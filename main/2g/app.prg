@@ -603,7 +603,7 @@ public g26Str2R:="\tab \tab Potpis:"
 public g27Str:="PREDRA¬UN MP br."
 public g27Str2T:="                                                               Direktor"
 public g27Str2R:="\tab \tab \tab Direktor:"
-
+public gNazPotStr:=SPACE(69)
 
 public gDodPar:="2", gDatVal:="N"
 
@@ -711,6 +711,7 @@ RPar("r4",@g06Str2T)
 RPar("s5",@g11Str2T)
 RPar("xm",@g15Str2T)
 RPar("s6",@g20Str2T)
+RPar("uc",@gNazPotStr)
 RPar("s7",@gMjStr)
 RPar("tb",@gTabela)
 RPar("tf",@gTipF)
