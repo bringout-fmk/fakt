@@ -600,7 +600,9 @@ method Kreiraj(nArea)
 
 CreFMKSvi()
 CreRoba()
-CreRabDB()
+if IsRabati()
+	CreRabDB()
+endif
 CreFMKPI()
 
 if (nArea==nil)
@@ -699,10 +701,10 @@ endif
 if (nArea==-1 .or. nArea==(F_PRIPR))
 	//PRIPR.DBF
 
+	if IsRabati()
+		AADD(aDBf,{ 'TIPRABAT'    , 'C' ,  10 ,  0 })
+	endif
 	
-	// avila 08.12.04 - IDRABAT ne treba da bude u PRIPR.DBF, za razliku od FAKT.DBF
-	AADD(aDBf,{ 'IDRABAT'    , 'C' ,  10 ,  0 })
-
 	if !FILE(PRIVPATH+'PRIPR.DBF')
         	DBcreate2(PRIVPATH+'PRIPR.DBF',aDbf)
 	endif
@@ -710,7 +712,9 @@ if (nArea==-1 .or. nArea==(F_PRIPR))
 	CREATE_INDEX("1","IdFirma+idtipdok+brdok+rbr+podbr",PRIVPATH+"PRIPR")
 	CREATE_INDEX("2","IdFirma+dtos(datdok)",PRIVPATH+"PRIPR")
 	CREATE_INDEX("3","IdFirma+idroba+rbr",PRIVPATH+"PRIPR")
-
+	if IsRabati()
+		CREATE_INDEX("4","IdFirma+idtipdok+rbr",PRIVPATH+"PRIPR")
+	endif
 endif
 
 if (nArea==-1 .or. nArea==(F__FAKT))
@@ -823,8 +827,12 @@ if (nArea==-1 .or. nArea==(F_DOKS))
 	AADD(aDBf,{ 'IDVRSTEP'            , 'C' ,   2 ,  0 })
 	AADD(aDBf,{ 'DATPL'               , 'D' ,   8 ,  0 })
 	AADD(aDBf,{ 'IDPM'                , 'C' ,  15 ,  0 })
-	AADD(aDBf,{ 'IDRABAT'             , 'C' ,  10 ,  0 })
-
+	
+	if IsRabati()
+		AADD(aDBf,{ 'IDRABAT'             , 'C' ,  10 ,  0 })
+		AADD(aDBf,{ 'TIPRABAT'            , 'C' ,  10 ,  0 })
+	endif
+	
 	if !FILE(KUMPATH+"DOKS.DBF")
         	DBcreate2(KUMPATH+'DOKS.DBF',aDbf)
 	endif

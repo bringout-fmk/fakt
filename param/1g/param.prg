@@ -120,8 +120,10 @@ AADD(opcexe,{|| P_WinFakt()})
 AADD(opc,"8. parametri stampaca                          ")
 AADD(opcexe,{|| PPrint()})
 
-AADD(opc,"9. postavi parametre rabatnih skala            ")
-AADD(opcexe,{|| PRabat()})
+if IsRabati()
+	AADD(opc,"9. rabatne skale            ")
+	AADD(opcexe,{|| PRabat()})
+endif
 
 Menu_SC("parf")
 
@@ -1959,24 +1961,28 @@ function PRabat()
 private  GetList:={}
 
 O_PARAMS
+RPar("rs", gcRabDef)
+RPar("is", gcRabIDef)
+RPar("id", gcRabDok)
 
-glRabDefault := PADR(glRabDefault,10)
+gcRabDef:=PADR(gcRabDef, 10)
 
-Box(,3,40,.f.,"RABATNE SKALE")
-	@ m_x+1,m_y+2 SAY "Rabatne skale (D/N): " GET glRabSkala VALID glRabSkala $ "DN" PICT "!@"
-  	@ m_x+2,m_y+2 SAY "Standardni rabat: " GET glRabDefault
-	@ m_x+3,m_y+2 SAY "Standardni iznos rabata (1-5): " GET glRabIznDefault VALID glRabIznDefault $ " 12345" PICT "!@"
+Box(,4,60,.f.,"RABATNE SKALE")
+  	@ m_x+1,m_y+2 SAY "Default rabat (oznaka)    :" GET gcRabDef VALID !Empty(gcRabDef)
+	@ m_x+2,m_y+2 SAY "Default iznos rabata (1-5):" GET gcRabIDef VALID gcRabIDef$"12345" PICT "!@"
+	@ m_x+3,m_y+2 SAY "Odnosi se na sljedece tipove dok. (10#12):" 
+	@ m_x+4,m_y+2 GET gcRabDok VALID !Empty(gcRabDok) PICT "@S20"
   	READ
 BoxC()
 
-glRabDefault:=TRIM(glRabDefault)
-
 if (LASTKEY()<>K_ESC)
-	WPar("rs",glRabSkala)
-  	Wpar("dr",glRabDefault)
-  	Wpar("ir",glRabIznDefault)
+	WPar("rs",gcRabDef)
+  	Wpar("ir",gcRabIDef)
+  	Wpar("id",gcRabDok)
 endif
 
 return
 *}
+
+
 

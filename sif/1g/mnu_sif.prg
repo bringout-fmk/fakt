@@ -81,6 +81,11 @@ if glDistrib
 	AADD(opcexe,{|| SifOVindija()})
 endif
 
+if IsRabati()
+	AADD(opc,"R. rabatne skale")
+	AADD(opcexe,{|| P_Rabat() })
+endif
+
 if IsUgovori()
 	AADD(opc,"U. ugovori")
 	AADD(opcexe,{|| OSifUgov(), SifUgovori()})

@@ -558,6 +558,13 @@ IF _idtipdok=="26" .and. glDistrib .and. !UGenNar()
   RETURN .f.
 ENDIF
 
+if IsRabati() .and. (_idtipdok $ gcRabDok)
+	_rabat := RabVrijednost(gcRabDef, cTipRab, _idroba, gcRabIDef)
+	if lSkonto
+		_skonto := SKVrijednost(gcRabDef, cTipRab, _idroba)
+	endif
+endif
+
 return .t.
 *}
 

@@ -412,6 +412,10 @@ private fID_J:=.f.
 private lVrsteP := ( IzFmkIni("FAKT","VrstePlacanja","N",SIFPATH)=="D" )
 private lOpcine := ( IzFmkIni("FAKT","Opcine","N",SIFPATH)=="D" )
 private gTBDir:="N"
+if IsRabati()
+	private cTipRab:=SPACE(10)
+	private lSkonto := .f.
+endif
 
 O_Edit()
 select pripr
@@ -622,9 +626,6 @@ return
 *}
 
 
-
-
-
 /*! \fn Rbr()
  *  \brief Redni broj
  */
@@ -831,6 +832,11 @@ do case
 			return DE_REFRESH
 		else
 			NotImp()
+		endif
+	case Ch==K_F7
+		if IsRabati()
+			SrediRabate()
+			return DE_REFRESH
 		endif
 	case Ch==K_F9
         	Iz20u10()  // izvrsena zamjena
@@ -1437,7 +1443,30 @@ if (nRbr==1 .and. VAL(_podbr)<1)
 		MsgBeep(cZabrana)
 		return 0
 	endif
-	
+
+	if IsRabati() .and. (_idtipdok $ gcRabDok)
+		
+		if fNovi 
+			lSkonto := Pitanje(, "Unositi kasu skonto (D/N)?", "N") == "D"
+		else
+			if _skonto <> 0
+				lSkonto := .t.
+			endif
+		endif
+		if fNovi
+			GetTRabat(@cTipRab)
+			_tiprabat := PADR(cTipRab, 10)
+			// uzmi broj dana 
+			if (gDodPar == "1")
+				nRokPl := GetDays(gcRabDef, cTipRab)
+			else
+				nRokPl := 0
+			endif
+		else
+			cTipRab := PADR(_tiprabat, 10)
+		endif
+	endif
+
     	@  m_x+3,m_y+2 SAY PADR(aPom[ASCAN(aPom,{|x|_IdTipdok==LEFT(x,2)})],40)
    	// if lastkey()==K_ESC; PopHT(); endif
    	if (_idTipDok=="13" .and. gVarNum=="2" .and. gVar13=="2")
@@ -1531,7 +1560,10 @@ if (nRbr==1 .and. VAL(_podbr)<1)
 
      			if (gDodPar=="1" .or. gDatVal=="D")
       				if fNovi
-					nRokPl:=gRokPl
+					// ako se koriste rabati izvuci broj dana iz tabele rabatnih skala
+					if !IsRabati()
+						nRokPl:=gRokPl
+					endif
 				endif
       				@  m_x+8,m_y+45 SAY "Rok plac.(dana):" GET nRokPl PICT "99" WHEN FRokPl("0",fnovi)   VALID FRokPl("1",fnovi)
 				@  m_x+9,m_y+45 SAY "Datum placanja :" GET _DatPl VALID FRokPl("2",fnovi)
@@ -1743,10 +1775,16 @@ if (gSamokol!="D")  // samo kolicine
     			@ m_x+16+RKOR+RKOR2,25  SAY IF(_idtipdok=="13".and.(gVar13=="2".or.glCij13Mpc),"MP cijena","Cijena") GET _Cijena   PICT piccdem WHEN  _podbr<>" ." .and. KLevel<="1" .and. SKCKalk(.t.) VALID SKCKalk(.f.)
    		endif
    		if !(_idtipdok $ "12#13").or.(_idtipdok=="12".and.gV12Por=="D")
-      			@  m_x+16+RKOR+RKOR2,col()+2  SAY "Rabat" get _Rabat pict "9999.999" when _podbr<>" ." .and. !_idtipdok$"15#27"
+			@  m_x+16+RKOR+RKOR2,col()+2  SAY "Rabat" get _Rabat pict "9999.999" when _podbr<>" ." .and. !_idtipdok$"15#27"
       			@ m_x+16+RKOR+RKOR2,col()+1  GET TRabat when {||  trabat:="%",!_idtipdok$"11#15#27" .and. _podbr<>" ."} valid trabat $ "% AUCI" .and. V_Rabat()  pict "@!"
     			@ m_x+16+RKOR+RKOR2,col()+2 SAY "Porez" GET _Porez pict "99.99"  when {|| if( fNovi .and. _idtipdok=="10" .and. IzFMKIni("FAKT","PPPNuditi","N",KUMPATH)=="D".and.ROBA->tip!="U" , _porez := TARIFA->opp , ), _podbr<>" ." .and. !(roba->tip $ "KV") .and. !_idtipdok$"11#15#27"} valid V_Porez()
    		endif
+		// SKONTO
+		if IsRabati()
+			if (_idtipdok $ "10")
+       				@ m_x+17+RKOR2,m_y+2 SAY "Skonto " get _skonto pict "9999.999"
+			endif
+		endif
 	endif
 
 	private cId:="  "

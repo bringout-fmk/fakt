@@ -1064,6 +1064,7 @@ do while !eof()
   	private cBrDok:=brdok
 	private cIdTipDok:=idtipdok
 	private dDatDok:=datdok
+	private cTipRabat:=tiprabat
 	
   	aMemo:=ParsMemo(txt)
   	
@@ -1091,6 +1092,13 @@ do while !eof()
   	_field->dindem    := cDinDem
   	_field->IdPartner := PRIPR->IdPartner
   	
+	if IsRabati()
+		if (cIdTipDok $ gcRabDok)
+			_field->IdRabat := PADR(gcRabDef, 10)
+			_field->tiprabat := PADR(cTipRabat, 10)
+  		endif
+	endif
+	
 	if lVrsteP
    		_field->IdVrsteP:=pripr->idvrstep
   	endif
