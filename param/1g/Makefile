@@ -4,7 +4,7 @@ MMODUL=fakt
 
 include /sclib/Makefile_clipper
 
-SRCDOSROOT=h:\\dev\\fmk\\$(MMODUL)\\param\\1g\\
+SRCDOSROOT=c:\\dev\\fmk\\$(MMODUL)\\param\\1g\\
 
 PRGS=param.prg
 

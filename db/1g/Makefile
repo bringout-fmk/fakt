@@ -3,7 +3,7 @@ MODUL=fa_1db
 
 include /sclib/Makefile_clipper
 
-SRCDOSROOT=h:\\dev\\fmk\\fakt\\db\\1g\\
+SRCDOSROOT=c:\\dev\\fmk\\fakt\\db\\1g\\
 
 PRGS=db.prg db_adm.prg
 CS=

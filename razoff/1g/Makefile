@@ -4,7 +4,7 @@ MMODUL=fakt
 
 include /sclib/Makefile_clipper
 
-SRCDOSROOT=h:\\dev\\fmk\\$(MMODUL)\\razoff\\1g\\
+SRCDOSROOT=c:\\dev\\fmk\\$(MMODUL)\\razoff\\1g\\
 
 PRGS=modem.prg faktdisk.prg
 

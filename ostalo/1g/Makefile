@@ -3,7 +3,7 @@ MODUL=fa_1ost
 
 include /sclib/Makefile_clipper
 
-SRCDOSROOT=h:\\dev\\fmk\\fakt\\ostalo\\1g\\
+SRCDOSROOT=c:\\dev\\fmk\\fakt\\ostalo\\1g\\
 
 PRGS=font.prg kalk.prg ostalo.prg
 CS=

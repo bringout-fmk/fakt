@@ -4,7 +4,7 @@ MMODUL=fakt
 
 include /sclib/Makefile_clipper
 
-SRCDOSROOT=h:\\dev\\fmk\\$(MMODUL)\\gendok\\1g\\
+SRCDOSROOT=c:\\dev\\fmk\\$(MMODUL)\\gendok\\1g\\
 
 PRGS=gendok.prg mnu_gdok.prg
 
