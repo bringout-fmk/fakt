@@ -1882,60 +1882,71 @@ return 1
  *  \param fNovi
  */
  
-function FRokPl(cVar,fNovi)
+function FRokPl(cVar, fNovi)
 *{
 local fOtp:=.f.
 
-if IzFMKINI('FAKT','DatumRokPlacanja','F')=="O"
- // F  - faktura, O -  otpremnica
- fOtp:=.t.
+if IzFMKINI('FAKT','DatumRokPlacanja','F') == "O"
+	// F  - faktura, O -  otpremnica
+ 	fOtp := .t.
 endif
 
 if cVar=="0"   // when
-  if nRokPl<0
-     return .t.   // ne diraj nista
-  endif
-  if !fnovi
-   if EMPTY(_datpl)
-      nRokPl:=0
-   else
-     if fotp
-       nRokPl:=_datpl-_datotp
-     else
-       nRokPl:=_datpl-_datdok
-     endif
-   endif
-  endif
-
+	if nRokPl<0
+     		return .t.   // ne diraj nista
+  	endif
+  	// ako je rama-glas
+	if IsRamaGlas()
+		if nRokPl < 1
+			MsgBeep("Unjeti broj dana !")
+			return .f.
+		endif
+	endif
+	if !fNovi
+   		if EMPTY(_datpl)
+      			nRokPl:=0
+   		else
+     			if fOtp
+       				nRokPl:=_datpl-_datotp
+     			else
+       				nRokPl:=_datpl-_datdok
+     			endif
+   		endif
+  	endif
 elseif cVar=="1"  // valid
-  if nRokPl<0  // moras unijeti pozitivnu vrijednost ili 0
-        MsgBeep("Unijeti broj dana !")
-        return .f.
-  endif
-  if nRokPl=0 .and. gRokPl<0
-     // exclusiv, ako je 0 ne postavljaj rok placanja !
-    _datPl:=ctod("")
-  else
-    if fotp
-      _datPl:=_datotp+nRokPl
-    else
-      _datPl:=_datdok+nRokPl
-    endif
-  endif
-
+	if nRokPl<0  // moras unijeti pozitivnu vrijednost ili 0
+        	MsgBeep("Unijeti broj dana !")
+        	return .f.
+  	endif
+	// ako je rama-glas
+	if IsRamaGlas()
+		if nRokPl < 1
+			MsgBeep("Unjeti broj dana !")
+			return .f.
+		endif
+	endif
+  	if nRokPl=0 .and. gRokPl<0
+     		// exclusiv, ako je 0 ne postavljaj rok placanja !
+    		_datPl:=ctod("")
+  	else
+    		if fOtp
+      			_datPl:=_datotp+nRokPl
+    		else
+      			_datPl:=_datdok+nRokPl
+    		endif
+  	endif
 else  // cVar=="2" - postavi datum placanja
-
-  if EMPTY(_datpl)
-    nRokPl:=0
-  else
-    if fotp
-      nRokPl:=_datpl-_datotp
-    else
-      nRokPl:=_datpl-_datdok
-    endif
-  endif
-
+	if EMPTY(_datpl)
+    		nRokPl:=0
+  	else
+    		if fotp
+      			nRokPl:=_datpl-_datotp
+    		else
+      			nRokPl:=_datpl-_datdok
+    		endif
+	endif
 endif
+
 ShowGets()
 return .t.
 *}
