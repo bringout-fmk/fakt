@@ -644,6 +644,10 @@ public gKarC3:="N"
 public gKarN1:="N"
 public gKarN2:="N"
 
+public glRabSkala := "N"
+public glRabDefault := SPACE(10)
+public glRabIznDefault := "1"
+
 
 O_PARAMS
 private cSection:="1",cHistory:=" "; aHistory:={}
@@ -766,6 +770,15 @@ RPar("g2",@gKarC2)
 RPar("g3",@gKarC3)
 RPar("g4",@gKarN1)
 RPar("g5",@gKarN2)
+
+// rabatne skale
+RPar("rs",@glRabSkala)
+RPar("dr",@glRabDefault)
+RPar("ir",@glRabIznDefault)
+
+// if empty(glRabDefault)
+//	glRabDefault := SPACE(10)
+// endif
 
 /*
 if empty(gNFirma)

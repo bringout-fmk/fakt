@@ -117,8 +117,11 @@ AADD(opcexe,{|| SetRazno()})
 AADD(opc,"7. parametri Win stampe (DelphiRB)             ")
 AADD(opcexe,{|| P_WinFakt()})
 
-AADD(opc,"8. parametri stampaca             ")
+AADD(opc,"8. parametri stampaca                          ")
 AADD(opcexe,{|| PPrint()})
+
+AADD(opc,"9. postavi parametre rabatnih skala            ")
+AADD(opcexe,{|| PRabat()})
 
 Menu_SC("parf")
 
@@ -1890,4 +1893,90 @@ endif
 return
 *}
 
+*string Params_s7;
+/*! \ingroup params
+ *  \var Params_s7
+ *  \brief Grad tj.mjesto u kojem je firma
+ *  \param Zenica - u Zenici
+ *  \note gMjStr
+ */
+
+
+*string Params_fi;
+/*! \ingroup params
+ *  \var Params_fi
+ *  \brief Sifra firme/default radne jedinice
+ *  \param 10 - sifra firme ili default radne jedinice je 10
+ *  \note gFirma
+ */
+
+
+*string Params_ts;
+/*! \ingroup params
+ *  \var Params_ts
+ *  \brief Tip poslovnog subjekta
+ *  \param Preduzece - znaci da se radi o preduzecu
+ *  \note gTS
+ */
+
+
+*string Params_fn;
+/*! \ingroup params
+ *  \var Params_fn
+ *  \brief Naziv firme
+ *  \param SIGMA-COM - naziv firme je SIGMA-COM
+ *  \note gNFirma
+ */
+
+
+*string Params_Bv;
+/*! \ingroup params
+ *  \var Params_Bv
+ *  \brief Bazna valuta
+ *  \param D - domaca
+ *  \param P - pomocna
+ *  \note gBaznaV
+ */
+
+
+*string Params_mV;
+/*! \ingroup params
+ *  \var Params_mV
+ *  \brief Koristiti modemsku vezu?
+ *  \param S - da, server
+ *  \param K - da, korisnik
+ *  \param N - ne koristiti modemsku vezu
+ *  \note gModemVeza
+ */
+
+
+/*! \fn PRabat()
+ *  \brief Podesenje parametara rabatnih skala
+ */
+ 
+function PRabat()
+*{
+private  GetList:={}
+
+O_PARAMS
+
+glRabDefault := PADR(glRabDefault,10)
+
+Box(,3,40,.f.,"RABATNE SKALE")
+	@ m_x+1,m_y+2 SAY "Rabatne skale (D/N): " GET glRabSkala VALID glRabSkala $ "DN" PICT "!@"
+  	@ m_x+2,m_y+2 SAY "Standardni rabat: " GET glRabDefault
+	@ m_x+3,m_y+2 SAY "Standardni iznos rabata (1-5): " GET glRabIznDefault VALID glRabIznDefault $ " 12345" PICT "!@"
+  	READ
+BoxC()
+
+glRabDefault:=TRIM(glRabDefault)
+
+if (LASTKEY()<>K_ESC)
+	WPar("rs",glRabSkala)
+  	Wpar("dr",glRabDefault)
+  	Wpar("ir",glRabIznDefault)
+endif
+
+return
+*}
 
