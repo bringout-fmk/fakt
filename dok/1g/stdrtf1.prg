@@ -502,7 +502,7 @@ LOCAL cDodatak:="", cRegBr, cPorBr
       cDodatak += ( "\line " + ToRtfStr("Ident.br:"+cRegBr) )
     ENDIF
     IF !EMPTY(cPorBr)
-      cDodatak += ( "\line " + ToRtfStr("Ident.br:"+cPorBr) )
+      cDodatak += ( "\line " + ToRtfStr("Por.br:"+cPorBr) )
     ENDIF
   ENDIF
 return cDodatak
