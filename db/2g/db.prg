@@ -600,6 +600,7 @@ method Kreiraj(nArea)
 
 CreFMKSvi()
 CreRoba()
+CreRabDB()
 CreFMKPI()
 
 if (nArea==nil)
@@ -665,6 +666,8 @@ AADD(aDBf,{ 'M1'        , 'C' ,   1 ,  0 })
 AADD(aDBf,{ 'TXT'       , 'M' ,  10 ,  0 })
 AADD(aDBf,{ 'IDVRSTEP'  , 'C' ,   2 ,  0 })
 AADD(aDBf,{ 'IDPM'      , 'C' ,  15 ,  0 })
+AADD(aDBf,{ 'TIPRABAT'  , 'C' ,  10 ,  0 })
+AADD(aDBf,{ 'SKONTO'    , 'N' ,  10 ,  5 })
 
 if (nArea==-1 .or. nArea==(F_FAKT))
 	//FAKT.DBF
@@ -695,7 +698,11 @@ endif
 
 if (nArea==-1 .or. nArea==(F_PRIPR))
 	//PRIPR.DBF
+
 	
+	// avila 08.12.04 - IDRABAT ne treba da bude u PRIPR.DBF, za razliku od FAKT.DBF
+	AADD(aDBf,{ 'IDRABAT'    , 'C' ,  10 ,  0 })
+
 	if !FILE(PRIVPATH+'PRIPR.DBF')
         	DBcreate2(PRIVPATH+'PRIPR.DBF',aDbf)
 	endif
@@ -816,6 +823,7 @@ if (nArea==-1 .or. nArea==(F_DOKS))
 	AADD(aDBf,{ 'IDVRSTEP'            , 'C' ,   2 ,  0 })
 	AADD(aDBf,{ 'DATPL'               , 'D' ,   8 ,  0 })
 	AADD(aDBf,{ 'IDPM'                , 'C' ,  15 ,  0 })
+	AADD(aDBf,{ 'IDRABAT'             , 'C' ,  10 ,  0 })
 
 	if !FILE(KUMPATH+"DOKS.DBF")
         	DBcreate2(KUMPATH+'DOKS.DBF',aDbf)
