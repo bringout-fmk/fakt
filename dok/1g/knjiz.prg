@@ -412,6 +412,7 @@ private fID_J:=.f.
 private lVrsteP := ( IzFmkIni("FAKT","VrstePlacanja","N",SIFPATH)=="D" )
 private lOpcine := ( IzFmkIni("FAKT","Opcine","N",SIFPATH)=="D" )
 private gTBDir:="N"
+
 if IsRabati()
 	private cTipRab:=SPACE(10)
 	private lSkonto := .f.
@@ -1443,7 +1444,8 @@ if (nRbr==1 .and. VAL(_podbr)<1)
 		MsgBeep(cZabrana)
 		return 0
 	endif
-
+	
+	// varijanta rabatnih skala
 	if IsRabati() .and. (_idtipdok $ gcRabDok)
 		
 		if fNovi 
@@ -1453,6 +1455,7 @@ if (nRbr==1 .and. VAL(_podbr)<1)
 				lSkonto := .t.
 			endif
 		endif
+		
 		if fNovi
 			GetTRabat(@cTipRab)
 			_tiprabat := PADR(cTipRab, 10)
@@ -1463,6 +1466,7 @@ if (nRbr==1 .and. VAL(_podbr)<1)
 				nRokPl := 0
 			endif
 		else
+			// uzmi vrijednost rabata sa prvog polja
 			cTipRab := PADR(_tiprabat, 10)
 		endif
 	endif
