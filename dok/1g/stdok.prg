@@ -585,7 +585,7 @@ Eval(bZagl)
 
 
 /*! \fn Koef(cDinDem)
- *  \brief
+ *  \brief Konverzija valute
  *  \param cDinDem
  */
  
@@ -593,10 +593,10 @@ function Koef(cdindem)
 *{
 local nNaz,nRet,nArr,dDat
 
-if cdindem==left(ValSekund(),3)
- return 1/UbaznuValutu(datdok)
+if cDinDem==left(ValSekund(),3)
+	return 1/UbaznuValutu(datdok)
 else
- return 1
+ 	return 1
 endif
 *}
 
