@@ -8,10 +8,3 @@ A SKONTO N 8 2
 *DOKS.DBF
 A IDRABAT C 10 0
 A TIPRABAT C 10 0
-
-
-
-
-
-
-
