@@ -732,7 +732,7 @@ if gOcitBarkod
     		
 		if (nCnt>1) // imamo duple!!!
        			if cSpojiti=="N"
-          			if Pitanje(,"Spojiti duple artikle ?","D")=="D"
+          			if Pitanje(,"Spojiti duple artikle ?","N")=="D"
              				cSpojiti:="D"
           			else
              				cSpojiti:="0"
@@ -1071,7 +1071,10 @@ do while !eof()
   	private cBrDok:=brdok
 	private cIdTipDok:=idtipdok
 	private dDatDok:=datdok
-	private cTipRabat:=tiprabat
+	
+	if IsRabati()
+		private cTipRabat:=tiprabat
+	endif
 	
   	aMemo:=ParsMemo(txt)
   	
