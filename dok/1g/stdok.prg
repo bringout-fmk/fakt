@@ -548,10 +548,6 @@ closeret
  
 function Zagl()
 *{
-if fDelphiRb
-	return
-endif
-
 P_COND
 ? space(gnLMarg); ?? m
 if gVarF=="1"
@@ -578,9 +574,6 @@ return
  
 function NStr0(bZagl)
 *{
-if fDelphiRb
-	return
-endif
 ? space(gnLmarg); ?? m
 ? space(gnLmarg+IF(gVarF=="9".and.gTipF=="2",14,0)),"Ukupno na strani "+str(++nStrana,3)+":"; @ prow(),nCol1  SAY nUk  pict picdem
 ? space(gnLmarg); ?? m
@@ -820,6 +813,7 @@ function ShowIDPar(cId,n,lNoviRed,lVratiRPBNiz)
 *{
 local cRegBr
 local cPorBr
+local cUgovBr
 local lPar:=.f.
 local lRegB:=.f.
 
@@ -834,7 +828,7 @@ endif
 if lNoviRed==nil
 	lNoviRed:=.t.
 endif
-if !fDelphiRb .and. !lVratiRPBNiz .and. IzFMkIni("FAKT","IdPartnNaF","N",KUMPATH)=="D"
+if !lVratiRPBNiz .and. IzFMkIni("FAKT","IdPartnNaF","N",KUMPATH)=="D"
 	if lNoviRed
       		? (SPACE(n) + PADC("ID:"+cId,30))
     	else
@@ -846,7 +840,7 @@ endif
 if IzFMkIni("FAKT","RegBrPorBr","D",KUMPATH)=="D" .or. lVratiRPBNiz
 	cRegBr:=IzSifK("PARTN","REGB",cId,.f.)
     	cPorBr:=IzSifK("PARTN","PORB",cId,.f.)
-    	if !fDelphiRb
+	cUgovBr:=IzSifK("PARTN","UGBR",cId,.f.)
 	 if lBrojRjesenja
     		cBrojRjesenja:=IzSifK('PARTN','BRJS',cId,.f.)
 		cBrojUpisa:=IzSifK('PARTN','BRUP',cId,.f.)
@@ -858,7 +852,11 @@ if IzFMkIni("FAKT","RegBrPorBr","D",KUMPATH)=="D" .or. lVratiRPBNiz
       		if !EMPTY(cPorBr)
         		? (SPACE(n) + PADC("Por.br:"+cPorBr,30))
       		endif
-      		if (lBrojRjesenja .and. !Empty(cBrojRjesenja))
+      		if !EMPTY(cUgovBr)
+        		? (SPACE(n) + PADC("Broj.ug.:"+cUgovBr,30))
+      		endif
+      	
+		if (lBrojRjesenja .and. !Empty(cBrojRjesenja))
         		? (SPACE(n+4)+ + PADC("Br.Sud.Rj:"+cBrojRjesenja,30))
       			if !Empty(cBrojUpisa)
 				? (SPACE(n+4) + PADC("Br.Upisa:"+cBrojUpisa,30))
@@ -878,8 +876,14 @@ if IzFMkIni("FAKT","RegBrPorBr","D",KUMPATH)=="D" .or. lVratiRPBNiz
         		endif
         		?? (SPACE(n) + PADC("Por.br:"+cPorBr,30))
       		endif
+		if !EMPTY(cUgovBr)
+        		if lPar .or. lRegB
+          			?
+        		endif
+        		?? (SPACE(n) + PADC("Ugov.br:"+cUgovBr,30))
+      		endif
+
     	 endif
-	endif
 	if lVratiRPBNiz
       		return {cRegBr,cPorBr}
     	endif

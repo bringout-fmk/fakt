@@ -365,44 +365,41 @@ endif
 
 
 if pcount()==0  // poziva se faktura iz pripreme
- IF gNovine=="D" .or. (IzFMKINI('FAKT','StampaViseDokumenata','N')=="D")
-   FilterPrNovine()
- ENDIF
- cIdTipdok:=idtipdok;cIdFirma:=IdFirma;cBrDok:=BrDok
+	IF gNovine=="D" .or. (IzFMKINI('FAKT','StampaViseDokumenata','N')=="D")
+   		FilterPrNovine()
+	ENDIF
+ 	cIdTipdok:=idtipdok;cIdFirma:=IdFirma;cBrDok:=BrDok
 endif
-seek cidfirma+cidtipdok+cbrdok
+seek cIdFirma+cIdTipDok+cBrDok
 NFOUND CRET
 
 IF idtipdok=="01" .and. kolicina<0 .and. gPovDob$"DN"
-  lPovDob := ( Pitanje(,"Stampati dokument povrata dobavljacu? (D/N)",gPovDob)=="D" )
+	lPovDob:=(Pitanje(,"Stampati dokument povrata dobavljacu? (D/N)",gPovDob)=="D")
 ELSE
-  lPovDob:=.f.
+	lPovDob:=.f.
 ENDIF
 
 IF glDistrib .and. cIdTipDok $ "10#21"
-  mamb := " -------"
+	mamb := " -------"
 ELSE
-  mamb := ""
+	mamb := ""
 ENDIF
 
 if gVarF=="1"
-  private M:="------ ---------- ---------------------------------------- ---------- ----------- ---"+mamb+" ----------- ------ ---- -----------"
+	private M:="------ ---------- ---------- ---------------------------------------- ---------- ----------- ---"+mamb+" ----------- ------ ---- -----------"
 else
-
-  if IsTvin()
-	cPR:=" -------------------------------"
-  	cP:=" --------"  // za iznos poreza
-  else
-	cPR:=" ----------------------------------------"
-  	cP:=""
-  endif
-
-  if gRabProc=="D"
-    private M:="------ ----------"+cPR+" ----------- ---"+mamb+" ----------- ------ ----------- ----"+cP+" -----------"
-  else
-    private M:="------ ----------"+cPR+" ----------- ---"+mamb+" ----------- ----------- ----"+cP+" -----------"
-  endif
-
+	if IsTvin()
+		cPR:=" -------------------------------"
+  		cP:=" --------"  // za iznos poreza
+  	else
+		cPR:=" ----------------------------------------"
+  		cP:=""
+  	endif
+	if gRabProc=="D"
+    		private M:="------ ---------- ----------" + cPR + " ----------- ---" + mamb + " ----------- ------ ----------- ----" + cP + " -----------"
+  	else
+    		private M:="------ ---------- ----------" + cPR + " ----------- ---" + mamb + " ----------- ----------- ----" + cP + " -----------"
+  	endif
 endif
 
 aDbf:={ {"POR","C",10,0},;
@@ -422,28 +419,28 @@ cIdTipDok:=IdTipDok
 cidpartner:=Idpartner
 
 if fDelphiRB
-  select partn
-  seek cIdpartner
-  if IzFmkIni("FAKT","Opcine","N",SIFPATH)=="D"
-    //set relation to idops into ops
-    cOpcina:=Idops
-  endif
-  select pripr
+	select partn
+  	seek cIdpartner
+  	if IzFmkIni("FAKT","Opcine","N",SIFPATH)=="D"
+    		//set relation to idops into ops
+    		cOpcina:=Idops
+  	endif
+  	select pripr
 endif
 
 if !fDelphiRB
-  if cidtipdok=="19" .and. lPartic
-    private m:="------ ---------- ---------------------------------------- ------- ------ ------- ----------- --- ----------- ----------------"
-  elseif cidtipdok$"11#27"
-    if IsTvin()
-	cPR:=" ----------------------" //  -18 za naziv robe
-	cP:=" --------" // za iznose poreza 2*9 = +18
-    else
-	cPR:=" ----------------------------------------"
-	cP:=""
-    endif
-    private m:="------ ----------"+cPR+" ------- ------"+cP+" -------"+cP+" ----------- --- ----------- -----------"
-  endif
+	if (cIdTipDok=="19" .and. lPartic)
+    		private m:="------ ---------- ---------- ---------------------------------------- ------- ------ ------- ----------- --- ----------- ----------------"
+  	elseif (cIdTipDok $ "11#27")
+    		if IsTvin()
+			cPR:=" ----------------------" //  -18 za naziv robe
+			cP:=" --------" // za iznose poreza 2*9 = +18
+    		else
+			cPR:=" ----------------------------------------"
+			cP:=""
+    		endif
+    		private m:="------ ---------- ----------" + cPR + " ------" + cP + " -------" + cP + " ----------- --- ----------- -----------"
+  	endif
 endif
 
 cTxt1:=""
@@ -457,36 +454,36 @@ cRegBr:=cPorDjBr:=""
 RegPorBrGet(@cRegBr,@cPorDjBr)
 
 if fDelphiRB
-  if IzFmkIni("FAKT","Opcine","N",SIFPATH)=="D"
-    cKanton:="K: " + cOpcina
-  endif
+	if IzFmkIni("FAKT","Opcine","N",SIFPATH)=="D"
+    		cKanton:="K: " + cOpcina
+  	endif
 endif
 
 if val(podbr)=0  .and. val(rbr)==1
-   aMemo:=ParsMemo(txt)
-   if len(aMemo)>0
-     cTxt1:=padr(aMemo[1],40)
-   endif
-   if len(aMemo)>=5
-    IF lUgRab
-      cTxt2:=UgRabTXT()
-    ELSE
-      cTxt2:=aMemo[2]
-    ENDIF
-    IF glDistrib
-      cIDPM:=TRIM(IDPM)
-      IF !EMPTY(cIDPM)
-        cIDPM:="(Prod.mjesto: "+cIDPM+")"
-      ENDIF
-    ENDIF
-    cTxt3a:=aMemo[3]
-    cTxt3b:=aMemo[4]
-    cTxt3c:=aMemo[5]
-   endif
+	aMemo:=ParsMemo(txt)
+   	if len(aMemo)>0
+     		cTxt1:=padr(aMemo[1],40)
+   	endif
+   	if len(aMemo)>=5
+    		IF lUgRab
+      			cTxt2:=UgRabTXT()
+    		ELSE
+      			cTxt2:=aMemo[2]
+    		ENDIF
+    		IF glDistrib
+      			cIDPM:=TRIM(IDPM)
+      			IF !EMPTY(cIDPM)
+        			cIDPM:="(Prod.mjesto: "+cIDPM+")"
+      			ENDIF
+    		ENDIF
+    		cTxt3a:=aMemo[3]
+    		cTxt3b:=aMemo[4]
+    		cTxt3c:=aMemo[5]
+   	endif
 else
-  Beep(2)
-  Msg("Prva stavka mora biti  '1.'  ili '1 ' !",4)
-  return
+	Beep(2)
+  	Msg("Prva stavka mora biti  '1.'  ili '1 ' !",4)
+  	return
 endif
 
 
@@ -609,7 +606,7 @@ nRab:=0
 nZaokr:=ZAOKRUZENJE
 cDinDEM:=dindem
 
-do while idfirma==cidfirma .and. idtipdok==cidtipdok .and. brdok==cbrdok .and. !eof()
+do while idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==cBrDok .and. !eof()
 	NSRNPIdRoba()   // Nastimaj (hseek) Sifr.Robe Na Pripr->IdRoba
 	if alltrim(podbr)=="."   .or. roba->tip="U"
      		aMemo:=ParsMemo(txt)
@@ -708,9 +705,10 @@ do while idfirma==cidfirma .and. idtipdok==cidtipdok .and. brdok==cbrdok .and. !
    	else   // podbr nije "."
      	// maloprodaja ili izlaz iz MP putem VP ili predr.MP
      	// ili racun participacije
-     		if idtipdok $ "11#15#27" .or. idtipdok=="19" .and. lPartic
-       			select tarifa; hseek roba->idtarifa
-       			IF IzFMKINI("POREZI","PPUgostKaoPPU","D")=="D"
+		if idtipdok $ "11#15#27" .or. idtipdok=="19" .and. lPartic
+       			select tarifa
+			hseek roba->idtarifa
+			IF IzFMKINI("POREZI","PPUgostKaoPPU","D")=="D"
          			nMPVBP:=pripr->(cijena*Koef(cDinDem)*kolicina())/(1+tarifa->zpp/100+tarifa->ppp/100)/(1+tarifa->opp/100)
        			ELSE
          			nMPVBP:=pripr->(cijena*Koef(cDinDem)*kolicina())/((1+tarifa->opp/100)*(1+tarifa->ppp/100)+tarifa->zpp/100)
@@ -747,8 +745,14 @@ do while idfirma==cidfirma .and. idtipdok==cidtipdok .and. brdok==cbrdok .and. !
        			endif
        			select pripr
      		endif
+		
+       		select tarifa
+		hseek roba->idtarifa
+		select pripr
+		
 		aSbr:=Sjecistr(serbr,10)
-    		if roba->tip="U"
+    		
+		if roba->tip="U"
      			aTxtR:=SjeciStr(aMemo[1],iif(gVarF=="1".and.!idtipdok$"11#27",51,if(IsTvin(),if(idtipdok$"11#27",22,31),40)))   // duzina naziva + serijski broj
      			if fdelphiRB
        				select pom
@@ -757,13 +761,16 @@ do while idfirma==cidfirma .and. idtipdok==cidtipdok .and. brdok==cbrdok .and. !
        				select pripr
      			endif
     		else
+			
 			cK1:=""
      			cK2:=""
-     			if pripr->(fieldpos("k1"))<>0 
+     			
+			if pripr->(fieldpos("k1"))<>0 
      				cK1:=k1
 				cK2:=k2
 			endif
-     			aTxtR:=SjeciStr(trim(roba->naz)+iif(!empty(ck1+ck2)," "+ck1+" "+ck2,"")+Katbr()+IspisiPoNar(),if(IsTvin(),if(idtipdok$"11#27",22,31),40))
+     			
+			aTxtR:=SjeciStr(trim(roba->naz)+iif(!empty(ck1+ck2)," "+ck1+" "+ck2,"")+Katbr()+IspisiPoNar(),if(IsTvin(),if(idtipdok$"11#27",22,31),40))
      			if fdelphiRB
        				select pom
        				append blank // prvo se stavlja naziv!!
@@ -794,55 +801,56 @@ do while idfirma==cidfirma .and. idtipdok==cidtipdok .and. brdok==cbrdok .and. !
               		Sifra  with pripr->(StIdROBA(idroba))
       			select pripr
     		else
+			
      			? space(gnLMarg)
-     			?? Rbr(), StIdROBA(idroba)
+     			?? Rbr(), PADR(IIF(roba->tip="U","", tarifa->naz), 10), StIdROBA(idroba)
      			nCTxtR:=pcol()+1
      			@ prow(),nCTxtR SAY aTxtR[1]
     		endif
 
-    if !( cidtipdok $ "11#27" .or. cidtipdok=="19" .and. lPartic )
-       if roba->tip<>"U" .and. gVarF=="1"
-         //nCTxtR:=pcol()+1
-         if !fDelphiRB
-          @ prow(),pcol()+1 SAY aSbr[1]
-         endif
-       endif
-    else
-       //nCTxtR:=pcol()+1
-     if fDelphiRB
-       select tarifa
-       hseek roba->idtarifa
-       select pom
-       replace POREZ1 with transform(tarifa->opp,"9999.9%")
-       replace POREZ2 with transform(tarifa->ppp,"999.9%")
-       select pripr
-     else
-       @ prow(),pcol()+1 SAY roba->idtarifa
-       select tarifa
-       hseek roba->idtarifa
-       @ prow(),pcol()+1 SAY tarifa->opp pict "9999.9%"
-       if IsTvin()
-        	@ prow(),pcol()+1 SAY nIznPPP pict "99999.99"
-       endif
-       @ prow(),pcol()+2 SAY tarifa->ppp pict "999.9%"
-       if IsTvin()
-        	@ prow(),pcol()+1 SAY nIznPPU pict "99999.99"
-       endif
-       select pripr
-     endif
-    endif
-    if fDelphiRB
-      select pom
-      replace kolicina with transform(pripr->(kolicina()),pickol),;
-              jmj with lower(ROBA->jmj)
-      select pripr
-    else
-     @ prow(),pcol()+1 SAY kolicina() pict pickol
-     @ prow(),pcol()+1 SAY lower(ROBA->jmj)
-     IF glDistrib .and. cIdTipDok $ "10#21"
-       IspisiAmbalazu()
-     ENDIF
-    endif
+	if !(cIdTipDok $ "11#27" .or. cidtipdok=="19" .and. lPartic )
+      		if roba->tip<>"U" .and. gVarF=="1"
+         		//nCTxtR:=pcol()+1
+         		if !fDelphiRB
+          			@ prow(),pcol()+1 SAY aSbr[1]
+         		endif
+       		endif
+    	else
+       		//nCTxtR:=pcol()+1
+     		if fDelphiRB
+       			select tarifa
+       			hseek roba->idtarifa
+       			select pom
+       			replace POREZ1 with transform(tarifa->opp,"9999.9%")
+       			replace POREZ2 with transform(tarifa->ppp,"999.9%")
+       			select pripr
+     		else
+       			//@ prow(),pcol()+1 SAY roba->idtarifa
+       			select tarifa
+      			hseek roba->idtarifa
+       			@ prow(),pcol() SAY tarifa->opp pict "9999.9%"
+       			if IsTvin()
+        			@ prow(),pcol()+1 SAY nIznPPP pict "99999.99"
+       			endif
+       			@ prow(),pcol()+2 SAY tarifa->ppp pict "999.9%"
+       			if IsTvin()
+        			@ prow(),pcol()+1 SAY nIznPPU pict "99999.99"
+       			endif
+       			select pripr
+     		endif
+    	endif
+    	if fDelphiRB
+     		select pom
+      		replace kolicina with transform(pripr->(kolicina()),pickol)
+              	replace jmj with lower(ROBA->jmj)
+      		select pripr
+    	else
+     		@ prow(),pcol()+1 SAY kolicina() pict pickol
+     		@ prow(),pcol()+1 SAY lower(ROBA->jmj)
+     		IF glDistrib .and. cIdTipDok $ "10#21"
+       			IspisiAmbalazu()
+    		ENDIF
+    	endif
 
      if gSamokol!="D"
      if empty(podbr) .or. (!empty(podbr) .and. cTI=="1")
@@ -1281,64 +1289,75 @@ CLOSERET
 
 
 /*! \fn Zagl2()
- *  \brief Stampa zaglavlja na fakturi
- */
- 
+ *  \brief Stampa zaglavlja na fakturi u varijanti 2
+ */ 
 static function Zagl2()
 *{
 P_COND
 ? space(gnLMarg)
 ?? m
 
-IF "U" $ TYPE("lPartic")
-lPartic:=.f.
-ENDIF
-
-if cidtipdok$"19" .and. lPartic
- ? space(gnLMarg); ?? "                                                                                                                Ukupan iznos "
- ? space(gnLMarg); ?? " R.br  Sifra      Naziv                                    Tarifa    PPP    PPU     kolicina  jmj    Ukupno     participacije"
-elseif cidtipdok$"11#27"
- if IsTvin()
- 	? space(gnLMarg); ?? " R.br  Sifra      Naziv                  Tarifa    PPP % i iznos   PPU % i iznos    kolicina  jmj    Cijena       Ukupno"
- else
- 	? space(gnLMarg); ?? " R.br  Sifra      Naziv                                    Tarifa    PPP    PPU     kolicina  jmj    Cijena       Ukupno"
- endif
- if fPBarkod
-    ? space(gnLMarg)
-    ?? "       Barkod    "
- endif
-else
- if glDistrib .and. cIdTipDok $ "10#21"
-   camb:="  ambal."
- else
-   camb:=""
- endif
- if gVarF=="1"
-   ? space(gnLMarg); ?? " R.br  Sifra      Naziv                                    "+JokSBr()+"    kolicina   jmj"+camb+"    Cijena    Rabat  Por    Ukupno"
-   if fPBarkod
-      ? space(gnLMarg); ?? "       Barkod    "
-   endif
- else
-   if IsTvin()
-	cPR:="Naziv"
-   	cP:="% i iznos"
-   else
-	cPR:="Naziv         "
-   	cP:=""
-   endif
-   IF gRabProc=="D"
-     ? space(gnLMarg); ?? " R.br  Sifra      "+cPR+"                             kolicina  jmj"+camb+"    Cijena   Rabat   Cijena-Rab  Por"+cP+"    Ukupno"
-   ELSE
-     ? space(gnLMarg); ?? " R.br  Sifra      "+cPR+"                             kolicina  jmj"+camb+"    Cijena    Cijena-Rab  Por"+cP+"    Ukupno"
-   ENDIF
-
-   if fPBarkod
-      ? space(gnLMarg); ?? "       Barkod    "
-   endif
- endif
+if "U" $ TYPE("lPartic")
+	lPartic:=.f.
 endif
 
-? space(gnLMarg); ?? m
+cTarMp := " Tar.u MP "
+
+if (cIdTipDok $ "19" .and. lPartic)
+	? space(gnLMarg)
+	?? "                                                                                                                Ukupan iznos "
+ 	? space(gnLMarg)
+	?? " R.br " + cTarMp + "  Sifra       Naziv                                     PPP    PPU     kolicina  jmj    Ukupno     participacije"
+elseif cIdTipDok$"11#27"
+	if IsTvin()
+ 		? space(gnLMarg)
+		?? " R.br " + cTarMp + "  Sifra       Naziv                   PPP % i iznos   PPU % i iznos    kolicina  jmj    Cijena       Ukupno"
+ 	else
+ 		? space(gnLMarg)
+		?? " R.br " + cTarMp + "  Sifra       Naziv                                     PPP    PPU     kolicina  jmj    Cijena       Ukupno"
+ 	endif
+ 	if fPBarkod
+    		? space(gnLMarg)
+    		?? "       Barkod    "
+ 	endif
+else
+	if (glDistrib .and. cIdTipDok $ "10#21")
+   		cAmb:="  ambal."
+ 	else
+   		cAmb:=""
+ 	endif
+ 	if gVarF=="1"
+   		? space(gnLMarg)
+		?? " R.br " + cTarMp + "  Sifra       Naziv                                    " + JokSBr() + "    kolicina   jmj" + cAmb + "    Cijena    Rabat  Por    Ukupno"
+   		if fPBarkod
+      			? space(gnLMarg)
+			?? "       Barkod    "
+   		endif
+ 	else
+   		if IsTvin()
+			cPR:="Naziv"
+   			cP:="% i iznos"
+   		else
+			cPR:="Naziv         "
+   			cP:=""
+   		endif
+   		IF gRabProc=="D"
+     			? space(gnLMarg)
+			?? " R.br " + cTarMp + "  Sifra      " + cPR + "                             kolicina  jmj" + cAmb + "    Cijena   Rabat   Cijena-Rab  Por" + cP + "    Ukupno"
+   		ELSE
+     			? space(gnLMarg)
+			?? " R.br " + cTarMp + "  Sifra      " + cPR + "                             kolicina  jmj" + cAmb + "    Cijena    Cijena-Rab  Por" + cP + "    Ukupno"
+   		ENDIF
+		if fPBarkod
+      			? space(gnLMarg)
+			?? "       Barkod    "
+   		endif
+ 	endif
+endif
+
+? space(gnLMarg)
+?? m
+
 return
 *}
 

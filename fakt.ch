@@ -317,8 +317,8 @@
 	#include "sc.ch"
 #endif
 
-#define D_FA_VERZIJA "1.w.0.7.97"
-#define D_FA_PERIOD  "11.94-22.12.04"
+#define D_FA_VERZIJA "1.w.0.8.02"
+#define D_FA_PERIOD  "11.94-10.02.05"
 
 
 #ifndef FMK_DEFINED

@@ -421,12 +421,12 @@ ENDIF
 
 if gVarF $ "13"
 	if gVarF=="3"  .and. cidtipdok=="12"
-   		private M:="     ------ ---------- ---------------------------------------- "+IF(!glDistrib.and.BK_SB,"---","")+"---------- ----------- --- ----------- -----------"
+   		private M:="     ------ ---------- ---------- ---------------------------------------- "+IF(!glDistrib.and.BK_SB,"---","")+"---------- ----------- --- ----------- -----------"
  	else
-   		private M:="------ ---------- ---------------------------------------- "+IF(cIdTipDok=="16".or.!glDistrib.and.BK_SB,"---","")+"---------- ----------- ---"+mamb+" ----------- ------ ---- -----------"
+   		private M:="------ ---------- ---------- ---------------------------------------- " + IF(cIdTipDok=="16".or.!glDistrib.and.BK_SB, "---", "") + "---------- ----------- ---" + mamb + " ----------- ------ ---- -----------"
  	endif
 else
-	private M:="------ ---------- ---------------------------------------- ----------- ---"+mamb+" ----------- ------ ----------- ---- -----------"
+	private M:="------ ---------- ---------- ---------------------------------------- ----------- ---" + mamb + " ----------- ------ ----------- ---- -----------"
 endif
 
 if cIdTipDok=="16"
@@ -445,7 +445,9 @@ ENDIF
 lShowSk := .f.
 
 if IsRabati()
-	lShowSk := (Pitanje(,"Prikazati iznos kasa skonto?","N") == "D")
+	if (cIdTipDok $ gcRabDok)
+		lShowSk := (Pitanje(,"Prikazati iznos kasa skonto?","N") == "D")
+	endif
 endif
 
 aDbf:={{"POR","C",10,0},{"IZNOS","N",17,8}}
@@ -474,9 +476,9 @@ endif
 
 if cIdtipdok$"11#27"
 	if IsVindija()
-  		private m:="------ ---------- ---------------------------------------- ------- ------ ------- ----------- --- ----------- ------ -----------"
+  		private m:="------ ---------- ---------- ---------------------------------------- ------ ------- ----------- --- ----------- ------ -----------"
  	else
- 		private m:="------ ---------- ---------------------------------------- ------- ------ ------- ----------- --- ----------- -----------"
+ 		private m:="------ ---------- ---------- ---------------------------------------- ------ ------- ----------- --- ----------- -----------"
  	endif
 endif
 
@@ -709,6 +711,9 @@ do while idfirma==cidfirma .and. idtipdok==cidtipdok .and. brdok==cbrdok .and. !
    	if roba->tip="U"
       		cTxtR:=aMemo[1]
    	endif
+	select tarifa
+	hseek roba->idtarifa
+	select pripr
 	if alltrim(podbr)=="."
     		if prow()>gERedova+48-nLTxt2  // prelaz na sljedecu stranicu ?
       			if prow()>50   // nemoj na pola strane na novu stranu
@@ -731,7 +736,7 @@ do while idfirma==cidfirma .and. idtipdok==cidtipdok .and. brdok==cbrdok .and. !
       			if gVarF $ "13"
          			?? space(10),cTxt1,space(10),transform(kolicina(),pickol),space(3)
       			else
-         			?? cTxt1,space(10),transform(kolicina(),pickol),space(3)
+         			?? PADR(IIF(roba->tip="U","",tarifa->naz),10), cTxt1, space(10), transform(kolicina(), pickol), space(3)
       			endif
     		endif
     		if cTI=="2"
@@ -885,12 +890,12 @@ do while idfirma==cidfirma .and. idtipdok==cidtipdok .and. brdok==cbrdok .and. !
       			if cIdtipdok=="12"
 				?? space(5)
 			endif
-      			?? Rbr(),idroba
+      			?? Rbr(), PADR(IIF(roba->tip="U","",tarifa->naz),10), idroba
       			nCTxtR:=pcol()+1
       			@ prow(),nCTxtR SAY aTxtR[1]
     		endif
 
-    		if !cIdTipDok$"11#27"
+    		if (!cIdTipDok $ "11#27")
       			if !(roba->tip="U") .and. gVarF $ "13"
         			//nCTxtR:=pcol()+1
         			if !fDelphiRB
@@ -910,10 +915,10 @@ do while idfirma==cidfirma .and. idtipdok==cidtipdok .and. brdok==cbrdok .and. !
       				IF gNW=="R"
         				@ prow(),pcol()+1 SAY PADR(ALLTRIM(serbr),5)
       				ENDIF
-      				@ prow(),pcol()+1 SAY roba->idtarifa
+      				//@ prow(),pcol()+1 SAY roba->idtarifa
       				select tarifa
 				hseek roba->idtarifa
-      				@ prow(),pcol()+1 SAY tarifa->opp pict "9999.9%"
+      				@ prow(),pcol() SAY tarifa->opp pict "9999.9%"
       				@ prow(),pcol()+2 SAY tarifa->ppp pict "999.9%"
       				select pripr
      			endif
@@ -1285,37 +1290,42 @@ static function Zagl2()
 *{
 P_COND
 if !fDelphiRB
-? space(gnLMarg); ?? m
-
-if cidtipdok$"11#27"
-  IF gNW=="R"
-   ? space(gnLMarg); ?? " R.br  Sifra      Naziv                              KJ/KG Tarifa    PPP    PPU     kolicina  jmj    Cijena       Ukupno"
-  ELSE
-   ? space(gnLMarg)
-   if IsVindija()
-   	?? " R.br  Sifra      Naziv                                    Tarifa    PPP    PPU     kolicina  jmj    Cijena    Rab.     Ukupno"
-   else
-   	?? " R.br  Sifra      Naziv                                    Tarifa    PPP    PPU     kolicina  jmj    Cijena       Ukupno"
-   endif
-  ENDIF
-else
- if glDistrib .and. cIdTipDok $ "10#21"
-   camb:="  ambal."
- else
-   camb:=""
- endif
- if gVarF $ "13"
-   if gVarF=="3"  .and. cidtipdok=="12"
-     ? space(gnLMarg); ?? "      R.br  Sifra      Naziv                                    "+JokSBr()+"    kolicina   jmj"+camb+"    Cijena    Ukupno"
-   else
-     ? space(gnLMarg); ?? " R.br  Sifra      Naziv                                    "+IF(cIdTipDok=="16","  Car.tar. ",JokSBr())+"    kolicina   jmj"+camb+"    Cijena    Rabat  Por    Ukupno"
-   endif
- else
-   ? space(gnLMarg); ?? " R.br  Sifra      Naziv                                      kolicina  jmj"+camb+"    Cijena   Rabat   Cijena-Rab  Por    Ukupno"
- endif
-endif
-
-? space(gnLMarg); ?? m
+	? space(gnLMarg)
+	?? m
+	cTarMp:=" Tar.u MP "
+	if cIdTipDok $ "11#27"
+  		if gNW=="R"
+   			? space(gnLMarg)
+			?? " R.br " + cTarMp + "  Sifra      Naziv                              KJ/KG     PPP    PPU     kolicina  jmj    Cijena       Ukupno"
+  		else
+   			? space(gnLMarg)
+   			if IsVindija()
+   				?? " R.br " + cTarMp + "  Sifra      Naziv                                      PPP    PPU     kolicina  jmj    Cijena    Rab.     Ukupno"
+   			else
+   				?? " R.br " + cTarMp + "  Sifra      Naziv                                      PPP    PPU     kolicina  jmj    Cijena       Ukupno"
+   			endif
+  		endif
+	else
+ 		if (glDistrib .and. cIdTipDok $ "10#21")
+   			cAmb:="  ambal."
+ 		else
+   			cAmb:=""
+ 		endif
+ 		if gVarF $ "13"
+   			if (gVarF=="3" .and. cIdTipDok=="12")
+     				? space(gnLMarg)
+				?? "      R.br " + cTarMp + "  Sifra      Naziv                                    " + JokSBr() + "    kolicina   jmj" + cAmb + "    Cijena    Ukupno"
+   			else
+     				? space(gnLMarg)
+				?? " R.br " + cTarMp + "  Sifra      Naziv                                    " + IF(cIdTipDok=="16","  Car.tar. ", JokSBr()) + "    kolicina   jmj" + cAmb + "    Cijena    Rabat  Por    Ukupno"
+   			endif
+ 		else
+   			? space(gnLMarg)
+			?? " R.br " + cTarMp + "  Sifra      Naziv                                      kolicina  jmj" + cAmb + "    Cijena   Rabat   Cijena-Rab  Por    Ukupno"
+ 		endif
+	endif
+	? space(gnLMarg)
+	?? m
 endif
 return
 *}

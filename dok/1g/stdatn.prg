@@ -740,12 +740,14 @@ IF prow()>55+gPStranica; FF; endif
 // @ prow(),123 SAY "Str:"+str(++nStr,3);  endif
 nRec:=recno()
 
-?
-? space(gNlMarg)+"Rekapitulacija po tarifama:"
-m:=space(gNlMarg)+"------ ---------- ---------- ----------  ---------- ---------- ---------- ---------- ----------"
-? m
-? space(gNlMarg)+"* Tar *  PPP%    *   PPU%   *    PP%   *    MPV   *    PPP   *   PPU    *   PP     * MPVSAPP *"
-? m
+if !fDelphiRb
+	?
+	? space(gNlMarg)+"Rekapitulacija po tarifama:"
+	m:=space(gNlMarg)+"------ ---------- ---------- ----------  ---------- ---------- ---------- ---------- ----------"
+	? m
+	? space(gNlMarg)+"* Tar *  PPP%    *   PPU%   *    PP%   *    MPV   *    PPP   *   PPU    *   PP     * MPVSAPP *"
+	? m
+endif
 nTot1:=nTot2:=nTot2b:=nTot3:=nTot4:=0
 nTot5:=nTot6:=nTot7:=0
 do while !eof()
@@ -798,17 +800,21 @@ do while !eof()
   enddo
   nTot1+=nu1; nTot2+=nU2;nTot2b+=nU2b; nTot3+=nU3
   nTot4+=nU4
-  ? space(gNlMarg)+cidtarifa
-  @ prow(),pcol()+1   SAY (_OPP*100) pict gpicproc
-  @ prow(),pcol()+1   SAY (_PPP*100) pict gpicproc
-  @ prow(),pcol()+1   SAY (_ZPP*100) pict gpicproc
-  nCol1:=pcol()+1
-  @ prow(),pcol()+1   SAY nu1  pict gpicdem
-  @ prow(),pcol()+1   SAY nu2  pict gpicdem
-  @ prow(),pcol()+1   SAY nu3  pict gpicdem
-  @ prow(),pcol()+1   SAY nu2b pict gpicdem
-  @ prow(),pcol()+1   SAY nu4  pict gpicdem
+  if !fDelphiRb
+  	? space(gNlMarg)+cidtarifa
+  	@ prow(),pcol()+1   SAY (_OPP*100) pict gpicproc
+  	@ prow(),pcol()+1   SAY (_PPP*100) pict gpicproc
+  	@ prow(),pcol()+1   SAY (_ZPP*100) pict gpicproc
+  	nCol1:=pcol()+1
+  	@ prow(),pcol()+1   SAY nu1  pict gpicdem
+  	@ prow(),pcol()+1   SAY nu2  pict gpicdem
+  	@ prow(),pcol()+1   SAY nu3  pict gpicdem
+  	@ prow(),pcol()+1   SAY nu2b pict gpicdem
+  	@ prow(),pcol()+1   SAY nu4  pict gpicdem
+  endif	
 enddo
+
+if !fDelphiRb
 ? m
 ? space(gNlMarg)+"UKUPNO"
 @ prow(),nCol1      SAY nTot1 pict gpicdem
@@ -817,6 +823,7 @@ enddo
 @ prow(),pcol()+1   SAY nTot2b pict gpicdem
 @ prow(),pcol()+1   SAY nTot4 pict gpicdem
 ? m
+endif
 
 return
 *}
