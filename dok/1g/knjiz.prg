@@ -1396,7 +1396,7 @@ else
 		_ambk:=0
    	endif
 	_cijena:=0
-	_idRoba:=SPACE(LEN(_idRoba))
+	//_idRoba:=SPACE(LEN(_idRoba))
 	_kolicina:=0
 endif
 
