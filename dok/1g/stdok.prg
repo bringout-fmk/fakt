@@ -678,7 +678,7 @@ function JokSBr()
 if "U" $ TYPE("BK_SB")
 	BK_SB := .f.
 endif
-return IF(gNW=="R","  KJ/KG ", IF(glDistrib," Tarifa ", IF(BK_SB, "  BARKOD   ","Ser.broj")))
+return IF(gNW=="R","  KJ/KG ", IF(glDistrib,"", IF(BK_SB, "  BARKOD   ","Ser.broj")))
 *}
 
 

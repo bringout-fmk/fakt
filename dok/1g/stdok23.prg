@@ -423,7 +423,7 @@ if gVarF $ "13"
 	if gVarF=="3"  .and. cidtipdok=="12"
    		private M:="     ------ --------- ---------- ---------------------------------------- "+IF(!glDistrib.and.BK_SB,"---","")+"---------- ----------- --- ----------- -----------"
  	else
-   		private M:="------ --------- ---------- ---------------------------------------- " + IF(cIdTipDok=="16".or.!glDistrib.and.BK_SB, "---", "") + "---------- ----------- ---" + mamb + " ----------- ------ ---- -----------"
+   		private M:="------ --------- ---------- ---------------------------------------- " + IF(cIdTipDok=="16".or.!glDistrib.and.BK_SB, "---", "") + IF(!glDistrib, "---------- ", "") + "----------- ---" + mamb + " ----------- ------ ---- -----------"
  	endif
 else
 	private M:="------ --------- ---------- ---------------------------------------- ----------- ---" + mamb + " ----------- ------ ----------- ---- -----------"
@@ -849,7 +849,7 @@ do while idfirma==cidfirma .and. idtipdok==cidtipdok .and. brdok==cbrdok .and. !
        			select pripr
      		endif
 		
-		aSBr := Sjecistr( IF(glDistrib,ROBA->idtarifa,IF(BK_SB,ROBA->barkod,serbr)) , IF(cIdTipDok=="16".or.BK_SB.and.!glDistrib,13,10) )
+		aSBr := Sjecistr( IF(glDistrib, "",IF(BK_SB,ROBA->barkod,serbr)) , IF(cIdTipDok=="16".or.BK_SB.and.!glDistrib,13,10) )
 		if roba->tip="U"
      			aTxtR:=SjeciStr(aMemo[1],iif(gVarF $ "13".and.!idtipdok$"11#27",51,40-IF(gNW=="R".and.idtipdok$"11#27",6,0)))   // duzina naziva + serijski broj
       			if fdelphiRB
@@ -898,7 +898,7 @@ do while idfirma==cidfirma .and. idtipdok==cidtipdok .and. brdok==cbrdok .and. !
     		if (!cIdTipDok $ "11#27")
       			if !(roba->tip="U") .and. gVarF $ "13"
         			//nCTxtR:=pcol()+1
-        			if !fDelphiRB
+        			if !fDelphiRB .and. !glDistrib
           				@ prow(),pcol()+1 SAY aSbr[1]
         			endif
       			endif
@@ -1317,7 +1317,7 @@ if !fDelphiRB
 				?? "      R.br " + cTarMp + " Sifra      Naziv                                    " + JokSBr() + "    kolicina   jmj" + cAmb + "    Cijena    Ukupno"
    			else
      				? space(gnLMarg)
-				?? " R.br " + cTarMp + " Sifra      Naziv                                    " + IF(cIdTipDok=="16","  Car.tar. ", JokSBr()) + "    kolicina   jmj" + cAmb + "    Cijena    Rabat  Por    Ukupno"
+				?? " R.br " + cTarMp + " Sifra      Naziv  " + IF(!glDistrib, "   ", "") + "                               " + IF(cIdTipDok=="16","  Car.tar. ", JokSBr()) + "    kolicina   jmj" + cAmb + "    Cijena    Rabat  Por    Ukupno"
    			endif
  		else
    			? space(gnLMarg)
