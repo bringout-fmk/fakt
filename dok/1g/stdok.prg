@@ -718,53 +718,63 @@ return
  
 function PrStr2T(cIdTipDok)
 *{
-LOCAL cPom2:=""
- IF "U" $ TYPE("fDelphiRB"); fDelphiRB:=.f.; ENDIF
- IF "U" $ TYPE("lUgRab"); lUgRab:=.f.; ENDIF
- private cpom:=""
- private cFaxT:=""
- //cIniName:=PRIVPATH+'fmk.ini'
- cFaxT:=IzFmkIni('UpitFax','FaxText','UpisiProizvoljanText',PRIVPATH)
- if lUgRab
-   cPom2:=SPACE(gnlMarg)+PADC("KUPAC",22)+SPACE(29)+PADC("PRODAVAC",22)
-   if fDelphiRB
-     UzmiIzIni(cIniName,'Varijable','Potpis',cPom2,'WRITE')
-   else
-     if IzFmkIni('UpitFax','Slati','N',PRIVPATH)=='D'
-       ? cFaxT
-     else
-       ? cPom2
-     endif
-   endif
- elseif cidtipdok $ "00#01#19"
+local cPom2:=""
 
-   altd()
-   if fDelphiRB
-     UzmiIzIni(cIniName,'Varijable','Potpis',g10Str2T,'WRITE')
-   else
-     if IzFmkIni('UpitFax','Slati','N',PRIVPATH)=='D'
-       ? cFaxT
-     else
-       ? g10Str2T
-     endif
-   endif
- else
-   cpom:="G"+cidtipdok+"STR2T"
-   if fDelphiRB
-     UzmiIzIni(cIniName,'Varijable','Potpis',&cPom,'WRITE')
-   else
-     if IzFmkIni('UpitFax','Slati','N',PRIVPATH)=='D'
-       ? cFaxT
-     else
-        IF cIdTipDok=="13".and.IzFMKIni("STAMPA","Opresa","N",KUMPATH)=="D".and.;
-           IzFMKINI("STAMPA","Opresa13ka_A4","N",KUMPATH)<>"D"
-          ? SPACE(10)+&cPom
-        ELSE
-          ? &cPom
-        ENDIF
-     endif
-   endif
- endif
+if "U" $ TYPE("fDelphiRB")
+	fDelphiRB:=.f.
+endif
+ 
+if "U" $ TYPE("lUgRab")
+	lUgRab:=.f.
+endif
+
+private cPom:=""
+private cFaxT:=""
+//cIniName:=PRIVPATH+'fmk.ini'
+cFaxT:=IzFmkIni('UpitFax','FaxText','UpisiProizvoljanText',PRIVPATH)
+if lUgRab
+	cPom2:=SPACE(gnlMarg)+PADC("KUPAC",22)+SPACE(29)+PADC("PRODAVAC",22)
+   	if fDelphiRB
+     		UzmiIzIni(cIniName,'Varijable','Potpis',cPom2,'WRITE')
+   	else
+     		if IzFmkIni('UpitFax','Slati','N',PRIVPATH)=='D'
+       			? cFaxT
+     		else
+       			? cPom2
+     		endif
+   	endif
+elseif cIdTipDok $ "00#01#19"
+	if fDelphiRB
+     		UzmiIzIni(cIniName,'Varijable','Potpis',g10Str2T,'WRITE')
+   	else
+     		if IzFmkIni('UpitFax','Slati','N',PRIVPATH)=='D'
+       			? cFaxT
+     		else
+       			? g10Str2T
+     		endif
+   	endif
+else
+	cPom:="G"+cIdTipDok+"STR2T"
+   	if fDelphiRB
+     		UzmiIzIni(cIniName,'Varijable','Potpis',&cPom,'WRITE')
+   	else
+     		if IzFmkIni('UpitFax','Slati','N',PRIVPATH)=='D'
+       			? cFaxT
+     		else
+        		if cIdTipDok=="13".and.IzFMKIni("STAMPA","Opresa","N",KUMPATH)=="D".and.IzFMKINI("STAMPA","Opresa13ka_A4","N",KUMPATH)<>"D"
+          			? SPACE(10)+&cPom
+        		else
+          			? &cPom
+        		endif
+     		endif
+   	endif
+endif
+
+// postavi i dodatni red za tip dok. 10,11,20 i 25
+if !EMPTY(gNazPotStr) .and. cIdTipDok $ "10#11#20#25"
+	? gNazPotStr
+endif
+
 return
 *}
 
