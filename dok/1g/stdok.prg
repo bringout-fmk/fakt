@@ -946,3 +946,32 @@ else
 endif
 *}
 
+
+/*! \fn GetRtmFile(cDefRtm)
+ *  \brief Vraca naziv rtm fajla za stampu
+ */
+function GetRtmFile(cDefRtm)
+*{
+aRtm:={}
+AADD(aRtm, {IzFmkIni("DelphiRb", "Rtm1", "", KUMPATH)})
+AADD(aRtm, {IzFmkIni("DelphiRb", "Rtm2", "", KUMPATH)})
+AADD(aRtm, {IzFmkIni("DelphiRb", "Rtm3", "", KUMPATH)})
+
+// ako nema nista u matrici vrati default
+if LEN(aRtm) == 0
+	return cDefRtm
+endif
+
+private GetList:={}
+
+Box(,6, 30)
+	@ 1+m_x, 2+m_y GET aRtm[1, 1]
+	@ 2+m_x, 2+m_y GET aRtm[1, 2]
+	@ 3+m_x, 2+m_y GET aRtm[1, 3]
+	read
+BoxC()
+
+
+
+return cRet
+*}
