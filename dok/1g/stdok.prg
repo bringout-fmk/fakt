@@ -548,6 +548,10 @@ closeret
  
 function Zagl()
 *{
+if fDelphiRb
+	return
+endif
+
 P_COND
 ? space(gnLMarg); ?? m
 if gVarF=="1"
@@ -574,6 +578,9 @@ return
  
 function NStr0(bZagl)
 *{
+if fDelphiRb
+	return
+endif
 ? space(gnLmarg); ?? m
 ? space(gnLmarg+IF(gVarF=="9".and.gTipF=="2",14,0)),"Ukupno na strani "+str(++nStrana,3)+":"; @ prow(),nCol1  SAY nUk  pict picdem
 ? space(gnLmarg); ?? m
@@ -581,6 +588,7 @@ FF
 Eval(bZagl)
 ? space(gnLmarg+IF(gVarF=="9".and.gTipF=="2",14,0)),"Prenos sa strane "+str(nStrana,3)+":"; @ prow(),nCol1  SAY nUk pict picdem
 ? space(gnLmarg); ?? m
+return
 *}
 
 
@@ -826,7 +834,7 @@ endif
 if lNoviRed==nil
 	lNoviRed:=.t.
 endif
-if !lVratiRPBNiz .and. IzFMkIni("FAKT","IdPartnNaF","N",KUMPATH)=="D"
+if !fDelphiRb .and. !lVratiRPBNiz .and. IzFMkIni("FAKT","IdPartnNaF","N",KUMPATH)=="D"
 	if lNoviRed
       		? (SPACE(n) + PADC("ID:"+cId,30))
     	else
@@ -838,11 +846,12 @@ endif
 if IzFMkIni("FAKT","RegBrPorBr","D",KUMPATH)=="D" .or. lVratiRPBNiz
 	cRegBr:=IzSifK("PARTN","REGB",cId,.f.)
     	cPorBr:=IzSifK("PARTN","PORB",cId,.f.)
-    	if lBrojRjesenja
+    	if !fDelphiRb
+	 if lBrojRjesenja
     		cBrojRjesenja:=IzSifK('PARTN','BRJS',cId,.f.)
 		cBrojUpisa:=IzSifK('PARTN','BRUP',cId,.f.)
-    	endif	
-    	if lNoviRed
+    	 endif	
+    	 if lNoviRed
       		if !EMPTY(cRegBr)
         		? (SPACE(n) + PADC("Ident.br:"+cRegBr,30))
       		endif
@@ -855,7 +864,7 @@ if IzFMkIni("FAKT","RegBrPorBr","D",KUMPATH)=="D" .or. lVratiRPBNiz
 				? (SPACE(n+4) + PADC("Br.Upisa:"+cBrojUpisa,30))
 			endif
 		endif		
-    	else
+    	 else
       		if !EMPTY(cRegBr)
         		if lPar
           			?
@@ -869,7 +878,8 @@ if IzFMkIni("FAKT","RegBrPorBr","D",KUMPATH)=="D" .or. lVratiRPBNiz
         		endif
         		?? (SPACE(n) + PADC("Por.br:"+cPorBr,30))
       		endif
-    	endif
+    	 endif
+	endif
 	if lVratiRPBNiz
       		return {cRegBr,cPorBr}
     	endif
@@ -970,8 +980,6 @@ Box(,6, 30)
 	@ 3+m_x, 2+m_y GET aRtm[1, 3]
 	read
 BoxC()
-
-
 
 return cRet
 *}
