@@ -557,6 +557,13 @@ if !fR
        			_serbr:=""
     		endif
     		
+		if IsRabati()
+			select doks
+			hseek cIdFirma+cIdTipDok+cBrDok
+			select pripr
+			_tiprabat := doks->tiprabat
+		endif
+		
 		Gather2()
     		select fakt
     		skip
