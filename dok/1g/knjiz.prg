@@ -1243,9 +1243,9 @@ Box("#PARAMETRI DOKUMENTA:",10,75)
    if dNajnoviji<>NIL
    	@  m_x+4,m_y+35 SAY "Datum posljednje otpremnice:" GET dNajnoviji WHEN .f. COLOR "GR+/B"
    endif
-   @  m_x+5,m_y+2 SAY "Rok plac.(dana):" GET nRokPl PICT "99" ;
-         WHEN FRokPl("0",.t.)   VALID FRokPl("1",.t.)
-   @  m_x+6,m_y+2 SAY "Datum placanja :" GET _DatPl VALID FRokPl("2",.t.)
+   altd()
+   @ m_x+5,m_y+2 SAY "Rok plac.(dana):" GET nRokPl PICT "99" WHEN FRokPl("0",.t.) VALID FRokPl("1",.t.)
+   @ m_x+6,m_y+2 SAY "Datum placanja :" GET _DatPl VALID FRokPl("2",.t.)
    read
   endif
 
@@ -1876,33 +1876,31 @@ return 1
 
 
 
-/*! \fn FRokPl(cVar,fNovi)
+/*! \fn FRokPl(cVar, fNovi)
  *  \brief Validacija roka placanja
  *  \param cVar
  *  \param fNovi
  */
- 
 function FRokPl(cVar, fNovi)
 *{
 local fOtp:=.f.
+local lRP0:=.t.
 
 if IzFMKINI('FAKT','DatumRokPlacanja','F') == "O"
 	// F  - faktura, O -  otpremnica
  	fOtp := .t.
 endif
+// ako je dozvoljen rok.placanja samo > 0
+if gVFRP0 == "D"
+	lRP0:=.f.
+endif
 
+altd()
 if cVar=="0"   // when
 	if nRokPl<0
      		return .t.   // ne diraj nista
   	endif
-  	// ako je rama-glas
-	if IsRamaGlas()
-		if nRokPl < 1
-			MsgBeep("Unjeti broj dana !")
-			return .f.
-		endif
-	endif
-	if !fNovi
+  	if !fNovi
    		if EMPTY(_datpl)
       			nRokPl:=0
    		else
@@ -1914,18 +1912,18 @@ if cVar=="0"   // when
    		endif
   	endif
 elseif cVar=="1"  // valid
+	// ako je rama-glas
+	if !lRP0
+		if nRokPl < 1
+			MsgBeep("Obavezno unjeti broj dana !")
+			return .f.
+		endif
+	endif
 	if nRokPl<0  // moras unijeti pozitivnu vrijednost ili 0
         	MsgBeep("Unijeti broj dana !")
         	return .f.
   	endif
-	// ako je rama-glas
-	if IsRamaGlas()
-		if nRokPl < 1
-			MsgBeep("Unjeti broj dana !")
-			return .f.
-		endif
-	endif
-  	if nRokPl=0 .and. gRokPl<0
+	if nRokPl=0 .and. gRokPl<0
      		// exclusiv, ako je 0 ne postavljaj rok placanja !
     		_datPl:=ctod("")
   	else

@@ -693,8 +693,9 @@ Box(,22,76,.f.,"VARIJANTE OBRADE DOKUMENATA")
   	@ m_x+18,m_y+2 SAY "Numericki dio broja dokumenta:" GET gNumDio PICT "99"
   	@ m_x+19,m_y+2 SAY "Upozorenje na promjenu radne jedinice:" GET gDetPromRj PICT "@!" VALID gDetPromRj $ "DN"
   	@ m_x+20,m_y+2 SAY "Var.otpr.-12 sa porezom :" GET gV12Por PICT "@!" VALID gV12Por $ "DN"
-  	@ m_x+21,m_y+2 SAY "Var.fakt.po ugovorima (1/2) :" GET gVFU PICT "9" VALID gVFU $ "12"
-  	@ m_x+22,m_y+2 SAY "Koristiti C1 (D/N)?" GET gKarC1 PICT "@!" VALID gKarC1$"DN"
+  	@ m_x+20,m_y+35 SAY "Var.fakt.po ugovorima (1/2) :" GET gVFU PICT "9" VALID gVFU $ "12"
+  	@ m_x+21,m_y+2 SAY "Var.fakt.rok plac. samo vece od 0 :" GET gVFRP0 PICT "@!" VALID gVFRP0 $ "DN"
+	@ m_x+22,m_y+2 SAY "Koristiti C1 (D/N)?" GET gKarC1 PICT "@!" VALID gKarC1$"DN"
   	@ m_x+22,col()+2 SAY "C2 (D/N)?" GET gKarC2 PICT "@!" VALID gKarC2$"DN"
   	@ m_x+22,col()+2 SAY "C3 (D/N)?" GET gKarC3 PICT "@!" VALID gKarC3$"DN"
   	@ m_x+22,col()+2 SAY "N1 (D/N)?" GET gKarN1 PICT "@!" VALID gKarN1$"DN"
@@ -717,6 +718,7 @@ if (LASTKEY()<>K_ESC)
    	WPar("PR",gDetPromRj)
    	WPar("vp",gV12Por)
    	WPar("vu",gVFU)
+   	WPar("v0",gVFRP0)
    	WPar("g1",gKarC1)
    	WPar("g2",gKarC2)
    	WPar("g3",gKarC3)

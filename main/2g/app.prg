@@ -631,7 +631,7 @@ public gMreznoNum:="N"
 public gIMenu:="3", gOdvT2:=0, gV12Por:="N", gVFU:="1"
 public gModemVeza:="N"
 public gFPZagA5:=0, gnTMarg2A5:=3, gnTMarg3A5:=-4, gnTMarg4A5:=0
-
+public gVFRP0:="N"
 public gFNar:=PADR("NAR.TXT",12)
 public gFUgRab:=PADR("UGRAB.TXT",12)
 public gDirektEdit:="N"
@@ -718,6 +718,7 @@ RPar("s7",@gMjStr)
 RPar("tb",@gTabela)
 RPar("tf",@gTipF)
 RPar("vf",@gVarF)
+RPar("v0",@gVFRP0)
 RPar("kr",@gKriz)
 RPar("55",@gKrizA5)
 RPar("51",@gFPzagA5)
