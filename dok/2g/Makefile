@@ -2,9 +2,9 @@ VERZIJA=CDX
 MODUL=fa_2dok
 MMODUL=fakt
 
-include /cl/sigma/Makefile_clipper
+include /sclib/Makefile_clipper
 
-SRCDOSROOT=h:\\cl\\sigma\\fmk\\$(MMODUL)\\dok\\2g\\
+SRCDOSROOT=h:\\dev\\fmk\\$(MMODUL)\\dok\\2g\\
 
 PRGS=frm_inv.prg frm_init.prg rpt_inv.prg rpt_invp.prg
 

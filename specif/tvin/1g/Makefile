@@ -2,9 +2,9 @@ VERZIJA=CDX
 MODUL=fa_1stv
 MMODUL=fakt
 
-include /cl/sigma/Makefile_clipper
+include /sclib/Makefile_clipper
 
-SRCDOSROOT=h:\\cl\\sigma\\fmk\\$(MMODUL)\\specif\\tvin\\1g\\
+SRCDOSROOT=h:\\dev\\fmk\\$(MMODUL)\\specif\\tvin\\1g\\
 
 PRGS=tvin.prg
 

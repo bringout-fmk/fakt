@@ -2,9 +2,9 @@ VERZIJA=CDX
 MODUL=fa_1kon
 MMODUL=fakt
 
-include /cl/sigma/Makefile_clipper
+include /sclib/Makefile_clipper
 
-SRCDOSROOT=h:\\cl\\sigma\\fmk\\$(MMODUL)\\konsig\\1g\\
+SRCDOSROOT=h:\\dev\\fmk\\$(MMODUL)\\konsig\\1g\\
 
 PRGS=konsig.prg
 

@@ -2,9 +2,9 @@ VERZIJA=CDX
 MODUL=fa_1sql
 MMODUL=fakt
 
-include /cl/sigma/Makefile_clipper
+include /sclib/Makefile_clipper
 
-SRCDOSROOT=h:\\cl\\sigma\\fmk\\$(MMODUL)\\sql\\1g\\
+SRCDOSROOT=h:\\dev\\fmk\\$(MMODUL)\\sql\\1g\\
 
 PRGS=sql.prg
 

@@ -2,9 +2,9 @@ VERZIJA=CDX
 MODUL=fa_1svi
 MMODUL=fakt
 
-include /cl/sigma/Makefile_clipper
+include /sclib/Makefile_clipper
 
-SRCDOSROOT=h:\\cl\\sigma\\fmk\\$(MMODUL)\\specif\\vindija\\1g\\
+SRCDOSROOT=h:\\dev\\fmk\\$(MMODUL)\\specif\\vindija\\1g\\
 
 PRGS=distrib.prg vindija.prg mnu_sif.prg
 

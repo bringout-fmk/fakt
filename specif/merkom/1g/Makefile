@@ -2,9 +2,9 @@ VERZIJA=CDX
 MODUL=fa_1smk
 MMODUL=fakt
 
-include /cl/sigma/Makefile_clipper
+include /sclib/Makefile_clipper
 
-SRCDOSROOT=h:\\cl\\sigma\\fmk\\$(MMODUL)\\specif\\merkom\\1g\\
+SRCDOSROOT=h:\\dev\\fmk\\$(MMODUL)\\specif\\merkom\\1g\\
 
 PRGS=merkom.prg
 

@@ -2,9 +2,9 @@ VERZIJA=CDX
 MODUL=fa_1sta
 MMODUL=fakt
 
-include /cl/sigma/Makefile_clipper
+include /sclib/Makefile_clipper
 
-SRCDOSROOT=h:\\cl\\sigma\\fmk\\$(MMODUL)\\stampa\\1g\\
+SRCDOSROOT=h:\\dev\\fmk\\$(MMODUL)\\stampa\\1g\\
 
 PRGS=stampa.prg mnu_izvj.prg
 

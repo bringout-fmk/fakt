@@ -2,9 +2,9 @@ VERZIJA=CDX
 MODUL=fa_1rpt
 MMODUL=fakt
 
-include /cl/sigma/Makefile_clipper
+include /sclib/Makefile_clipper
 
-SRCDOSROOT=h:\\cl\\sigma\\fmk\\$(MMODUL)\\rpt\\1g\\
+SRCDOSROOT=h:\\dev\\fmk\\$(MMODUL)\\rpt\\1g\\
 
 PRGS=izvj.prg rpt_lag.prg rpt_lag2.prg rpt_kart.prg mnu_izvj.prg rpt_nar.prg 
 

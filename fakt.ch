@@ -317,18 +317,18 @@
 	#include "sc.ch"
 #endif
 
-#define D_FA_VERZIJA "1.w.0.7.93"
-#define D_FA_PERIOD  "11.94-27.05.04"
+#define D_FA_VERZIJA "1.w.0.7.94"
+#define D_FA_PERIOD  "11.94-09.08.04"
 
 
 #ifndef FMK_DEFINED
-	#include "\cl\sigma\fmk\fmk.ch"
+	#include "\dev\fmk\AF\cl-AF\fmk.ch"
 #endif
 
 #ifdef CDX
-	#include "\cl\sigma\fmk\fakt\cdx\fakt.ch"
+	#include "\dev\fmk\fakt\cdx\fakt.ch"
 #else
-	#include "\cl\sigma\fmk\fakt\ax\fakt.ch"
+	#include "\dev\fmk\fakt\ax\fakt.ch"
 #endif
 
 #define I_ID 1

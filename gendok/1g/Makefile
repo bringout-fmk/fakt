@@ -2,9 +2,9 @@ VERZIJA=CDX
 MODUL=fa_1gdo
 MMODUL=fakt
 
-include /cl/sigma/Makefile_clipper
+include /sclib/Makefile_clipper
 
-SRCDOSROOT=h:\\cl\\sigma\\fmk\\$(MMODUL)\\gendok\\1g\\
+SRCDOSROOT=h:\\dev\\fmk\\$(MMODUL)\\gendok\\1g\\
 
 PRGS=gendok.prg mnu_gdok.prg
 

@@ -2,9 +2,9 @@ VERZIJA=CDX
 MODUL=fa_1ugo
 MMODUL=fakt
 
-include /cl/sigma/Makefile_clipper
+include /sclib/Makefile_clipper
 
-SRCDOSROOT=h:\\cl\\sigma\\fmk\\$(MMODUL)\\ugov\\1g\\
+SRCDOSROOT=h:\\dev\\fmk\\$(MMODUL)\\ugov\\1g\\
 
 PRGS=genug.prg p_ugov.prg mnu_ugov.prg mnu_tir.prg 
 
