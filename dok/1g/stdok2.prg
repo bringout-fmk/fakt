@@ -547,7 +547,7 @@ if fDelphiRB
    AADD(aDBf,{ 'SIFRA'               , 'C' ,  10 ,  0 })
    AADD(aDBf,{ 'BARKOD'              , 'C' ,  13 ,  0 })
    if gDest
-   AADD(aDBf,{ 'DEST'                , 'C' ,  20 ,  0 })
+   	AADD(aDBf,{ 'DEST'                , 'C' ,  20 ,  0 })
    endif
    AADD(aDBf,{ 'NAZIV'               , 'C' ,  200 ,  0 })
    AADD(aDBf,{ 'JMJ'                 , 'C' ,   3 ,  0 })
@@ -560,7 +560,8 @@ if fDelphiRB
    AADD(aDBf,{ 'RABAT'               , 'C' ,  12 ,  0 })
    AADD(aDBf,{ 'POR'                 , 'C' ,  12 ,  0 })
    AADD(aDBf,{ 'UKUPNO'              , 'C' ,  12 ,  0 })
-   AADD(aDBf,{ 'CijenaMR'               , 'C' ,  12 ,  0 })  // cijena-rabat
+   AADD(aDBf,{ 'IDTARIFA'            , 'C' ,   6 ,  0 })
+   AADD(aDBf,{ 'CijenaMR'            , 'C' ,  12 ,  0 })  // cijena-rabat
 
 
    nSek0 := SECONDS()
@@ -588,12 +589,8 @@ else
  StZaglav2(gVlZagl,PRIVPATH)
 endif
 
-
-
 cIdTipdok:=idtipdok
 cBrDok:=brdok
-
-
 
 StKupac(fDelphiRb)
 
@@ -633,7 +630,7 @@ do while idfirma==cidfirma .and. idtipdok==cidtipdok .and. brdok==cbrdok .and. !
       			append blank
       			replace rbr with pripr->(Rbr())
       			replace naziv with KonvZnWin(@cTxt1, gKonvZnWin), kolicina with transform(PRIPR->(kolicina()),pickol)
-      			select pripr
+			select pripr
     		else
      			? space(gnLMarg); ?? Rbr(),""
      			if gVarF=="1"
@@ -772,7 +769,8 @@ do while idfirma==cidfirma .and. idtipdok==cidtipdok .and. brdok==cbrdok .and. !
        				append blank // prvo se stavlja naziv!!
        				replace naziv with pripr->(trim(roba->naz)+iif(!empty(ck1+ck2)," "+ck1+" "+ck2,"")+Katbr()+IspisiPoNar())
        				replace serbr with pripr->serbr
-       				select pripr
+       				replace idtarifa with roba->idtarifa
+				select pripr
      			endif
 		endif
 		if !fDelphiRB
