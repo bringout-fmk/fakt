@@ -675,8 +675,10 @@ return
  
 function JokSBr()
 *{
-IF "U"$TYPE("BK_SB"); BK_SB:=.f.; ENDIF
-return IF(gNW=="R","  KJ/KG ",IF(glDistrib," Tarifa ",IF(BK_SB,"  BARKOD   ","Ser.broj")))
+if "U" $ TYPE("BK_SB")
+	BK_SB := .f.
+endif
+return IF(gNW=="R","  KJ/KG ", IF(glDistrib," Tarifa ", IF(BK_SB, "  BARKOD   ","Ser.broj")))
 *}
 
 
