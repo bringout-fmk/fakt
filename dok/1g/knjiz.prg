@@ -1460,15 +1460,11 @@ if (nRbr==1 .and. VAL(_podbr)<1)
 			GetTRabat(@cTipRab)
 			_tiprabat := PADR(cTipRab, 10)
 			// uzmi broj dana 
-			if (gDodPar == "1")
-				nRokPl := GetDays(gcRabDef, cTipRab)
-			else
-				nRokPl := 0
-			endif
 		else
 			// uzmi vrijednost rabata sa prvog polja
 			cTipRab := PADR(_tiprabat, 10)
 		endif
+		nRokPl := GetDays(gcRabDef, cTipRab)
 	endif
 
     	@  m_x+3,m_y+2 SAY PADR(aPom[ASCAN(aPom,{|x|_IdTipdok==LEFT(x,2)})],40)

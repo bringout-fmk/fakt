@@ -668,8 +668,10 @@ AADD(aDBf,{ 'M1'        , 'C' ,   1 ,  0 })
 AADD(aDBf,{ 'TXT'       , 'M' ,  10 ,  0 })
 AADD(aDBf,{ 'IDVRSTEP'  , 'C' ,   2 ,  0 })
 AADD(aDBf,{ 'IDPM'      , 'C' ,  15 ,  0 })
-AADD(aDBf,{ 'TIPRABAT'  , 'C' ,  10 ,  0 })
-AADD(aDBf,{ 'SKONTO'    , 'N' ,  10 ,  5 })
+if IsRabati()
+	AADD(aDBf,{ 'TIPRABAT'  , 'C' ,  10 ,  0 })
+	AADD(aDBf,{ 'SKONTO'    , 'N' ,  10 ,  5 })
+endif
 
 if (nArea==-1 .or. nArea==(F_FAKT))
 	//FAKT.DBF

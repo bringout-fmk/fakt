@@ -911,24 +911,25 @@ return left(cTxt,i)
 function ParsMemo(cTxt)
 *{
 local aMemo:={}
-local i,cPom,fPoc
+local i, cPom, fPoc
 
- fPoc:=.f.
- cPom:=""
- for i:=1 to len(cTxt)
-   if  substr(cTxt,i,1)==Chr(16)
-     fPoc:=.t.
-   elseif  substr(cTxt,i,1)==Chr(17)
-     fPoc:=.f.
-     AADD(aMemo,cPom)
-     cPom:=""
-   elseif fPoc
-      cPom:=cPom+substr(cTxt,i,1)
-   endif
- next
+fPoc:=.f.
+cPom:=""
+for i:=1 to len(cTxt)
+	if  substr(cTxt,i,1)==Chr(16)
+     		fPoc:=.t.
+   	elseif  substr(cTxt,i,1)==Chr(17)
+     		fPoc:=.f.
+     		AADD(aMemo,cPom)
+     		cPom:=""
+   	elseif fPoc
+      		cPom:=cPom+substr(cTxt,i,1)
+   	endif
+next
 
 return aMemo
 *}
+
 
 // u ovoj funkciji se nalazi metoda utvrdjivanja narednog izdanja novina
 /*! \fn Odredi_IdRoba()

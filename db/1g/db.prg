@@ -1101,7 +1101,7 @@ do while !eof()
   	
 	if IsRabati()
 		if (cIdTipDok $ gcRabDok)
-			_field->IdRabat := PADR(gcRabDef, 10)
+			_field->idrabat := PADR(gcRabDef, 10)
 			_field->tiprabat := PADR(cTipRabat, 10)
   		endif
 	endif
