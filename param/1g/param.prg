@@ -1471,6 +1471,7 @@ g26Str2T:=PADR(g26Str2T,132)
 g26Str2R:=PADR(g26Str2R,132)
 g27Str2T:=PADR(g27Str2T,132)
 g27Str2R:=PADR(g27Str2R,132)
+gNazPotStr:=PADR(gNazPotStr,132)
 
 Box(,22,76,.f.,"ISPIS NAZIVA DOKUMENATA I TEKSTA NA KRAJU (POTPIS), 1.strana")
 	@ m_x+ 1,m_y+2 SAY "06 - Tekst"      GET g06Str
@@ -1516,7 +1517,8 @@ Box(,19,76,.f.,"ISPIS NAZIVA DOKUMENATA I TEKSTA NA KRAJU (POTPIS), 2.strana")
   	@ m_x+16,m_y+2 SAY "27 - Tekst"      GET g27Str
   	@ m_x+17,m_y+2 SAY "27 - Potpis TXT" GET g27Str2T PICT"@S50"
   	@ m_x+18,m_y+2 SAY "27 - Potpis RTF" GET g27Str2R PICT"@S50"
-  	read
+  	@ m_x+19,m_y+2 SAY "Dodatni red    " GET gNazPotStr PICT"@S50"
+	read
 BoxC()
 
 if gKodnaS=="8"
@@ -1559,6 +1561,7 @@ if gKodnaS=="8"
         g27Str:=KSTo852(TRIM(g27Str)  )
         g27Str2T:=KSTo852(TRIM(g27Str2T))
         g27Str2R:=(TRIM(g27Str2R))
+	gNazPotStr:=KSTo852(TRIM(gNazPotStr))
 else
         g10Str:=KSTo7(TRIM(g10Str)  )
         g10Str2T:=KSTo7(TRIM(g10Str2T))
@@ -1599,6 +1602,7 @@ else
         g27Str:=KSTo7(TRIM(g27Str)  )
         g27Str2T:=KSTo7(TRIM(g27Str2T))
         g27Str2R:=(TRIM(g27Str2R))
+	gNazPotStr:=KSTo7(TRIM(gNazPotStr))
 endif
 
 if (LASTKEY()<>K_ESC)
@@ -1636,6 +1640,7 @@ if (LASTKEY()<>K_ESC)
   	WPar("xj",@g26Str2T)
   	WPar("xk",@g26Str2R)
   	WPar("xo",@g27Str)
+	WPar("uc",@gNazPotStr)
   	WPar("xp",@g27Str2T)
   	WPar("xr",@g27Str2R)
   	WPar("r1",@g10Str2R)
