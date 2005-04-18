@@ -1039,7 +1039,8 @@ do while idfirma==cidfirma .and. idtipdok==cidtipdok .and. brdok==cbrdok .and. !
     		else
 			nRab+=round( Cijena*kolicina()*PrerCij()*Rabat/100 , nZaokr)
     			if IsRabati() .and. lShowSk
-				nSkto += round((nUk - nRab) * Skonto/100, nZaokr)
+				altd()
+				nSkto += round(((round(PrerCij()*kolicina()*cijena*nKurs,nZaokr)) - (round(Cijena*Kolicina()*PrerCij()*Rabat/100,nZaokr))) * Skonto/100, nZaokr)
 			endif
 		endif
     
