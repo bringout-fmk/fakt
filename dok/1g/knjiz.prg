@@ -581,8 +581,9 @@ endif
 Kol:={}; for i:=1 to len(ImeKol); AADD(Kol,i); next
 
 private cTipVPC:="1"
+
 if gVarC $ "123"
-  cTipVPC:=IzFmkIni("FAKT","TekVPC","1",SIFPATH)
+	cTipVPC:=IzFmkIni("FAKT","TekVPC","1",SIFPATH)
 endif
 
 
@@ -607,21 +608,26 @@ closeret
  
 function TekDokument()
 *{
-local nRec,aMemo,ctxt
+local nRec
+local aMemo
+local cTxt
+
 cTxt:=padr("-",60)
-if reccount2()<>0
-  nRec:=recno()
-  go top
-  aMemo:=ParsMemo(txt)
-  if len(aMemo)>=5
-    cTxt:=trim(amemo[3])+" "+trim(amemo[4])+","+trim(amemo[5])
-  else
-    cTxt:=""
-  endif
-  cTxt:=padr(cTxt,30)
-  cTxt:=" "+alltrim(cTxt)+", Broj: "+idfirma+"-"+idtipdok+"-"+brdok+", od "+dtoc(datdok)+" "
-  go nRec
+
+if RecCount2()<>0
+	nRec:=recno()
+  	go top
+  	aMemo:=ParsMemo(txt)
+  	if len(aMemo)>=5
+    		cTxt:=trim(amemo[3])+" "+trim(amemo[4])+","+trim(amemo[5])
+  	else
+    		cTxt:=""
+  	endif
+  	cTxt:=padr(cTxt,30)
+  	cTxt:=" "+alltrim(cTxt)+", Broj: "+idfirma+"-"+idtipdok+"-"+brdok+", od "+dtoc(datdok)+" "
+  	go nRec
 endif
+
 @ m_x+0,m_y+2 SAY cTxt
 return
 *}
@@ -634,15 +640,18 @@ return
 function Rbr()
 *{
 local cRet
-if eof()
-   cret:=""
-elseif val(pripr->podbr)==0
-   cRet:=pripr->rbr+")"
+
+if EOF()
+	cRet:=""
+elseif VAL(pripr->podbr)==0
+   	cRet:=pripr->rbr+")"
 else
-   cRet:=pripr->rbr+"."+alltrim(pripr->podbr)
+   	cRet:=pripr->rbr+"."+alltrim(pripr->podbr)
 endif
+
 return padr(cRet,6)
 *}
+
 
 /*! \fn Roba()
  *  \brief 
@@ -651,24 +660,25 @@ return padr(cRet,6)
 function Roba()
 *{
 local cRet
+
 cRet:=trim(StIdROBA())+" "
-if eof()
-  cRet:=""
+if EOF()
+  	cRet:=""
 elseif alltrim(podbr)=="."
-  aMemo:=ParsMemo(txt)
-  cRet:=aMemo[1]
+  	aMemo:=ParsMemo(txt)
+  	cRet:=aMemo[1]
 else
- dbselectarr(F_ROBA)
- if gNovine=="D"
-   seek PADR(LEFT(PRIPR->idroba,gnDS),LEN(PRIPR->idroba))
-   if !FOUND() .or. ROBA->tip!="S"
-     seek PRIPR->IdRoba
-   endif
- else
-   seek PRIPR->IdRoba
- endif
- dbselectarr(F_PRIPR)
- cRet+=ROBA->naz
+	DbSelectArr(F_ROBA)
+ 	if gNovine=="D"
+   		seek PADR(LEFT(PRIPR->idroba,gnDS),LEN(PRIPR->idroba))
+   		if !FOUND() .or. ROBA->tip!="S"
+     			seek PRIPR->IdRoba
+   		endif
+ 	else
+   		seek PRIPR->IdRoba
+ 	endif
+ 	DbSelectArr(F_PRIPR)
+ 	cRet+=ROBA->naz
 endif
 return padr(cRet,30)
 *}
@@ -685,12 +695,13 @@ nBrStavki := 0
 cIdFirma := IdFirma
 cIdTipDok := IdTipDok
 cBrDok    := BrDok
+
 go top
 HSEEK cIdFirma+cIdTipDok+cBrDok
 do while ! eof () .and. (IdFirma==cIdFirma) .and. (IdTipDok==cIdTipDok) ;
       .AND. (BrDok==cBrDok)
-   nBrStavki++
-   SKIP
+	nBrStavki++
+   	SKIP
 enddo
 GO nTekRec
 return IIF(nBrStavki==1, .t., .f.)
@@ -725,7 +736,7 @@ do case
 			return DE_CONT
 		endif
 	case Ch==K_ENTER .and. gTBDir="N"
-    		Box("ist",19,75,.f.)
+    		Box("ist", 19, 75, .f.)
    		Scatter()
     		nRbr:=RbrUnum(_Rbr)
     		// PushHT("Elementi")
@@ -881,6 +892,7 @@ endcase
 return DE_CONT
 *}
 
+
 function BrisiStavku()
 *{
 cSecur:=SecurR(KLevel,"BRISIGENDOK")
@@ -890,20 +902,21 @@ if m1="X" .and. ImaSlovo ("X", cSecur)   // pripr->m1
        return 0
 endif
 if Pitanje(,"Zelite izbrisati ovu stavku ?","D")=="D"
-        if (RecCount2 () == 1) .OR. JedinaStavka ()
-           SELECT DOKS
-           HSEEK PRIPR->IdFirma+PRIPR->IdTipDok+PRIPR->BrDok
-           if FOUND () .AND. DOKS->M1 == "Z"
-              // dokument zapisan samo u DOKS-u
-              DELETE
-           endif
-           SELECT PRIPR
+	if (RecCount2 () == 1) .OR. JedinaStavka ()
+        	SELECT DOKS
+           	HSEEK PRIPR->IdFirma+PRIPR->IdTipDok+PRIPR->BrDok
+           	if FOUND () .AND. DOKS->M1 == "Z"
+              		// dokument zapisan samo u DOKS-u
+              		DELETE
+           	endif
+           	SELECT PRIPR
         endif
 	delete
         return 1
 endif
 return 0
 *}
+
 
 function ProdjiKrozStavke()
 *{	
@@ -914,135 +927,143 @@ select PRIPR
 Box(,19,75,.f.,"")
 nDug:=0
 do while !eof()
-   skip; nTR2:=RECNO(); skip-1
-   Scatter()
-   nRbr:=RbrUnum(_Rbr)
-   //@ m_x+1,m_y+1 CLEAR to m_x+21,m_y+76
-   BoxCLS()
-   if EditPripr(.f.)==0
-     exit
-   endif
-   nDug+=round( _Cijena*_kolicina*PrerCij()*(1-_Rabat/100)*(1+_Porez/100) , ZAOKRUZENJE)
-   @ m_x+20,m_y+2 SAY "ZBIR DOKUMENTA:"
-   @ m_x+20,col()+1 SAY nDug PICTURE '9 999 999 999.99'
-   inkeySc(10)
-   select PRIPR
-   Gather()
-   PrCijSif()      // ako treba, promijeni cijenu u sifrarniku
-   go nTR2
- enddo
- PopWA()
+	skip
+	nTR2:=RECNO()
+	skip-1
+   	Scatter()
+   	nRbr:=RbrUnum(_Rbr)
+   	//@ m_x+1,m_y+1 CLEAR to m_x+21,m_y+76
+   	BoxCLS()
+   	if EditPripr(.f.)==0
+     		exit
+   	endif
+   	nDug+=round( _Cijena*_kolicina*PrerCij()*(1-_Rabat/100)*(1+_Porez/100) , ZAOKRUZENJE)
+   	@ m_x+20,m_y+2 SAY "ZBIR DOKUMENTA:"
+   	@ m_x+20,col()+1 SAY nDug PICTURE '9 999 999 999.99'
+   	InkeySc(10)
+   	select PRIPR
+   	Gather()
+   	PrCijSif()      // ako treba, promijeni cijenu u sifrarniku
+   	go nTR2
+enddo
+PopWA()
 BoxC()
 
 return
 *}
+
 
 function NoveStavke()
 *{
 
-nDug:=nPrvi:=0
+nDug:=0
+nPrvi:=0
+
 go top
-do while .not. eof() // kompletan nalog sumiram
-   nDug+=round( Cijena*Kolicina*PrerCij()*(1-Rabat/100)*(1+Porez/100) , ZAOKRUZENJE)
-   skip
+do while .not. EOF() // kompletan nalog sumiram
+	nDug += Round( Cijena*Kolicina*PrerCij()*(1-Rabat/100)*(1+Porez/100) , ZAOKRUZENJE)
+   	skip
 enddo
+
 go bottom
-Box("knjn",19,77,.f.,"Unos novih stavki")
+
+Box("knjn", 19, 77, .f., "Unos novih stavki")
+
 do while .t.
-   Scatter()
-   if alltrim(_podbr)=="." .and. empty(_idroba)
-    nRbr:=RbrUnum(_Rbr)
-    _PodBr:=" 1"
-   elseif _podbr>=" 1"
-    nRbr:=RbrUnum(_Rbr)
-    _podbr:= str(val(_podbr)+1,2)
-   else
-    nRbr:=RbrUnum(_Rbr)+1
-    _PodBr:="  "
-   endif
-   BoxCLS()
-   _c1:=_c2:=_c3:=SPACE(20)
-   _opis:=space(120)
-   _n1:=_n2:=0
-   if EditPripr(.t.)==0
-     exit
-   endif
-   nDug+=round( _Cijena*_Kolicina*PrerCij()*(1-_Rabat/100)*(1+_Porez/100) , ZAOKRUZENJE)
-   @ m_x+20,m_y+2 SAY "ZBIR DOKUMENTA:"
-   @ m_x+20,col()+2 SAY nDug PICTURE '9 999 999 999.99'
-   inkeySc(10)
-   select PRIPR
-   APPEND BLANK
-   Gather()
-   PrCijSif()      // ako treba, promijeni cijenu u sifrarniku
+	Scatter()
+   	if AllTrim(_podbr)=="." .and. empty(_idroba)
+    		nRbr:=RbrUnum(_Rbr)
+    		_PodBr:=" 1"
+   	elseif _podbr>=" 1"
+    		nRbr:=RbrUnum(_Rbr)
+    		_podbr:= str(val(_podbr)+1,2)
+   	else
+    		nRbr:=RbrUnum(_Rbr)+1
+    		_PodBr:="  "
+   	endif
+   	BoxCLS()
+   	_c1:=_c2:=_c3:=SPACE(20)
+   	_opis:=space(120)
+   	_n1:=_n2:=0
+   	if EditPripr(.t.) == 0
+     		exit
+   	endif
+   	nDug += Round(_Cijena*_Kolicina*PrerCij()*(1-_Rabat/100)*(1+_Porez/100) , ZAOKRUZENJE)
+   	@ m_x+20,m_y+2 SAY "ZBIR DOKUMENTA:"
+   	@ m_x+20,col()+2 SAY nDug PICTURE '9 999 999 999.99'
+   	InkeySc(10)
+   	select PRIPR
+   	APPEND BLANK
+   	Gather()
+   	PrCijSif()      // ako treba, promijeni cijenu u sifrarniku
 enddo
 BoxC()
 
 return
 *}
+
 
 function PrintDok()
 *{
 
 SpojiDuple()  // odradi ovo prije stampanja !
-
 SrediRbr()
 O_Edit() // sredirbr zatvori pripremu !!
-
 if gTBDir=="D"
-   if eof()
-     skip -1
-   endif
+	if eof()
+     		skip -1
+   	endif
 endif
 
-if !CijeneOK ("Stampanje")
-   return DE_REFRESH
+if !CijeneOK("Stampanje")
+   	return DE_REFRESH
 endif
-if EMPTY(NarBrDok ())
-   return DE_REFRESH
+
+if EMPTY( NarBrDok() )
+   	return DE_REFRESH
 endif
 
 if IzFMKIni("FAKT","StampajSveIzPripreme","N",PRIVPATH)=="D"
-  lSSIP99:=.t.
+  	lSSIP99:=.t.
 else
-  lSSIP99:=.f.
+  	lSSIP99:=.f.
 endif
 
 lJos:=.t.
+
 if lSSIP99
-
-  if IzFMKIni('FAKT','DelphiRB','N')=='D'
-    UzmiIzIni(EXEPATH+"FMK.INI",'DELPHIRB','Aktivan',"0",'WRITE')
-  else
-    StartPrint(.t.)
-  endif
-
-  if IzFMKIni("STAMPA","Opresa","N",KUMPATH)=="D"
-    gRPL_gusto()
-    nDokumBr:=0
-  endif
+	if IzFMKIni('FAKT','DelphiRB','N')=='D'
+    		UzmiIzIni(EXEPATH+"FMK.INI",'DELPHIRB','Aktivan',"0",'WRITE')
+  	else
+    		StartPrint(.t.)
+  	endif
+	
+	if IzFMKIni("STAMPA","Opresa","N",KUMPATH)=="D"
+    		gRPL_gusto()
+    		nDokumBr:=0
+  	endif
 endif
 do while lJos
-  if gNovine=="D" .or. (IzFMKINI('FAKT','StampaViseDokumenata','N')=="D")
-    lJos:=StViseDokMenu()
-    if LEN(gFiltNov)==0
-      GO TOP
-      exit
-    endif
-  else
-    lJos:=.f.
-  endif
-  cPom:=idtipdok
-  StampTXT(nil,cPom,nil)
-  O_Edit()
+	if gNovine=="D" .or. (IzFMKINI('FAKT','StampaViseDokumenata','N')=="D")
+    		lJos:=StViseDokMenu()
+    		if LEN(gFiltNov)==0
+      			GO TOP
+      			exit
+    		endif
+  	else
+    		lJos:=.f.
+  	endif
+  	cPom:=idtipdok
+  	StampTXT(nil,cPom,nil)
+  	O_Edit()
 enddo
 if lSSIP99
-  if IzFMKIni("STAMPA","Opresa","N",KUMPATH)=="D"
-    gRPL_normal()
-  endif
-  if ! (IzFMKIni('FAKT','DelphiRB','N')=='D')
-    EndPrint()
-  endif
+	if IzFMKIni("STAMPA","Opresa","N",KUMPATH)=="D"
+    		gRPL_normal()
+  	endif
+  	if !(IzFMKIni('FAKT','DelphiRB','N')=='D')
+    		EndPrint()
+  	endif
 endif
 
 lSSIP99:=.f.
@@ -1062,7 +1083,8 @@ INDEX ON &cSort1 to "TMPPRIPR" for &cFilt1
 GO TOP
 StartPrint()
 ? "FAKT,",date(),", REKAPITULACIJA ZADUZENJA MALOPRODAJNIH OBJEKATA"
-? ; IspisFirme(PRIPR->idfirma)
+? 
+IspisFirme(PRIPR->idfirma)
 ?
 do while !EOF()
   cLinija:=IzSifK('PARTN','LINI',idpartner,.f.)
@@ -1139,18 +1161,19 @@ function EdOtpr(Ch)
 *{
 local cDn:="N",nRet:=DE_CONT
 do case
- case Ch==ASC(" ") .or. Ch==K_ENTER
-   Beep(1)
-   if m1=" "    // iz DOKS
-     replace m1 with "*"
-     nSuma+=Iznos
-   else
-     replace m1 with " "
-     nSuma-=Iznos
-   endif
-   @ m_x+1,m_Y+55 SAY nSuma pict picdem
-   nRet:=DE_REFRESH
+	case Ch==ASC(" ") .or. Ch==K_ENTER
+   		Beep(1)
+   		if m1=" "    // iz DOKS
+     			replace m1 with "*"
+     			nSuma+=Iznos
+   		else
+     			replace m1 with " "
+     			nSuma-=Iznos
+   		endif
+   		@ m_x+1,m_Y+55 SAY nSuma pict picdem
+   		nRet:=DE_REFRESH
 endcase
+
 return nRet
 *}
 
@@ -1172,26 +1195,30 @@ select pripr
 set order to 1
 go top
 if RecCount2 () == 0
-   return
+	return
 endif
 
 nRbr:=999
 go bottom
 do while !bof()
-  replace rbr with str(--nRbr,3)
-  skip -1
+  	replace rbr with str(--nRbr,3)
+  	skip -1
 enddo
 
 nRbr:=0
 do while !eof()
-  skip;nTrec:=recno(); skip -1
-  if empty(podbr)
-    replace rbr with str(++nRbr,3)
-  else
-    if nRbr==0; nRbr:=1; endif
-    replace rbr with str(nRbr,3)
-  endif
-  go nTrec
+  	skip
+	nTrec:=recno()
+	skip -1
+  	if Empty(podbr)
+   		replace rbr with str(++nRbr,3)
+  	else
+    		if nRbr==0
+			nRbr:=1
+		endif
+    		replace rbr with str(nRbr,3)
+  	endif
+  	go nTrec
 enddo
 
 go top
@@ -1199,29 +1226,34 @@ go top
 Scatter()
 _txt1:=_txt2:=_txt3a:=_txt3b:=_txt3c:=""
 if IzFmkIni('FAKT','ProsiriPoljeOtpremniceNa50','N',KUMPATH)=='D'
-  _BrOtp:=space(50)
+	_BrOtp:=space(50)
 else
-  _BrOtp:=space(8)
+  	_BrOtp:=space(8)
 endif
 _DatOtp:=ctod(""); _BrNar:=space(8); _DatPl:=ctod("")
 if cVezOtpr==nil
-  cVezOtpr:= ""
+  	cVezOtpr:= ""
 endif
 aMemo:=ParsMemo(_txt)
 if len(aMemo)>0
-  _txt1:=aMemo[1]
+  	_txt1:=aMemo[1]
 endif
 if len(aMemo)>=2
-  _txt2:=aMemo[2]
+  	_txt2:=aMemo[2]
 endif
 if len(aMemo)>=5
-  _txt3a:=aMemo[3]; _txt3b:=aMemo[4]; _txt3c:=aMemo[5]
+  	_txt3a:=aMemo[3]
+	_txt3b:=aMemo[4]
+	_txt3c:=aMemo[5]
 endif
 if len(aMemo)>=9
- _BrOtp:=aMemo[6]; _DatOtp:=ctod(aMemo[7]); _BrNar:=amemo[8]; _DatPl:=ctod(aMemo[9])
+ 	_BrOtp:=aMemo[6]
+	_DatOtp:=ctod(aMemo[7])
+	_BrNar:=amemo[8]
+	_DatPl:=ctod(aMemo[9])
 endif
 if len(aMemo)>=10 .and. !EMPTY(aMemo[10])
-  cVezOtpr := aMemo[10]
+  	cVezOtpr := aMemo[10]
 endif
 nRbr:=1
 
@@ -1418,7 +1450,7 @@ else
 	nPom:=ASCAN(aPom,{|x|_IdTipdok==LEFT(x,2)})
 endif
 
-if (nRbr==1 .and. VAL(_podbr)<1)
+if (nRbr==1 .and. VAL(_podbr) < 1)
 	if gNW$"DR"
    		@ m_x+1,m_y+2 SAY gNFirma
    		if RecCount2()==0
@@ -1444,24 +1476,21 @@ if (nRbr==1 .and. VAL(_podbr)<1)
 		MsgBeep(cZabrana)
 		return 0
 	endif
-	
+	altd()
 	// varijanta rabatnih skala
 	if IsRabati() .and. (_idtipdok $ gcRabDok)
 		
 		if fNovi 
 			lSkonto := Pitanje(, "Unositi kasu skonto (D/N)?", "N") == "D"
-		else
-			if _skonto <> 0
-				lSkonto := .t.
-			endif
-		endif
-		
-		if fNovi
 			GetTRabat(@cTipRab)
 			_tiprabat := PADR(cTipRab, 10)
-			// uzmi broj dana 
+	
 		else
-			// uzmi vrijednost rabata sa prvog polja
+			if ( _skonto == 0 )
+				lSkonto := .f.
+			else
+				lSkonto := .t.
+			endif
 			cTipRab := PADR(_tiprabat, 10)
 		endif
 		nRokPl := GetDays(gcRabDef, cTipRab)
@@ -1638,6 +1667,7 @@ if (nRbr==1 .and. VAL(_podbr)<1)
   	
 	ChSveStavke(fNovi)
 else
+	altd()
 	@ m_x+1,m_y+2 SAY gNFirma 
 	?? "  RJ:", _IdFirma
    	@ m_x+4,m_y+2 SAY PADR(aPom[ASCAN(aPom,{|x|_IdTipdok==LEFT(x,2)})],35)
@@ -1646,6 +1676,36 @@ else
    	@ m_x+4,m_y+col()+2 SAY "Broj: "
 	?? _BrDok
    	_txt2:=""
+	// varijanta rabatnih skala
+	if IsRabati() .and. (_idtipdok $ gcRabDok)
+		if fNovi 
+			skip -1
+			if ( _skonto == 0 )
+				lSkonto := .f.
+			else 
+				lSkonto := .t.
+			endif
+			if Empty(cTipRab)
+				if Empty(_tiprabat)
+					GetTRabat(@cTipRab)
+				else
+					cTipRab := _tiprabat	
+				endif
+			endif
+			
+			skip 1
+			_tiprabat := PADR(cTipRab, 10)
+		else
+			if ( _skonto == 0 )
+				lSkonto := .f.
+			else
+				lSkonto := .t.
+			endif
+			cTipRab := PADR(_tiprabat, 10)
+		endif
+		nRokPl := GetDays(gcRabDef, cTipRab)
+	endif
+
 endif
 
 if (gNovine=="D" .and. fNovi)
@@ -1664,6 +1724,8 @@ else
 endif
 
 cDSFINI:=IzFMKINI('SifRoba','DuzSifra','10',SIFPATH)
+
+altd()
 
 if fID_J
 	@ m_x+13,m_y+2 SAY "Artikal  " GET _IdRoba_J PICT "@!S10" WHEN {|| _idroba_J:=padr(_Idroba_J,VAL(cDSFINI)),W_Roba()} valid {|| _Idroba_J:=iif(len(trim(_Idroba_J))<10,left(_Idroba_J,10),_Idroba_J), V_Roba(),GetUsl(fnovi), NijeDupla(fNovi)}
@@ -1758,6 +1820,8 @@ else
    	endif
 endif
 
+
+
 private trabat:="%"
 
 if (gSamokol!="D")  // samo kolicine
@@ -1792,6 +1856,25 @@ if (gSamokol!="D")  // samo kolicine
 endif //gSamokol=="D"  // samo kolicine
 
 read
+
+
+if IsRamaGlas()
+	altd()
+	nArr := SELECT()
+	nRN := RecNo()
+	O__SDIM
+	select _sdim
+	append blank
+	Scatter()
+	EnterDim()
+	_idfirma := pripr->idfirma
+	_idtipdok := pripr->idtipdok
+	_brdok := pripr->brdok
+	_idroba := pripr->idroba
+	Gather()
+	select (nArr)
+	go nRN
+endif
 
 ESC_return 0
 
