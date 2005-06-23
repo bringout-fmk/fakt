@@ -1862,11 +1862,11 @@ if IsRamaGlas()
 	altd()
 	nArr := SELECT()
 	nRN := RecNo()
-	O__SDIM
+	// O__SDIM
 	select _sdim
 	append blank
 	Scatter()
-	EnterDim()
+	// EnterDim()
 	_idfirma := pripr->idfirma
 	_idtipdok := pripr->idtipdok
 	_brdok := pripr->brdok
@@ -1993,7 +1993,16 @@ if cVar=="0"   // when
        				nRokPl:=_datpl-_datdok
      			endif
    		endif
-  	endif
+  
+
+/// benjaminjahic, 23.06.2005
+      else  // ako je novi, a koristi se rok placanja iz Partn/ROKP
+		// i ne koriste se Rabatne skale - odnosno ili jedno ili drugo
+		if IzFmkIni("Svi", "RokPlIzSifPartn", "N", SIFPATH) = "D" .and. !IsRabati()
+			nRokPl:=IzSifk("PARTN", "ROKP", _IdPartner, .f.)
+   		endif
+      endif
+
 elseif cVar=="1"  // valid
 	// ako je rama-glas
 	if !lRP0

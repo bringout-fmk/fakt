@@ -4,8 +4,12 @@
  * ----------------------------------------------------------------
  * $Source: c:/cvsroot/cl/sigma/fmk/fakt/fakt.ch,v $
  * $Author: sasavranic $ 
- * $Revision: 1.91 $
+ * $Revision: 1.92 $
  * $Log: fakt.ch,v $
+ 
+ * Revision 1.92  2004/06/23 09:27:02  benjaminjahic
+ * Mogucnost koristenja broja dana za rok placanja iz sif.partnera 
+ 
  * Revision 1.91  2004/05/27 09:27:02  sasavranic
  * Koristenje zajednickog sifranika valuta
  *
@@ -317,8 +321,8 @@
 	#include "sc.ch"
 #endif
 
-#define D_FA_VERZIJA "1.w.0.8.08"
-#define D_FA_PERIOD  "11.94-27.05.05"
+#define D_FA_VERZIJA "1.w.0.8.09"
+#define D_FA_PERIOD  "11.94-23.06.05"
 
 
 #ifndef FMK_DEFINED

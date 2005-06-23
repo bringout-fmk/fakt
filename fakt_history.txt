@@ -2,6 +2,13 @@
 FAKT 
 ======
 
+23.06.2005, 1.w.0.8.09, benjamin.jahic@sigma-com.net
+===========================================
+Programske dorade
+------------------
+- Uvedena opcija koristene rok placanja iz sif.partnera
+
+
 11.05.2004, 1.w.0.7.92, sasa@sigma-com.net
 ===========================================
 Programske dorade
