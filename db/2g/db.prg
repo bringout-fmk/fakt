@@ -937,6 +937,10 @@ if glDistrib
 	endif
 endif
 
+if IsRamaGlas()
+	SDimDB_Cre()
+endif
+
 return
 *}
 
