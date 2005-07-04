@@ -58,3 +58,6 @@
 #xcommand O_BARKOD  => select(F_BARKOD);  use (PRIVPATH+"BARKOD"); set order to tag "1"
 
 #xcommand O_POMGN  => select(F_POMGN);  use (KUMPATH+"POMGN"); set order to tag "4"
+#xcommand O_SDIM => select(F_SDIM); use (KUMPATH+"SDIM"); set order to tag "1"
+#xcommand O__SDIM => select(F__SDIM); use (PRIVPATH+"_SDIM"); set order to tag "1"
+
