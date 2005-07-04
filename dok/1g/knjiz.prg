@@ -1858,24 +1858,6 @@ endif //gSamokol=="D"  // samo kolicine
 read
 
 
-if IsRamaGlas()
-	altd()
-	nArr := SELECT()
-	nRN := RecNo()
-	// O__SDIM
-	select _sdim
-	append blank
-	Scatter()
-	// EnterDim()
-	_idfirma := pripr->idfirma
-	_idtipdok := pripr->idtipdok
-	_brdok := pripr->brdok
-	_idroba := pripr->idroba
-	Gather()
-	select (nArr)
-	go nRN
-endif
-
 ESC_return 0
 
 //if (_idTipDok=="11")
