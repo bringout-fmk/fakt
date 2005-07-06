@@ -387,6 +387,8 @@ endif
 SETKEY(K_SH_F1,{|| Calc()})
 Izbor:=1
 
+CheckROnly(KUMPATH + "\FAKT.DBF")
+
 O_DOKS
 SELECT doks
 TrebaRegistrovati(20)
@@ -499,6 +501,16 @@ if (MPar37("/KONVERT", goModul))
 	goModul:oDataBase:KonvZN()
 	goModul:quit(.f.)
 endif
+// RN TC
+if (MPar37("/TC", goModul))
+	if LEFT(self:cP5,3)=="/RN"
+		? "RN TC..."
+		RunRnTC()
+		goModul:quit()
+	endif
+endif
+
+
 return
 *}
 
