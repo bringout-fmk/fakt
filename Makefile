@@ -14,6 +14,7 @@ all:
 	make -C ostalo/1g
 	make -C specif/vindija/1g
 	make -C specif/merkom/1g
+	make -C specif/ramag/1g
 	make -C rpt/1g
 	make -C param/1g
 	make -C specif/tvin/1g
@@ -38,6 +39,7 @@ clean:
 	make -C razdb/1g clean
 	make -C ostalo/1g clean
 	make -C specif/rudnik/1g clean
+	make -C specif/ramag/1g clean
 	make -C specif/vindija/1g clean
 	make -C specif/merkom/1g clean
 	make -C rpt/1g clean
@@ -49,4 +51,10 @@ clean:
 	make -C dok/2g clean
 	make -C gendok/1g clean
 	make -C 1g clean
+
+zip:
+	cd 1g; make zip
+
+commit:
+	cd 1g; make commit
 
