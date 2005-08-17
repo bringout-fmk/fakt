@@ -1,5 +1,6 @@
 VERZIJA=CDX
 MODUL=FAKT
+MODVER=1.w.0.8.10
 
 PRGS=/dev/fmk/fakt/main/1g/e.prg
 CS=
@@ -11,7 +12,7 @@ FMK_LIBS=fmk_roba.lib fmk_svi.lib fmk_pi.lib fmk_evn.lib fmk_sec.lib fmk_mes.lib
 
 SCLIB_LIBS=sc1g_arh.lib sc1g_ba.lib sc1g_cui.lib sc1g_db.lib sc1g_os.lib sc1g_ost.lib sc1g_par.lib sc1g_pr.lib sc1g_sif.lib sc1g_sql.lib sc1g_ut.lib sc2g_app.lib sc2g_db.lib sc1g_rpt.lib sc2g_cui.lib sc1g_key.lib ka_s1pf.lib
 
-MODUL_LIBS=fa_1ma.lib fa_2ma.lib fa_2db.lib fa_1db.lib fa_1upl.lib fa_1ugo.lib fa_1dok.lib fa_1sif.lib fa_1rof.lib fa_1rdb.lib fa_1sql.lib fa_1ost.lib fa_1svi.lib fa_1rpt.lib fa_1smk.lib fa_1par.lib fa_1stv.lib fa_1sta.lib fa_1kon.lib fa_2dok.lib fa_1gdo.lib fa_1rud.lib
+MODUL_LIBS=fa_1ma.lib fa_2ma.lib fa_2db.lib fa_1db.lib fa_1upl.lib fa_1ugo.lib fa_1dok.lib fa_1sif.lib fa_1rof.lib fa_1rdb.lib fa_1sql.lib fa_1ost.lib fa_1svi.lib fa_1rpt.lib fa_1smk.lib fa_1par.lib fa_1stv.lib fa_1sta.lib fa_1kon.lib fa_2dok.lib fa_1gdo.lib fa_1rud.lib fa_1srg.lib
 
 PREF2=lib $(LIB_DOS_DEST)
 FMKLIBCMD=$(addprefix $(PREF2), $(SCLIB_LIBS) $(FMK_LIBS) $(MODUL_LIBS) )
@@ -34,15 +35,18 @@ mod: $(OBJS)
 	cp e.exe $(EXEDEST)/$(MODUL).EXE
 
 zip:
-	rm -f /z/fmk/$(MODUL).zip
-	/sclib/zip.sh z:\\fmk\\$(MODUL).zip ..\\chs\\\*.chs \\dev\\fmk\\AF\\cl-AF\\roba\\\*.chs \\dev\\fmk\\fakt\\template\\\*.txt $(EXEDOSDEST)\\$(MODUL).EXE 
+	/sclib/zip.sh h:\\cs\\fmk\\binary\\$(MODUL).zip ..\\chs\\\*.chs \\dev\\fmk\\AF\\cl-AF\\roba\\\*.chs \\dev\\fmk\\fakt\\template\\\*.txt $(EXEDOSDEST)\\$(MODUL).EXE 
 
+commit:
+	/sclib/commit.sh $(MODVER) h:\\cs\\FMK\\binary\\$(MODUL).zip
 
 clean:
 	rm -f *.obj *.OBJ
 	rm -f $(OBJS) I$(MODULH).OBJ *.bak *.BAK
 
-
-
 sfx:
 	/cygdrive/p/bat/SFXMA.BAT fakt
+
+7exe:
+	/sclib/7exe.sh h:\\cs\\fmk\\binary\\$(MODUL).exe ..\\chs\\\*.chs \\dev\\fmk\\af\\cl-af\\svi\\\*.chs ..\\template\\\*.txt $(EXEDOSDEST)\\$(MODUL).EXE
+
