@@ -881,32 +881,37 @@ cTabela:="N"
 cBrFakDok:=SPACE(40)
 cImeKup:=space(20)
 qqPartn:=space(20)
+qqOpc:=space(20)
 RPar("TA",@cTabela)
 RPar("KU",@cImeKup)
 RPar("sk",@qqPartn)
 RPar("BD",@cBrFakDok)
 qqPartn:=padr(qqPartn,20)
-
 qqTipDok:=padr(qqTipDok,40)
+qqOpc:=padr(qqOpc,20)
+
 do while .t.
- cIdFirma:=padr(cidfirma,2)
- @ m_x+1,m_y+2 SAY "RJ            " GET cIdFirma valid {|| empty(cidfirma) .or. cidfirma==gfirma .or. P_RJ(@cIdFirma) }
- @ m_x+2,m_y+2 SAY "Tip dokumenta " GET qqTipDok pict "@!S20"
- @ m_x+3,m_y+2 SAY "Od datuma "  get dDatOd
- @ m_x+3,col()+1 SAY "do"  get dDatDo
- @ m_x+6,m_y+2 SAY "Uslov po sifri kupca (prazno svi)"  get qqPartn pict "@!"
- @ m_x+7,m_y+2 SAY "Broj dokumenta (prazno svi)"  get cBrFakDok pict "@!"
- read
- ESC_BCR
- aUslBFD:=Parsiraj(cBrFakDok,"BRDOK","C")
- aUslSK:=Parsiraj(qqPartn,"IDPARTNER","C")
- aUslTD:=Parsiraj(qqTipdok,"IdTipdok","C")
- altd()
- if aUslBFD<>NIL .and. aUslSK<>NIL .and. aUslTD<>NIL; exit; endif
+	cIdFirma:=padr(cidfirma,2)
+ 	@ m_x+1,m_y+2 SAY "RJ            " GET cIdFirma valid {|| empty(cidfirma) .or. cidfirma==gfirma .or. P_RJ(@cIdFirma) }
+ 	@ m_x+2,m_y+2 SAY "Tip dokumenta " GET qqTipDok pict "@!S20"
+ 	@ m_x+3,m_y+2 SAY "Od datuma "  get dDatOd
+ 	@ m_x+3,col()+1 SAY "do"  get dDatDo
+ 	@ m_x+6,m_y+2 SAY "Uslov po nazivu kupca (prazno svi)"  get qqPartn pict "@!"
+ 	@ m_x+7,m_y+2 SAY "Broj dokumenta (prazno svi)"  get cBrFakDok pict "@!"
+ 	@ m_x+9,m_y+2 SAY "Opcina (prazno sve)" get qqOpc pict "@!"
+ 	read
+ 	ESC_BCR
+ 	aUslBFD:=Parsiraj(cBrFakDok,"BRDOK","C")
+ 	//aUslSK:=Parsiraj(qqPartn,"IDPARTNER")
+ 	aUslTD:=Parsiraj(qqTipdok,"IdTipdok","C")
+ 	if aUslBFD<>NIL .and. aUslTD<>NIL
+		exit
+	endif
 enddo
 
 qqTipDok:=trim(qqTipDok)
 qqPartn:=trim(qqPartn)
+
 Params2()
 WPar("c1",cIdFirma)
 WPar("d1",dDatOd)
@@ -914,7 +919,8 @@ WPar("d2",dDatDo)
 WPar("TA",cTabela)
 WPar("sk",qqPartn)
 WPar("BD",cBrFakDok)
-select params; use
+select params
+use
 
 BoxC()
 
@@ -923,23 +929,20 @@ select doks
 Private cFilter:=".t."
 
 if !empty(dDatOd) .or. !empty(dDatDo)
-  cFilter+=".and.  datdok>="+cm2str(dDatOd)+".and. datdok<="+cm2str(dDatDo)
+  	cFilter+=".and.  datdok>="+cm2str(dDatOd)+".and. datdok<="+cm2str(dDatDo)
 endif
 
 if cTabela=="D"  // tabel prikaz
-
-
-  cFilter+=".and. IdFirma="+cm2str(cIdFirma)
-
+	cFilter+=".and. IdFirma="+cm2str(cIdFirma)
 endif
 
 if !empty(cBrFakDok)
   cFilter+=".and."+aUslBFD
 endif
 
-if !empty(qqPartn)
-  cFilter+=".and."+aUslSK
-endif
+//if !empty(qqPartn)
+//  cFilter+=".and."+aUslSK
+//endif
 
 if !empty(qqTipDok)
   cFilter+=".and."+aUslTD
@@ -962,7 +965,6 @@ EOF CRET
 //gaZagFix:={3,3}
 START PRINT CRET
 
-
 private nStrana:=0
 private m:="---- ------ -------------------------- ------------ ------------ ------------"
 ZaglRPartn()
@@ -976,42 +978,69 @@ ncol1:=10
 nTIznos:=nTRabat:=0
 private cRezerv:=" "
 do while !eof() .and. IdFirma=cIdFirma
+	// uslov po partneru
+	if !Empty(qqPartn)
+  		if !(doks->partner=qqPartn)
+			skip
+			loop
+		endif
+  	endif
+  	
+	nIznos:=0
+	nRabat:=0
+  	cIdPartner:=idpartner
+  	select partn
+	hseek cIdPartner
+	select doks
+	
+	// uslov po opcini
+	if !Empty(qqOpc)
+		if AT(partn->idops, qqOpc)==0
+			skip
+			loop
+		endif
+	endif
+	
+  	do while !eof() .and. IdFirma=cIdFirma .and. idpartner==cIdpartner
+		if DinDem==left(ValBazna(),3)
+      			nIznos+=ROUND(iznos,ZAOKRUZENJE)
+      			nRabat+=ROUND(Rabat,ZAOKRUZENJE)
+    		else
+      			nIznos+=ROUND(iznos*UBaznuValutu(datdok),ZAOKRUZENJE)
+      			nRabat+=ROUND(Rabat*UBaznuValutu(datdok),ZAOKRUZENJE)
+    		endif
+		skip
+  	enddo
+	if prow()>61
+  		FF
+		ZaglRPartn()
+  	endif
 
-  nIznos:=0; nRabat:=0
-  cIdPartner:=idpartner
-  do while !eof() .and. IdFirma=cIdFirma .and. idpartner==cIdpartner
+  	? space(gnLMarg)
+	?? Str(++nC,4)+".", cIdPartner, partn->naz
+  	nCol1:=pcol()+1
+  	@ prow(),pcol()+1 SAY str(nIznos+nRabat,12,2)
+  	@ prow(),pcol()+1 SAY str(nRabat,12,2)
+  	@ prow(),pcol()+1 SAY str(nIznos,12,2)
 
-    if DinDem==left(ValBazna(),3)
-      nIznos+=ROUND(iznos,ZAOKRUZENJE)
-      nRabat+=ROUND(Rabat,ZAOKRUZENJE)
-    else
-      nIznos+=ROUND(iznos*UBaznuValutu(datdok),ZAOKRUZENJE)
-      nRabat+=ROUND(Rabat*UBaznuValutu(datdok),ZAOKRUZENJE)
-    endif
-
-    skip
-  enddo
-
-  if prow()>61; FF; ZaglRPartn(); endif
-
-  select partn; hseek cidpartner; select doks
-  ? space(gnLMarg); ?? Str(++nC,4)+".", cidpartner, partn->naz
-  nCol1:=pcol()+1
-  @ prow(),pcol()+1 SAY str(nIznos+nRabat,12,2)
-  @ prow(),pcol()+1 SAY str(nRabat,12,2)
-  @ prow(),pcol()+1 SAY str(nIznos,12,2)
-
-  ntIznos+=nIznos
-  ntRabat+=nRabat
+  	ntIznos+=nIznos
+  	ntRabat+=nRabat
 enddo
 
-if prow()>59; FF; ZaglRPartn(); endif
-? space(gnLMarg);?? m
-? space(gnLMarg); ?? " Ukupno"
-  @ prow(),nCol1    SAY str(ntIznos+ntRabat,12,2)
-  @ prow(),pcol()+1 SAY str(ntRabat,12,2)
-  @ prow(),pcol()+1 SAY str(ntIznos,12,2)
-? space(gnLMarg);?? m
+if prow()>59
+	FF
+	ZaglRPartn()
+endif
+
+? space(gnLMarg)
+?? m
+? space(gnLMarg)
+?? " Ukupno"
+@ prow(),nCol1 SAY str(ntIznos+ntRabat,12,2)
+@ prow(),pcol()+1 SAY str(ntRabat,12,2)
+@ prow(),pcol()+1 SAY str(ntIznos,12,2)
+? space(gnLMarg)
+?? m
 
 set filter to  // ukini filter
 
