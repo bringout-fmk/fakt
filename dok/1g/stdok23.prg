@@ -354,6 +354,8 @@ else
 	O_Edit()
 endif
 
+altd()
+
 lDoks2:=(IzFMKINI("FAKT","Doks2","N",KUMPATH)=="D")
 
 BK_SB:=(IzFMKINI("FAKT","BARKODumjestoSERIJSKOGBROJA","N",KUMPATH)=="D")
@@ -1424,47 +1426,69 @@ if fdelphiRb
      UzmiIzIni(cIniName,'Varijable','KANTON',cKanton,'WRITE')
    endif
 else
-  IF IzFMKINI("FAKT","KupacDesno","N",KUMPATH)=="D"
-    if !(cidtipdok$"10#06#16")
-      @ prow(),6 SAY padr(Mjesto(cIdFirma)+", "+dtoc(ddatdok)+" godine",36)
-      ?
-    endif
-    ? space(5+38),gPB_ON+"旼컴컴컴컴"+IF(cIdTipDok=="06","KONSIGNATOR:","컴컴컴컴컴컴")+"컴컴컴컴커"+gPB_OFF
-    // ---------------- MS 07.04.01
-    // ? space(6),gPB_ON+padc(alltrim(cTxt3a),30)+gPB_OFF
-    aPom:=Sjecistr(cTxt3a,30)
-    ? space(7+38);gPB_ON();?? padc(alltrim(aPom[1]),30);gPB_OFF()
-    for i:=2 to len(aPom)
-      ? space(7+38);gPB_ON();?? padc(alltrim(aPom[i]),30);gPB_OFF()
-    next
-    // ---------------- MS 07.04.01
-    ? space(6+38),gPB_ON+padc(alltrim(cTxt3b),30)+gPB_OFF
-    ? space(6+38),gPB_ON+padc(alltrim(cTxt3c),30)+gPB_OFF
-    IF glDistrib .and. !EMPTY(cidpm)
-      ? space(6+38),gPB_ON+padc(alltrim(cidpm),30)+gPB_OFF
-    ENDIF
-    ? space(5+38),gPB_ON+"읕컴컴컴컴컴컴컴컴컴컴컴컴컴컴켸"+gPB_OFF
-  ELSE
-    if !(cidtipdok$"10#06#16") .and. (!lPharmaMAC .or. !(cidtipdok$"20#19"))
-      @ prow(),36 SAY padl(Mjesto(cIdFirma)+", "+dtoc(ddatdok)+" godine",36)
-      ?
-    endif
-    ? space(5),gPB_ON+"旼컴컴컴컴"+IF(cIdTipDok=="06","KONSIGNATOR:","컴컴컴컴컴컴")+"컴컴컴컴커"+gPB_OFF
-    // ---------------- MS 07.04.01
-    // ? space(6),gPB_ON+padc(alltrim(cTxt3a),30)+gPB_OFF
-    aPom:=Sjecistr(cTxt3a,30)
-    ? space(7);gPB_ON();?? padc(alltrim(aPom[1]),30);gPB_OFF()
-    for i:=2 to len(aPom)
-      ? space(7);gPB_ON();?? padc(alltrim(aPom[i]),30);gPB_OFF()
-    next
-    // ---------------- MS 07.04.01
-    ? space(6),gPB_ON+padc(alltrim(cTxt3b),30)+gPB_OFF
-    ? space(6),gPB_ON+padc(alltrim(cTxt3c),30)+gPB_OFF
-    IF glDistrib .and. !EMPTY(cidpm)
-      ? space(6),gPB_ON+padc(alltrim(cidpm),30)+gPB_OFF
-    ENDIF
-    ? space(5),gPB_ON+"읕컴컴컴컴컴컴컴컴컴컴컴컴컴컴켸"+gPB_OFF
-  ENDIF
+	IF IzFMKINI("FAKT","KupacDesno","N",KUMPATH)=="D"
+    		if !(cidtipdok$"10#06#16")
+      			@ prow(),6 SAY padr(Mjesto(cIdFirma)+", "+dtoc(ddatdok)+" godine",36)
+      			?
+    		endif
+    		? space(5+38),gPB_ON+"旼컴컴컴컴"+IF(cIdTipDok=="06","KONSIGNATOR:","컴컴컴컴컴컴")+"컴컴컴컴커"+gPB_OFF
+    		// ---------------- MS 07.04.01
+    		// ? space(6),gPB_ON+padc(alltrim(cTxt3a),30)+gPB_OFF
+    		aPom:=Sjecistr(cTxt3a,30)
+    		? space(7+38)
+		gPB_ON()
+		?? padc(alltrim(aPom[1]),30)
+		gPB_OFF()
+    		for i:=2 to len(aPom)
+      			? space(7+38)
+			gPB_ON()
+			?? padc(alltrim(aPom[i]),30)
+			gPB_OFF()
+    		next
+    		// ---------------- MS 07.04.01
+    		? space(6+38),gPB_ON+padc(alltrim(cTxt3b),30)+gPB_OFF
+    		? space(6+38),gPB_ON+padc(alltrim(cTxt3c),30)+gPB_OFF
+    		IF glDistrib .and. !EMPTY(cidpm)
+      			? space(6+38),gPB_ON+padc(alltrim(cidpm),30)+gPB_OFF
+   		ENDIF
+    		? space(5+38),gPB_ON+"읕컴컴컴컴컴컴컴컴컴컴컴컴컴컴켸"+gPB_OFF
+  	ELSE
+    		altd()
+		if !(cidtipdok$"10#06#16") .and. (!lPharmaMAC .or. !(cidtipdok$"20#19"))
+      			//@ prow(),36 SAY padl(Mjesto(cIdFirma)+", "+dtoc(ddatdok)+" godine",36)
+      			?
+			?
+			?
+			?
+			?
+			?
+			?
+			?
+			? padl(Mjesto(cIdFirma)+", "+dtoc(ddatdok)+" godine",36)
+      			?
+    		endif
+    		? space(5),gPB_ON+"旼컴컴컴컴"+IF(cIdTipDok=="06","KONSIGNATOR:","컴컴컴컴컴컴")+"컴컴컴컴커"+gPB_OFF
+    		// ---------------- MS 07.04.01
+    		// ? space(6),gPB_ON+padc(alltrim(cTxt3a),30)+gPB_OFF
+    		aPom:=Sjecistr(cTxt3a,30)
+    		? space(7)
+		gPB_ON()
+		?? padc(alltrim(aPom[1]),30)
+		gPB_OFF()
+    		for i:=2 to len(aPom)
+      			? space(7)
+			gPB_ON()
+			?? padc(alltrim(aPom[i]),30)
+			gPB_OFF()
+    		next
+    		// ---------------- MS 07.04.01
+    		? space(6),gPB_ON+padc(alltrim(cTxt3b),30)+gPB_OFF
+    		? space(6),gPB_ON+padc(alltrim(cTxt3c),30)+gPB_OFF
+    		IF glDistrib .and. !EMPTY(cidpm)
+      			? space(6),gPB_ON+padc(alltrim(cidpm),30)+gPB_OFF
+    		ENDIF
+    		? space(5),gPB_ON+"읕컴컴컴컴컴컴컴컴컴컴컴컴컴컴켸"+gPB_OFF
+  	ENDIF
 endif
 
 cStr:=cidtipdok+" "+trim(cbrdok)

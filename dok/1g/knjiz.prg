@@ -758,7 +758,8 @@ do case
         	NoveStavke()
         	return DE_REFRESH
 	case Ch=K_CTRL_P
-        	PrintDok()
+        	altd()
+		PrintDok()
         	return DE_REFRESH
 	case Ch==K_ALT_L
         	close all

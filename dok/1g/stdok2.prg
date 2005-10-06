@@ -1440,27 +1440,62 @@ if fdelphiRb
      UzmiIzIni(cIniName,'Varijable','KANTON',cKanton,'WRITE')
    endif
 else
- IF IzFMKINI("FAKT","KupacDesno","N",KUMPATH)=="D"
-   ?? space(5); ?? PADR(ALLTRIM(iif(gFPzag<>99 .or. gnTMarg2=1,cMjesto,"")),39); gPB_ON(); ?? padc(alltrim(aPom[1]),30); gPB_OFF()
-   for i:=2 to len(aPom)
-     ? space(5+39);gPB_ON();?? padc(alltrim(aPom[i]),30);gPB_OFF()
-   next
-   ?  space(5); ?? PADR(ALLTRIM(iif(gFPzag=99 .and. gnTMarg2=2,cMjesto,"")),39) ;gPB_ON();?? padc(alltrim(cTxt3b),30);gPB_OFF()
-   ?  space(5); ?? PADR(ALLTRIM(iif(gFPzag=99 .and. gnTMarg2=3,cMjesto,"")),39) ;gPB_ON();?? padc(alltrim(cTxt3c),30);gPB_OFF()
-   IF glDistrib .and. !EMPTY(cidpm)
-     ?  space(5+39); gPB_ON();?? padc(alltrim(cIDPM),30);gPB_OFF()
-   ENDIF
- ELSE
-   ?? space(5);gPB_ON();?? padc(alltrim(aPom[1]),30);gPB_OFF(); ?? iif(gFPzag<>99 .or. gnTMarg2=1,cMjesto,"")
-   for i:=2 to len(aPom)
-     ? space(5);gPB_ON();?? padc(alltrim(aPom[i]),30);gPB_OFF()
-   next
-   ?  space(5);gPB_ON();?? padc(alltrim(cTxt3b),30);gPB_OFF(); ?? iif(gFPzag=99 .and. gnTMarg2=2,cMjesto,"")
-   ?  space(5);gPB_ON();?? padc(alltrim(cTxt3c),30);gPB_OFF(); ?? iif(gFPzag=99 .and. gnTMarg2=3,cMjesto,"")
-   IF glDistrib .and. !EMPTY(cidpm)
-     ?  space(5);gPB_ON();?? padc(alltrim(cIDPM),30);gPB_OFF()
-   ENDIF
- ENDIF
+	IF IzFMKINI("FAKT","KupacDesno","N",KUMPATH)=="D"
+   		?? space(5)
+		?? PADR(ALLTRIM(iif(gFPzag<>99 .or. gnTMarg2=1,cMjesto,"")),39)
+		gPB_ON()
+		?? padc(alltrim(aPom[1]),30); gPB_OFF()
+   		for i:=2 to len(aPom)
+     			? space(5+39)
+			gPB_ON()
+			?? padc(alltrim(aPom[i]),30)
+			gPB_OFF()
+   		next
+   		?  space(5)
+		?? PADR(ALLTRIM(iif(gFPzag=99 .and. gnTMarg2=2,cMjesto,"")),39)
+		gPB_ON()
+		?? padc(alltrim(cTxt3b),30)
+		gPB_OFF()
+   		?  space(5)
+		?? PADR(ALLTRIM(iif(gFPzag=99 .and. gnTMarg2=3,cMjesto,"")),39)
+		gPB_ON()
+		?? padc(alltrim(cTxt3c),30)
+		gPB_OFF()
+   		IF glDistrib .and. !EMPTY(cidpm)
+     			? space(5+39)
+			gPB_ON()
+			?? padc(alltrim(cIDPM),30)
+			gPB_OFF()
+   		ENDIF
+ 	ELSE
+   		?? space(5)
+		gPB_ON()
+		?? padc(alltrim(aPom[1]),30)
+		gPB_OFF()
+		?? iif(gFPzag<>99 .or. gnTMarg2=1,cMjesto,"")
+   		for i:=2 to len(aPom)
+     			? space(5)
+			gPB_ON()
+			?? padc(alltrim(aPom[i]),30)
+			gPB_OFF()
+   		next
+   		? space(5)
+		gPB_ON()
+		?? padc(alltrim(cTxt3b),30)
+		gPB_OFF()
+		?? iif(gFPzag=99 .and. gnTMarg2=2,cMjesto,"")
+   		? space(5)
+		gPB_ON()
+		?? padc(alltrim(cTxt3c),30)
+		gPB_OFF()
+		?? iif(gFPzag=99 .and. gnTMarg2=3,cMjesto,"")
+  		IF glDistrib .and. !EMPTY(cidpm)
+     			?  space(5)
+			gPB_ON()
+			?? padc(alltrim(cIDPM),30)
+			gPB_OFF()
+   		ENDIF
+ 	ENDIF
 endif
 
 cStr:=cidtipdok+" "+trim(cbrdok)
