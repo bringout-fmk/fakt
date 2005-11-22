@@ -1634,8 +1634,11 @@ if (nRbr==1 .and. VAL(_podbr) < 1)
    			USTipke()
    		endif
    		
-		READ
-   		
+		// ako nije ukljucena opcija Ispravke partnera pri unosu dokumenta
+		if (gIspPart == "N")
+			READ
+   		endif
+		
 		if lUSTipke
    			BosTipke()
    		endif
