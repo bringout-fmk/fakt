@@ -1409,15 +1409,17 @@ static function StKupac(fDelphiRb)
 *{
 local cMjesto:=padl(Mjesto(cIdFirma)+", "+dtoc(ddatdok),iif(gFPZag=99,gnTMarg3,0)+39)
 
-IF "U" $ TYPE("lPartic"); lPartic:=.f.; ENDIF
+IF "U" $ TYPE("lPartic")
+	lPartic:=.f.
+ENDIF
 
 if fDelphiRB==NIL
- fDelphiRB:=.t.
+	fDelphiRB:=.t.
 endif
 
 aPom:=Sjecistr(cTxt3a,30)
-if fdelphiRb
 
+if fdelphiRb
    for i:=1 to len(aPom)
      UzmiIzIni(cIniName,'Varijable','PARTNER'+ALLTRIM(STR(i)),aPom[i],'WRITE')
    next
@@ -1440,6 +1442,7 @@ if fdelphiRb
      UzmiIzIni(cIniName,'Varijable','KANTON',cKanton,'WRITE')
    endif
 else
+	
 	IF IzFMKINI("FAKT","KupacDesno","N",KUMPATH)=="D"
    		?? space(5)
 		?? PADR(ALLTRIM(iif(gFPzag<>99 .or. gnTMarg2=1,cMjesto,"")),39)

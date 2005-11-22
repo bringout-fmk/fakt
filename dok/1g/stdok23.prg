@@ -1456,16 +1456,7 @@ else
     		altd()
 		if !(cidtipdok$"10#06#16") .and. (!lPharmaMAC .or. !(cidtipdok$"20#19"))
       			//@ prow(),36 SAY padl(Mjesto(cIdFirma)+", "+dtoc(ddatdok)+" godine",36)
-      			?
-			?
-			?
-			?
-			?
-			?
-			?
-			?
-			? padl(Mjesto(cIdFirma)+", "+dtoc(ddatdok)+" godine",36)
-      			?
+			@ prow(),36 SAY padl(Mjesto(cIdFirma)+", "+dtoc(ddatdok)+" godine",36)
     		endif
     		? space(5),gPB_ON+"旼컴컴컴컴"+IF(cIdTipDok=="06","KONSIGNATOR:","컴컴컴컴컴컴")+"컴컴컴컴커"+gPB_OFF
     		// ---------------- MS 07.04.01
