@@ -74,26 +74,29 @@ qqTipDok:=space(20)
 
 Box("#SPECIFIKACIJA PRODAJE PO ARTIKLIMA",11,77)
 	O_PARAMS
-	RPar("c1",@cIdFirma)
-	RPar("d1",@dDatOd)
-	RPar("d2",@dDatDo)
-	qqIdRoba:=SPACE(20)
-	cPrikaz:="2"
-	cIdRoba:=SPACE(20)
-	cImeKup:=SPACE(20)
-	cOpcina:=SPACE(20)
-	qqPartn:=SPACE(20)
-	RPar("sk",@qqPartn)
-//	RPar("vi",@cPrikaz)
-	RPar("td",@qqTipDok)
-	qqPartn:=PADR(qqPartn,LEN(partn->id))
-	qqIdRoba:=PADR(qqIdRoba,20)
-	qqTipDok:=PADR(qqTipDok,40)
+	RPar("c1", @cIdFirma)
+	RPar("d1", @dDatOd)
+	RPar("d2", @dDatDo)
+	qqIdRoba := SPACE(20)
+	cPrikaz := "2"
+	if IsPlanika()
+		cK2X := "N"
+		cJmjPar := "D"
+		RPar("pK", @cK2X)
+		RPar("pJ", @cJmjPar)
+	endif
+	cIdRoba := SPACE(20)
+	cImeKup := SPACE(20)
+	cOpcina := SPACE(20)
+	qqPartn := SPACE(20)
+	RPar("sk", @qqPartn)
+	RPar("td", @qqTipDok)
+	qqPartn := PADR(qqPartn, LEN(partn->id))
+	qqIdRoba := PADR(qqIdRoba, 20)
+	qqTipDok := PADR(qqTipDok, 40)
 
 	do while .t.
  		cIdFirma:=PADR(cIdFirma,2)
-// 		@ m_x+1,m_y+2 SAY "Prikaz izvjestaja po partnerima/robi (1/2) " GET cPrikaz valid cPrikaz $ "12"
-// 		read
  		@ m_x+2,m_y+2 SAY "RJ            " GET cIdFirma valid {|| empty(cIdFirma) .or. cIdFirma==gFirma .or. P_RJ(@cIdFirma) }
  		@ m_x+3,m_y+2 SAY "Tip dokumenta " GET qqTipDok pict "@!S20"
  		@ m_x+4,m_y+2 SAY "Od datuma "  get dDatOd
@@ -103,7 +106,12 @@ Box("#SPECIFIKACIJA PRODAJE PO ARTIKLIMA",11,77)
  		if lOpcine
    			@ m_x+9,m_y+2 SAY "Uslov po opcini (prazno sve) "  get cOpcina pict "@!"
  		endif
- 		read
+ 		if IsPlanika()
+			@ m_x+10,m_y+2 SAY "Ne prikazuj robu K2=X "  get cK2X pict "@!" VALID cK2X$"DN"
+			@ m_x+11,m_y+2 SAY "Filter po ROBA->JMJ=PAR "  get cJmjPar pict "@!" VALID cJmjPar$"DN"
+ 		endif
+		
+		read
  		ESC_BCR
 
  		aUslRB:=Parsiraj(qqIdRoba,"IDROBA","C")
@@ -123,11 +131,17 @@ Box("#SPECIFIKACIJA PRODAJE PO ARTIKLIMA",11,77)
 	qqIdRoba:=TRIM(qqIdRoba)
 	qqTipDok:=TRIM(qqTipDok)
 	Params2()
-	WPar("c1",cIdFirma)
-	WPar("d1",dDatOd)
-	WPar("d2",dDatDo)
-	WPar("vi",cPrikaz)
-	WPar("td",qqTipDok)
+	WPar("c1", cIdFirma)
+	WPar("d1", dDatOd)
+	WPar("d2", dDatDo)
+	WPar("vi", cPrikaz)
+	WPar("td", qqTipDok)
+	
+	if IsPlanika()
+		RPar("pK", cK2X)
+		RPar("pJ", cJmjPar)
+	endif
+	
 	select params
 	use
 BoxC()
@@ -233,7 +247,30 @@ else  // ako je izabrano "2"
     		nKolicina:=0
 		nIznos:=0
    		cIdRoba:=IdRoba
-    		do while !eof() .and. idRoba==cIdRoba
+		
+		if IsPlanika()
+			select roba
+			set order to tag "ID"
+			hseek cIdRoba
+			select fakt
+		endif
+		
+		// ako je planika i roba.k2=X preskoci
+		if IsPlanika() .and. cK2X == "D"
+			if LEFT(roba->k2, 1) == "X"
+				skip
+				loop
+			endif
+		endif
+    		// ako je planika i roba.jmj<>PAR preskoci
+		if IsPlanika() .and. cJmjPar == "D"
+			if roba->jmj <> "PAR"
+				skip
+				loop
+			endif
+		endif
+    		
+		do while !eof() .and. idRoba==cIdRoba
 			if lOpcine
         			SELECT partn
 				HSEEK fakt->idPartner
