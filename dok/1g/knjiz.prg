@@ -1542,7 +1542,8 @@ if (nRbr==1 .and. VAL(_podbr) < 1)
      		endif
    	endif
   	do while .t.
-   		@  m_x+3,m_y+40 SAY "Datum:" GET _datDok
+   		altd()
+		@  m_x+3,m_y+40 SAY "Datum:" GET _datDok
    		@  m_x+3,m_y+col()+2 SAY "Broj:" GET _BrDok WHEN gMreznoNum=="N" VALID !EMPTY(_BrDok).and.(!glDistrib.or.!JeStorno10().or.PuniDVRiz10())
 		//if IzFMkIni('FAKT',"IdPartnNaF",'N',KUMPATH)=="D" .or.;
    		if lSpecifZips
@@ -1647,10 +1648,13 @@ if (nRbr==1 .and. VAL(_podbr) < 1)
       			EdDoks2()
     		endif
    		
-		_txt3a:=trim(_txt3a)
-   		_txt3b:=trim(_txt3b)
-   		_txt3c:=trim(_txt3c)
-   		ESC_Return 0
+		if (gIspPart == "N")
+			_txt3a:=trim(_txt3a)
+   			_txt3b:=trim(_txt3b)
+   			_txt3c:=trim(_txt3c)
+   		endif
+		
+		ESC_Return 0
 
    		if (gMreznoNum=="D")
      			exit
