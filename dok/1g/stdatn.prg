@@ -993,6 +993,7 @@ do while !eof() .and. IdFirma=cIdFirma
 	hseek cIdPartner
 	select doks
 	
+	
 	// uslov po opcini
 	if !Empty(qqOpc)
 		if AT(partn->idops, qqOpc)==0
