@@ -332,6 +332,7 @@ Box(,20,77,.f.,"OSTALI PARAMETRI (RAZNO)")
   	@ m_x+17,m_y+2 SAY "Mod direktnog edita " GET gDirektEdit PICT "@!" VALID gDirektEdit $ "DN"
   	@ m_x+18,m_y+2 SAY "Voditi samo kolicine " GET gSamoKol PICT "@!" VALID gSamoKol $ "DN"
   	@ m_x+19,m_y+2 SAY "Tekuca vrijednost za rok placanja  " GET gRokPl PICT "999"
+  	@ m_x+20,m_y+2 SAY "Mogucnost ispravke partnera u novoj stavci" GET gIspPart PICT "@!" VALID gIspPart$"DN"
   	READ
 BoxC()
 
@@ -355,6 +356,7 @@ if (LASTKEY()<>K_ESC)
    	WPar("k2",@gDk2)
    	WPar("im",gIMenu)
    	WPar("mr",gMjRJ)
+   	WPar("Fi",gIspPart)
 endif
 
 return 
