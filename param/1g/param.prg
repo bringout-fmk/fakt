@@ -313,7 +313,7 @@ O_PARAMS
 
 gKomLin:=PADR(gKomLin,70)
 
-Box(,20,77,.f.,"OSTALI PARAMETRI (RAZNO)")
+Box(,21,77,.f.,"OSTALI PARAMETRI (RAZNO)")
 	@ m_x+2,m_y+2 SAY "Naziv fajla zaglavlja (prazno bez zaglavlja)" GET gVlZagl VALID V_VZagl()
 	@ m_x+3,m_y+2 SAY "Novi korisnicki interfejs D-da/N-ne/R-rudnik/T-test" GET gNW VALID gNW $ "DNRT" PICT "@!"
   	@ m_x+4,m_y+2 SAY "Na kraju fakture izvrsiti zaokruzenje" GET gFZaok PICT "99"
@@ -332,7 +332,8 @@ Box(,20,77,.f.,"OSTALI PARAMETRI (RAZNO)")
   	@ m_x+17,m_y+2 SAY "Mod direktnog edita " GET gDirektEdit PICT "@!" VALID gDirektEdit $ "DN"
   	@ m_x+18,m_y+2 SAY "Voditi samo kolicine " GET gSamoKol PICT "@!" VALID gSamoKol $ "DN"
   	@ m_x+19,m_y+2 SAY "Tekuca vrijednost za rok placanja  " GET gRokPl PICT "999"
-  	@ m_x+20,m_y+2 SAY "Mogucnost ispravke partnera u novoj stavci" GET gIspPart PICT "@!" VALID gIspPart$"DN"
+  	@ m_x+20,m_y+2 SAY "Mogucnost ispravke partnera u novoj stavci (D/N)" GET gIspPart PICT "@!" VALID gIspPart$"DN"
+  	@ m_x+21,m_y+2 SAY "Uvijek resetuj artikal pri unosu dokumenata (D/N)" GET gResetRoba PICT "@!" VALID gResetRoba$"DN"
   	READ
 BoxC()
 
@@ -356,7 +357,8 @@ if (LASTKEY()<>K_ESC)
    	WPar("k2",@gDk2)
    	WPar("im",gIMenu)
    	WPar("mr",gMjRJ)
-   	WPar("Fi",gIspPart)
+   	WPar("Fi",@gIspPart)
+   	WPar("Fr",@gResetRoba)
 endif
 
 return 
