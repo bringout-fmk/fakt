@@ -563,6 +563,8 @@ public gnTMarg4:=0 // vertik.pomj. za donji dio fakture var.9
 public gMjStr:="Zenica", gMjRJ:="N"
 public gDK1:="N"
 public gDK2:="N"
+public gIspPart:="N" // ispravka partnera u unosu novog dokumenta
+public gResetRoba:="D" // resetuj uvijek artikal, pri unosu stavki dokumenta 
 
 public g10Str:="RA¬UN/OTPREMNICA br."
 public g10Str2T:="              Predao                  Odobrio                  Preuzeo"
@@ -784,6 +786,8 @@ RPar("g5",@gKarN2)
 RPar("rs",@gcRabDef)
 RPar("ir",@gcRabIDef)
 RPar("id",@gcRabDok)
+RPar("Fi",@gIspPart)
+RPar("Fr",@gResetRoba)
 
 /*
 if empty(gNFirma)
