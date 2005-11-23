@@ -1436,7 +1436,12 @@ else
 		_ambk:=0
    	endif
 	_cijena:=0
-	//_idRoba:=SPACE(LEN(_idRoba))
+	
+	// ako je ovaj parametar ukljucen ponisti polje roba
+	if gResetRoba == "D"
+		_idRoba:=SPACE(LEN(_idRoba))
+	endif
+	
 	_kolicina:=0
 endif
 
