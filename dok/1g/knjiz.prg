@@ -4,115 +4,6 @@
  * ----------------------------------------------------------------
  *                                     Copyright Sigma-com software 
  * ----------------------------------------------------------------
- * $Source: c:/cvsroot/cl/sigma/fmk/fakt/dok/1g/knjiz.prg,v $
- * $Author: sasavranic $ 
- * $Revision: 1.31 $
- * $Log: knjiz.prg,v $
- * Revision 1.31  2004/05/06 14:30:01  sasavranic
- * Uvedena nova f-ja Iz22u10(), tigra
- *
- * Revision 1.30  2004/05/06 12:34:12  sasavranic
- * Funkcija filovanja azurirane 10-ke sa 22-kom u pripremi
- *
- * Revision 1.29  2004/02/12 15:37:16  sasavranic
- * Kopiranje podataka za novu grupu po uzoru na postojecu.
- *
- * Revision 1.28  2003/09/08 13:18:14  mirsad
- * sitne dorade za Hano - radni nalozi
- *
- * Revision 1.27  2003/08/21 08:12:08  mirsad
- * Specif.za Niagaru: - ukinuo setovanje mpc u sifr. pri unosu 13-ke, a uveo setovanje mpc u sifr. pri unosu 01-ice
- *
- * Revision 1.26  2003/08/01 09:42:48  sasa
- * ako nije nadjena banka nemoj ispisati nista
- *
- * Revision 1.25  2003/07/25 13:14:06  sasa
- * korekcije narudzbenice
- *
- * Revision 1.24  2003/07/24 15:58:13  sasa
- * stampa podataka o bankama na narudzbenici
- *
- * Revision 1.23  2003/07/06 21:50:54  mirsad
- * nova varijanta: unos radnog naloga na 12-ki (FMK.INI/KUMPATH/FAKT/RadniNalozi=D)
- *
- * Revision 1.22  2003/05/10 18:57:58  ernad
- * dodat opis za artikle u dokumentu
- *
- * Revision 1.21  2003/05/10 15:07:57  mirsad
- * dodatna polja za robne karakteristike u kumulativnoj bazi C1,C2,C3,N1,N2
- *
- * Revision 1.20  2003/04/25 10:44:36  ernad
- * ispravka za Planiku: parametar Cijena13MPC=D vise ne setuje MPC u sifrarniku pri promjeni cijene u unosu 13-ke
- *
- * Revision 1.19  2003/04/15 07:44:47  mirsad
- * ispravka: datum fakture ipak opet nudi sistemski, a ovaj put definitivno popuni zadani datum u svim stavkama fakture generisane na osnovu otpremnica
- *
- * Revision 1.18  2003/04/12 23:00:38  ernad
- * O_Edit (O_S_PRIREMA)
- *
- * Revision 1.17  2003/04/12 18:37:37  ernad
- * ImportTxt
- *
- * Revision 1.16  2003/03/28 15:38:10  mirsad
- * 1) ispravka bug-a pri gen.fakt.na osnovu otpremnica: sada se korektno setuje datum u svim stavkama
- * 2) ukinuo setovanje u proizvj.ini parametra "Broj" jer opet smeta (zbog njega se u reg.broj upisuje broj fakture)
- *
- * Revision 1.15  2003/03/16 10:07:16  ernad
- * rtf fakture
- *
- * Revision 1.14  2003/02/27 01:27:30  mirsad
- * male dorade za zips
- *
- * Revision 1.13  2003/01/19 23:44:17  ernad
- * test network speed (sa), korekcija bl.lnk
- *
- * Revision 1.12  2002/10/01 13:01:42  sasa
- * dorada za vindiju rabat na 11-ki
- *
- * Revision 1.11  2002/07/10 08:44:19  ernad
- *
- *
- * barkod funkcije kalk, fakt -> fmk/roba/barkod.prg
- *
- * Revision 1.10  2002/07/08 08:27:47  ernad
- *
- *
- * debug - uzimanje teksta na kraju fakture
- *
- * Revision 1.9  2002/07/05 10:27:12  mirsad
- * no message
- *
- * Revision 1.8  2002/07/04 14:13:07  mirsad
- * dokumentovanje ini parametara
- *
- * Revision 1.7  2002/07/04 08:34:19  mirsad
- * dokumentovanje ini parametara
- *
- * Revision 1.6  2002/07/03 12:21:49  sasa
- * funkcija FaktDisk() vise ne postoji, zamjenjena sa PrenosDiskete
- *
- * Revision 1.5  2002/06/27 17:20:33  ernad
- *
- *
- * dokument inventure, razrada, uvedena generacija dokumenta
- *
- * Revision 1.4  2002/06/27 14:03:20  ernad
- *
- *
- * dok/2g init
- *
- * Revision 1.3  2002/06/26 17:54:16  ernad
- *
- *
- * ciscenja - za dokument inventure
- *
- * Revision 1.2  2002/06/18 09:00:39  sasa
- * no message
- *
- * Revision 1.1.1.1  2002/06/17 18:30:18  ernad
- * no message
- *
- *
  */
 
 /*! \file fmk/fakt/dok/1g/knjiz.prg
@@ -839,13 +730,6 @@ do case
         	return DE_REFRESH
 	case UPPER(Chr(Ch))=="R"
         	return DE_REFRESH
-	case Ch==K_F8
-		if IsTigra()
-			Iz22u10()
-			return DE_REFRESH
-		else
-			NotImp()
-		endif
 	case Ch==K_F7
 		if IsRabati()
 			SrediRabate()
