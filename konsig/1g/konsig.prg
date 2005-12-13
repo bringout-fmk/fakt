@@ -4,16 +4,6 @@
  * ----------------------------------------------------------------
  *                                     Copyright Sigma-com software 
  * ----------------------------------------------------------------
- * $Source: c:/cvsroot/cl/sigma/fmk/fakt/konsig/1g/konsig.prg,v $
- * $Author: ernad $ 
- * $Revision: 1.1 $
- * $Log: konsig.prg,v $
- * Revision 1.1  2002/06/26 18:06:43  ernad
- *
- *
- * ciscenja fakt
- *
- *
  */
  
 /*! \fn GKRacun()

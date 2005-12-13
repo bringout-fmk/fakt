@@ -4,16 +4,6 @@
  * ----------------------------------------------------------------
  *                                     Copyright Sigma-com software 
  * ----------------------------------------------------------------
- * $Source: c:/cvsroot/cl/sigma/fmk/fakt/stampa/1g/stampa.prg,v $
- * $Author: ernad $ 
- * $Revision: 1.1 $
- * $Log: stampa.prg,v $
- * Revision 1.1  2002/06/26 18:01:29  ernad
- *
- *
- * ciscenja
- *
- *
  */
  
 

@@ -4,53 +4,6 @@
  * ----------------------------------------------------------------
  *                                     Copyright Sigma-com software 
  * ----------------------------------------------------------------
- * $Source: c:/cvsroot/cl/sigma/fmk/fakt/param/1g/param.prg,v $
- * $Author: mirsadsubasic $ 
- * $Revision: 1.14 $
- * $Log: param.prg,v $
- * Revision 1.14  2003/09/22 08:40:11  mirsadsubasic
- * sitna ispravka na novim parametrima WinFmk
- *
- * Revision 1.13  2003/09/20 13:20:32  mirsadsubasic
- * Uvodjenje novih parametara u parametri Win stampe fakture -- merkomerc
- *
- * Revision 1.12  2003/05/10 15:07:57  mirsad
- * dodatna polja za robne karakteristike u kumulativnoj bazi C1,C2,C3,N1,N2
- *
- * Revision 1.11  2002/12/30 16:34:27  mirsad
- * no message
- *
- * Revision 1.10  2002/09/18 11:38:42  mirsad
- * dokumentovanje PARAMS i INI(proizvj.ini) parametara
- *
- * Revision 1.9  2002/09/12 07:39:42  mirsad
- * dokumentovanje INI parametara
- *
- * Revision 1.8  2002/07/04 08:34:19  mirsad
- * dokumentovanje ini parametara
- *
- * Revision 1.7  2002/07/03 12:24:00  sasa
- * u listu parametara dodata i podesenja stampaca
- *
- * Revision 1.6  2002/06/24 08:15:14  sasa
- * no message
- *
- * Revision 1.5  2002/06/21 14:06:15  sasa
- * no message
- *
- * Revision 1.4  2002/06/21 13:28:50  sasa
- * no message
- *
- * Revision 1.3  2002/06/21 12:03:00  sasa
- * no message
- *
- * Revision 1.2  2002/06/18 13:33:36  sasa
- * no message
- *
- * Revision 1.1.1.1  2002/06/17 18:30:18  ernad
- * no message
- *
- *
  */
 
 /*! \file fmk/fakt/param/1g/param.prg

@@ -4,46 +4,6 @@
  * ----------------------------------------------------------------
  *                                     Copyright Sigma-com software 
  * ----------------------------------------------------------------
- * $Source: c:/cvsroot/cl/sigma/fmk/fakt/dok/1g/vknjiz.prg,v $
- * $Author: sasavranic $ 
- * $Revision: 1.11 $
- * $Log: vknjiz.prg,v $
- * Revision 1.11  2003/12/10 11:57:59  sasavranic
- * no message
- *
- * Revision 1.10  2003/09/26 11:16:17  mirsadsubasic
- * debug: vratio u f-ju parametar za korištenje VPC
- *
- * Revision 1.9  2003/09/12 09:35:21  ernad
- * omoguceno biranje i VPC po RJ
- *
- * Revision 1.8  2003/08/21 08:12:08  mirsad
- * Specif.za Niagaru: - ukinuo setovanje mpc u sifr. pri unosu 13-ke, a uveo setovanje mpc u sifr. pri unosu 01-ice
- *
- * Revision 1.7  2003/04/25 10:44:36  ernad
- * ispravka za Planiku: parametar Cijena13MPC=D vise ne setuje MPC u sifrarniku pri promjeni cijene u unosu 13-ke
- *
- * Revision 1.6  2003/02/27 01:27:30  mirsad
- * male dorade za zips
- *
- * Revision 1.5  2002/07/08 08:27:47  ernad
- *
- *
- * debug - uzimanje teksta na kraju fakture
- *
- * Revision 1.4  2002/07/05 14:04:52  mirsad
- * no message
- *
- * Revision 1.3  2002/07/04 08:34:19  mirsad
- * dokumentovanje ini parametara
- *
- * Revision 1.2  2002/06/18 13:01:05  sasa
- * no message
- *
- * Revision 1.1.1.1  2002/06/17 18:30:18  ernad
- * no message
- *
- *
  */
 
 /*! \file fmk/fakt/dok/1g/vknjiz.prg
@@ -152,7 +112,6 @@ if right(cSif,1)="." .and. len(csif)<=7
    if !fsilent
      P_Firma(padr(cSif,6))
    endif
-//   if IzFMkIni('FAKT',"IdPartnNaF",'N',KUMPATH)=="D" .or.;
    if lSpecifZips
      _Txt3a:=TRIM(partn->id)+"- "+TRIM(partn->naz)+" "+trim(partn->naz2)
    else
@@ -340,8 +299,6 @@ elseif lRJ .and. rj->tip="M"  // baratamo samo sa mp.cijenama
    _cijena:=UzmiMPCsif()
 
 elseif _idtipdok$"11#15#27"
-  // ako je na RJ->tip stavljeno M1 - maloprodajne cijene
-  // magacin barata sa mpc cijenama
   if gMP=="1"
     _Cijena:=MPC
   elseif gMP=="2"

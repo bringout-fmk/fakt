@@ -4,46 +4,8 @@
  * ----------------------------------------------------------------
  *                                     Copyright Sigma-com software 
  * ----------------------------------------------------------------
- * $Source: c:/cvsroot/cl/sigma/fmk/fakt/dok/1g/stdok.prg,v $
- * $Author: sasavranic $ 
- * $Revision: 1.9 $
- * $Log: stdok.prg,v $
- * Revision 1.9  2003/11/21 08:46:51  sasavranic
- * Opresa - stampa, stampa samo jedne dostavnice
- * FMK.INI/PRIVPATH
- * [Stampa]
- *  JednaDostavnica=D
- *
- * Revision 1.8  2003/10/04 08:11:49  sasavranic
- * no message
- *
- * Revision 1.7  2003/08/01 09:42:25  sasa
- * nove karakteristike na nar
- *
- * Revision 1.6  2003/07/16 11:08:42  sasa
- * broj rjesenja
- *
- * Revision 1.5  2003/03/26 14:55:15  mirsad
- * umjesto "Reg.br." i "Por.br." svuda stavljen ispis "Ident.br."
- *
- * Revision 1.4  2002/09/13 12:52:31  mirsad
- * dokumentovanje INI parametara
- *
- * Revision 1.3  2002/07/04 08:34:19  mirsad
- * dokumentovanje ini parametara
- *
- * Revision 1.2  2002/06/18 13:01:05  sasa
- * no message
- *
- * Revision 1.1.1.1  2002/06/17 18:30:18  ernad
- * no message
- *
- *
  */
  
-/*! \todo Izbaciti POCNI STAMPU ... ZAVRSI STAMPU
- */
-
 
 /*! \ingroup ini
   * \var *string FmkIni_ExePath_FAKT_DelphiRB
@@ -211,7 +173,8 @@ aDbf:={ {"POR","C",10,0},;
 dbcreate2(PRIVPATH+"por",aDbf)
 O_POR   // select 95
 index  on BRISANO TAG "BRISAN"
-index  on POR  TAG "1" ;  set order to tag "1"
+index  on POR  TAG "1" 
+set order to tag "1"
 select pripr
 
 dDatDok:=DatDok
@@ -248,18 +211,16 @@ for i:=1 to len(cTxt2)
    ++nLTxt2
  endif
 next
-//if idtipdok == "11"; nLTxt2+=7; endif
 
 POCNI STAMPU
 
 P_10CPI
-for i:=1 to gnTMarg  // Top Margina
+for i:=1 to gnTMarg  
+  // Top Margina
   ?
 next
 
 
-// ---------------- MS 07.04.01
-// ?? space(4),gPB_ON+padc(alltrim(cTxt3a),30)+gPB_OFF; ?? padl(Mjesto(cIdFirma)+", "+dtoc(datdok)+" godine",39)
 aPom:=Sjecistr(cTxt3a,30)
 ?? space(4),gPB_ON+padc(alltrim(aPom[1]),30)+gPB_OFF; ?? padl(Mjesto(cIdFirma)+", "+dtoc(datdok)+" godine",39)
 for i:=2 to len(aPom)

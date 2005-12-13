@@ -4,32 +4,6 @@
  * ----------------------------------------------------------------
  *                                     Copyright Sigma-com software 
  * ----------------------------------------------------------------
- * $Source: c:/cvsroot/cl/sigma/fmk/fakt/dok/1g/stdrtf3.prg,v $
- * $Author: ernad $ 
- * $Revision: 1.7 $
- * $Log: stdrtf3.prg,v $
- * Revision 1.7  2003/03/16 10:07:16  ernad
- * rtf fakture
- *
- * Revision 1.6  2003/01/19 23:44:17  ernad
- * test network speed (sa), korekcija bl.lnk
- *
- * Revision 1.5  2002/09/16 09:01:33  mirsad
- * dokumentovanje INI parametara
- *
- * Revision 1.4  2002/07/05 13:11:11  mirsad
- * no message
- *
- * Revision 1.3  2002/07/04 08:34:19  mirsad
- * dokumentovanje ini parametara
- *
- * Revision 1.2  2002/06/18 13:01:05  sasa
- * no message
- *
- * Revision 1.1.1.1  2002/06/17 18:30:18  ernad
- * no message
- *
- *
  */
  
 /*! \file fmk/fakt/dok/1g/stdrtf3.prg

@@ -4,43 +4,6 @@
  * ----------------------------------------------------------------
  *                                     Copyright Sigma-com software 
  * ----------------------------------------------------------------
- * $Source: c:/cvsroot/cl/sigma/fmk/fakt/dok/1g/rpt_nar.prg,v $
- * $Author: sasavranic $ 
- * $Revision: 1.10 $
- * $Log: rpt_nar.prg,v $
- * Revision 1.10  2004/05/11 09:00:32  sasavranic
- * Dodao stampu narudzbenice kroz Fmk.NET
- *
- * Revision 1.9  2003/11/10 09:52:10  sasavranic
- * no message
- *
- * Revision 1.8  2003/08/07 11:30:08  sasa
- * Dodat naziv organa na narudzbenici
- *
- * Revision 1.7  2003/08/01 09:42:25  sasa
- * nove karakteristike na nar
- *
- * Revision 1.6  2003/07/25 10:25:41  sasa
- * no message
- *
- * Revision 1.5  2003/07/24 15:58:06  sasa
- * stampa podataka o bankama na narudzbenici
- *
- * Revision 1.4  2003/07/23 14:16:32  sasa
- * broj sudskog rjesenja
- *
- * Revision 1.3  2002/07/05 10:31:58  mirsad
- * no message
- *
- * Revision 1.2  2002/07/04 08:34:19  mirsad
- * dokumentovanje ini parametara
- *
- * Revision 1.1  2002/06/26 18:00:19  ernad
- *
- *
- * ciscenja
- *
- *
  */
 
 

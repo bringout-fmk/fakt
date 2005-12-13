@@ -4,23 +4,6 @@
  * ----------------------------------------------------------------
  *                                     Copyright Sigma-com software 
  * ----------------------------------------------------------------
- * $Source: c:/cvsroot/cl/sigma/fmk/fakt/specif/vindija/1g/distrib.prg,v $
- * $Author: mirsad $ 
- * $Revision: 1.4 $
- * $Log: distrib.prg,v $
- * Revision 1.4  2002/09/13 09:11:53  mirsad
- * dokumentovanje INI parametara
- *
- * Revision 1.3  2002/07/04 08:34:19  mirsad
- * dokumentovanje ini parametara
- *
- * Revision 1.2  2002/06/19 09:12:07  sasa
- * no message
- *
- * Revision 1.1.1.1  2002/06/17 18:30:18  ernad
- * no message
- *
- *
  */
  
 

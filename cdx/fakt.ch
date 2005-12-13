@@ -2,23 +2,6 @@
  * ----------------------------------------------------------------
  *                                     Copyright Sigma-com software 
  * ----------------------------------------------------------------
- * $Source: c:/cvsroot/cl/sigma/fmk/fakt/cdx/fakt.ch,v $
- * $Author: sasavranic $ 
- * $Revision: 1.4 $
- * $Log: fakt.ch,v $
- * Revision 1.4  2003/12/10 10:56:31  sasavranic
- * Stavljena xcommand O_POMGN
- *
- * Revision 1.3  2003/12/08 15:12:20  sasavranic
- * Dorada za opresu, polje remitenda
- *
- * Revision 1.2  2003/01/03 14:07:09  sasa
- * ispravka pocetnog stanja
- *
- * Revision 1.1.1.1  2002/06/17 18:30:18  ernad
- * no message
- *
- *
  */
  
 #xcommand O_PRIPR     => select (F_PRIPR);   usex (PRIVPATH+"PRIPR") ; set order to tag "1"

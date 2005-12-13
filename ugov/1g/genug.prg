@@ -4,47 +4,6 @@
  * ----------------------------------------------------------------
  *                                     Copyright Sigma-com software 
  * ----------------------------------------------------------------
- * $Source: c:/cvsroot/cl/sigma/fmk/fakt/ugov/1g/genug.prg,v $
- * $Author: sasavranic $ 
- * $Revision: 1.12 $
- * $Log: genug.prg,v $
- * Revision 1.12  2003/12/12 12:10:27  sasavranic
- * no message
- *
- * Revision 1.11  2003/12/10 11:57:52  sasavranic
- * no message
- *
- * Revision 1.10  2003/12/10 10:57:32  sasavranic
- * prebaceno USEX na USE (POMGN), prebacen meni novina u  mnu_tir.prg
- *
- * Revision 1.9  2003/12/08 15:12:20  sasavranic
- * Dorada za opresu, polje remitenda
- *
- * Revision 1.8  2003/11/28 14:04:56  sasavranic
- * Korekcije kod-a opresa - stampa
- *
- * Revision 1.7  2003/07/07 14:09:44  sasa
- * Prebacene pomocne tabele POMGN i PPOMGN.DBF u KUMPATH
- *
- * Revision 1.6  2003/02/27 01:27:30  mirsad
- * male dorade za zips
- *
- * Revision 1.5  2003/01/19 23:44:17  ernad
- * test network speed (sa), korekcija bl.lnk
- *
- * Revision 1.4  2002/09/13 10:32:45  mirsad
- * dokumentovanje INI parametara
- *
- * Revision 1.3  2002/07/04 08:34:19  mirsad
- * dokumentovanje ini parametara
- *
- * Revision 1.2  2002/06/19 09:38:42  sasa
- * no message
- *
- * Revision 1.1.1.1  2002/06/17 18:30:18  ernad
- * no message
- *
- *
  */
 
 
@@ -736,12 +695,6 @@ Box(,20,77)
 
       APPEND FROM PPOMGN
 
-      // nUOtpKol:=0
-      // SELECT POMGN; GO TOP
-      // DO WHILE !EOF()
-      //   nUOtpKol+=otpremkol
-      //   SKIP 1
-      // ENDDO
       SELECT POMGN
       IF nUOtpKol>nKolicina
         MsgBeep("Greska: otpremljena kolicina je veca od zaduzene!")

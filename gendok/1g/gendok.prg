@@ -4,64 +4,6 @@
  * ----------------------------------------------------------------
  *                                     Copyright Sigma-com software 
  * ----------------------------------------------------------------
- * $Source: c:/cvsroot/cl/sigma/fmk/fakt/gendok/1g/gendok.prg,v $
- * $Author: sasavranic $ 
- * $Revision: 1.14 $
- * $Log: gendok.prg,v $
- * Revision 1.14  2004/05/06 14:30:01  sasavranic
- * Uvedena nova f-ja Iz22u10(), tigra
- *
- * Revision 1.13  2004/05/06 12:34:13  sasavranic
- * Funkcija filovanja azurirane 10-ke sa 22-kom u pripremi
- *
- * Revision 1.12  2003/04/16 15:02:58  mirsad
- * ispravke buga "zaklj.zapis" na pripr.dbf
- *
- * Revision 1.11  2003/03/28 15:38:10  mirsad
- * 1) ispravka bug-a pri gen.fakt.na osnovu otpremnica: sada se korektno setuje datum u svim stavkama
- * 2) ukinuo setovanje u proizvj.ini parametra "Broj" jer opet smeta (zbog njega se u reg.broj upisuje broj fakture)
- *
- * Revision 1.10  2002/09/09 08:22:07  mirsad
- * nista bitno (promjena slova u komentaru š->s)
- *
- * Revision 1.9  2002/07/01 09:36:26  mirsad
- * stilske ispravke
- *
- * Revision 1.8  2002/06/28 20:19:36  ernad
- *
- *
- * debug GenDokInv
- *
- * Revision 1.7  2002/06/28 14:01:19  mirsad
- * zavrseno kodiranje f-ja GDokInvVisak() i GDokInvManjak()
- *
- * Revision 1.6  2002/06/28 11:32:46  mirsad
- * no message
- *
- * Revision 1.5  2002/06/28 10:30:04  mirsad
- * no message
- *
- * Revision 1.4  2002/06/28 10:20:33  ernad
- *
- *
- * ispravka fje IsDocExists, nova fja FaNoviBroj, debug Azur (lVrstap)
- *
- * Revision 1.3  2002/06/28 06:34:16  ernad
- *
- *
- * dokument inventure skeleton funkcija Generacija dokumenta viska, manjka
- *
- * Revision 1.2  2002/06/27 17:20:33  ernad
- *
- *
- * dokument inventure, razrada, uvedena generacija dokumenta
- *
- * Revision 1.1  2002/06/27 16:12:16  ernad
- *
- *
- * Generacija dokumenata
- *
- *
  */
 
 

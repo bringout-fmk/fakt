@@ -4,26 +4,6 @@
  * ----------------------------------------------------------------
  *                                     Copyright Sigma-com software 
  * ----------------------------------------------------------------
- * $Source: c:/cvsroot/cl/sigma/fmk/fakt/main/1g/appsrv.prg,v $
- * $Author: sasa $ 
- * $Revision: 1.5 $
- * $Log: appsrv.prg,v $
- * Revision 1.5  2002/10/15 13:24:52  sasa
- * ciscenje koda
- *
- * Revision 1.4  2002/09/09 08:22:40  mirsad
- * dokumentovanje INI parametara
- *
- * Revision 1.3  2002/07/04 08:34:19  mirsad
- * dokumentovanje ini parametara
- *
- * Revision 1.2  2002/06/18 13:07:22  sasa
- * no message
- *
- * Revision 1.1.1.1  2002/06/17 18:30:18  ernad
- * no message
- *
- *
  */
  
 /*! \file fmk/fakt/main/1g/appsrv.prg

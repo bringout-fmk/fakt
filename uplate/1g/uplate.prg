@@ -4,32 +4,6 @@
  * ----------------------------------------------------------------
  *                                     Copyright Sigma-com software 
  * ----------------------------------------------------------------
- * $Source: c:/cvsroot/cl/sigma/fmk/fakt/uplate/1g/uplate.prg,v $
- * $Author: sasavranic $ 
- * $Revision: 1.7 $
- * $Log: uplate.prg,v $
- * Revision 1.7  2004/01/07 13:43:59  sasavranic
- * Na izvjestaju Lista salda kupaca dodao kolonu ukupno
- *
- * Revision 1.6  2002/09/28 15:49:48  mirsad
- * prenos pocetnog stanja za evid.uplata dovrsen
- *
- * Revision 1.5  2002/09/27 12:20:43  mirsad
- * ispr.bug na pregledu salda kupaca
- *
- * Revision 1.4  2002/09/26 13:39:52  mirsad
- * dorada za Franex: lista salda kupaca i generisanje pocetnog stanja
- *
- * Revision 1.3  2002/09/26 12:47:05  mirsad
- * no message
- *
- * Revision 1.2  2002/06/19 09:59:22  sasa
- * no message
- *
- * Revision 1.1.1.1  2002/06/17 18:30:18  ernad
- * no message
- *
- *
  */
 
 /*! \file fmk/fakt/uplate/1g/uplate.prg

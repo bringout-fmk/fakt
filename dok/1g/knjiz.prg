@@ -297,6 +297,7 @@
  
 function Knjiz()
 *{
+
 // da li je ocitan barkod
 private gOcitBarkod:=.f.
 private fID_J:=.f.
@@ -687,6 +688,7 @@ do case
 	case Ch==K_CTRL_F9
 		BrisiPripr()
         	return DE_REFRESH
+		
 	case Ch==K_F5
         	// kontrola zbira
         	nRec:=RecNo()
@@ -713,6 +715,7 @@ do case
         	BoxC()
         	go nRec
         	return DE_CONT
+		
 	case UPPER(Chr(Ch))  $ "RX"
         	go top
         	if idtipdok $ "20#27"
@@ -728,16 +731,19 @@ do case
         	Beep(1)
         	go top
         	return DE_REFRESH
+		
 	case UPPER(Chr(Ch))=="R"
         	return DE_REFRESH
+		
 	case Ch==K_F7
 		if IsRabati()
 			SrediRabate()
 			return DE_REFRESH
 		endif
 	case Ch==K_F9
-        	Iz20u10()  // izvrsena zamjena
+        	Iz20u10() 
         	return DE_REFRESH
+		
 	case Ch==K_ALT_F10
       		private nEntera:=30
       		for iSekv:=1 to INT(RecCount2()/15)+1
@@ -748,14 +754,17 @@ do case
        			keyboard cSekv
       		next
       		return DE_REFRESH
+		
 	case Ch==K_F10
        		PopupKnjiz()
        		SETLASTKEY(K_CTRL_PGDN)
        		return DE_REFRESH
+		
 	case Ch=K_ALT_I
        		RekZadMpO()
        		O_Edit()
        		return DE_REFRESH
+		
 	case Ch=K_ALT_N
        		SELECT PRIPR
 		nRec:=RECNO()
@@ -763,6 +772,7 @@ do case
        		StNarKup()
        		GO (nRec)
        		return DE_CONT
+		
 	case Ch=K_ALT_U
        		SELECT PRIPR
 		nRec:=RECNO()
@@ -845,7 +855,8 @@ nDug:=0
 nPrvi:=0
 
 go top
-do while .not. EOF() // kompletan nalog sumiram
+do while .not. EOF() 
+    	// kompletan nalog sumiram
 	nDug += Round( Cijena*Kolicina*PrerCij()*(1-Rabat/100)*(1+Porez/100) , ZAOKRUZENJE)
    	skip
 enddo

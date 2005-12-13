@@ -4,29 +4,6 @@
  * ----------------------------------------------------------------
  *                                     Copyright Sigma-com software 
  * ----------------------------------------------------------------
- * $Source: c:/cvsroot/cl/sigma/fmk/fakt/dok/1g/rpt_olpp.prg,v $
- * $Author: ernad $ 
- * $Revision: 1.5 $
- * $Log: rpt_olpp.prg,v $
- * Revision 1.5  2003/04/25 10:44:36  ernad
- * ispravka za Planiku: parametar Cijena13MPC=D vise ne setuje MPC u sifrarniku pri promjeni cijene u unosu 13-ke
- *
- * Revision 1.4  2002/09/13 12:02:33  mirsad
- * dokumentovanje INI parametara
- *
- * Revision 1.3  2002/07/04 19:04:08  ernad
- *
- *
- * ciscenje sifrarnik fakt
- *
- * Revision 1.2  2002/07/04 08:34:19  mirsad
- * dokumentovanje ini parametara
- *
- * Revision 1.1  2002/06/26 18:00:19  ernad
- *
- *
- * ciscenja
- *
  *
  */
 
