@@ -67,8 +67,14 @@ AADD(opcexe,{|| SetPICT()})
 AADD(opc,"6. postaviti parametre - razno                 ")
 AADD(opcexe,{|| SetRazno()})
 
-AADD(opc,"7. parametri Win stampe (DelphiRB)             ")
-AADD(opcexe,{|| P_WinFakt()})
+if !IsPDV()
+	AADD(opc,"7. parametri Win stampe (DelphiRB)             ")
+	AADD(opcexe,{|| P_WinFakt()})
+endif
+if IsPDV()
+	AADD(opc,"7. parametri zaglavlja             ")
+	AADD(opcexe,{|| ZaglParams()})
+endif
 
 AADD(opc,"8. parametri stampaca                          ")
 AADD(opcexe,{|| PPrint()})
@@ -316,6 +322,47 @@ endif
 
 return 
 *}
+
+
+function ZaglParams()
+*{
+private cSection:="1"
+private cHistory:=" "
+private aHistory:={}
+private GetList:={}
+
+O_PARAMS
+
+Box(,15,77,.f.,"Parametri zaglavlja")
+	@ m_x+2,m_y+2 SAY "Puni naziv firme:" GET gFNaziv 
+	@ m_x+3,m_y+2 SAY "Adresa firme:" GET gFAdresa
+  	@ m_x+4,m_y+2 SAY "Ident.broj:" GET gFIdBroj
+  	@ m_x+5,m_y+2 SAY "Broj sud.rjesenja:" GET gFBrSudRjes
+  	@ m_x+6,m_y+2 SAY "Broj upisa:" GET gFBrUpisa
+  	@ m_x+7,m_y+2 SAY "Ustanova:" GET gFUstanova
+  	@ m_x+8,m_y+2 SAY "Poreski broj:" GET gFPorBroj
+  	@ m_x+10,m_y+2 SAY "Banka 1:" GET gFBanka1
+  	@ m_x+11,m_y+2 SAY "Banka 2:" GET gFBanka2
+  	@ m_x+12,m_y+2 SAY "Banka 3:" GET gFBanka3
+  	read
+BoxC()
+
+if (LASTKEY()<>K_ESC)
+	Wpar("F1",gFNaziv)
+   	Wpar("F2",gFAdresa)
+   	Wpar("F3",gFIdBroj)
+   	Wpar("F4",gFBrSudRjes)
+   	Wpar("F5",gFBrUpisa)
+   	Wpar("F6",gFUstanova)
+   	Wpar("F7",gFPorBroj)
+   	Wpar("F9",gFBanka1)
+   	Wpar("G1",gFBanka2)
+   	Wpar("G2",gFBanka3)
+endif
+
+return 
+*}
+
 
 
 *string Params_s7;
