@@ -2163,6 +2163,19 @@ function StampTXT(cIdFirma,cIdTipDok,cBrDok)
 *{
 private InPicDEM:=PicDEM  // picture iznosa
 private InPicCDEM:=PicCDEM  // picture iznosa
+
+if IsPDV()
+	if cIdFirma == nil
+		StDokPDV()
+	else
+		StDokPDV(cIdFirma, cIdTipDok, cBrDok)
+	endif
+	
+	PicDEM:=InPicDEM
+	PicCDEM:=InPicCDEM
+	return
+endif
+
 cIniName:=PRIVPATH+'fmk.ini'
 UzmiIzIni(cIniName,'UpitFax','Slati','N','WRITE')
 UzmiIzIni(EXEPATH+'fmk.ini','FAKT','KrozDelphi','N','WRITE')
