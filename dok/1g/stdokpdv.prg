@@ -37,26 +37,8 @@ cIdFirma:=IdFirma
 cBrDok:=BrDok
 dDatDok:=DatDok
 cIdTipDok:=IdTipDok
-cIdPartner:=IdPartner
 
-// provjeri ispravnost dokumenta
-if val(podbr)=0  .and. val(rbr)==1
-	aMemo:=ParsMemo(txt)
-   	if len(aMemo)>0
-     		cTxt1:=padr(aMemo[1],40)
-   	endif
-   	if len(aMemo)>=5
-      		cTxt2:=aMemo[2]
-    		cTxt4:=aMemo[3]
-    		cTxt5:=aMemo[4]
-    		cTxt6:=aMemo[5]
-   	endif
-	if LEN(aMemo)>9
-      		cOtpBroj:=aMemo[6]
-		cOtpDatum:=CToD(aMemo[7])
-		cNarBroj:=aMemo[8]
-		cDatPl:=CToD(aMemo[9])
-	endif
+if VAL(podbr)=0 .and. VAL(rbr)==1
 else
 	Beep(2)
   	Msg("Prva stavka mora biti  '1.'  ili '1 ' !",4)
@@ -103,6 +85,14 @@ local nVPopust:=0
 local nUkPDV:=0
 local cTime:=""
 
+fill_firm_data()
+
+select pripr
+go top
+
+fill_part_data(idpartner)
+
+select pripr
 go top
 
 dDatDok := datdok
@@ -118,6 +108,8 @@ do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==c
 	select pripr
 	
      	aMemo:=ParsMemo(txt)
+	
+	altd()
 	
 	cIdRoba := field->idroba
 	
@@ -151,21 +143,21 @@ do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==c
 	// izracunaj vrijednost popusta
 	if Round(nPopust,4) <> 0
 		// vrijednost popusta
-		nVPopust := (nCjBPDV / (nPopust/100))
+		nVPopust := (nCjBPDV * (nPopust/100))
 	endif
 	
 	// cijena sa popustom bez pdv-a
-	nCj2BPDV := ((nCjBPDV - nVPopust) / (1 + nPopust/100))
+	nCj2BPDV := (nCjBPDV - nVPopust)
 	// izracuna PDV na cijenu sa popustom
 	nCj2PDV := (nCj2BPDV * (1 + nPPDV/100))
 	// preracunaj VPDV sa popustom
-	nVPDV := nKol * (nCj2BPDV * (nPPDV/100))
+	nVPDV := (nCj2BPDV * (nPPDV/100))
 	// ukupno stavka
 	nUkStavka := nKol * (nCj2PDV)
 
 	// sumiraj vrijednosti
 	nUkVPop += nVPopust
-	nUkPDV += nVPDV
+	nUkPDV += nKol * nVPDV
 	nUkBPDV += nKol * nCjBPDV
 	nUkBPDVPop += nKol * nCj2BPDV
 	nTotal += (nKol * nCj2BPDV) + nVPDV
@@ -177,9 +169,74 @@ do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==c
 	skip
 enddo	
 
+select pripr
+go top
+
+// nafiluj ostale podatke
+aMemo := ParsMemo(txt)
+dDatDok := datdok
+dDatIsp := datdok
+dDatVal := CToD(aMemo[7])
+
+// mjesto
+add_drntext("D01", gMjStr)
+// tekst na kraju fakture
+add_drntext("F04", aMemo[2])
+// potpis 
+add_drntext("F05", "  predao odobrio preuzeo .... ")
+
+// dodaj total u DRN
 add_drn(cBrDok, dDatDok, dDatVal, dDatIsp, cTime, nUkBPDV, nUkVPop, nUkBPDVPop, nUkPDV, nTotal, nCSum)
 
 return
 *}
 
+
+function fill_part_data(cId)
+*{
+local cIdBroj
+local cPorBroj
+local cBrRjes
+local cBrUpisa
+
+O_PARTN
+select partn
+set order to tag "ID"
+hseek cId
+
+if partn->id == cId
+	// uzmi podatke iz SIFK
+	cIdBroj := IzSifK("PARTN", "REGB", cId, .f.)
+	cPorBroj := IzSifK("PARTN", "PORB", cId, .f.)
+	cBrRjes := IzSifK("PARTN", "BRJS", cId, .f.)
+	cBrUpisa := IzSifK("PARTN", "BRUP", cId, .f.)
+
+	// naziv
+	add_drntext("K01", partn->naz)
+	// adresa
+	add_drntext("K02", partn->adresa)
+	// mjesto
+	add_drntext("K07", partn->mjesto)
+	// ptt
+	add_drntext("K08", partn->ptt)
+	// idbroj
+	add_drntext("K03", cIdBroj)
+	// porbroj
+	add_drntext("K04", cPorBroj)
+	// brrjes
+	add_drntext("K05", cBrRjes)
+	// brupisa
+	add_drntext("K06", cBrUpisa)
+endif
+
+return
+*}
+
+function fill_firm_data()
+*{
+add_drntext("I01", gFNaziv)
+add_drntext("I02", gFAdresa)
+add_drntext("I03", gFIdBroj)
+return
+*}
 
