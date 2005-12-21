@@ -15,6 +15,8 @@ else
  	O_Edit()
 endif
 
+altd()
+
 // barkod artikla
 private cPombk := IzFmkIni("SifRoba","PBarkod","0",SIFPATH)
 private lPBarkod:=.f.
@@ -31,7 +33,9 @@ endif
 seek cIdFirma+cIdTipDok+cBrDok
 NFOUND CRET
 
-select pripr
+if PCount()==0
+	select pripr
+endif
 
 cIdFirma:=IdFirma
 cBrDok:=BrDok
@@ -84,20 +88,25 @@ local nUkVPop:=0
 local nVPopust:=0
 local nUkPDV:=0
 local cTime:=""
+local cDinDem
+local nRec
+local nZaokr
 
 fill_firm_data()
 
 select pripr
-go top
 
 fill_part_data(idpartner)
 
 select pripr
-go top
 
 dDatDok := datdok
 dDatVal := dDatDok
 dDatIsp := dDatDok
+cDinDem := dindem
+nZaokr := zaokr
+
+nRec:=RecNO()
 
 do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==cBrDok
 	NSRNPIdRoba()   // Nastimaj (hseek) Sifr.Robe Na Pripr->IdRoba
@@ -131,7 +140,7 @@ do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==c
 	
 	// kolicina
 	nKol := field->kolicina
-	nRCijen := roba->vpc
+	nRCijen := field->cijena
 	
 	// rabat - popust
 	nPopust := field->rabat
@@ -170,23 +179,65 @@ do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==c
 enddo	
 
 select pripr
-go top
+go (nRec)
 
 // nafiluj ostale podatke
 aMemo := ParsMemo(txt)
 dDatDok := datdok
 dDatIsp := datdok
 dDatVal := CToD(aMemo[7])
+cBrOtpr := aMemo[6]
+cBrNar  := aMemo[8]
 
 // mjesto
 add_drntext("D01", gMjStr)
-// tekst na kraju fakture
-add_drntext("F04", aMemo[2])
-// potpis 
-add_drntext("F05", "  predao odobrio preuzeo .... ")
+// slovima iznos fakture
+add_drntext("D04", Slovima(ROUND(nTotal, nZaokr), cDinDem))
+// broj otpremnice
+add_drntext("D05", cBrOtpr)
+// broj narudzbenice
+add_drntext("D06", cBrNar)
+// DM/EURO
+add_drntext("D07", cDinDem)
+
+// tekst na kraju fakture F04, F05, F06
+fill_dod_text(aMemo[2])
+// potpis na kraju
+fill_potpis(cIdTipDok)
 
 // dodaj total u DRN
 add_drn(cBrDok, dDatDok, dDatVal, dDatIsp, cTime, nUkBPDV, nUkVPop, nUkBPDVPop, nUkPDV, nTotal, nCSum)
+
+return
+*}
+
+
+function fill_potpis(cIdVD)
+*{
+local cPom
+local cPotpis
+
+cPom:="G"+cIdVD+"STR2T"
+cPotpis := &cPom
+
+// potpis 
+add_drntext("F10", cPotpis)
+
+return
+*}
+
+
+function fill_dod_text(cTxt)
+*{
+local aPom
+
+aPom := SjeciStr(cTxt, 199)
+
+nPom := 3
+
+for i:=1 to LEN(aPom)
+	add_drntext("F0" + ALLTRIM(STR(nPom + i)), aPom[i] + " ")
+next
 
 return
 *}
@@ -216,17 +267,17 @@ if partn->id == cId
 	// adresa
 	add_drntext("K02", partn->adresa)
 	// mjesto
-	add_drntext("K07", partn->mjesto)
+	add_drntext("K10", partn->mjesto)
 	// ptt
-	add_drntext("K08", partn->ptt)
+	add_drntext("K11", partn->ptt)
 	// idbroj
 	add_drntext("K03", cIdBroj)
 	// porbroj
-	add_drntext("K04", cPorBroj)
+	add_drntext("K05", cPorBroj)
 	// brrjes
-	add_drntext("K05", cBrRjes)
+	add_drntext("K06", cBrRjes)
 	// brupisa
-	add_drntext("K06", cBrUpisa)
+	add_drntext("K07", cBrUpisa)
 endif
 
 return
@@ -237,6 +288,14 @@ function fill_firm_data()
 add_drntext("I01", gFNaziv)
 add_drntext("I02", gFAdresa)
 add_drntext("I03", gFIdBroj)
+// 4. se koristi za id prod.mjesto u pos
+add_drntext("I05", gFPorBroj)
+add_drntext("I06", gFBrSudRjes)
+add_drntext("I07", gFBrUpisa)
+add_drntext("I08", gFUstanova)
+// banke
+add_drntext("I09", ALLTRIM(gFBanka1) + "; " + ALLTRIM(gFBanka2) + ";" + ALLTRIM(gFBanka3))
+
 return
 *}
 
