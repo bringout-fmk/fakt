@@ -202,8 +202,8 @@ go (nRec)
 // nafiluj ostale podatke vazne za sam dokument
 aMemo := ParsMemo(txt)
 dDatDok := datdok
-dDatIsp := datdok
-dDatVal := CToD(aMemo[7])
+dDatVal := CToD(aMemo[9])
+dDatIsp := CToD(aMemo[7])
 cBrOtpr := aMemo[6]
 cBrNar  := aMemo[8]
 
@@ -269,6 +269,11 @@ cNaz := &cPom
 
 // da li se na dokumentu prikazju samo kolicine
 cSamoKol := "N"
+// za sljedece dokumente samo KOLICINE
+if cIdVD $ "12#19#21#26"
+	cSamoKol := "D"
+endif
+
 add_drntext("P03", cSamoKol)
 
 return
