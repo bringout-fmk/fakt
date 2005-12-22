@@ -1224,7 +1224,7 @@ local nPom:=IF(VAL(gIMenu)<1,ASC(gIMenu)-55,VAL(gIMenu))
 
 private aPom:={"00 - Pocetno stanje     ",;
                "01 - Ulaz / Radni nalog ",;
-               "06 - Ulaz u konsig.skladiste",;
+	       "06 - Ulaz u konsig.skladiste",;
                "10 - Racun veleprodaje",;
                "11 - Racun maloprodaje",;
                "12 - Otpremnica",;
@@ -1239,6 +1239,7 @@ private aPom:={"00 - Pocetno stanje     ",;
                "25 - Knjizna obavijest        ",;
                "26 - Narudzbenica             ",;
                "27 - Predracun MP             "},  h[16]
+
 
 if IzFmkIni("FAKT","Konsignacija","N",KUMPATH)=="N"
 	ADEL(aPom,9)
@@ -1509,8 +1510,14 @@ if (nRbr==1 .and. VAL(_podbr) < 1)
         			@ m_x+5,m_y+45 SAY "Po ul.fakt.broj:" GET _brotp when  W_BrOtp(fnovi)
       			endif
       			@  m_x+7,m_y+45 SAY "       i UCD-u :" GET _brNar
-   		endif
-   		if (glDistrib .and. _idtipdok$"10#12#13#26#21#22")
+   		else
+			// dodaj i za ostale dokumente
+			if IsPDV()
+      				@  m_x+6,m_y+45 SAY " datum isporuke:" GET _Datotp
+			endif
+		endif
+   		
+		if (glDistrib .and. _idtipdok$"10#12#13#26#21#22")
      			@ m_x+11,m_y+31  SAY "Relacija   :" get _idrelac  picture "@!" valid {|| _idtipdok$"21#22".or.JeStorno10().and.PuniDVRiz10().or.IzborRelacije(@_IdRelac,@_IdDist,@_IdVozila,@_datdok,@_marsruta)}
    		endif
 
