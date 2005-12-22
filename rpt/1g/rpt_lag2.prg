@@ -576,7 +576,7 @@ endif
 if lBezUlaza
    ?? "R.br  Sifra       Naziv                                 "+IF(lPoNarudzbi.and.cPKN=="D","Naruc. ","")+"   Stanje    jmj     "
 else
-   ?? "R.br  Sifra       Naziv                                 "+IF(lPoNarudzbi.and.cPKN=="D","Naruc. ","")+"   Stanje    jmj     "+IF(RJ->tip$"M1#M2".and.!EMPTY(cIdFirma),"Cij.","VPC ")+"      Iznos"
+   ?? "R.br  Sifra       Naziv                                 "+IF(lPoNarudzbi.and.cPKN=="D","Naruc. ","")+"   Stanje    jmj     "+IF(RJ->tip$"M1#M2".and.!EMPTY(cIdFirma),"Cij.",if(IsPDV()," PC ","VPC "))+"      Iznos"
 endif
 // endif
 

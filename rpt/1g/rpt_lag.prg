@@ -4,48 +4,6 @@
  * ----------------------------------------------------------------
  *                                     Copyright Sigma-com software 
  * ----------------------------------------------------------------
- * $Source: c:/cvsroot/cl/sigma/fmk/fakt/rpt/1g/rpt_lag.prg,v $
- * $Author: mirsad $ 
- * $Revision: 1.11 $
- * $Log: rpt_lag.prg,v $
- * Revision 1.11  2003/09/17 15:14:00  mirsad
- * sitni debug: uklonio poruku na kraju izvj.lager liste "gcnt1=x"
- *
- * Revision 1.10  2003/05/20 07:29:01  mirsad
- * Formatirao duzinu naziva robe za izvjestaje na 40 znakova.
- *
- * Revision 1.9  2003/04/28 13:39:12  mirsad
- * omogucen prikaz rekapitulacije po tarifama na lager listi (za Opresu)
- *
- * Revision 1.8  2003/01/21 15:01:58  ernad
- * probelm excl fakt - kalk ?! direktorij kalk
- *
- * Revision 1.7  2003/01/19 23:44:17  ernad
- * test network speed (sa), korekcija bl.lnk
- *
- * Revision 1.6  2003/01/14 03:23:33  ernad
- * exclusiv ... probelm mreza W2K ...
- *
- * Revision 1.5  2002/09/28 15:49:48  mirsad
- * prenos pocetnog stanja za evid.uplata dovrsen
- *
- * Revision 1.4  2002/09/12 12:58:23  mirsad
- * dokumentovanje INI parametara
- *
- * Revision 1.3  2002/07/04 13:35:04  ernad
- *
- *
- * debug: Stanje robe uzima parametre iz lager liste (a oni se ne mogu ispraviti pri pozivu izvjestaja)
- *
- * Revision 1.2  2002/07/04 08:34:19  mirsad
- * dokumentovanje ini parametara
- *
- * Revision 1.1  2002/06/28 20:59:39  ernad
- *
- *
- * razbijanje izvj.prg
- *
- *
  */
 
 
@@ -738,7 +696,13 @@ IF !lBezUlaza
       @ prow(),pcol()+1 SAY nIzn-nIznR  pict picdem
     endif
     if gVarC=="4"
-      ? space(gnLMarg); ?? " Ukupno MPV:"
+      ? space(gnLMarg)
+      if IsPDV()
+      	?? " Ukupno  PV:"
+      else
+      	?? " Ukupno MPV:"
+      endif
+      
       @ prow(),nCol1 SAY nIzn2  pict picdem
     endif
   endif
@@ -916,8 +880,13 @@ ELSE
             IF( cUI $ "IS" , PADC("Izlaz",12) , "" )+;
             IF( cUI $ "S" , PADC("Stanje",12) , "" )
   if cRR $ "NF"
-   ?? "R.br  Sifra       Naziv                                  "+IIF(lPoNarudzbi.and.cPKN=="D","Naruc. ","")+cPomZK+"jmj     "+IIF(RJ->tip$"N1#M1#M2".and.!EMPTY(cIdFirma),"Cij.",iif(cRealizacija=="D","PR.C","VPC "))+;
+     if IsPDV()
+ 	?? "R.br  Sifra       Naziv                                  "+IIF(lPoNarudzbi.and.cPKN=="D","Naruc. ","")+cPomZK+"jmj     "+IIF(RJ->tip$"N1#M1#M2".and.!EMPTY(cIdFirma),"Cij.",iif(cRealizacija=="D","PR.C"," PC "))+;
+      iif(cREalizacija=="N","      Iznos","       PV        Rabat      Realizovano")
+     else
+     	?? "R.br  Sifra       Naziv                                  "+IIF(lPoNarudzbi.and.cPKN=="D","Naruc. ","")+cPomZK+"jmj     "+IIF(RJ->tip$"N1#M1#M2".and.!EMPTY(cIdFirma),"Cij.",iif(cRealizacija=="D","PR.C","VPC "))+;
       iif(cREalizacija=="N","      Iznos","      VPV        Rabat      Realizovano")
+     endif
   else
    ?? "R.br  Sifra       Naziv                                  "+IIF(lPoNarudzbi .and. cPKN=="D","Naruc. ","")+"  Stanje       Revers    Rezervac.   Ostalo     jmj     "+IF(RJ->tip$"N1#M1#M2" .and. !EMPTY(cIdFirma),"Cij.  Cij.","VPC    VPC")+"*Stanje"
   endif
