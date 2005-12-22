@@ -599,12 +599,23 @@ select pripr
 select tarifa
 seek roba->idtarifa
 IF lPrikTar
-  if gTBDir=="N"
-    @ m_X+14,m_y+28 SAY "TBr: "; ?? roba->idtarifa, "PPP",str(tarifa->opp,7,2)+"%","PPU",str(tarifa->ppp,7,2)
-  endif
-  if _IdTipdok=="13"
-     @ m_X+16,m_y+45 SAY "MPC u sifraniku: "; ?? str(roba->mpc,8,2)
-  endif
+	if gTBDir=="N"
+    		if IsPDV()
+			@ m_X+14,m_y+28 SAY "TBr: "
+			?? roba->idtarifa, "PDV", str(tarifa->opp,7,2)+"%"
+		else
+			@ m_X+14,m_y+28 SAY "TBr: "
+			?? roba->idtarifa, "PPP", str(tarifa->opp,7,2)+"%", "PPU", str(tarifa->ppp,7,2)
+  		endif
+	endif
+  	if _IdTipdok=="13"
+		if IsPDV()
+     			@ m_X+16,m_y+45 SAY "PC u sifraniku : "
+		else
+     			@ m_X+16,m_y+45 SAY "MPC u sifraniku: "
+		endif
+		?? str(roba->mpc,8,2)
+  	endif
 ENDIF
 
 Odredi_IDROBA()
