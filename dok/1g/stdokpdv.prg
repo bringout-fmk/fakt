@@ -234,7 +234,10 @@ add_drntext("P04", if(gZagl == "1", "D", "N"))
 add_drntext("P05", if(gDodPar == "1", "D", "N"))
 // dodati redovi po listu 
 add_drntext("P06", ALLTRIM(STR(gERedova)) )
-
+// gornja margina
+add_drntext("P07", ALLTRIM(STR(gnTMarg)) )
+// da li se formira automatsko zaglavlje
+add_drntext("P10", gStZagl )
 
 // dodaj total u DRN
 add_drn(cBrDok, dDatDok, dDatVal, dDatIsp, cTime, nUkBPDV, nUkVPop, nUkBPDVPop, nUkPDV, nTotal, nCSum)
