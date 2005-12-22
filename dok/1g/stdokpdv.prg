@@ -91,12 +91,20 @@ local cTime:=""
 local cDinDem
 local nRec
 local nZaokr
+local cDokNaz
 
+// napuni firmine podatke
 fill_firm_data()
 
 select pripr
 
+// napuni podatke partnera
 fill_part_data(idpartner)
+
+select pripr
+
+// vrati naziv dokumenta
+get_dok_naz(@cDokNaz, idtipdok)
 
 select pripr
 
@@ -107,6 +115,8 @@ cDinDem := dindem
 nZaokr := zaokr
 
 nRec:=RecNO()
+
+altd()
 
 do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==cBrDok
 	NSRNPIdRoba()   // Nastimaj (hseek) Sifr.Robe Na Pripr->IdRoba
@@ -131,6 +141,13 @@ do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==c
 		endif
 	endif
 	
+	//resetuj varijable sa cijenama
+	nCjPDV := 0
+	nCj2PDV := 0
+	nCjBPDV := 0
+	nCj2BPDV := 0
+	nVPopust := 0
+	
 	cRbr := field->rbr
 	cPodBr := field->podbr
 	cJmj := roba->jmj
@@ -141,7 +158,7 @@ do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==c
 	// kolicina
 	nKol := field->kolicina
 	nRCijen := field->cijena
-	
+
 	// rabat - popust
 	nPopust := field->rabat
 	
@@ -175,13 +192,14 @@ do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==c
 	
 	add_rn(cBrDok, cRbr, cPodBr, cIdRoba, cRobaNaz, cJmj, nKol, nCjPDV, nCjBPDV, nCj2PDV, nCj2BPDV, nPopust, nPPDV, nVPDV, nUkStavka)
 
+	select pripr
 	skip
 enddo	
 
 select pripr
 go (nRec)
 
-// nafiluj ostale podatke
+// nafiluj ostale podatke vazne za sam dokument
 aMemo := ParsMemo(txt)
 dDatDok := datdok
 dDatIsp := datdok
@@ -191,6 +209,8 @@ cBrNar  := aMemo[8]
 
 // mjesto
 add_drntext("D01", gMjStr)
+// naziv dokumenta
+add_drntext("D02", cDokNaz)
 // slovima iznos fakture
 add_drntext("D04", Slovima(ROUND(nTotal, nZaokr), cDinDem))
 // broj otpremnice
@@ -204,6 +224,17 @@ add_drntext("D07", cDinDem)
 fill_dod_text(aMemo[2])
 // potpis na kraju
 fill_potpis(cIdTipDok)
+
+// parametri generalni za stampu dokuemnta
+// lijeva margina
+add_drntext("P01", ALLTRIM(STR(gnLMarg)) )
+// zaglavlje na svakoj stranici
+add_drntext("P04", if(gZagl == "1", "D", "N"))
+// prikaz dodatnih podataka 
+add_drntext("P05", if(gDodPar == "1", "D", "N"))
+// dodati redovi po listu 
+add_drntext("P06", ALLTRIM(STR(gERedova)) )
+
 
 // dodaj total u DRN
 add_drn(cBrDok, dDatDok, dDatVal, dDatIsp, cTime, nUkBPDV, nUkVPop, nUkBPDVPop, nUkPDV, nTotal, nCSum)
@@ -227,17 +258,46 @@ return
 *}
 
 
+// daj naziv dokumenta iz parametara
+function get_dok_naz(cNaz, cIdVd)
+*{
+local cPom
+local cSamoKol
+
+cPom:="G" + cIdVd + "STR"
+cNaz := &cPom
+
+// da li se na dokumentu prikazju samo kolicine
+cSamoKol := "N"
+add_drntext("P03", cSamoKol)
+
+return
+*}
+
+// filovanje dodatnog teksta
 function fill_dod_text(cTxt)
 *{
-local aPom
+local aLines // matrica sa linijama teksta
+local nFId // polje Fnn counter od 20 pa nadalje
+local nCnt // counter upisa u DRNTEXT
 
-aPom := SjeciStr(cTxt, 199)
+// slobodni tekst se upisuje u DRNTEXT od F20 -- F50
 
-nPom := 3
+cTxt := STRTRAN(cTxt, "ç" + Chr(10), "")
+// daj mi matricu sa tekstom line1, line2 itd...
+aLines := TokToNiz(cTxt, Chr(13) + Chr(10)) 
 
-for i:=1 to LEN(aPom)
-	add_drntext("F0" + ALLTRIM(STR(nPom + i)), aPom[i] + " ")
+nFId := 20
+nCnt := 0
+
+for i:=1 to LEN(aLines)
+	add_drntext("F" + ALLTRIM(STR(nFId)), aLines[i] + " ")
+	++ nFId
+	++ nCnt
 next
+
+// dodaj i parametar koliko ima linija texta
+add_drntext("P02", ALLTRIM(STR(nCnt)))
 
 return
 *}
