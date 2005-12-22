@@ -678,7 +678,7 @@ if IsPDV()
 	public gFBanka1:=SPACE(50)
 	public gFBanka2:=SPACE(50)
 	public gFBanka3:=SPACE(50)
-	
+	public gStZagl:="D"
 	// parametri zaglavlja
 	Rpar("F1",@gFNaziv)
    	Rpar("F2",@gFAdresa)
@@ -690,6 +690,7 @@ if IsPDV()
    	Rpar("F9",@gFBanka1)
    	Rpar("G1",@gFBanka2)
    	Rpar("G2",@gFBanka3)
+   	Rpar("Z1",@gStZagl)
 endif
 
 if valtype(gtabela)<>"N"
