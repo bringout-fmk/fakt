@@ -333,7 +333,7 @@ private GetList:={}
 
 O_PARAMS
 
-Box(,15,77,.f.,"Parametri zaglavlja")
+Box(,17,77,.f.,"Parametri zaglavlja")
 	@ m_x+2,m_y+2 SAY "Puni naziv firme:" GET gFNaziv 
 	@ m_x+3,m_y+2 SAY "Adresa firme:" GET gFAdresa
   	@ m_x+4,m_y+2 SAY "Ident.broj:" GET gFIdBroj
@@ -344,6 +344,7 @@ Box(,15,77,.f.,"Parametri zaglavlja")
   	@ m_x+10,m_y+2 SAY "Banka 1:" GET gFBanka1
   	@ m_x+11,m_y+2 SAY "Banka 2:" GET gFBanka2
   	@ m_x+12,m_y+2 SAY "Banka 3:" GET gFBanka3
+  	@ m_x+15,m_y+2 SAY "Koristiti automatsko zaglavlje (D/N)?" GET gStZagl VALID gStZagl$"DN" PICT "@!"
   	read
 BoxC()
 
@@ -358,6 +359,7 @@ if (LASTKEY()<>K_ESC)
    	Wpar("F9",gFBanka1)
    	Wpar("G1",gFBanka2)
    	Wpar("G2",gFBanka3)
+   	Wpar("Z1",gStZagl)
 endif
 
 return 
