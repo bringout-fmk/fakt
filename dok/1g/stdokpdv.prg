@@ -162,9 +162,16 @@ do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==c
 	// rabat - popust
 	nPopust := field->rabat
 	
-	// cjena bez pdv-a
-	nCjBPDV:= nRCijen
-	nCjPDV := (nRCijen * (1 + nPPDV/100))
+	// ako je 13-ka onda je MPC
+	if field->idtipdok == "13"
+		// cjena bez pdv-a
+		nCjPDV:= nRCijen
+		nCjBPDV := (nRCijen / (1 + nPPDV/100))
+	else
+		// cjena bez pdv-a
+		nCjBPDV:= nRCijen
+		nCjPDV := (nRCijen * (1 + nPPDV/100))
+	endif
 	
 	// izracunaj vrijednost popusta
 	if Round(nPopust,4) <> 0
@@ -186,7 +193,7 @@ do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==c
 	nUkPDV += nKol * nVPDV
 	nUkBPDV += nKol * nCjBPDV
 	nUkBPDVPop += nKol * nCj2BPDV
-	nTotal += (nKol * nCj2BPDV) + nVPDV
+	nTotal += nKol * (nCj2BPDV + nVPDV)
 
 	++ nCSum
 	
