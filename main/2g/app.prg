@@ -666,32 +666,31 @@ RPar("id",@gcRabDok)
 RPar("Fi",@gIspPart)
 RPar("Fr",@gResetRoba)
 
-if IsPDV()
-	// varijable
-	public gFNaziv:=SPACE(40)
-	public gFAdresa:=SPACE(35)
-	public gFIdBroj:=SPACE(12)
-	public gFBrSudRjes:=SPACE(15)
-	public gFBrUpisa:=SPACE(10)
-	public gFUstanova:=SPACE(20)
-	public gFPorBroj:=SPACE(15)
-	public gFBanka1:=SPACE(50)
-	public gFBanka2:=SPACE(50)
-	public gFBanka3:=SPACE(50)
-	public gStZagl:="D"
-	// parametri zaglavlja
-	Rpar("F1",@gFNaziv)
-   	Rpar("F2",@gFAdresa)
-   	Rpar("F3",@gFIdBroj)
-   	Rpar("F4",@gFBrSudRjes)
-   	Rpar("F5",@gFBrUpisa)
-   	Rpar("F6",@gFUstanova)
-   	Rpar("F7",@gFPorBroj)
-   	Rpar("F9",@gFBanka1)
-   	Rpar("G1",@gFBanka2)
-   	Rpar("G2",@gFBanka3)
-   	Rpar("Z1",@gStZagl)
-endif
+// varijable
+public gFNaziv:=SPACE(40)
+public gFAdresa:=SPACE(35)
+public gFIdBroj:=SPACE(13)
+public gFBrSudRjes:=SPACE(15)
+public gFBrUpisa:=SPACE(10)
+public gFUstanova:=SPACE(20)
+public gFPorBroj:=SPACE(15)
+public gFBanka1:=SPACE(50)
+public gFBanka2:=SPACE(50)
+public gFBanka3:=SPACE(50)
+public gStZagl:="D"
+// parametri zaglavlja
+Rpar("F1",@gFNaziv)
+Rpar("F2",@gFAdresa)
+Rpar("F3",@gFIdBroj)
+Rpar("F4",@gFBrSudRjes)
+Rpar("F5",@gFBrUpisa)
+Rpar("F6",@gFUstanova)
+Rpar("F7",@gFPorBroj)
+Rpar("F9",@gFBanka1)
+Rpar("G1",@gFBanka2)
+Rpar("G2",@gFBanka3)
+Rpar("Z1",@gStZagl)
+
 
 if valtype(gtabela)<>"N"
    gTabela:=1
