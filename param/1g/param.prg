@@ -333,6 +333,8 @@ private GetList:={}
 
 O_PARAMS
 
+gFIdBroj := PADR(gFIdBroj, 13)
+
 Box(,17,77,.f.,"Parametri zaglavlja")
 	@ m_x+2,m_y+2 SAY "Puni naziv firme:" GET gFNaziv 
 	@ m_x+3,m_y+2 SAY "Adresa firme:" GET gFAdresa
