@@ -189,7 +189,7 @@ do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==c
 	nUkStavka := nKol * (nCj2PDV)
 
 	// sumiraj vrijednosti
-	nUkVPop += nVPopust
+	nUkVPop += nKol * nVPopust
 	nUkPDV += nKol * nVPDV
 	nUkBPDV += nKol * nCjBPDV
 	nUkBPDVPop += nKol * nCj2BPDV
