@@ -127,9 +127,6 @@ do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==c
 	select pripr
 	
      	aMemo:=ParsMemo(txt)
-	
-	altd()
-	
 	cIdRoba := field->idroba
 	
 	if roba->tip="U"
@@ -137,7 +134,7 @@ do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==c
    	else
 		cRobaNaz:=ALLTRIM(roba->naz)
 		if lBarKod
-			cRobaNaz:=cRobaNaz + "(" + roba->barkod + ")"
+			cRobaNaz:=cRobaNaz + " (BK: " + roba->barkod + ")"
 		endif
 	endif
 	
