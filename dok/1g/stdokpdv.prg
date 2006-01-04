@@ -15,7 +15,6 @@ else
  	O_Edit()
 endif
 
-altd()
 
 // barkod artikla
 private cPombk := IzFmkIni("SifRoba","PBarkod","0",SIFPATH)
@@ -75,6 +74,7 @@ local nKol:=0
 local nCjPDV:=0
 local nCjBPDV:=0
 local nPopust:=0 // proc popusta
+local nPopNaTeretProdavca:=0
 local nVPDV:=0
 local nCj2PDV:=0
 local nCj2BPDV:=0
@@ -86,12 +86,16 @@ local nUkBPDV:= 0
 local nUkBPDVPop:=0
 local nUkVPop:=0
 local nVPopust:=0
+local nVPopNaTeretProdavca:=0
 local nUkPDV:=0
+local nUkPopNaTeretProdavca:=0
 local cTime:=""
 local cDinDem
 local nRec
 local nZaokr
 local cDokNaz
+// ako je kupac pdv obveznik, ova varijable je .t.
+local lPdvObveznik
 
 // napuni firmine podatke
 fill_firm_data()
@@ -99,7 +103,9 @@ fill_firm_data()
 select pripr
 
 // napuni podatke partnera
-fill_part_data(idpartner)
+
+lPdvObveznik := .f.
+fill_part_data(idpartner, @lPdvObveznik)
 
 select pripr
 
@@ -116,7 +122,6 @@ nZaokr := zaokr
 
 nRec:=RecNO()
 
-altd()
 
 do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==cBrDok
 	NSRNPIdRoba()   // Nastimaj (hseek) Sifr.Robe Na Pripr->IdRoba
@@ -156,8 +161,17 @@ do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==c
 	nKol := field->kolicina
 	nRCijen := field->cijena
 
-	// rabat - popust
-	nPopust := field->rabat
+	// zasticena cijena, za krajnjeg kupca
+	if RobaZastCijena(tarifa->id)  .and. !lPdvObveznik
+	   // krajnji potrosac
+	   // roba sa zasticenom cijenom
+	   nPopNaTeretProdavca := field->rabat
+	   nPopust := 0
+	else
+	    // rabat - popust
+	    nPopust := field->rabat
+	    nPopNaTeretProdavca := 0
+	endif
 	
 	// ako je 13-ka onda je MPC
 	if field->idtipdok == "13"
@@ -176,6 +190,13 @@ do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==c
 		nVPopust := (nCjBPDV * (nPopust/100))
 	endif
 	
+	// izacunaj vrijednost popusta na teret prodavca
+	if Round(nPopNaTeretProdavca, 4) <> 0
+		// vrijednost popusta
+		nVPopNaTeretProdavca := (nCjBPDV * (nPopNaTeretProdavca/100))
+	endif
+
+	
 	// cijena sa popustom bez pdv-a
 	nCj2BPDV := (nCjBPDV - nVPopust)
 	// izracuna PDV na cijenu sa popustom
@@ -191,14 +212,20 @@ do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==c
 	nUkBPDV += nKol * nCjBPDV
 	nUkBPDVPop += nKol * nCj2BPDV
 	nTotal += nKol * (nCj2BPDV + nVPDV)
+	nUkPopNaTeretProdavca += nKol * nVPopNaTeretProdavca 
 
 	++ nCSum
 	
-	add_rn(cBrDok, cRbr, cPodBr, cIdRoba, cRobaNaz, cJmj, nKol, nCjPDV, nCjBPDV, nCj2PDV, nCj2BPDV, nPopust, nPPDV, nVPDV, nUkStavka)
+	add_rn(cBrDok, cRbr, cPodBr, cIdRoba, cRobaNaz, cJmj, nKol, nCjPDV, nCjBPDV, nCj2PDV, nCj2BPDV, nPopust, nPPDV, nVPDV, nUkStavka, nPopNaTeretProdavca, nVPopNaTeretProdavca )
 
 	select pripr
 	skip
 enddo	
+
+nTotal := ROUND(nTotal, nZaokr)
+nUkPopNaTeretProdavca := ROUND(nUkPopNaTeretProdavca, nZaokr)
+nUkBPDV := ROUND( nUkBPDV, nZaokr )
+nUkVPop := ROUND( nUkVPop, nZaokr )
 
 select pripr
 go (nRec)
@@ -216,7 +243,7 @@ add_drntext("D01", gMjStr)
 // naziv dokumenta
 add_drntext("D02", cDokNaz)
 // slovima iznos fakture
-add_drntext("D04", Slovima(ROUND(nTotal, nZaokr), cDinDem))
+add_drntext("D04", Slovima( nTotal - nUkPopNaTeretProdavca , cDinDem))
 // broj otpremnice
 add_drntext("D05", cBrOtpr)
 // broj narudzbenice
@@ -244,7 +271,7 @@ add_drntext("P07", ALLTRIM(STR(gnTMarg)) )
 add_drntext("P10", gStZagl )
 
 // dodaj total u DRN
-add_drn(cBrDok, dDatDok, dDatVal, dDatIsp, cTime, nUkBPDV, nUkVPop, nUkBPDVPop, nUkPDV, nTotal, nCSum)
+add_drn(cBrDok, dDatDok, dDatVal, dDatIsp, cTime, nUkBPDV, nUkVPop, nUkBPDVPop, nUkPDV, nTotal, nCSum, nUkPopNaTeretProdavca)
 
 return
 *}
@@ -255,8 +282,12 @@ function fill_potpis(cIdVD)
 local cPom
 local cPotpis
 
-cPom:="G"+cIdVD+"STR2T"
-cPotpis := &cPom
+if (cIdVd == "01") .or. (cIdVd == "00")
+   cPotpis := "                           Odobrio                     Primio "
+else
+   cPom:="G"+cIdVD+"STR2T"
+   cPotpis := &cPom
+endif
 
 // potpis 
 add_drntext("F10", cPotpis)
@@ -271,15 +302,23 @@ function get_dok_naz(cNaz, cIdVd)
 local cPom
 local cSamoKol
 
-cPom:="G" + cIdVd + "STR"
-cNaz := &cPom
+if (cIdVd == "01")
+ cNaz := "Prijem robe u magacin"
+elseif (cIdVd == "00")
+ cNaz := "Pocetno stanje"
+else
+ cPom:="G" + cIdVd + "STR"
+ cNaz := &cPom
+endif
 
 // da li se na dokumentu prikazju samo kolicine
 cSamoKol := "N"
+
 // za sljedece dokumente samo KOLICINE
 if cIdVD $ "12#19#21#26"
 	cSamoKol := "D"
 endif
+
 
 add_drntext("P03", cSamoKol)
 
@@ -315,7 +354,7 @@ return
 *}
 
 
-function fill_part_data(cId)
+function fill_part_data(cId, lPdvObveznik)
 *{
 local cIdBroj
 local cPorBroj
@@ -346,6 +385,12 @@ if partn->id == cId
 	add_drntext("K03", cIdBroj)
 	// porbroj
 	add_drntext("K05", cPorBroj)
+	if !EMPTY(cPorBroj)
+		lPdvObveznik := .t.
+	else
+		lPdvObveznik := .f.
+	endif
+	
 	// brrjes
 	add_drntext("K06", cBrRjes)
 	// brupisa
@@ -371,3 +416,15 @@ add_drntext("I09", ALLTRIM(gFBanka1) + "; " + ALLTRIM(gFBanka2) + ";" + ALLTRIM(
 return
 *}
 
+// roba ima zasticenu cijenu
+// sto znaci da krajnji kupac uvijek placa fixan iznos pdv-a 
+// bez obzira po koliko se roba prodaje
+function RobaZastCijena( cIdTarifa )
+*{
+lZasticena := .f.
+lZasticena := lZasticena .or.  (PADR(cIdTarifa, 6) == PADR("PDVZ",6))
+lZasticena := lZasticena .or.  (PADR(cIdTarifa, 6) == PADR("PDV17Z",6))
+lZasticena := lZasticena .or.  (PADR(cIdTarifa, 6) == PADR("CIGA05",6))
+
+return lZasticena
+*}
