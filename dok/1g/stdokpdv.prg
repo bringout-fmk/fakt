@@ -173,8 +173,8 @@ do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==c
 	    nPopNaTeretProdavca := 0
 	endif
 	
-	// ako je 13-ka onda je MPC
-	if field->idtipdok == "13"
+	// ako je 13-ka ili 27-ca
+	if (field->idtipdok == "13" .and. glCij13Mpc) .or. (field->idtipdok $ "11#27" .and. gMP $ "1234567") 
 		// cjena bez pdv-a
 		nCjPDV:= nRCijen
 		nCjBPDV := (nRCijen / (1 + nPPDV/100))
@@ -385,8 +385,13 @@ if partn->id == cId
 	add_drntext("K03", cIdBroj)
 	// porbroj
 	add_drntext("K05", cPorBroj)
-	if !EMPTY(cPorBroj)
-		lPdvObveznik := .t.
+	
+	if !EMPTY(cIdBroj) 
+		if LEN(ALLTRIM(cIdBroj)) == 12
+			lPdvObveznik := .t.
+		else
+			lPdvObveznik := .f.
+		endif
 	else
 		lPdvObveznik := .f.
 	endif
