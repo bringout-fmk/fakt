@@ -302,8 +302,8 @@ elseif _idtipdok$"11#15#27"
   if gMP=="1"
     _Cijena:=MPC
   elseif gMP=="2"
-    _Cijena:=round(VPC * (1+ tarifa->opp/100) * (1+tarifa->ppp/100),;
-                   VAL(IzFMKIni("FAKT","ZaokruzenjeMPCuDiskontu","1",KUMPATH)))
+      _Cijena:=round(VPC * (1+ tarifa->opp/100) * (1+tarifa->ppp/100),;
+                   VAL(IzFMKIni("FAKT","ZaokruzenjeMPCuDiskontu","2",KUMPATH)))
   elseif gMP=="3"
     _Cijena:=MPC2
   elseif gMP=="4"
