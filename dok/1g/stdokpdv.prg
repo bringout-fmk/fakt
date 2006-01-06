@@ -136,13 +136,18 @@ do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==c
 	
 	if roba->tip="U"
 		cRobaNaz:=padr(aMemo[1],40) // roba
-   	else
+	else
 		cRobaNaz:=ALLTRIM(roba->naz)
 		if lBarKod
 			cRobaNaz:=cRobaNaz + " (BK: " + roba->barkod + ")"
 		endif
 	endif
-	
+	altd()
+	// dodaj i vrijednost iz polja SERBR
+	if !EMPTY(ALLTRIM(pripr->serbr))
+		cRobaNaz := cRobaNaz + ", " + ALLTRIM(pripr->serbr) 
+	endif
+
 	//resetuj varijable sa cijenama
 	nCjPDV := 0
 	nCj2PDV := 0
@@ -356,51 +361,71 @@ return
 
 function fill_part_data(cId, lPdvObveznik)
 *{
-local cIdBroj
-local cPorBroj
-local cBrRjes
-local cBrUpisa
+local cIdBroj:=""
+local cPorBroj:=""
+local cBrRjes:=""
+local cBrUpisa:=""
+local cPartNaziv:=""
+local cPartAdres:=""
+local cPartMjesto:=""
+local cPartPTT:=""
+local aMemo
+local lFromMemo:=.f.
 
-O_PARTN
-select partn
-set order to tag "ID"
-hseek cId
+if Empty(ALLTRIM(cID))
+	// ako je prazan partner uzmi iz memo polja
+	aMemo:=ParsMemo(txt)
+	lFromMemo := .t.
+else
+	O_PARTN
+	select partn
+	set order to tag "ID"
+	hseek cId
+endif
 
-if partn->id == cId
+if !lFromMemo .and. partn->id == cId
 	// uzmi podatke iz SIFK
 	cIdBroj := IzSifK("PARTN", "REGB", cId, .f.)
 	cPorBroj := IzSifK("PARTN", "PORB", cId, .f.)
 	cBrRjes := IzSifK("PARTN", "BRJS", cId, .f.)
 	cBrUpisa := IzSifK("PARTN", "BRUP", cId, .f.)
+	cPartNaziv := partn->naz
+	cPartAdres := partn->adresa
+	cPartMjesto := partn->mjesto
+	cPartPtt := partn->ptt
+else
+	cPartNaziv := aMemo[3]
+	cPartAdres := aMemo[4]
+	cPartMjesto := aMemo[5]
+endif
 
-	// naziv
-	add_drntext("K01", partn->naz)
-	// adresa
-	add_drntext("K02", partn->adresa)
-	// mjesto
-	add_drntext("K10", partn->mjesto)
-	// ptt
-	add_drntext("K11", partn->ptt)
-	// idbroj
-	add_drntext("K03", cIdBroj)
-	// porbroj
-	add_drntext("K05", cPorBroj)
-	
-	if !EMPTY(cIdBroj) 
-		if LEN(ALLTRIM(cIdBroj)) == 12
-			lPdvObveznik := .t.
-		else
-			lPdvObveznik := .f.
-		endif
+// naziv
+add_drntext("K01", cPartNaziv)
+// adresa
+add_drntext("K02", cPartAdres)
+// mjesto
+add_drntext("K10", cPartMjesto)
+// ptt
+add_drntext("K11", cPartPTT)
+// idbroj
+add_drntext("K03", cIdBroj)
+// porbroj
+add_drntext("K05", cPorBroj)
+
+if !EMPTY(cIdBroj) 
+	if LEN(ALLTRIM(cIdBroj)) == 12
+		lPdvObveznik := .t.
 	else
 		lPdvObveznik := .f.
 	endif
-	
-	// brrjes
-	add_drntext("K06", cBrRjes)
-	// brupisa
-	add_drntext("K07", cBrUpisa)
+else
+	lPdvObveznik := .f.
 endif
+	
+// brrjes
+add_drntext("K06", cBrRjes)
+// brupisa
+add_drntext("K07", cBrUpisa)
 
 return
 *}
