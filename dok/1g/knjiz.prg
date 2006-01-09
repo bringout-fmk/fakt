@@ -1513,6 +1513,7 @@ if (nRbr==1 .and. VAL(_podbr) < 1)
    		else
 			// dodaj i za ostale dokumente
 			if IsPDV()
+				_DatOtp := _datdok
       				@  m_x+6,m_y+45 SAY " datum isporuke:" GET _Datotp
 			endif
 		endif

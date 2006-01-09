@@ -3,6 +3,7 @@
 
 function stdokpdv(cIdFirma, cIdTipDok, cBrDok)
 *{
+local lSamoKol:=.f. // samo kolicine
 
 drn_create()
 drn_open()
@@ -19,6 +20,7 @@ endif
 // barkod artikla
 private cPombk := IzFmkIni("SifRoba","PBarkod","0",SIFPATH)
 private lPBarkod:=.f.
+
 if cPombk $ "12"  // pitanje, default "N"
 	lPBarkod := ( Pitanje(,"Zelite li ispis barkodova ?",iif(cPombk=="1","N","D"))=="D")
 endif
@@ -41,6 +43,13 @@ cBrDok:=BrDok
 dDatDok:=DatDok
 cIdTipDok:=IdTipDok
 
+// prikaz samo kolicine
+if cIdTipDok $ "12#19#21#26"
+	if (gPSamoKol == "0" .and. Pitanje(,"Prikazati samo kolicine (D/N)", "N") == "D") .or. gPSamoKol == "D"
+		lSamoKol:=.t.
+	endif
+endif
+
 if VAL(podbr)=0 .and. VAL(rbr)==1
 else
 	Beep(2)
@@ -48,7 +57,7 @@ else
   	return
 endif
 
-fill_porfakt_data(cIdFirma, cIdTipDok, cBrDok, lPBarKod)
+fill_porfakt_data(cIdFirma, cIdTipDok, cBrDok, lPBarKod, lSamoKol)
 
 pf_a4_print()
 
@@ -57,7 +66,7 @@ return
 
 
 
-function fill_porfakt_data(cIdFirma, cIdTipDok, cBrDok, lBarKod)
+function fill_porfakt_data(cIdFirma, cIdTipDok, cBrDok, lBarKod, lSamoKol)
 *{
 local cTxt1,cTxt2,cTxt3,cTxt4,cTxt5
 local cIdPartner
@@ -110,7 +119,7 @@ fill_part_data(idpartner, @lPdvObveznik)
 select pripr
 
 // vrati naziv dokumenta
-get_dok_naz(@cDokNaz, idtipdok)
+get_dok_naz(@cDokNaz, idtipdok, lSamoKol)
 
 select pripr
 
@@ -142,7 +151,7 @@ do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==c
 			cRobaNaz:=cRobaNaz + " (BK: " + roba->barkod + ")"
 		endif
 	endif
-	altd()
+
 	// dodaj i vrijednost iz polja SERBR
 	if !EMPTY(ALLTRIM(pripr->serbr))
 		cRobaNaz := cRobaNaz + ", " + ALLTRIM(pripr->serbr) 
@@ -168,14 +177,14 @@ do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==c
 
 	// zasticena cijena, za krajnjeg kupca
 	if RobaZastCijena(tarifa->id)  .and. !lPdvObveznik
-	   // krajnji potrosac
-	   // roba sa zasticenom cijenom
-	   nPopNaTeretProdavca := field->rabat
-	   nPopust := 0
+		// krajnji potrosac
+	   	// roba sa zasticenom cijenom
+	   	nPopNaTeretProdavca := field->rabat
+	   	nPopust := 0
 	else
-	    // rabat - popust
-	    nPopust := field->rabat
-	    nPopNaTeretProdavca := 0
+	    	// rabat - popust
+	    	nPopust := field->rabat
+	    	nPopNaTeretProdavca := 0
 	endif
 	
 	// ako je 13-ka ili 27-ca
@@ -286,12 +295,15 @@ function fill_potpis(cIdVD)
 *{
 local cPom
 local cPotpis
+local cStdPot
 
-if (cIdVd == "01") .or. (cIdVd == "00")
-   cPotpis := "                           Odobrio                     Primio "
+cStdPot := "                           Odobrio                     Primio "
+
+if (cIdVd $ "01#00#19") 
+	cPotpis := cStdPot
 else
-   cPom:="G"+cIdVD+"STR2T"
-   cPotpis := &cPom
+   	cPom:="G"+cIdVD+"STR2T"
+   	cPotpis := &cPom
 endif
 
 // potpis 
@@ -302,33 +314,33 @@ return
 
 
 // daj naziv dokumenta iz parametara
-function get_dok_naz(cNaz, cIdVd)
+function get_dok_naz(cNaz, cIdVd, lSamoKol)
 *{
 local cPom
 local cSamoKol
 
 if (cIdVd == "01")
- cNaz := "Prijem robe u magacin"
+	cNaz := "Prijem robe u magacin br. "
 elseif (cIdVd == "00")
- cNaz := "Pocetno stanje"
+	cNaz := "Pocetno stanje br. "
+elseif (cIdVD == "19")
+	cNaz := "Izlaz po ostalim osnovama br. "
 else
- cPom:="G" + cIdVd + "STR"
- cNaz := &cPom
+ 	cPom:="G" + cIdVd + "STR"
+ 	cNaz := &cPom
 endif
 
-// da li se na dokumentu prikazju samo kolicine
+// ako je lSamoKol := .t. onda je prikaz samo kolicina
 cSamoKol := "N"
-
-// za sljedece dokumente samo KOLICINE
-if cIdVD $ "12#19#21#26"
+if lSamoKol
 	cSamoKol := "D"
 endif
-
 
 add_drntext("P03", cSamoKol)
 
 return
 *}
+
 
 // filovanje dodatnog teksta
 function fill_dod_text(cTxt)
@@ -441,7 +453,9 @@ add_drntext("I06", gFBrSudRjes)
 add_drntext("I07", gFBrUpisa)
 add_drntext("I08", gFUstanova)
 // banke
-add_drntext("I09", ALLTRIM(gFBanka1) + "; " + ALLTRIM(gFBanka2) + ";" + ALLTRIM(gFBanka3))
+add_drntext("I09", ALLTRIM(gFBanka1) + "; " + ALLTRIM(gFBanka2) + "; " + ALLTRIM(gFBanka3) + "; " + ALLTRIM(gFBanka4) + "; " + ALLTRIM(gFBanka5) )
+
+add_drntext("I10", ALLTRIM(gFTelefon))
 
 return
 *}

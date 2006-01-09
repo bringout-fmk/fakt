@@ -335,18 +335,21 @@ O_PARAMS
 
 gFIdBroj := PADR(gFIdBroj, 13)
 
-Box(,17,77,.f.,"Parametri zaglavlja")
+Box(,20,77,.f.,"Parametri zaglavlja")
 	@ m_x+2,m_y+2 SAY "Puni naziv firme:" GET gFNaziv 
 	@ m_x+3,m_y+2 SAY "Adresa firme:" GET gFAdresa
-  	@ m_x+4,m_y+2 SAY "Ident.broj:" GET gFIdBroj
-  	@ m_x+5,m_y+2 SAY "Broj sud.rjesenja:" GET gFBrSudRjes
-  	@ m_x+6,m_y+2 SAY "Broj upisa:" GET gFBrUpisa
-  	@ m_x+7,m_y+2 SAY "Ustanova:" GET gFUstanova
-  	@ m_x+8,m_y+2 SAY "Poreski broj:" GET gFPorBroj
-  	@ m_x+10,m_y+2 SAY "Banka 1:" GET gFBanka1
-  	@ m_x+11,m_y+2 SAY "Banka 2:" GET gFBanka2
-  	@ m_x+12,m_y+2 SAY "Banka 3:" GET gFBanka3
-  	@ m_x+15,m_y+2 SAY "Koristiti automatsko zaglavlje (D/N)?" GET gStZagl VALID gStZagl$"DN" PICT "@!"
+	@ m_x+4,m_y+2 SAY "Telefoni:" GET gFTelefon
+  	@ m_x+5,m_y+2 SAY "Ident.broj:" GET gFIdBroj
+  	@ m_x+6,m_y+2 SAY "Broj sud.rjesenja:" GET gFBrSudRjes
+  	@ m_x+7,m_y+2 SAY "Broj upisa:" GET gFBrUpisa
+  	@ m_x+8,m_y+2 SAY "Ustanova:" GET gFUstanova
+  	@ m_x+9,m_y+2 SAY "Poreski broj:" GET gFPorBroj
+  	@ m_x+13,m_y+2 SAY "Banka 1:" GET gFBanka1
+  	@ m_x+14,m_y+2 SAY "Banka 2:" GET gFBanka2
+  	@ m_x+15,m_y+2 SAY "Banka 3:" GET gFBanka3
+  	@ m_x+16,m_y+2 SAY "Banka 4:" GET gFBanka4
+  	@ m_x+17,m_y+2 SAY "Banka 5:" GET gFBanka5
+  	@ m_x+19,m_y+2 SAY "Koristiti automatsko zaglavlje (D/N)?" GET gStZagl VALID gStZagl$"DN" PICT "@!"
   	read
 BoxC()
 
@@ -361,6 +364,9 @@ if (LASTKEY()<>K_ESC)
    	Wpar("F9",gFBanka1)
    	Wpar("G1",gFBanka2)
    	Wpar("G2",gFBanka3)
+   	Wpar("G3",gFBanka4)
+   	Wpar("G4",gFBanka5)
+   	Wpar("G5",gFTelefon)
    	Wpar("Z1",gStZagl)
 endif
 
@@ -679,7 +685,7 @@ private  GetList:={}
 
 O_PARAMS
 
-Box(,22,76,.f.,"VARIJANTE OBRADE DOKUMENATA")
+Box(,23,76,.f.,"VARIJANTE OBRADE DOKUMENATA")
 	@ m_x+1,m_y+2 SAY "Unos Dat.pl, otpr., narudzbe D/N (1/2) ?" GET gDoDPar VALID gDodPar $ "12" PICT "@!"
   	@ m_x+1,m_y+46 SAY "Dat.pl.u svim v.f.9 (D/N)?" GET gDatVal VALID gDatVal $ "DN" PICT "@!"
   	@ m_x+2,m_y+2 SAY "Generacija ulaza prilikom izlaza 13" GET gProtu13 VALID gProtu13 $ "DN" PICT "@!"
@@ -708,7 +714,8 @@ Box(,22,76,.f.,"VARIJANTE OBRADE DOKUMENATA")
   	@ m_x+22,col()+2 SAY "C3 (D/N)?" GET gKarC3 PICT "@!" VALID gKarC3$"DN"
   	@ m_x+22,col()+2 SAY "N1 (D/N)?" GET gKarN1 PICT "@!" VALID gKarN1$"DN"
   	@ m_x+22,col()+2 SAY "N2 (D/N)?" GET gKarN2 PICT "@!" VALID gKarN2$"DN"
-  	read
+  	@ m_x+23,m_y+2 SAY "Prikaz samo kolicina na dokumentima (0/D/N)" GET gPSamoKol PICT "@!" VALID gPSamoKol $ "0DN"
+	read
 BoxC()
 
 if (LASTKEY()<>K_ESC)
@@ -732,6 +739,8 @@ if (LASTKEY()<>K_ESC)
    	WPar("g3",gKarC3)
    	WPar("g4",gKarN1)
    	WPar("g5",gKarN2)
+   	WPar("g6",gPSamoKol)
+  	
 endif
 
 return 

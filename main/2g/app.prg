@@ -534,6 +534,7 @@ public gKarC2:="N"
 public gKarC3:="N"
 public gKarN1:="N"
 public gKarN2:="N"
+public gPSamoKol:="N"
 public gcRabDef := SPACE(10)
 public gcRabIDef := "1"
 public gcRabDok := SPACE(30)
@@ -660,6 +661,7 @@ RPar("g2",@gKarC2)
 RPar("g3",@gKarC3)
 RPar("g4",@gKarN1)
 RPar("g5",@gKarN2)
+RPar("g6",@gPSamoKol)
 RPar("rs",@gcRabDef)
 RPar("ir",@gcRabIDef)
 RPar("id",@gcRabDok)
@@ -674,9 +676,12 @@ public gFBrSudRjes:=SPACE(15)
 public gFBrUpisa:=SPACE(10)
 public gFUstanova:=SPACE(20)
 public gFPorBroj:=SPACE(15)
+public gFTelefon:=SPACE(50)
 public gFBanka1:=SPACE(50)
 public gFBanka2:=SPACE(50)
 public gFBanka3:=SPACE(50)
+public gFBanka4:=SPACE(50)
+public gFBanka5:=SPACE(50)
 public gStZagl:="D"
 // parametri zaglavlja
 Rpar("F1",@gFNaziv)
@@ -689,11 +694,13 @@ Rpar("F7",@gFPorBroj)
 Rpar("F9",@gFBanka1)
 Rpar("G1",@gFBanka2)
 Rpar("G2",@gFBanka3)
+Rpar("G3",@gFBanka4)
+Rpar("G4",@gFBanka5)
+Rpar("G5",@gFTelefon)
 Rpar("Z1",@gStZagl)
 
-
 if valtype(gtabela)<>"N"
-   gTabela:=1
+	gTabela:=1
 endif
 
 select params
