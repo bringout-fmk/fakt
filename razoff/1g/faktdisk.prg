@@ -314,10 +314,7 @@ PRIVATE cKonvBrDok  := ""
 
 PPPDisk(.t.)
 
-fSifk:=.f.
-if Izfmkini('Svi','Sifk','N')=="D"
-   fSifk:=.t.
-endif
+fSifk:=.t.
 
 if Klevel<>"0"
     Beep(2)
@@ -326,44 +323,53 @@ if Klevel<>"0"
 endif
 
 IF !Unzipuj(cFZaPrijem,,cLokPren)   // raspakuje u PRIVPATH
-  CLOSERET
+	CLOSERET
 ENDIF
 
 close all
-if lastkey()==K_ESC; return; endif
+
+if lastkey()==K_ESC
+	return
+endif
 
 save screen to cs
+
 VidiFajl(PRIVPATH+"_FAKT.TXT")
+
 IF Pitanje(,"Zelite li preuzeti prikazane dokumente? (D/N)"," ")=="N"
-  restore screen from cs
-  RETURN
+	restore screen from cs
+  	RETURN
 ENDIF
+
 restore screen from cs
 
 O__FAKT
 O_PRIPR
 
-SELECT _FAKT; set order to 0  // idFirma+IdTipdok+BrDok+RBr
+SELECT _FAKT
+set order to 0  // idFirma+IdTipdok+BrDok+RBr
 
 if !EMPTY(cKonvFirma+cKonvBrDok)
-  aKBrDok:=TokUNiz(cKonvBrDok)
-  aKFirma:=TokUNiz(cKonvFirma)
-  GO TOP
-  DO WHILE !EOF()
-    nPosKBrDok := ASCAN( aKBrDok , {|x| x[1]==IDTIPDOK} )
-    IF nPosKBrDok>0
-      cPom777 := aKBrDok[nPosKBrDok,2]
-      REPLACE brdok WITH &cPom777
-    ENDIF
-    nPosKFirma := ASCAN( aKFirma , {|x| x[1]==IDFIRMA} )
-    IF nPosKFirma>0
-      REPLACE idfirma WITH aKFirma[nPosKFirma,2]
-    ENDIF
-    SKIP 1
-  ENDDO
+	aKBrDok:=TokUNiz(cKonvBrDok)
+  	aKFirma:=TokUNiz(cKonvFirma)
+  	GO TOP
+  	DO WHILE !EOF()
+    		nPosKBrDok := ASCAN( aKBrDok , {|x| x[1]==IDTIPDOK} )
+    		IF nPosKBrDok>0
+      			cPom777 := aKBrDok[nPosKBrDok,2]
+      			REPLACE brdok WITH &cPom777
+    		ENDIF
+    		nPosKFirma := ASCAN( aKFirma , {|x| x[1]==IDFIRMA} )
+    		IF nPosKFirma>0
+      			REPLACE idfirma WITH aKFirma[nPosKFirma,2]
+    		ENDIF
+    		SKIP 1
+  	ENDDO
 endif
 
-cidfirma:=gfirma; cIdTipdok:=space(2); cBrDok:=space(8)
+cidfirma:=gfirma
+cIdTipdok:=space(2)
+cBrDok:=space(8)
 
 MsgO("Prenos _FAKT -> PRIPR")
 select pripr
@@ -371,85 +377,87 @@ append from _fakt
 MsgC()
 
 IF IzFMKINI("FAKT","OsvjeziBarKod","N",PRIVPATH)=="D"
- cdn1:="D"      // ROBA - DODATI nepostojece sifre ?
- cdn2:="N"      // ROBA - ZAMIJENITI postojece sifre ?
- cdn3:="D"      // ROBA - osvjeziti bar-kodove ?
+	cDn1:="D"      // ROBA - DODATI nepostojece sifre ?
+ 	cDn2:="N"      // ROBA - ZAMIJENITI postojece sifre ?
+ 	cDn3:="D"      // ROBA - osvjeziti bar-kodove ?
 ELSE
- cdn1:=Pitanje(,"ROBA - DODATI nepostojece sifre ?","D")
- cdn2:=Pitanje(,"ROBA - ZAMIJENITI postojece sifre ?","D")
- cdn3:="N"      // ROBA - osvjeziti bar-kodove ?
+ 	cDn1:=Pitanje(,"ROBA - DODATI nepostojece sifre ?","D")
+ 	cDn2:=Pitanje(,"ROBA - ZAMIJENITI postojece sifre ?","D")
+ 	cDn3:="N"      // ROBA - osvjeziti bar-kodove ?
 ENDIF
 
 lOsvNazRobe := ( IzFMKIni("FAKT","PriFAKTuFAKTPrenosuOsvjeziNaziveRobe","N",KUMPATH)=="D" )
 
-if cdn1=="D"
-close all
-O_ROBA
-if fsifk
-   O_SIFK;   O_SIFV
-endif
-O__ROBA
-set order to 0; go top
-Box(,1,60)
-// prolazimo kroz _ROBA
-
-cRFajl := PRIVPATH+"FAKT.RF"
-
-UpisiURF("IZVJESTAJ O PROMJENAMA NA SIFRARNIKU ROBE:",cRFajl,.t.,.t.)
-UpisiURF("------------------------------------------",cRFajl,.t.,.f.)
-
-do while !eof()
-  @ m_x+1,m_y+2 SAY id; ?? "-",naz
-  select roba; scatter()
-  select _roba
-  scatter()
-  select roba; hseek _id
-  if !found()
-    UpisiURF("ROBA: dodajem "+_id+"-"+_naz,cRFajl,.t.,.f.)
-    append blank
-    gather()
-    if fSifk
-      SifKOsv(PRIVPATH+"_SIFK",PRIVPATH+"_SIFV","ROBA",_id)
-    endif
-  else
-    if cdn2=="D"  // zamjeniti postojece sifre
-      cDiff:=""
-      IF DiffMFV(,@cDiff)
-        UpisiURF("ROBA: osvjezavam "+_id+"-"+_naz+cDiff,cRFajl,.t.,.f.)
-      ENDIF
-      gather()
-      if fsifk
-        SifKOsv(PRIVPATH+"_SIFK",PRIVPATH+"_SIFV","ROBA",_id)
-      endif
-    else
-      if cdn3=="D"
-        Scatter()
-        IF _barkod <>_roba->barkod
-          UpisiURF("ROBA: osvjezavam "+_id+"-"+_naz,cRFajl,.t.,.f.)
-          UpisiURF("     BARKOD: bilo="+TRANS(_barkod,"")+", sada="+TRANS(_ROBA->barkod,""),cRFajl,.t.,.f.)
-        ENDIF
-        _barkod := _ROBA->barkod
-        Gather()
-      endif
-      if lOsvNazRobe
-        Scatter()
-        IF _naz <> _roba->naz
-          UpisiURF("ROBA: osvjezavam "+_id+"-"+_naz,cRFajl,.t.,.f.)
-          UpisiURF("     NAZIV: bilo="+TRANS(_naz,"")+", sada="+TRANS(_ROBA->naz,""),cRFajl,.t.,.f.)
-        ENDIF
-        _naz := _ROBA->naz
-        Gather()
-      endif
-    endif
-  endif
-  select _roba
-  skip
-enddo
+if cDn1=="D"
+	close all
+	O_ROBA
+	O_SIFK
+	O_SIFV
+	O__ROBA
+	set order to 0
+	go top
+	Box(,1,60)
+		// prolazimo kroz _ROBA
+		cRFajl := PRIVPATH+"FAKT.RF"
+		UpisiURF("IZVJESTAJ O PROMJENAMA NA SIFRARNIKU ROBE:",cRFajl,.t.,.t.)
+		UpisiURF("------------------------------------------",cRFajl,.t.,.f.)
+		do while !eof()
+  			@ m_x+1,m_y+2 SAY id; ?? "-",naz
+  			select roba
+			scatter()
+  			select _roba
+  			scatter()
+  			select roba; hseek _id
+  			if !found()
+    			UpisiURF("ROBA: dodajem "+_id+"-"+_naz,cRFajl,.t.,.f.)
+    			append blank
+    			gather()
+    			if fSifk
+      				SifKOsv(PRIVPATH+"_SIFK",PRIVPATH+"_SIFV","ROBA",_id)
+    			endif
+  		else
+    			if cDn2=="D"  // zamjeniti postojece sifre
+      				cDiff:=""
+      				IF DiffMFV(,@cDiff)
+        				UpisiURF("ROBA: osvjezavam "+_id+"-"+_naz+cDiff,cRFajl,.t.,.f.)
+      				ENDIF
+      				gather()
+      				if fsifk
+        				SifKOsv(PRIVPATH+"_SIFK",PRIVPATH+"_SIFV","ROBA",_id)
+      				endif
+    			else
+      				if cdn3=="D"
+        				Scatter()
+        				IF _barkod <>_roba->barkod
+          					UpisiURF("ROBA: osvjezavam "+_id+"-"+_naz,cRFajl,.t.,.f.)
+          					UpisiURF("     BARKOD: bilo="+TRANS(_barkod,"")+", sada="+TRANS(_ROBA->barkod,""),cRFajl,.t.,.f.)
+        				ENDIF
+        				_barkod := _ROBA->barkod
+        				Gather()
+      				endif
+      				if lOsvNazRobe
+        				Scatter()
+        				IF _naz <> _roba->naz
+          					UpisiURF("ROBA: osvjezavam "+_id+"-"+_naz,cRFajl,.t.,.f.)
+          					UpisiURF("     NAZIV: bilo="+TRANS(_naz,"")+", sada="+TRANS(_ROBA->naz,""),cRFajl,.t.,.f.)
+        				ENDIF
+        				_naz := _ROBA->naz
+        				Gather()
+      				endif
+    			endif
+  		endif
+  		select _roba
+  		skip
+	enddo
 Boxc()
 endif // cnd1
 
 save screen to cs
-VidiFajl(cRFajl)
+
+if cDn1 == "D"
+	VidiFajl(cRFajl)
+endif
+
 restore screen from cs
 
 closeret

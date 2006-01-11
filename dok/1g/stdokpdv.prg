@@ -382,7 +382,7 @@ local cPartNaziv:=""
 local cPartAdres:=""
 local cPartMjesto:=""
 local cPartPTT:=""
-local aMemo
+local aMemo:={}
 local lFromMemo:=.f.
 
 if Empty(ALLTRIM(cID))
@@ -407,9 +407,15 @@ if !lFromMemo .and. partn->id == cId
 	cPartMjesto := partn->mjesto
 	cPartPtt := partn->ptt
 else
-	cPartNaziv := aMemo[3]
-	cPartAdres := aMemo[4]
-	cPartMjesto := aMemo[5]
+	if LEN(aMemo) == 0
+		cPartNaziv := ""
+		cPartAdres := ""
+		cPartMjesto := ""
+	else
+		cPartNaziv := aMemo[3]
+		cPartAdres := aMemo[4]
+		cPartMjesto := aMemo[5]
+	endif
 endif
 
 // naziv
