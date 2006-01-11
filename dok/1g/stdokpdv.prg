@@ -212,11 +212,11 @@ do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==c
 
 	
 	// cijena sa popustom bez pdv-a
-	nCj2BPDV := (nCjBPDV - nVPopust)
+	nCj2BPDV := ROUND((nCjBPDV - nVPopust),nZaokr)
 	// izracuna PDV na cijenu sa popustom
-	nCj2PDV := (nCj2BPDV * (1 + nPPDV/100))
+	nCj2PDV := ROUND((nCj2BPDV * (1 + nPPDV/100)), nZaokr)
 	// preracunaj VPDV sa popustom
-	nVPDV := (nCj2BPDV * (nPPDV/100))
+	nVPDV := ROUND((nCj2BPDV * (nPPDV/100)),nZaokr)
 	// ukupno stavka
 	nUkStavka := nKol * (nCj2PDV)
 
@@ -230,7 +230,7 @@ do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==c
 
 	++ nCSum
 	
-	add_rn(cBrDok, cRbr, cPodBr, cIdRoba, cRobaNaz, cJmj, nKol, nCjPDV, nCjBPDV, nCj2PDV, nCj2BPDV, nPopust, nPPDV, nVPDV, nUkStavka, nPopNaTeretProdavca, nVPopNaTeretProdavca )
+	add_rn(cBrDok, cRbr, cPodBr, cIdRoba, cRobaNaz, cJmj, nKol, ROUND(nCjPDV,nZaokr), ROUND(nCjBPDV,nZaokr), ROUND(nCj2PDV,nZaokr), ROUND(nCj2BPDV,nZaokr), nPopust, nPPDV, nVPDV, ROUND(nUkStavka,nZaokr), ROUND(nPopNaTeretProdavca,nZaokr), ROUND(nVPopNaTeretProdavca,nZaokr) )
 
 	select pripr
 	skip
