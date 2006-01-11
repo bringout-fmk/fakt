@@ -127,7 +127,8 @@ dDatDok := datdok
 dDatVal := dDatDok
 dDatIsp := dDatDok
 cDinDem := dindem
-nZaokr := zaokr
+//nZaokr := zaokr
+nZaokr := gFZaok
 
 nRec:=RecNO()
 
