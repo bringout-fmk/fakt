@@ -668,35 +668,38 @@ RPar("id",@gcRabDok)
 RPar("Fi",@gIspPart)
 RPar("Fr",@gResetRoba)
 
-// varijable
-public gFNaziv:=SPACE(40)
-public gFAdresa:=SPACE(35)
-public gFIdBroj:=SPACE(13)
-public gFBrSudRjes:=SPACE(15)
-public gFBrUpisa:=SPACE(10)
-public gFUstanova:=SPACE(20)
-public gFPorBroj:=SPACE(15)
-public gFTelefon:=SPACE(50)
-public gFBanka1:=SPACE(50)
-public gFBanka2:=SPACE(50)
-public gFBanka3:=SPACE(50)
-public gFBanka4:=SPACE(50)
-public gFBanka5:=SPACE(50)
-public gStZagl:="D"
+// varijable PDV
+public gFNaziv:=SPACE(40) // firma naziv
+public gFAdresa:=SPACE(35) // firma adresa
+public gFIdBroj:=SPACE(13) // firma id broj
+public gFTelefon:=SPACE(72) // telefoni
+public gFEmailWeb:=SPACE(72) // web
+public gFBanka1:=SPACE(50) // banka 1
+public gFBanka2:=SPACE(50) // banka 2
+public gFBanka3:=SPACE(50) // banka 3
+public gFBanka4:=SPACE(50) // banka 4
+public gFBanka5:=SPACE(50) // banka 5
+public gFText1:=SPACE(72) // proizv.text 1
+public gFText2:=SPACE(72) // proizv.text 2
+public gFText3:=SPACE(72) // proizv.text 3
+public gStZagl:="D" // stampati zaglavlje
+public gPDVSvStavka:="N" // pdv na svaku stavku
 // parametri zaglavlja
 Rpar("F1",@gFNaziv)
 Rpar("F2",@gFAdresa)
 Rpar("F3",@gFIdBroj)
-Rpar("F4",@gFBrSudRjes)
-Rpar("F5",@gFBrUpisa)
-Rpar("F6",@gFUstanova)
-Rpar("F7",@gFPorBroj)
 Rpar("F9",@gFBanka1)
 Rpar("G1",@gFBanka2)
 Rpar("G2",@gFBanka3)
 Rpar("G3",@gFBanka4)
 Rpar("G4",@gFBanka5)
 Rpar("G5",@gFTelefon)
+Rpar("G6",@gFEmailWeb)
+Rpar("G7",@gFText1)
+Rpar("G8",@gFText2)
+Rpar("G9",@gFText3)
+
+Rpar("H1",@gPDVSvStavka)
 Rpar("Z1",@gStZagl)
 
 if valtype(gtabela)<>"N"

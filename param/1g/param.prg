@@ -334,40 +334,49 @@ private GetList:={}
 O_PARAMS
 
 gFIdBroj := PADR(gFIdBroj, 13)
+gFText1 := PADR(gFText1, 72)
+gFText2 := PADR(gFText2, 72)
+gFText3 := PADR(gFText3, 72)
+gFTelefon := PADR(gFTelefon, 72)
+gFEmailWeb := PADR(gFEmailWeb, 72)
 
 Box(,20,77,.f.,"Parametri zaglavlja")
+	// opci podaci
 	@ m_x+2,m_y+2 SAY "Puni naziv firme:" GET gFNaziv 
 	@ m_x+3,m_y+2 SAY "Adresa firme:" GET gFAdresa
-	@ m_x+4,m_y+2 SAY "Telefoni:" GET gFTelefon
-  	@ m_x+5,m_y+2 SAY "Ident.broj:" GET gFIdBroj
-  	@ m_x+6,m_y+2 SAY "Broj sud.rjesenja:" GET gFBrSudRjes
-  	@ m_x+7,m_y+2 SAY "Broj upisa:" GET gFBrUpisa
-  	@ m_x+8,m_y+2 SAY "Ustanova:" GET gFUstanova
-  	@ m_x+9,m_y+2 SAY "Poreski broj:" GET gFPorBroj
-  	@ m_x+13,m_y+2 SAY "Banka 1:" GET gFBanka1
-  	@ m_x+14,m_y+2 SAY "Banka 2:" GET gFBanka2
-  	@ m_x+15,m_y+2 SAY "Banka 3:" GET gFBanka3
-  	@ m_x+16,m_y+2 SAY "Banka 4:" GET gFBanka4
-  	@ m_x+17,m_y+2 SAY "Banka 5:" GET gFBanka5
-  	@ m_x+19,m_y+2 SAY "Koristiti automatsko zaglavlje (D/N)?" GET gStZagl VALID gStZagl$"DN" PICT "@!"
+  	@ m_x+4,m_y+2 SAY "Ident.broj:" GET gFIdBroj
+	@ m_x+5,m_y+2 SAY "Telefoni:" GET gFTelefon PICT "@S60"
+	@ m_x+6,m_y+2 SAY "email/web:" GET gFEmailWeb PICT "@S60"
+  	// banke
+	@ m_x+8,m_y+2 SAY "Banka 1:" GET gFBanka1
+  	@ m_x+9,m_y+2 SAY "Banka 2:" GET gFBanka2
+  	@ m_x+10,m_y+2 SAY "Banka 3:" GET gFBanka3
+  	@ m_x+11,m_y+2 SAY "Banka 4:" GET gFBanka4
+  	@ m_x+12,m_y+2 SAY "Banka 5:" GET gFBanka5
+	// dodatni redovi
+  	@ m_x+14,m_y+2 SAY "Slobodni red:" GET gFText1 PICT "@S60"
+  	@ m_x+15,m_y+2 SAY "Slobodni red:" GET gFText2 PICT "@S60"
+  	@ m_x+16,m_y+2 SAY "Slobodni red:" GET gFText3 PICT "@S60"
+
+	@ m_x+18,m_y+2 SAY "Koristiti automatsko zaglavlje (D/N)?" GET gStZagl VALID gStZagl$"DN" PICT "@!"
   	read
 BoxC()
 
-if (LASTKEY()<>K_ESC)
+if (LASTKEY() <> K_ESC)
 	Wpar("F1",gFNaziv)
    	Wpar("F2",gFAdresa)
    	Wpar("F3",gFIdBroj)
-   	Wpar("F4",gFBrSudRjes)
-   	Wpar("F5",gFBrUpisa)
-   	Wpar("F6",gFUstanova)
-   	Wpar("F7",gFPorBroj)
    	Wpar("F9",gFBanka1)
    	Wpar("G1",gFBanka2)
    	Wpar("G2",gFBanka3)
    	Wpar("G3",gFBanka4)
    	Wpar("G4",gFBanka5)
    	Wpar("G5",gFTelefon)
-   	Wpar("Z1",gStZagl)
+	Wpar("G6",gFEmailWeb)
+   	Wpar("G7",gFText1)
+	Wpar("G8",gFText2)
+	Wpar("G9",gFText3)
+	Wpar("Z1",gStZagl)
 endif
 
 return 
@@ -694,27 +703,25 @@ Box(,23,76,.f.,"VARIJANTE OBRADE DOKUMENATA")
   	@ m_x+5,m_y+2 SAY "Varijanta dokumenta 13 (1/2)   " GET gVar13 VALID gVar13$"12"
   	@ m_x+6,m_y+2 SAY "Varijanta numeracije dokumenta 13 (1/2)   " GET gVarNum VALID gVarNum$"12"
   	@ m_x+7,m_y+2 SAY "Pratiti trenutnu kolicinu D/N ?" GET gPratiK PICT "@!" VALID gPratiK $ "DN"
-  	@ m_x+8,m_y+2 SAY "Koristenje VP cijene:"
-  	@ m_x+9,m_y+2 SAY "           ( ) samo VPC   (X) koristiti samo MPC"
-  	@ m_x+10,m_y+2 SAY "           (1) VPC1/VPC2"
-  	@ m_x+11,m_y+2 SAY "           (2) VPC1/VPC2 putem rabata u odnosu na VPC1"
-  	@ m_x+12,m_y+2 SAY "           (3) NC , (4) Uporedo vidi i MPC............" GET gVarC
-  	@ m_x+13,m_y+2 SAY "U fakturi maloprodaje koristiti:"
-  	@ m_x+14,m_y+2 SAY "           (1) MPC iz sifrarnika"
-  	@ m_x+15,m_y+2 SAY "           (2) VPC + PPP + PPU"
-  	@ m_x+16,m_y+2 SAY "           (3) MPC2   (4) MPC3   (5) MPC4"
-  	@ m_x+17,m_y+2 SAY "           (6) MPC5   (7) MPC6 ............." GET gMP VALID gMP $ "1234567"
-  	@ m_x+18,m_y+2 SAY "Numericki dio broja dokumenta:" GET gNumDio PICT "99"
-  	@ m_x+19,m_y+2 SAY "Upozorenje na promjenu radne jedinice:" GET gDetPromRj PICT "@!" VALID gDetPromRj $ "DN"
-  	@ m_x+20,m_y+2 SAY "Var.otpr.-12 sa porezom :" GET gV12Por PICT "@!" VALID gV12Por $ "DN"
-  	@ m_x+20,m_y+35 SAY "Var.fakt.po ugovorima (1/2) :" GET gVFU PICT "9" VALID gVFU $ "12"
-  	@ m_x+21,m_y+2 SAY "Var.fakt.rok plac. samo vece od 0 :" GET gVFRP0 PICT "@!" VALID gVFRP0 $ "DN"
-	@ m_x+22,m_y+2 SAY "Koristiti C1 (D/N)?" GET gKarC1 PICT "@!" VALID gKarC1$"DN"
-  	@ m_x+22,col()+2 SAY "C2 (D/N)?" GET gKarC2 PICT "@!" VALID gKarC2$"DN"
-  	@ m_x+22,col()+2 SAY "C3 (D/N)?" GET gKarC3 PICT "@!" VALID gKarC3$"DN"
-  	@ m_x+22,col()+2 SAY "N1 (D/N)?" GET gKarN1 PICT "@!" VALID gKarN1$"DN"
-  	@ m_x+22,col()+2 SAY "N2 (D/N)?" GET gKarN2 PICT "@!" VALID gKarN2$"DN"
-  	@ m_x+23,m_y+2 SAY "Prikaz samo kolicina na dokumentima (0/D/N)" GET gPSamoKol PICT "@!" VALID gPSamoKol $ "0DN"
+  	@ m_x+8,m_y+2 SAY  "Koristenje VP cijene:"
+  	@ m_x+9,m_y+2 SAY  "  ( ) samo VPC   (X) koristiti samo MPC    (1) VPC1/VPC2 "
+  	@ m_x+10,m_y+2 SAY "  (2) VPC1/VPC2 putem rabata u odnosu na VPC1   (3) NC "
+  	@ m_x+11,m_y+2 SAY "  (4) Uporedo vidi i MPC............" GET gVarC
+  	@ m_x+12,m_y+2 SAY "U fakturi maloprodaje koristiti:"
+  	@ m_x+13,m_y+2 SAY "  (1) MPC iz sifrarnika  (2) VPC + PPP + PPU   (3) MPC2 "
+  	@ m_x+14,m_y+2 SAY "  (4) MPC3  (5) MPC4  (6) MPC5  (7) MPC6 ....." GET gMP VALID gMP $ "1234567"
+  	@ m_x+15,m_y+2 SAY "Numericki dio broja dokumenta:" GET gNumDio PICT "99"
+  	@ m_x+16,m_y+2 SAY "Upozorenje na promjenu radne jedinice:" GET gDetPromRj PICT "@!" VALID gDetPromRj $ "DN"
+  	@ m_x+17,m_y+2 SAY "Var.otpr.-12 sa porezom :" GET gV12Por PICT "@!" VALID gV12Por $ "DN"
+  	@ m_x+17,m_y+35 SAY "Var.fakt.po ugovorima (1/2) :" GET gVFU PICT "9" VALID gVFU $ "12"
+  	@ m_x+18,m_y+2 SAY "Var.fakt.rok plac. samo vece od 0 :" GET gVFRP0 PICT "@!" VALID gVFRP0 $ "DN"
+	@ m_x+19,m_y+2 SAY "Koristiti C1 (D/N)?" GET gKarC1 PICT "@!" VALID gKarC1$"DN"
+  	@ m_x+19,col()+2 SAY "C2 (D/N)?" GET gKarC2 PICT "@!" VALID gKarC2$"DN"
+  	@ m_x+19,col()+2 SAY "C3 (D/N)?" GET gKarC3 PICT "@!" VALID gKarC3$"DN"
+  	@ m_x+19,col()+2 SAY "N1 (D/N)?" GET gKarN1 PICT "@!" VALID gKarN1$"DN"
+  	@ m_x+19,col()+2 SAY "N2 (D/N)?" GET gKarN2 PICT "@!" VALID gKarN2$"DN"
+  	@ m_x+20,m_y+2 SAY "Prikaz samo kolicina na dokumentima (0/D/N)" GET gPSamoKol PICT "@!" VALID gPSamoKol $ "0DN"
+  	@ m_x+21,m_y+2 SAY "Prikaz PDV iznosa na svaku stavku fakture (D/N)" GET gPDVSvStavka PICT "@!" VALID gPDVSvStavka $ "DN"
 	read
 BoxC()
 
@@ -740,6 +747,7 @@ if (LASTKEY()<>K_ESC)
    	WPar("g4",gKarN1)
    	WPar("g5",gKarN2)
    	WPar("g6",gPSamoKol)
+   	WPar("H1",gPDVSvStavka)
   	
 endif
 

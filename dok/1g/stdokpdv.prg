@@ -102,6 +102,8 @@ local cTime:=""
 local cDinDem
 local nRec
 local nZaokr
+local nFZaokr:=0
+local nDrnZaokr:=0
 local cDokNaz
 // ako je kupac pdv obveznik, ova varijable je .t.
 local lPdvObveznik
@@ -127,8 +129,7 @@ dDatDok := datdok
 dDatVal := dDatDok
 dDatIsp := dDatDok
 cDinDem := dindem
-//nZaokr := zaokr
-nZaokr := gFZaok
+nZaokr := zaokr
 
 nRec:=RecNO()
 
@@ -219,7 +220,7 @@ do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==c
 	// preracunaj VPDV sa popustom
 	nVPDV := (nCj2BPDV * (nPPDV/100))
 	// ukupno stavka
-	nUkStavka := nKol * ROUND((nCj2PDV),nZaokr)
+	nUkStavka := nKol * nCj2PDV
 
 	// sumiraj vrijednosti
 	nUkVPop += nKol * nVPopust
@@ -237,7 +238,14 @@ do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==c
 	skip
 enddo	
 
-nTotal := ROUND(nTotal, nZaokr)
+// zaokruzenje
+nFZaokr := ROUND(nTotal, nZaokr) - ROUND2(ROUND(nTotal, nZaokr), gFZaok)
+if (gFZaok <> 9 .and. ROUND(nFZaokr, 4) <> 0)
+	nDrnZaokr := nFZaokr
+endif
+
+nTotal := ROUND(nTotal - nDrnZaokr, nZaokr)
+
 nUkPopNaTeretProdavca := ROUND(nUkPopNaTeretProdavca, nZaokr)
 nUkBPDV := ROUND( nUkBPDV, nZaokr )
 nUkVPop := ROUND( nUkVPop, nZaokr )
@@ -284,9 +292,11 @@ add_drntext("P06", ALLTRIM(STR(gERedova)) )
 add_drntext("P07", ALLTRIM(STR(gnTMarg)) )
 // da li se formira automatsko zaglavlje
 add_drntext("P10", gStZagl )
+// da li se prikazuje pojedini iznos PDV na svakoj stavci
+add_drntext("P11", gPDVSvStavka )
 
 // dodaj total u DRN
-add_drn(cBrDok, dDatDok, dDatVal, dDatIsp, cTime, nUkBPDV, nUkVPop, nUkBPDVPop, nUkPDV, nTotal, nCSum, nUkPopNaTeretProdavca)
+add_drn(cBrDok, dDatDok, dDatVal, dDatIsp, cTime, nUkBPDV, nUkVPop, nUkBPDVPop, nUkPDV, nTotal, nCSum, nUkPopNaTeretProdavca, nDrnZaokr)
 
 return
 *}
@@ -451,18 +461,21 @@ return
 
 function fill_firm_data()
 *{
+// opci podaci
 add_drntext("I01", gFNaziv)
 add_drntext("I02", gFAdresa)
 add_drntext("I03", gFIdBroj)
 // 4. se koristi za id prod.mjesto u pos
-add_drntext("I05", gFPorBroj)
-add_drntext("I06", gFBrSudRjes)
-add_drntext("I07", gFBrUpisa)
-add_drntext("I08", gFUstanova)
+add_drntext("I10", ALLTRIM(gFTelefon))
+add_drntext("I11", ALLTRIM(gFEmailWeb))
+
 // banke
 add_drntext("I09", ALLTRIM(gFBanka1) + "; " + ALLTRIM(gFBanka2) + "; " + ALLTRIM(gFBanka3) + "; " + ALLTRIM(gFBanka4) + "; " + ALLTRIM(gFBanka5) )
 
-add_drntext("I10", ALLTRIM(gFTelefon))
+// dodatni redovi
+add_drntext("I12", ALLTRIM(gFText1))
+add_drntext("I13", ALLTRIM(gFText2))
+add_drntext("I14", ALLTRIM(gFText3))
 
 return
 *}
