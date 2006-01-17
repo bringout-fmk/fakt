@@ -10,7 +10,7 @@
 #endif
 
 #define D_FA_VERZIJA "02.16"
-#define D_FA_PERIOD  "11.94-12.01.06"
+#define D_FA_PERIOD  "11.94-17.01.06"
 
 
 #ifndef FMK_DEFINED
