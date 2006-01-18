@@ -146,7 +146,7 @@ do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==c
 	cIdRoba := field->idroba
 	
 	if roba->tip="U"
-		cRobaNaz:=padr(aMemo[1],40) // roba
+		cRobaNaz:=padr(aMemo[1],80) // roba
 	else
 		cRobaNaz:=ALLTRIM(roba->naz)
 		if lBarKod
