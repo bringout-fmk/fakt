@@ -275,37 +275,58 @@ Box(,21,77,.f.,"OSTALI PARAMETRI (RAZNO)")
 
 nX := 2
 if !IsPdv()
-	@ m_x+nX++, m_y+2 SAY "Naziv fajla zaglavlja (prazno bez zaglavlja)" GET gVlZagl VALID V_VZagl()
-	@ m_x+nX++, m_y+2 SAY "Novi korisnicki interfejs D-da/N-ne/R-rudnik/T-test" GET gNW VALID gNW $ "DNRT" PICT "@!"
-  	@ m_x+nX++, m_y+2 SAY "Na kraju fakture izvrsiti zaokruzenje" GET gFZaok PICT "99"
-  	@ m_x+nX++, m_y+2 SAY "Svaki izlazni fajl ima posebno ime ?" GET gImeF VALID gImeF $ "DN"
-  	@ m_x+nX++, m_y+2 SAY "Komandna linija za RTF fajl:" GET gKomLin PICT "@S40"
+	@ m_x+nX, m_y+2 SAY "Naziv fajla zaglavlja (prazno bez zaglavlja)" GET gVlZagl VALID V_VZagl()
+	nX++
+	@ m_x+nX, m_y+2 SAY "Novi korisnicki interfejs D-da/N-ne/R-rudnik/T-test" GET gNW VALID gNW $ "DNRT" PICT "@!"
+	nX++
+  	@ m_x+nX, m_y+2 SAY "Na kraju fakture izvrsiti zaokruzenje" GET gFZaok PICT "99"
+	nX++
+  	@ m_x+nX, m_y+2 SAY "Svaki izlazni fajl ima posebno ime ?" GET gImeF VALID gImeF $ "DN"
+	nX++
+	
+  	@ m_x+nX, m_y+2 SAY "Komandna linija za RTF fajl:" GET gKomLin PICT "@S40"
+	nX++
 endif
-  	@ m_x+(nX:=nX+3),m_y+2 SAY "Inicijalna meni-opcija (1/2/.../G)" GET gIMenu VALID gIMenu $ "123456789ABCDEFG" PICT "@!"
+  	@ m_x+nX, m_y+2 SAY "Inicijalna meni-opcija (1/2/.../G)" GET gIMenu VALID gIMenu $ "123456789ABCDEFG" PICT "@!"
+	nX := nX+3
 	
 if !IsPdV()
-  	@ m_x+nX++,m_y+2 SAY "Prikaz K1" GET gDk1 PICT "@!" VALID gDk1 $ "DN"
+  	@ m_x+nX,m_y+2 SAY "Prikaz K1" GET gDk1 PICT "@!" VALID gDk1 $ "DN"
   	@ m_x+nX,col()+2 SAY "Prikaz K2" GET gDk2 PICT "@!" VALID gDk2 $ "DN"
-  	@ m_x+nX++,m_y+2 SAY "Mjesto uzimati iz RJ (D/N)" GET gMjRJ PICT "@!" VALID gMjRJ $ "DN"
+	nX++
+  	@ m_x+nX,m_y+2 SAY "Mjesto uzimati iz RJ (D/N)" GET gMjRJ PICT "@!" VALID gMjRJ $ "DN"
+	nX++
 endif
 	
-  	@ m_x+nX++,m_y+2 SAY "Omoguciti poredjenje FAKT sa FAKT druge firme (D/N) ?" GET gFaktFakt VALID gFaktFakt $ "DN" PICT "@!"
-  	@ m_x+nX++,m_y+2 SAY "Koriste li se artikli koji se vode po sintet.sifri, roba tipa 'S' (D/N) ?" GET gNovine VALID gNovine $ "DN" PICT "@!"
-  	@ m_x+nX++, m_y+2 SAY "Duzina sifre artikla sinteticki " GET gnDS VALID gnDS>0 PICT "9"
+  	@ m_x+nX,m_y+2 SAY "Omoguciti poredjenje FAKT sa FAKT druge firme (D/N) ?" GET gFaktFakt VALID gFaktFakt $ "DN" PICT "@!"
+	nX++
+  	@ m_x+nX,m_y+2 SAY "Koriste li se artikli koji se vode po sintet.sifri, roba tipa 'S' (D/N) ?" GET gNovine VALID gNovine $ "DN" PICT "@!"
+	nX++
+  	@ m_x+nX, m_y+2 SAY "Duzina sifre artikla sinteticki " GET gnDS VALID gnDS>0 PICT "9"
+	nX++
 
-  	@ m_x+nX++, m_y+2 SAY "Naziv fajla obrasca narudzbenice" GET gFNar VALID V_VNar()
-  	@ m_x+nX++,m_y+2 SAY "Naziv fajla teksta ugovora o rabatu" GET gFUgRab VALID V_VUgRab()
+  	@ m_x+nX, m_y+2 SAY "Naziv fajla obrasca narudzbenice" GET gFNar VALID V_VNar()
+	nX++
+	
+  	@ m_x+nX, m_y+2 SAY "Naziv fajla teksta ugovora o rabatu" GET gFUgRab VALID V_VUgRab()
+	nX++
 
-  	@ m_x+nX++, m_y+2 SAY "Voditi samo kolicine " GET gSamoKol PICT "@!" VALID gSamoKol $ "DN"
-  	@ m_x+nX++, m_y+2 SAY "Tekuca vrijednost za rok placanja  " GET gRokPl PICT "999"
+  	@ m_x+nX, m_y+2 SAY "Voditi samo kolicine " GET gSamoKol PICT "@!" VALID gSamoKol $ "DN"
+	nX++
+	
+  	@ m_x+nX, m_y+2 SAY "Tekuca vrijednost za rok placanja  " GET gRokPl PICT "999"
+	nX++
 	
 if !IsPDV()
-  	@ m_x+nX++, m_y+2 SAY "Mogucnost ispravke partnera u novoj stavci (D/N)" GET gIspPart PICT "@!" VALID gIspPart$"DN"
+  	@ m_x+nX, m_y+2 SAY "Mogucnost ispravke partnera u novoj stavci (D/N)" GET gIspPart PICT "@!" VALID gIspPart$"DN"
+	nX++
 else
 	gIspPart := "N"
 endif
 	
-  	@ m_x+nX++, m_y+2 SAY "Uvijek resetuj artikal pri unosu dokumenata (D/N)" GET gResetRoba PICT "@!" VALID gResetRoba$"DN"
+  	@ m_x + nX, m_y+2 SAY "Uvijek resetuj artikal pri unosu dokumenata (D/N)" GET gResetRoba PICT "@!" VALID gResetRoba $ "DN"
+	nX++
+	
   	READ
 BoxC()
 
@@ -353,7 +374,7 @@ gFText3 := PADR(gFText3, 72)
 gFTelefon := PADR(gFTelefon, 72)
 gFEmailWeb := PADR(gFEmailWeb, 72)
 
-Box(,20,77,.f.,"Parametri zaglavlja")
+Box( , 20, 77, .f., "Parametri zaglavlja")
 	// opci podaci
 	@ m_x+2,m_y+2 SAY "Puni naziv firme:" GET gFNaziv 
 	@ m_x+3,m_y+2 SAY "Adresa firme:" GET gFAdresa
@@ -374,6 +395,7 @@ Box(,20,77,.f.,"Parametri zaglavlja")
 	@ m_x+18,m_y+2 SAY "Koristiti automatsko zaglavlje (D/N)?" GET gStZagl VALID gStZagl$"DN" PICT "@!"
   	read
 BoxC()
+
 
 if (LASTKEY() <> K_ESC)
 	Wpar("F1",gFNaziv)
@@ -538,9 +560,9 @@ Box(,4,60,.f.,"PARAMETRI PRIKAZA - PICTURE KODOVI")
 BoxC()
 
 if (LASTKEY()<>K_ESC)
-   	WPar("p0",PicCDem)
-   	WPar("p1",PicDem)
-   	WPar("p2",PicKol)
+   	WPar("p0", PicCDem)
+   	WPar("p1", PicDem)
+   	WPar("p2", PicKol)
 endif
 
 return 
@@ -1051,65 +1073,65 @@ endif
 RPar("c1",@cIzvj)
 
 Box(,22,76,.f.,"VARIJANTE IZGLEDA DOKUMENATA")
-	@ m_x+2,m_y+2 SAY "Prikaz cijena podstavki/cijena u glavnoj stavci (1/2)" GET cIzvj
-  	@ m_x+3,m_y+2 SAY "Izgled fakture 1/2/3" GET gTipF VALID gTipF $ "123"
-  	@ m_x+4,m_y+2 SAY "Varijanta 1/2/3/4/9/A/B" GET gVarF VALID gVarF $ "12349AB"
-  	@ m_x+5,m_y+2 SAY "Dodat.redovi po listu " GET gERedova VALID gERedova>=0 PICT "99"
-  	@ m_x+6,m_y+2 SAY "Lijeva margina pri stampanju " GET gnLMarg PICT "99"
-  	@ m_x+6,m_y+35 SAY "L.marg.za v.2/9/A5 " GET gnLMargA5 PICT "99"
-  	@ m_x+7,m_y+2 SAY "Gornja margina " GET gnTMarg PICT "99"
-  	@ m_x+8,m_y+2 SAY "Koristiti A5 obrazac u varijanti 9 D/N/0" GET gFormatA5 PICT "@!" VALID gFormatA5 $ "DN0"
-  	@ m_x+ 8,m_y+58 SAY "A4   A5"
-  	@ m_x+ 9,m_y+2 SAY "Horizont.pomjeranje zaglavlja u varijanti 9 (br.kolona)" GET gFPzag PICT "99"
-  	@ m_x+ 9,m_y+63 GET gFPzagA5 PICT "99"
-  	@ m_x+10,m_y+2 SAY "Vertikalno pomjeranje stavki u fakturi var.9(br.redova)" GET gnTmarg2 PICT "99"
-  	@ m_x+10,m_y+63 GET gnTmarg2A5 PICT "99"
-  	@ m_x+11,m_y+2 SAY "Vertikalno pomjeranje totala u fakturi var.9(br.redova)" GET gnTmarg3 PICT "99"
-  	@ m_x+11,m_y+63 GET gnTmarg3A5 PICT "99"
-  	@ m_x+12,m_y+2 SAY "Vertikalno pomj.donjeg dijela fakture  var.9(br.redova)" GET gnTmarg4 PICT "99"
-  	@ m_x+12,m_y+63 GET gnTmarg4A5 PICT "99"
-  	@ m_x+13,m_y+2 SAY "Vertik.pomj.znakova krizanja i br.dok.var.9(br.red.>=0)" GET gKriz PICT "99"
-  	@ m_x+13,m_y+63 GET gKrizA5 PICT "99"
-  	@ m_x+14,m_y+2 SAY "Znak kojim se precrtava dio teksta na papiru" GET gZnPrec
-  	@ m_x+15,m_y+2 SAY "Broj linija za odvajanje tabele od broja dokumenta" GET gOdvT2 VALID gOdvT2>=0 PICT "9"
-  	@ m_x+16,m_y+2 SAY "Nacin crtanja tabele (0/1/2) ?" GET gTabela VALID gTabela<3.and.gTabela>=0 PICT "9"
-  	@ m_x+17,m_y+2 SAY "Zaglavlje na svakoj stranici D/N  (1/2) ? " GET gZagl VALID gZagl $ "12" PICT "@!"
-  	@ m_x+18,m_y+2 SAY "Crni-masni prikaz fakture D/N  (1/2) ? " GET gBold VALID gBold $ "12" PICT "@!"
-  	@ m_x+19,m_y+2 SAY "Var.RTF-fakt.,izgled tipa 2 (' '-standardno, 1-MINEX, 2-LIKOM, 3-ZENELA)" GET gVarRF VALID gVarRF $ " 123"
-  	@ m_x+20,m_y+2 SAY "Prikaz rekapitulacije po tarifama na 13-ci:" GET gRekTar VALID gRekTar $ "DN" PICT "@!"
-  	@ m_x+21,m_y+2 SAY "Prikaz horizot. linija:" GET gHLinija VALID gHLinija $ "DN" PICT "@!"
-  	@ m_x+22,m_y+2 SAY "Prikaz rabata u %(procentu)? (D/N):" GET gRabProc VALID gRabProc $ "DN" PICT "@!"
+	@ m_x+2, m_y+2 SAY "Prikaz cijena podstavki/cijena u glavnoj stavci (1/2)" GET cIzvj
+  	@ m_x+3, m_y+2 SAY "Izgled fakture 1/2/3" GET gTipF VALID gTipF $ "123"
+  	@ m_x+4, m_y+2 SAY "Varijanta 1/2/3/4/9/A/B" GET gVarF VALID gVarF $ "12349AB"
+  	@ m_x+5, m_y+2 SAY "Dodat.redovi po listu " GET gERedova VALID gERedova>=0 PICT "99"
+  	@ m_x+6, m_y+2 SAY "Lijeva margina pri stampanju " GET gnLMarg PICT "99"
+  	@ m_x+6, m_y+35 SAY "L.marg.za v.2/9/A5 " GET gnLMargA5 PICT "99"
+  	@ m_x+7, m_y+2 SAY "Gornja margina " GET gnTMarg PICT "99"
+  	@ m_x+8, m_y+2 SAY "Koristiti A5 obrazac u varijanti 9 D/N/0" GET gFormatA5 PICT "@!" VALID gFormatA5 $ "DN0"
+  	@ m_x+ 8, m_y+58 SAY "A4   A5"
+  	@ m_x+ 9, m_y+2 SAY "Horizont.pomjeranje zaglavlja u varijanti 9 (br.kolona)" GET gFPzag PICT "99"
+  	@ m_x+ 9, m_y+63 GET gFPzagA5 PICT "99"
+  	@ m_x+10, m_y+2 SAY "Vertikalno pomjeranje stavki u fakturi var.9(br.redova)" GET gnTmarg2 PICT "99"
+  	@ m_x+10, m_y+63 GET gnTmarg2A5 PICT "99"
+  	@ m_x+11, m_y+2 SAY "Vertikalno pomjeranje totala u fakturi var.9(br.redova)" GET gnTmarg3 PICT "99"
+  	@ m_x+11, m_y+63 GET gnTmarg3A5 PICT "99"
+  	@ m_x+12, m_y+2 SAY "Vertikalno pomj.donjeg dijela fakture  var.9(br.redova)" GET gnTmarg4 PICT "99"
+  	@ m_x+12, m_y+63 GET gnTmarg4A5 PICT "99"
+  	@ m_x+13, m_y+2 SAY "Vertik.pomj.znakova krizanja i br.dok.var.9(br.red.>=0)" GET gKriz PICT "99"
+  	@ m_x+13, m_y+63 GET gKrizA5 PICT "99"
+  	@ m_x+14, m_y+2 SAY "Znak kojim se precrtava dio teksta na papiru" GET gZnPrec
+  	@ m_x+15, m_y+2 SAY "Broj linija za odvajanje tabele od broja dokumenta" GET gOdvT2 VALID gOdvT2>=0 PICT "9"
+  	@ m_x+16, m_y+2 SAY "Nacin crtanja tabele (0/1/2) ?" GET gTabela VALID gTabela<3.and.gTabela>=0 PICT "9"
+  	@ m_x+17, m_y+2 SAY "Zaglavlje na svakoj stranici D/N  (1/2) ? " GET gZagl VALID gZagl $ "12" PICT "@!"
+  	@ m_x+18, m_y+2 SAY "Crni-masni prikaz fakture D/N  (1/2) ? " GET gBold VALID gBold $ "12" PICT "@!"
+  	@ m_x+19, m_y+2 SAY "Var.RTF-fakt.,izgled tipa 2 (' '-standardno, 1-MINEX, 2-LIKOM, 3-ZENELA)" GET gVarRF VALID gVarRF $ " 123"
+  	@ m_x+20, m_y+2 SAY "Prikaz rekapitulacije po tarifama na 13-ci:" GET gRekTar VALID gRekTar $ "DN" PICT "@!"
+  	@ m_x+21, m_y+2 SAY "Prikaz horizot. linija:" GET gHLinija VALID gHLinija $ "DN" PICT "@!"
+  	@ m_x+22, m_y+2 SAY "Prikaz rabata u %(procentu)? (D/N):" GET gRabProc VALID gRabProc $ "DN" PICT "@!"
   	read
 BoxC()
 
 if (LASTKEY()<>K_ESC)
-	WPar("c1",cIzvj)
-   	WPar("tf",@gTipF)
-   	WPar("vf",@gVarF)
-   	WPar("kr",@gKriz)
-   	WPar("55",@gKrizA5)
-   	WPar("vr",@gVarRF)
-   	WPar("er",gERedova)
-   	WPar("pr",gnLMarg)
-   	WPar("56",gnLMargA5)
-   	WPar("pt",gnTMarg)
-   	WPar("a5",gFormatA5)
-   	WPar("fp",gFPzag)
-   	WPar("51",gFPzagA5)
-   	WPar("52",gnTMarg2A5)
-   	WPar("53",gnTMarg3A5)
-   	WPar("54",gnTMarg4A5)
-   	WPar("d1",gnTMarg2)
-   	WPar("d2",gnTMarg3)
-   	WPar("d3",gnTMarg4)
-   	WPar("cr",gZnPrec)
-   	WPar("ot",gOdvT2)
-   	WPar("tb",gTabela)
-   	WPar("za",gZagl)   // zaglavlje na svakoj stranici
-   	WPar("zb",gbold)
-   	WPar("RT",gRekTar)
-   	WPar("HL",gHLinija)
-   	WPar("rp",gRabProc)
+	WPar("c1", cIzvj)
+   	WPar("tf", @gTipF)
+   	WPar("vf", @gVarF)
+   	WPar("kr", @gKriz)
+   	WPar("55", @gKrizA5)
+   	WPar("vr", @gVarRF)
+   	WPar("er", gERedova)
+   	WPar("pr", gnLMarg)
+   	WPar("56", gnLMargA5)
+   	WPar("pt", gnTMarg)
+   	WPar("a5", gFormatA5)
+   	WPar("fp", gFPzag)
+   	WPar("51", gFPzagA5)
+   	WPar("52", gnTMarg2A5)
+   	WPar("53", gnTMarg3A5)
+   	WPar("54", gnTMarg4A5)
+   	WPar("d1", gnTMarg2)
+   	WPar("d2", gnTMarg3)
+   	WPar("d3", gnTMarg4)
+   	WPar("cr", gZnPrec)
+   	WPar("ot", gOdvT2)
+   	WPar("tb", gTabela)
+   	WPar("za", gZagl)   // zaglavlje na svakoj stranici
+   	WPar("zb", gbold)
+   	WPar("RT", gRekTar)
+   	WPar("HL", gHLinija)
+   	WPar("rp", gRabProc)
 endif
 
 return 
@@ -1725,13 +1747,14 @@ function V_VNar()
 *{
 private cKom:="q "+PRIVPATH+gFNar
 
-if Pitanje(,"Zelite li izvrsiti ispravku fajla obrasca narudzbenice ?","N")=="D"
+if Pitanje( , "Zelite li izvrsiti ispravku fajla obrasca narudzbenice ?","N")=="D"
 	if !EMPTY(gFNar)
    		Box(,25,80)
    			run &ckom
    		BoxC()
  	endif
 endif
+
 return .t.
 *}
 
@@ -1740,7 +1763,6 @@ return .t.
 /*! \fn V_VUgRab()
  *  \brief Ispravka fajla ugovora o rabatu
  */
- 
 function V_VUgRab()
 *{
 private cKom:="q "+PRIVPATH+gFUgRab
