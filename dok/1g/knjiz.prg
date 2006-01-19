@@ -324,34 +324,6 @@ if IzFMKINI('SifRoba','ID_J','N', SIFPATH)=="D"
 endif
 
 
-if pripr->(fieldpos("k1"))<>0 .and. gDK1=="D"
-  AADD(ImeKol,{ "K1", {|| k1}, "k1", {||.t.}, {||.t.} })
-endif
-if pripr->(fieldpos("k2"))<>0 .and. gDK2=="D"
-  AADD(ImeKol,{ "K2", {|| k2}, "k2", {||.t.}, {||.t.} })
-endif
-
-
-Kol:={}; for i:=1 to len(ImeKol); AADD(Kol,i); next
-
-
-adImeKol:={}
-for i:=1 to LEN(ImeKol); AADD(adImeKol,ImeKol[i]); next
-adKol:={}; for i:=1 to len(adImeKol); AADD(adKol,i); next
-
-private cTipVPC:="1"
-if gVarC $ "123"
-  cTipVPC:=IzFmkIni("FAKT","TekVPC","1",SIFPATH)
-endif
-
-// PushHT("Unos,ispravka")
-Box(,21,77)
-TekDokument()
-
-ObjDbedit("PNal",21,77,{|| EdPripr()},"","Priprema..."+"ออออ<a-N> narudzb.kupca"+"ออออ<a-U> ugov.o rabatu"+IF(gNovine=="D",REPL("อ",4)+"<a-I> rekap.zad.",""), , , , ,6)
-BoxC()
-
-
 private ImeKol:={ ;
           {"Red.br",        {|| Rbr() } } ,;
           {"Roba",          {|| Roba()  } } ,;
@@ -384,7 +356,10 @@ if glDistrib
   AADD( ImeKol , { "Marsruta" , {|| marsruta }, "MARSRUTA" } )
 endif
 
-Kol:={}; for i:=1 to len(ImeKol); AADD(Kol,i); next
+Kol:={}
+for i:=1 to len(ImeKol)
+	AADD(Kol,i)
+next
 
 private cTipVPC:="1"
 
@@ -399,7 +374,7 @@ TekDokument()
 @ m_x+19,m_y+2 SAY " <c-A> Ispravka Dokumentaณ<c-P> Stampa (TXT)        ณ<a-F10> Asistent  "
 @ m_x+20,m_y+2 SAY " <a-A> Azuriranje dok.   ณ<c-F9> Brisi pripremu     ณ<F5>  Kontrola zbira  "
 @ m_x+21,m_y+2 SAY " <R> Rezerv  <X> Prekid Rณ<F10>  Ostale opcije      ณ<F9> 20,12->10; 27->11"
-ObjDbedit("PNal",21,77,{|| EdPripr()},"","Priprema..."+"ออออ<a-N> narudzb.kupca"+"ออออ<a-U> ugov.o rabatu"+IF(gNovine=="D",REPL("อ",4)+"<a-I> rekap.zad.",""), , , , ,4)
+ObjDbedit("PNal",21,77,{|| EdPripr()},"","Priprema..."+"ออออ<a-N> narudzb.kupca"+"ออออ<a-U> ugov.o rabatu", , , , ,4)
 BoxC()
 
 closeret
