@@ -591,9 +591,6 @@ else
  P_Roba(@ _Idroba)
 endif
 select roba
-if gNovine!="D"
-   go SIF_TEKREC()
-endif
 select pripr
 
 select tarifa
@@ -906,46 +903,6 @@ return aMemo
  
 function Odredi_IdRoba()
 *{
-  IF gNovine=="D" .and. ROBA->tip=="S" .and. LEN(RTRIM(_idroba))<=gnDS
-    SELECT FAKT
-    PushWA()
-    SET ORDER TO TAG "3"
-    SEEK PADR(LEFT(_idroba,gnDS),10,"9")
-    SKIP -1
-    DO WHILE !BOF() .and. LEFT(idroba,gnDS)==LEFT(_idroba,gnDS)
-      IF LEFT(IDROBA,gnDS)==LEFT(_idroba,gnDS)
-        IF _idtipdok=="01"  // ulaz u skladiçte -> novi broj artikla (novina)
-          IF DTOS(_datdok)>DTOS(DATDOK) .or. IDTIPDOK=="13".and.IDFIRMA=="99"
-            _idroba:=LEFT(IDROBA,gnDS)+PADL(ALLTRIM(STR(VAL(RIGHT(IDROBA,10-gnDS))+1)),10-gnDS,"0")
-          ELSE
-            _idroba:=IDROBA
-          ENDIF
-          EXIT
-        ELSEIF _idtipdok=="13" .and. _idpartner==IDPARTNER
-          IF _idfirma=="99"  // prodavnica -> skladiçte vra†enih artikala (RJ 99)
-           IF DTOS(_datdok)>DTOS(DATDOK)
-             IF IDTIPDOK=="13" .and. IDFIRMA=="99"
-              _idroba:=LEFT(IDROBA,gnDS)+PADL(ALLTRIM(STR(VAL(RIGHT(IDROBA,10-gnDS))+1)),10-gnDS,"0")
-             ELSE
-              _idroba:=IDROBA
-             ENDIF
-           ELSE
-             IF IDTIPDOK=="13" .and. IDFIRMA=="99"
-              _idroba:=IDROBA
-             ELSE
-              _idroba:=LEFT(IDROBA,gnDS)+PADL(ALLTRIM(STR(VAL(RIGHT(IDROBA,10-gnDS))-1)),10-gnDS,"0")
-             ENDIF
-           ENDIF
-          ELSE               // skladiçte -> prodavnica
-           _idroba:=IDROBA
-          ENDIF
-          exit
-        ENDIF
-      ENDIF
-      SKIP -1
-    ENDDO
-    PopWA()
-  ENDIF
 RETURN
 *}
 

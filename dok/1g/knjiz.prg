@@ -323,72 +323,6 @@ if IzFMKINI('SifRoba','ID_J','N', SIFPATH)=="D"
 	fId_J:=.t.
 endif
 
-lOpresaPovrati:=(IzFMKINI("OPRESA","Povrati","N",PRIVPATH)=="D" )
-
-if gDirektEdit=="D"
-  // direkt edit
-  private  gTBDir:="D"
-  Scatter()  // uzmi prvi red
-  private  bGoreRed:={|| PrGoreRed()}
-  private  bDoleRed:={|| PrDoleRed()}
-  private  bDodajRed:={|| PrDodajRed() }
-  private  fTBNoviRed:=.f. // trenutno smo u novom redu ?
-  private  TBCanClose:=.t. // da li se moze zavrsiti unos podataka ?
-  private  bZaglavlje:={|| PrZaglavlje()}
-           // zaglavlje se edituje kada je kursor u prvoj koloni
-           // prvog reda
-  private  TBSkipBlock:={|nSkip| SkipDB(nSkip, @nTBLine)}
-  private  TBScatter:="D"  // scatteruj bazu - uzmi iz baze kada radi็ get
-  private  TBAppend:="D"
-  private  nTBLine:=1      // tekuca linija-kod viselinijskog browsa
-  private  nTBLastLine:=1  // broj linija kod viselinijskog browsa
-  private  TBPomjerise:="" // ako je ">2" pomjeri se lijevo dva
-                           // ovo se moงe setovati u when/valid fjama
-  // varijable koje se inicijalizuju iz baze
-  private TRabat:="%"
-  private _txt1:=_txt2:=_txt3a:=_txt3b:=_txt3c:=""
-          // txt1  -  naziv robe,usluge
-  if IzFmkIni('FAKT','ProsiriPoljeOtpremniceNa50','N',KUMPATH)=='D'
-    private _BrOtp:=space(50)
-  else
-    private _BrOtp:=space(8)
-  endif
-  private _DatOtp:=ctod("")
-  private _BrNar:=space(8)
-  private _DatPl:=ctod("")
-  private _VezOtpr := ""
-  private nRbr:=RbrUnum(_Rbr)
-
-
-cDSFINI:=IzFMKINI('SifRoba','DuzSifra','10', SIFPATH)
-
-ImeKol:={}
-AADD(ImeKol,{"Rbr",        {|| rbr }, "nRbr", {|| nRbr:=val(rbr),.t.}, {|| tb_V_rbr() }, ">", "999" }     )
-//AADD(ImeKol,{"Pbr",        {|| podbr }, "Podbr", {|| .t.}, {|| .t. }, ">" }     )
-AADD(ImeKol,{"Roba",       {|| StIdROBA() }, "idroba", {|| tb_W_IdRoba() }, {|| tb_V_IdRoba()}, ">1", "@!S10" }   )
-AADD(ImeKol,{"Naziv",      {|| tbRobaNaz() } }   )
-AADD(ImeKol,{"Kolicina",   {|| transform(kolicina,pickol)}, "kolicina", {|| .t. } , {|| tb_V_Kolicina() },iif(gSamokol="D".or.lOpresaPovrati,"V1",">1"), PicKol }  )
-
-if gSamoKol!="D"
- AADD(ImeKol,{"Cijena",     {|| transform(Cijena,piccdem) } , "cijena", {|| tb_W_Cijena()} , {|| tb_V_Cijena()}, ">" , piccdem} )
-
- if !lOpresaPovrati
-  aTRabat:={  ;
-     { "TRabat", {|| tb_W_Trabat()}, {|| tb_V_Trabat()}, "@!" } ;
-  }
-  // dodatna varijabla sa rabatom
-  AADD(ImeKol,{"Rab.",    {|| transform(Rabat,"99.99")  } ,;
-                          "Rabat",                         ;
-                          {|| .t.} ,;
-                          {|| tb_v_Rabat() } ,;
-                           ">",;
-                          "9999.999",;
-                          aTRabat ;
-                };
-       )
-  AADD(ImeKol,{"Por",           {|| transform(Porez,"99.9") } ,"porez" , {|| tb_W_Porez()}, {||  tb_V_Porez()},"V1" ,"99.9" } )
- endif
-endif
 
 if pripr->(fieldpos("k1"))<>0 .and. gDK1=="D"
   AADD(ImeKol,{ "K1", {|| k1}, "k1", {||.t.}, {||.t.} })
@@ -397,10 +331,6 @@ if pripr->(fieldpos("k2"))<>0 .and. gDK2=="D"
   AADD(ImeKol,{ "K2", {|| k2}, "k2", {||.t.}, {||.t.} })
 endif
 
-if lPoNarudzbi
-  AADD(ImeKol,{ "BrNar", {|| brojnar}, "brojnar", {||.t.}, {||.t.} })
-  AADD(ImeKol,{ "IdNar", {|| idnar}, "idnar", {||.t.}, {||.t.} })
-endif
 
 Kol:={}; for i:=1 to len(ImeKol); AADD(Kol,i); next
 
@@ -418,20 +348,9 @@ endif
 Box(,21,77)
 TekDokument()
 
-if lOpresaPovrati
- @ m_x+16,m_y+2 SAY "ฺ <c-P> Stampa dokumenta ฟ"
- @ m_x+17,m_y+2 SAY "ณ <a-A> Azuriranje       ณ"
- @ m_x+18,m_y+2 SAY "ณ <c-T> Brisi Stavku     ณ"
- @ m_x+19,m_y+2 SAY "ณ <c-F9> Brisi pripremu  ณ"
- @ m_x+20,m_y+2 SAY "ณ <F10>  Ostale opcije   ณ"
- @ m_x+21,m_y+2 SAY "ภ <ENT> na RBr 1 ispravkaู"
-endif
 ObjDbedit("PNal",21,77,{|| EdPripr()},"","Priprema..."+"ออออ<a-N> narudzb.kupca"+"ออออ<a-U> ugov.o rabatu"+IF(gNovine=="D",REPL("อ",4)+"<a-I> rekap.zad.",""), , , , ,6)
 BoxC()
-// PopHT()
 
-else
-// stari edit
 
 private ImeKol:={ ;
           {"Red.br",        {|| Rbr() } } ,;
@@ -465,11 +384,6 @@ if glDistrib
   AADD( ImeKol , { "Marsruta" , {|| marsruta }, "MARSRUTA" } )
 endif
 
-if lPoNarudzbi
-  AADD(ImeKol,{ "BrNar", {|| brojnar}, "brojnar", {||.t.}, {||.t.} })
-  AADD(ImeKol,{ "IdNar", {|| idnar}, "idnar", {||.t.}, {||.t.} })
-endif
-
 Kol:={}; for i:=1 to len(ImeKol); AADD(Kol,i); next
 
 private cTipVPC:="1"
@@ -488,7 +402,6 @@ TekDokument()
 ObjDbedit("PNal",21,77,{|| EdPripr()},"","Priprema..."+"ออออ<a-N> narudzb.kupca"+"ออออ<a-U> ugov.o rabatu"+IF(gNovine=="D",REPL("อ",4)+"<a-I> rekap.zad.",""), , , , ,4)
 BoxC()
 
-endif
 closeret
 *}
 
@@ -681,9 +594,6 @@ do case
         	CLOSE ALL
         	Azur()
         	O_Edit()
-        	if gDirektEdit=="D"
-          		KEYBOARD REPL(CHR(K_LEFT),8)
-        	endif
         	return DE_REFRESH
 	case Ch==K_CTRL_F9
 		BrisiPripr()
@@ -1527,13 +1437,6 @@ if (nRbr==1 .and. VAL(_podbr) < 1)
      			@  m_x+10,m_y+31  SAY "Destinacija :" get _Dest
    		endif
 
-   		if !lOpresaPovrati
-     			if _idtipdok$"06#16"
-       				@ m_x+9,m_y+2  SAY Valdomaca()+"/"+VAlPomocna() get _DINDEM pict "@!" valid ImaUSifVal(_dindem)
-     			else
-       				@ m_x+9,m_y+2  SAY Valdomaca()+"/"+VAlPomocna() get _DINDEM pict "@!" valid _dindem $ valdomaca()+valpomocna()
-     			endif
-   		endif
 
 		if glRadNal .and. _idtipdok$"12"
 			@ m_x+9, m_y+15 SAY "Rad.nalog:" GET _idRNal VALID P_RNal(@_idRNal) PICT "@!"
@@ -2173,10 +2076,19 @@ private InPicDEM:=PicDEM  // picture iznosa
 private InPicCDEM:=PicCDEM  // picture iznosa
 
 if IsPDV()
-	if cIdFirma == nil
-		StDokPDV()
-	else
-		StDokPDV(cIdFirma, cIdTipDok, cBrDok)
+	if gPdvDrb == "D"
+		if cIdFirma == nil
+			Stdok2p_rb()
+		else
+			Stdok2p_rb(cIdFirma, cIdTipDok, cBrDok)
+		endif
+	
+	else	
+		if cIdFirma == nil
+			StDokPDV()
+		else
+			StDokPDV(cIdFirma, cIdTipDok, cBrDok)
+		endif
 	endif
 	
 	PicDEM:=InPicDEM

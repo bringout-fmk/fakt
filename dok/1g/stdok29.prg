@@ -4,26 +4,6 @@
  * ----------------------------------------------------------------
  *                                     Copyright Sigma-com software 
  * ----------------------------------------------------------------
- * $Source: c:/cvsroot/cl/sigma/fmk/fakt/dok/1g/stdok29.prg,v $
- * $Author: mirsad $ 
- * $Revision: 1.5 $
- * $Log: stdok29.prg,v $
- * Revision 1.5  2003/03/26 14:55:02  mirsad
- * umjesto "Reg.br." i "Por.br." svuda stavljen ispis "Ident.br."
- *
- * Revision 1.4  2002/09/14 12:08:58  mirsad
- * dokumentovanje INI parametara
- *
- * Revision 1.3  2002/07/04 08:34:19  mirsad
- * dokumentovanje ini parametara
- *
- * Revision 1.2  2002/06/18 13:01:05  sasa
- * no message
- *
- * Revision 1.1.1.1  2002/06/17 18:30:18  ernad
- * no message
- *
- *
  */
 
 /*! \file fmk/fakt/dok/1g/stdok29.prg

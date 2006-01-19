@@ -4,66 +4,6 @@
  * ----------------------------------------------------------------
  *                                     Copyright Sigma-com software 
  * ----------------------------------------------------------------
- * $Source: c:/cvsroot/cl/sigma/fmk/fakt/dok/1g/stdok2.prg,v $
- * $Author: sasavranic $ 
- * $Revision: 1.18 $
- * $Log: stdok2.prg,v $
- * Revision 1.18  2003/12/04 11:11:43  sasavranic
- * Uvedena konverzija i za varijantu "2" fakture
- *
- * Revision 1.17  2003/10/02 09:08:29  sasavranic
- * no message
- *
- * Revision 1.16  2003/09/08 13:18:14  mirsad
- * sitne dorade za Hano - radni nalozi
- *
- * Revision 1.15  2003/08/06 17:44:49  mirsad
- * dorada za Tvin, varijanta faktura 2/2, prikaz iznosa poreza za svaku stavku
- *
- * Revision 1.14  2003/07/11 06:43:26  sasa
- * trebovanje kada je popunjeno polje radnog naloga
- *
- * Revision 1.13  2003/07/11 06:29:15  sasa
- * trebovanje kada je popunjeno polje radnog naloga
- *
- * Revision 1.12  2003/05/23 13:08:10  ernad
- * haaktrans rtm faktura
- *
- * Revision 1.11  2003/05/20 09:14:37  ernad
- * - RTM faktura za tip dokumenta 11
- *
- * Revision 1.10  2003/05/14 15:25:14  sasa
- * ispravka buga sa stampom kroz delphirb ako je podesen parametar 10Duplo=D
- *
- * Revision 1.9  2003/05/10 18:57:58  ernad
- * dodat opis za artikle u dokumentu
- *
- * Revision 1.8  2003/05/10 15:07:57  mirsad
- * dodatna polja za robne karakteristike u kumulativnoj bazi C1,C2,C3,N1,N2
- *
- * Revision 1.7  2003/03/28 15:38:10  mirsad
- * 1) ispravka bug-a pri gen.fakt.na osnovu otpremnica: sada se korektno setuje datum u svim stavkama
- * 2) ukinuo setovanje u proizvj.ini parametra "Broj" jer opet smeta (zbog njega se u reg.broj upisuje broj fakture)
- *
- * Revision 1.6  2003/03/26 14:55:11  mirsad
- * umjesto "Reg.br." i "Por.br." svuda stavljen ispis "Ident.br."
- *
- * Revision 1.5  2002/09/14 12:04:47  mirsad
- * dokumentovanje INI parametara
- *
- * Revision 1.4  2002/09/14 09:24:19  mirsad
- * dokumentovanje INI parametara
- *
- * Revision 1.3  2002/07/04 08:34:19  mirsad
- * dokumentovanje ini parametara
- *
- * Revision 1.2  2002/06/18 13:01:05  sasa
- * no message
- *
- * Revision 1.1.1.1  2002/06/17 18:30:18  ernad
- * no message
- *
- *
  */
 
 /*! \file fmk/fakt/dok/1g/stdok2.prg
@@ -288,7 +228,9 @@ private i,nCol1:=0,cTxt1,cTxt2,aMemo,nMPVBP:=nVPVBP:=0
 private cpom,cpombk
 private cTi,nUk,nRab,nUk2:=nRab2:=0
 
-private nStrana:=0,nCTxtR:=10,nPorZaIspis:=0
+private nStrana:=0
+private nCTxtR:=10
+private nPorZaIspis:=0
 
 IF "U" $ TYPE("lUgRab"); lUgRab:=.f.; ENDIF
 

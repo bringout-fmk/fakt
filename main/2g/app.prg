@@ -525,7 +525,6 @@ public gFPZagA5:=0, gnTMarg2A5:=3, gnTMarg3A5:=-4, gnTMarg4A5:=0
 public gVFRP0:="N"
 public gFNar:=PADR("NAR.TXT",12)
 public gFUgRab:=PADR("UGRAB.TXT",12)
-public gDirektEdit:="N"
 public gSamokol:="N"
 public gRokPl:=0
 
@@ -559,9 +558,6 @@ RPar("dc",@g13dcij)
 RPar("dp",@gDodPar)   // dodatni parametri fakture broj otpremnice itd
 RPar("dv",@gDatVal)
 RPar("er",@gERedova)
-//RPar("fi",@gFirma)
-//RPar("ts",@gTS)
-//Rpar("fn",@gNFirma)
 RPar("fp",@gFPzag)
 RPar("fz",@gFZaok)
 RPar("if",@gImeF)
@@ -576,7 +572,6 @@ Rpar("ff",@gFaktFakt)
 Rpar("nw",@gNW)
 Rpar("NF",@gFNar)
 Rpar("UF",@gFUgRab)
-Rpar("DE",@gDirektEdit)
 Rpar("sk",@gSamoKol)
 Rpar("rP",@gRokPl)
 Rpar("no",@gNovine)
@@ -683,7 +678,10 @@ public gFText1:=SPACE(72) // proizv.text 1
 public gFText2:=SPACE(72) // proizv.text 2
 public gFText3:=SPACE(72) // proizv.text 3
 public gStZagl:="D" // stampati zaglavlje
-public gPDVSvStavka:="N" // pdv na svaku stavku
+
+// DelphiRB - pdv faktura
+public gPdvDRb := "N"
+
 // parametri zaglavlja
 Rpar("F1",@gFNaziv)
 Rpar("F2",@gFAdresa)
@@ -699,7 +697,8 @@ Rpar("G7",@gFText1)
 Rpar("G8",@gFText2)
 Rpar("G9",@gFText3)
 
-Rpar("H1",@gPDVSvStavka)
+Rpar("H1",@gPdvDrb)
+
 Rpar("Z1",@gStZagl)
 
 if valtype(gtabela)<>"N"
@@ -708,7 +707,8 @@ endif
 
 select params
 use
-cSekcija:="SifRoba"; cVar:="PitanjeOpis"
+cSekcija:="SifRoba"
+cVar:="PitanjeOpis"
 IzFmkIni (cSekcija,cVar, IzFMkIni(cSekcija,cVar,'D') , SIFPATH)
 cSekcija:="SifRoba"; cVar:="ID_J"
 IzFmkIni (cSekcija,cVar, IzFMkIni(cSekcija,cVar,'N') , SIFPATH)

@@ -292,8 +292,6 @@ add_drntext("P06", ALLTRIM(STR(gERedova)) )
 add_drntext("P07", ALLTRIM(STR(gnTMarg)) )
 // da li se formira automatsko zaglavlje
 add_drntext("P10", gStZagl )
-// da li se prikazuje pojedini iznos PDV na svakoj stavci
-add_drntext("P11", gPDVSvStavka )
 
 // dodaj total u DRN
 add_drn(cBrDok, dDatDok, dDatVal, dDatIsp, cTime, nUkBPDV, nUkVPop, nUkBPDVPop, nUkPDV, nTotal, nCSum, nUkPopNaTeretProdavca, nDrnZaokr)

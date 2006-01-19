@@ -135,7 +135,6 @@ return nil
  *  \brief Da li je ukljucen mod direktnog edita browse-tabela
  *  \param D - da
  *  \param N - ne
- *  \note gDirektEdit
  */
 
 
@@ -273,28 +272,43 @@ O_PARAMS
 gKomLin:=PADR(gKomLin,70)
 
 Box(,21,77,.f.,"OSTALI PARAMETRI (RAZNO)")
-	@ m_x+2,m_y+2 SAY "Naziv fajla zaglavlja (prazno bez zaglavlja)" GET gVlZagl VALID V_VZagl()
-	@ m_x+3,m_y+2 SAY "Novi korisnicki interfejs D-da/N-ne/R-rudnik/T-test" GET gNW VALID gNW $ "DNRT" PICT "@!"
-  	@ m_x+4,m_y+2 SAY "Na kraju fakture izvrsiti zaokruzenje" GET gFZaok PICT "99"
-  	@ m_x+5,m_y+2 SAY "Svaki izlazni fajl ima posebno ime ?" GET gImeF VALID gImeF $ "DN"
-  	@ m_x+6,m_y+2 SAY "Komandna linija za RTF fajl:" GET gKomLin PICT "@S40"
-  	@ m_x+8,m_y+2 SAY "Inicijalna meni-opcija (1/2/.../G)" GET gIMenu VALID gIMenu $ "123456789ABCDEFG" PICT "@!"
-  	@ m_x+9,m_y+2 SAY "Prikaz K1" GET gDk1 PICT "@!" VALID gDk1 $ "DN"
-  	@ m_x+9,col()+2 SAY "Prikaz K2" GET gDk2 PICT "@!" VALID gDk2 $ "DN"
-  	@ m_x+10,m_y+2 SAY "Mjesto uzimati iz RJ (D/N)" GET gMjRJ PICT "@!" VALID gMjRJ $ "DN"
-  	@ m_x+11,m_y+2 SAY "Omoguciti poredjenje FAKT sa FAKT druge firme (D/N) ?" GET gFaktFakt VALID gFaktFakt $ "DN" PICT "@!"
-  	@ m_x+12,m_y+2 SAY "Koriste li se artikli koji se vode po sintet.sifri, roba tipa 'S' (D/N) ?" GET gNovine VALID gNovine $ "DN" PICT "@!"
-  	@ m_x+13,m_y+2 SAY "Duzina sifre artikla sinteticki " GET gnDS VALID gnDS>0 PICT "9"
 
-  	@ m_x+14,m_y+2 SAY "Naziv fajla obrasca narudzbenice" GET gFNar VALID V_VNar()
-  	@ m_x+15,m_y+2 SAY "Naziv fajla teksta ugovora o rabatu" GET gFUgRab VALID V_VUgRab()
-  	@ m_x+17,m_y+2 SAY "Mod direktnog edita " GET gDirektEdit PICT "@!" VALID gDirektEdit $ "DN"
-  	@ m_x+18,m_y+2 SAY "Voditi samo kolicine " GET gSamoKol PICT "@!" VALID gSamoKol $ "DN"
-  	@ m_x+19,m_y+2 SAY "Tekuca vrijednost za rok placanja  " GET gRokPl PICT "999"
-  	@ m_x+20,m_y+2 SAY "Mogucnost ispravke partnera u novoj stavci (D/N)" GET gIspPart PICT "@!" VALID gIspPart$"DN"
-  	@ m_x+21,m_y+2 SAY "Uvijek resetuj artikal pri unosu dokumenata (D/N)" GET gResetRoba PICT "@!" VALID gResetRoba$"DN"
+nX := 2
+if !IsPdv()
+	@ m_x+nX++, m_y+2 SAY "Naziv fajla zaglavlja (prazno bez zaglavlja)" GET gVlZagl VALID V_VZagl()
+	@ m_x+nX++, m_y+2 SAY "Novi korisnicki interfejs D-da/N-ne/R-rudnik/T-test" GET gNW VALID gNW $ "DNRT" PICT "@!"
+  	@ m_x+nX++, m_y+2 SAY "Na kraju fakture izvrsiti zaokruzenje" GET gFZaok PICT "99"
+  	@ m_x+nX++, m_y+2 SAY "Svaki izlazni fajl ima posebno ime ?" GET gImeF VALID gImeF $ "DN"
+  	@ m_x+nX++, m_y+2 SAY "Komandna linija za RTF fajl:" GET gKomLin PICT "@S40"
+endif
+  	@ m_x+(nX:=nX+3),m_y+2 SAY "Inicijalna meni-opcija (1/2/.../G)" GET gIMenu VALID gIMenu $ "123456789ABCDEFG" PICT "@!"
+	
+if !IsPdV()
+  	@ m_x+nX++,m_y+2 SAY "Prikaz K1" GET gDk1 PICT "@!" VALID gDk1 $ "DN"
+  	@ m_x+nX,col()+2 SAY "Prikaz K2" GET gDk2 PICT "@!" VALID gDk2 $ "DN"
+  	@ m_x+nX++,m_y+2 SAY "Mjesto uzimati iz RJ (D/N)" GET gMjRJ PICT "@!" VALID gMjRJ $ "DN"
+endif
+	
+  	@ m_x+nX++,m_y+2 SAY "Omoguciti poredjenje FAKT sa FAKT druge firme (D/N) ?" GET gFaktFakt VALID gFaktFakt $ "DN" PICT "@!"
+  	@ m_x+nX++,m_y+2 SAY "Koriste li se artikli koji se vode po sintet.sifri, roba tipa 'S' (D/N) ?" GET gNovine VALID gNovine $ "DN" PICT "@!"
+  	@ m_x+nX++, m_y+2 SAY "Duzina sifre artikla sinteticki " GET gnDS VALID gnDS>0 PICT "9"
+
+  	@ m_x+nX++, m_y+2 SAY "Naziv fajla obrasca narudzbenice" GET gFNar VALID V_VNar()
+  	@ m_x+nX++,m_y+2 SAY "Naziv fajla teksta ugovora o rabatu" GET gFUgRab VALID V_VUgRab()
+
+  	@ m_x+nX++, m_y+2 SAY "Voditi samo kolicine " GET gSamoKol PICT "@!" VALID gSamoKol $ "DN"
+  	@ m_x+nX++, m_y+2 SAY "Tekuca vrijednost za rok placanja  " GET gRokPl PICT "999"
+	
+if !IsPDV()
+  	@ m_x+nX++, m_y+2 SAY "Mogucnost ispravke partnera u novoj stavci (D/N)" GET gIspPart PICT "@!" VALID gIspPart$"DN"
+else
+	gIspPart := "N"
+endif
+	
+  	@ m_x+nX++, m_y+2 SAY "Uvijek resetuj artikal pri unosu dokumenata (D/N)" GET gResetRoba PICT "@!" VALID gResetRoba$"DN"
   	READ
 BoxC()
+
 
 gKomLin:=TRIM(gKomLin)
 
@@ -303,7 +317,6 @@ if (LASTKEY()<>K_ESC)
    	Wpar("nw",gNW)
    	Wpar("NF",gFNar)
    	Wpar("UF",gFUgRab)
-   	Wpar("DE",gDirektEdit)
    	Wpar("sk",gSamoKol)
    	Wpar("rP",gRokPl)
    	Wpar("no",gNovine)
@@ -721,7 +734,7 @@ Box(,23,76,.f.,"VARIJANTE OBRADE DOKUMENATA")
   	@ m_x+19,col()+2 SAY "N1 (D/N)?" GET gKarN1 PICT "@!" VALID gKarN1$"DN"
   	@ m_x+19,col()+2 SAY "N2 (D/N)?" GET gKarN2 PICT "@!" VALID gKarN2$"DN"
   	@ m_x+20,m_y+2 SAY "Prikaz samo kolicina na dokumentima (0/D/N)" GET gPSamoKol PICT "@!" VALID gPSamoKol $ "0DN"
-  	@ m_x+21,m_y+2 SAY "Prikaz PDV iznosa na svaku stavku fakture (D/N)" GET gPDVSvStavka PICT "@!" VALID gPDVSvStavka $ "DN"
+  	@ m_x+21,m_y+2 SAY "PDV Delphi RB prikaz (D/N)" GET gPDVDrb PICT "@!" VALID gPDVDrb $ "DN"
 	read
 BoxC()
 
@@ -747,7 +760,7 @@ if (LASTKEY()<>K_ESC)
    	WPar("g4",gKarN1)
    	WPar("g5",gKarN2)
    	WPar("g6",gPSamoKol)
-   	WPar("H1",gPDVSvStavka)
+   	WPar("H1",gPDVDrb)
   	
 endif
 
