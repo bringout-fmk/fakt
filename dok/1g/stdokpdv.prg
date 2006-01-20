@@ -478,15 +478,4 @@ add_drntext("I14", ALLTRIM(gFText3))
 return
 *}
 
-// roba ima zasticenu cijenu
-// sto znaci da krajnji kupac uvijek placa fixan iznos pdv-a 
-// bez obzira po koliko se roba prodaje
-function RobaZastCijena( cIdTarifa )
-*{
-lZasticena := .f.
-lZasticena := lZasticena .or.  (PADR(cIdTarifa, 6) == PADR("PDVZ",6))
-lZasticena := lZasticena .or.  (PADR(cIdTarifa, 6) == PADR("PDV17Z",6))
-lZasticena := lZasticena .or.  (PADR(cIdTarifa, 6) == PADR("CIGA05",6))
 
-return lZasticena
-*}
