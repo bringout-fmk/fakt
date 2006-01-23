@@ -756,7 +756,6 @@ Box(,23,76,.f.,"VARIJANTE OBRADE DOKUMENATA")
   	@ m_x+19,col()+2 SAY "N1 (D/N)?" GET gKarN1 PICT "@!" VALID gKarN1$"DN"
   	@ m_x+19,col()+2 SAY "N2 (D/N)?" GET gKarN2 PICT "@!" VALID gKarN2$"DN"
   	@ m_x+20,m_y+2 SAY "Prikaz samo kolicina na dokumentima (0/D/N)" GET gPSamoKol PICT "@!" VALID gPSamoKol $ "0DN"
-  	@ m_x+21,m_y+2 SAY "PDV Delphi RB prikaz (D/N)" GET gPDVDrb PICT "@!" VALID gPDVDrb $ "DN"
 	read
 BoxC()
 
@@ -782,7 +781,6 @@ if (LASTKEY()<>K_ESC)
    	WPar("g4",gKarN1)
    	WPar("g5",gKarN2)
    	WPar("g6",gPSamoKol)
-   	WPar("H1",gPDVDrb)
   	
 endif
 
@@ -1061,6 +1059,8 @@ return
  
 function SetT1()
 *{
+local nX
+
 private GetList:={}
 private cIzvj:="1"
 
@@ -1072,35 +1072,87 @@ endif
 
 RPar("c1",@cIzvj)
 
+nX:=2
 Box(,22,76,.f.,"VARIJANTE IZGLEDA DOKUMENATA")
-	@ m_x+2, m_y+2 SAY "Prikaz cijena podstavki/cijena u glavnoj stavci (1/2)" GET cIzvj
-  	@ m_x+3, m_y+2 SAY "Izgled fakture 1/2/3" GET gTipF VALID gTipF $ "123"
-  	@ m_x+4, m_y+2 SAY "Varijanta 1/2/3/4/9/A/B" GET gVarF VALID gVarF $ "12349AB"
-  	@ m_x+5, m_y+2 SAY "Dodat.redovi po listu " GET gERedova VALID gERedova>=0 PICT "99"
-  	@ m_x+6, m_y+2 SAY "Lijeva margina pri stampanju " GET gnLMarg PICT "99"
-  	@ m_x+6, m_y+35 SAY "L.marg.za v.2/9/A5 " GET gnLMargA5 PICT "99"
-  	@ m_x+7, m_y+2 SAY "Gornja margina " GET gnTMarg PICT "99"
-  	@ m_x+8, m_y+2 SAY "Koristiti A5 obrazac u varijanti 9 D/N/0" GET gFormatA5 PICT "@!" VALID gFormatA5 $ "DN0"
-  	@ m_x+ 8, m_y+58 SAY "A4   A5"
-  	@ m_x+ 9, m_y+2 SAY "Horizont.pomjeranje zaglavlja u varijanti 9 (br.kolona)" GET gFPzag PICT "99"
-  	@ m_x+ 9, m_y+63 GET gFPzagA5 PICT "99"
-  	@ m_x+10, m_y+2 SAY "Vertikalno pomjeranje stavki u fakturi var.9(br.redova)" GET gnTmarg2 PICT "99"
-  	@ m_x+10, m_y+63 GET gnTmarg2A5 PICT "99"
-  	@ m_x+11, m_y+2 SAY "Vertikalno pomjeranje totala u fakturi var.9(br.redova)" GET gnTmarg3 PICT "99"
-  	@ m_x+11, m_y+63 GET gnTmarg3A5 PICT "99"
-  	@ m_x+12, m_y+2 SAY "Vertikalno pomj.donjeg dijela fakture  var.9(br.redova)" GET gnTmarg4 PICT "99"
-  	@ m_x+12, m_y+63 GET gnTmarg4A5 PICT "99"
-  	@ m_x+13, m_y+2 SAY "Vertik.pomj.znakova krizanja i br.dok.var.9(br.red.>=0)" GET gKriz PICT "99"
-  	@ m_x+13, m_y+63 GET gKrizA5 PICT "99"
-  	@ m_x+14, m_y+2 SAY "Znak kojim se precrtava dio teksta na papiru" GET gZnPrec
-  	@ m_x+15, m_y+2 SAY "Broj linija za odvajanje tabele od broja dokumenta" GET gOdvT2 VALID gOdvT2>=0 PICT "9"
-  	@ m_x+16, m_y+2 SAY "Nacin crtanja tabele (0/1/2) ?" GET gTabela VALID gTabela<3.and.gTabela>=0 PICT "9"
-  	@ m_x+17, m_y+2 SAY "Zaglavlje na svakoj stranici D/N  (1/2) ? " GET gZagl VALID gZagl $ "12" PICT "@!"
-  	@ m_x+18, m_y+2 SAY "Crni-masni prikaz fakture D/N  (1/2) ? " GET gBold VALID gBold $ "12" PICT "@!"
-  	@ m_x+19, m_y+2 SAY "Var.RTF-fakt.,izgled tipa 2 (' '-standardno, 1-MINEX, 2-LIKOM, 3-ZENELA)" GET gVarRF VALID gVarRF $ " 123"
-  	@ m_x+20, m_y+2 SAY "Prikaz rekapitulacije po tarifama na 13-ci:" GET gRekTar VALID gRekTar $ "DN" PICT "@!"
-  	@ m_x+21, m_y+2 SAY "Prikaz horizot. linija:" GET gHLinija VALID gHLinija $ "DN" PICT "@!"
-  	@ m_x+22, m_y+2 SAY "Prikaz rabata u %(procentu)? (D/N):" GET gRabProc VALID gRabProc $ "DN" PICT "@!"
+	@ m_x + nX, m_y+2 SAY "Prikaz cijena podstavki/cijena u glavnoj stavci (1/2)" GET cIzvj
+	nX++
+  	
+	if !IsPdv()
+ 	 @ m_x + nX, m_y+2 SAY "Izgled fakture 1/2/3" GET gTipF VALID gTipF $ "123"
+	 nX++
+  	 @ m_x + nX, m_y+2 SAY "Varijanta 1/2/3/4/9/A/B" GET gVarF VALID gVarF $ "12349AB"
+	 nX++
+	endif
+	
+  	@ m_x + nX, m_y+2 SAY "Dodat.redovi po listu " GET gERedova VALID gERedova>=0 PICT "99"
+	nX++
+  	@ m_x + nX, m_y+2 SAY "Lijeva margina pri stampanju " GET gnLMarg PICT "99"
+	nX++
+  	
+	if !IsPdv()
+	 @ m_x+ nX, m_y+35 SAY "L.marg.za v.2/9/A5 " GET gnLMargA5 PICT "99"
+	 nX++
+	endif
+	
+  	@ m_x+ nX, m_y+2 SAY "Gornja margina " GET gnTMarg PICT "99"
+	nX++
+	
+	if !IsPdv()
+  	 @ m_x + nX, m_y+2 SAY "Koristiti A5 obrazac u varijanti 9 D/N/0" GET gFormatA5 PICT "@!" VALID gFormatA5 $ "DN0"
+	 nX++
+	
+  	 @ m_x+ nX, m_y+58 SAY "A4   A5"
+	 nX++
+  	 @ m_x+ nX, m_y+2 SAY "Horizont.pomjeranje zaglavlja u varijanti 9 (br.kolona)" GET gFPzag PICT "99"
+  	 @ m_x+ nX, m_y+63 GET gFPzagA5 PICT "99"
+	 nX++
+  	 @ m_x + nX, m_y+2 SAY "Vertikalno pomjeranje stavki u fakturi var.9(br.redova)" GET gnTmarg2 PICT "99"
+  	 @ m_x + nX, m_y+63 GET gnTmarg2A5 PICT "99"
+	 nX++
+  	 @ m_x + nX, m_y+2 SAY "Vertikalno pomjeranje totala u fakturi var.9(br.redova)" GET gnTmarg3 PICT "99"
+  	 @ m_x + nX, m_y+63 GET gnTmarg3A5 PICT "99"
+	nX++
+  	 @ m_x + nX, m_y+2 SAY "Vertikalno pomj.donjeg dijela fakture  var.9(br.redova)" GET gnTmarg4 PICT "99"
+  	 @ m_x + nX, m_y+63 GET gnTmarg4A5 PICT "99"
+	 nX++
+  	 @ m_x + nX, m_y+2 SAY "Vertik.pomj.znakova krizanja i br.dok.var.9(br.red.>=0)" GET gKriz PICT "99"
+  	 @ m_x + nX, m_y+63 GET gKrizA5 PICT "99"
+	 nX++
+  	 @ m_x + nX, m_y+2 SAY "Znak kojim se precrtava dio teksta na papiru" GET gZnPrec
+	 nX++
+        endif
+	
+  	@ m_x + nX, m_y+2 SAY "Broj linija za odvajanje tabele od broja dokumenta" GET gOdvT2 VALID gOdvT2>=0 PICT "9"
+	nX++
+        
+
+	if !IsPdv()
+  	  @ m_x + nX, m_y+2 SAY "Nacin crtanja tabele (0/1/2) ?" GET gTabela VALID gTabela<3.and.gTabela>=0 PICT "9"
+	nX++
+  	  @ m_x + nX, m_y+2 SAY "Zaglavlje na svakoj stranici D/N  (1/2) ? " GET gZagl VALID gZagl $ "12" PICT "@!"
+	  nX++
+  	  @ m_x + nX, m_y+2 SAY "Crni-masni prikaz fakture D/N  (1/2) ? " GET gBold VALID gBold $ "12" PICT "@!"
+	  nX++
+    	  @ m_x + nX, m_y+2 SAY "Var.RTF-fakt.,izgled tipa 2 (' '-standardno, 1-MINEX, 2-LIKOM, 3-ZENELA)" GET gVarRF VALID gVarRF $ " 123"
+	  nX++
+	
+   	  @ m_x + nX, m_y+2 SAY "Prikaz rekapitulacije po tarifama na 13-ci:" GET gRekTar VALID gRekTar $ "DN" PICT "@!"
+	  nX++
+	
+  	  @ m_x + nX, m_y+2 SAY "Prikaz horizot. linija:" GET gHLinija VALID gHLinija $ "DN" PICT "@!"
+	  nX++
+	
+  	  @ m_x + nX, m_y+2 SAY "Prikaz rabata u %(procentu)? (D/N):" GET gRabProc VALID gRabProc $ "DN" PICT "@!"
+	  nX++
+	endif
+
+	if IsPdv()
+  	  @ m_x+ nX, m_y+2 SAY "PDV Delphi RB prikaz (D/N)" GET gPDVDrb PICT "@!" VALID gPDVDrb $ "DN"
+	  nX++
+  	  @ m_x+ nX, m_y+2 SAY "PDV TXT dokument varijanta " GET gPDVDokVar PICT "@!" VALID gPDVDokVar $ "123"
+	  nX++
+	endif
+
   	read
 BoxC()
 
@@ -1132,6 +1184,9 @@ if (LASTKEY()<>K_ESC)
    	WPar("RT", gRekTar)
    	WPar("HL", gHLinija)
    	WPar("rp", gRabProc)
+
+   	WPar("H1",gPDVDrb)
+   	WPar("H1",gPDVDokVar)
 endif
 
 return 

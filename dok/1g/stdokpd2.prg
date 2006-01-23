@@ -1,7 +1,7 @@
 #include "\dev\fmk\fakt\fakt.ch"
 
 
-function stdokpdv(cIdFirma, cIdTipDok, cBrDok)
+function stdokpd2(cIdFirma, cIdTipDok, cBrDok)
 *{
 local lSamoKol:=.f. // samo kolicine
 
@@ -135,8 +135,7 @@ nRec:=RecNO()
 
 
 do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==cBrDok
-	// Nastimaj (hseek) Sifr.Robe Na Pripr->IdRoba
-	NSRNPIdRoba()   
+	NSRNPIdRoba()   // Nastimaj (hseek) Sifr.Robe Na Pripr->IdRoba
 	
 	// nastimaj i tarifu
 	select tarifa
@@ -167,8 +166,8 @@ do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==c
 	nCj2BPDV := 0
 	nVPopust := 0
 	
-	cRbr := rbr
-	cPodBr := podbr
+	cRbr := field->rbr
+	cPodBr := field->podbr
 	cJmj := roba->jmj
 
 	// procenat pdv-a
@@ -266,41 +265,31 @@ cBrNar  := aMemo[8]
 add_drntext("D01", gMjStr)
 // naziv dokumenta
 add_drntext("D02", cDokNaz)
-
 // slovima iznos fakture
 add_drntext("D04", Slovima( nTotal - nUkPopNaTeretProdavca , cDinDem))
-
 // broj otpremnice
 add_drntext("D05", cBrOtpr)
-
 // broj narudzbenice
 add_drntext("D06", cBrNar)
-
 // DM/EURO
 add_drntext("D07", cDinDem)
 
 // tekst na kraju fakture F04, F05, F06
 fill_dod_text(aMemo[2])
-
 // potpis na kraju
 fill_potpis(cIdTipDok)
 
 // parametri generalni za stampu dokuemnta
 // lijeva margina
 add_drntext("P01", ALLTRIM(STR(gnLMarg)) )
-
 // zaglavlje na svakoj stranici
 add_drntext("P04", if(gZagl == "1", "D", "N"))
-
 // prikaz dodatnih podataka 
 add_drntext("P05", if(gDodPar == "1", "D", "N"))
 // dodati redovi po listu 
-
 add_drntext("P06", ALLTRIM(STR(gERedova)) )
-
 // gornja margina
 add_drntext("P07", ALLTRIM(STR(gnTMarg)) )
-
 // da li se formira automatsko zaglavlje
 add_drntext("P10", gStZagl )
 
@@ -470,10 +459,6 @@ return
 
 function fill_firm_data()
 *{
-local i
-local cBanke
-local cPom
-local lPrazno
 // opci podaci
 add_drntext("I01", gFNaziv)
 add_drntext("I02", gFAdresa)
@@ -483,32 +468,7 @@ add_drntext("I10", ALLTRIM(gFTelefon))
 add_drntext("I11", ALLTRIM(gFEmailWeb))
 
 // banke
-cBanke:=""
-lPrazno:=.t.
-
-for i:=1 to 5
-  if i==1
-    cPom:=ALLTRIM(gFBanka1)
-  elseif i==2
-    cPom:=ALLTRIM(gFBanka2)
-  elseif i==3
-    cPom:=ALLTRIM(gFBanka3)
-  elseif i==4
-    cPom:=ALLTRIM(gFBanka4)
-  elseif i==5
-    cPom:=ALLTRIM(gFBanka5)
-  endif
-  if !empty(cPom)
-	if !lPrazno
-		cBanke += "; "
-	endif
-	cBanke += cPom
-	lPrazno := .f.
-  endif
-next
-
-
-add_drntext("I09", cBanke )
+add_drntext("I09", ALLTRIM(gFBanka1) + "; " + ALLTRIM(gFBanka2) + "; " + ALLTRIM(gFBanka3) + "; " + ALLTRIM(gFBanka4) + "; " + ALLTRIM(gFBanka5) )
 
 // dodatni redovi
 add_drntext("I12", ALLTRIM(gFText1))

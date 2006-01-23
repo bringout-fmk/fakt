@@ -4,40 +4,6 @@
  * ----------------------------------------------------------------
  *                                     Copyright Sigma-com software 
  * ----------------------------------------------------------------
- * $Source: c:/cvsroot/cl/sigma/fmk/fakt/dok/1g/stdok13.prg,v $
- * $Author: sasavranic $ 
- * $Revision: 1.8 $
- * $Log: stdok13.prg,v $
- * Revision 1.8  2003/11/28 15:12:07  sasavranic
- * Opresa - stampa, stampa dostavnica u jedan red
- *
- * Revision 1.7  2003/11/21 08:46:40  sasavranic
- * Opresa - stampa, stampa samo jedne dostavnice
- * FMK.INI/PRIVPATH
- * [Stampa]
- *  JednaDostavnica=D
- *
- * Revision 1.6  2003/04/25 10:44:36  ernad
- * ispravka za Planiku: parametar Cijena13MPC=D vise ne setuje MPC u sifrarniku pri promjeni cijene u unosu 13-ke
- *
- * Revision 1.5  2002/09/14 07:25:36  mirsad
- * dokumentovanje INI parametara
- *
- * Revision 1.4  2002/07/04 19:04:08  ernad
- *
- *
- * ciscenje sifrarnik fakt
- *
- * Revision 1.3  2002/07/04 08:34:19  mirsad
- * dokumentovanje ini parametara
- *
- * Revision 1.2  2002/06/18 13:01:05  sasa
- * no message
- *
- * Revision 1.1.1.1  2002/06/17 18:30:18  ernad
- * no message
- *
- *
  */
 
 /*! \file fmk/fakt/dok/1g/stdok13.prg

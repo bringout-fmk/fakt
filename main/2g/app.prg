@@ -681,6 +681,7 @@ public gStZagl:="D" // stampati zaglavlje
 
 // DelphiRB - pdv faktura
 public gPdvDRb := "N"
+public gPdvDokVar := "1"
 
 // parametri zaglavlja
 Rpar("F1",@gFNaziv)
@@ -698,6 +699,7 @@ Rpar("G8",@gFText2)
 Rpar("G9",@gFText3)
 
 Rpar("H1",@gPdvDrb)
+Rpar("H2",@gPdvDokVar)
 
 Rpar("Z1",@gStZagl)
 

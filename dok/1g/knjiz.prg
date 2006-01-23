@@ -1853,13 +1853,9 @@ function PrCijSif()
 NSRNPIdRoba()
    SELECT (F_ROBA)
 
-//   if PRIPR->idtipdok=="13" .and. ( gVar13=="2" .or. IzFMKINI("FAKT","Cijena13MPC","N",KUMPATH)=="D" )   // Planika-Alisa ne odgovara joj ovo, MS 25.04.03
-
-//   if PRIPR->idtipdok=="13" .and. gVar13=="2" // ovo izgleda nikome ne odgovara (Niagara koristi gVar13=="2"), MS 21.08.03
-
    if PRIPR->idtipdok=="01" .and. IsNiagara()
      if g13dcij$" 1".and.PRIPR->cijena!=MPC
-       Scatter();  _mpc:=PRIPR->cijena; Gather()
+       Scatter(); _mpc:=PRIPR->cijena; Gather()
      elseif g13dcij=="2".and.PRIPR->cijena!=MPC2
        Scatter(); _mpc2:=PRIPR->cijena; Gather()
      elseif g13dcij=="3".and.PRIPR->cijena!=MPC3
