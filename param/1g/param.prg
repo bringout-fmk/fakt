@@ -1186,7 +1186,7 @@ if (LASTKEY()<>K_ESC)
    	WPar("rp", gRabProc)
 
    	WPar("H1",gPDVDrb)
-   	WPar("H1",gPDVDokVar)
+   	WPar("H2",gPDVDokVar)
 endif
 
 return 
