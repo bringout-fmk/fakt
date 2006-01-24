@@ -367,7 +367,7 @@ if _podbr<>" ."
 	NSRNPIdRoba(_IDROBA)
   	select ROBA
 if !(roba->tip="U")  // usluge ne diraj
-  	if _idtipdok=="13".and.(gVar13=="2".or.glCij13Mpc).and.gVarNum=="1" .or. _idtipdok=="01" .and. IsNiagara()
+  	if _idtipdok=="13" .and. (gVar13=="2".or.glCij13Mpc).and.gVarNum=="1" .or. _idtipdok=="01" .and. IsNiagara()
       		if gVar13=="2" .and. _idtipdok=="13"
         		_cijena := UzmiMPCSif()
       		else
@@ -441,9 +441,10 @@ if !(roba->tip="U")  // usluge ne diraj
     	endif
 endif
 
-if _DINDEM==left(ValSekund(),3)   // preracunaj u sekundarnu valutu
-	_Cijena:=_Cijena/UBaznuValutu(_datdok)
-endif
+
+//if _DINDEM <> LEFT(ValBazna(),3)   // preracunaj u sekundarnu valutu
+//      	_Cijena:=_Cijena * OmjerVal(ValBazna(), _DINDEM, _datdok)
+//endif
 
 endif
 
@@ -554,7 +555,6 @@ endif
 function V_Roba(lPrikTar)
 *{
 local cPom , nArr
-altd()
 private cVarIDROBA
 if fID_J
   cVarIDROBA:="_IDROBA_J"
@@ -582,14 +582,8 @@ if right(trim(&cVarIdRoba),2)="--"
   endif
 endif
 
-if fId_J
- P_Roba(@ _Idroba_J)
- // proba uvijek setuje varijablu _IdRoba
- _IdRoba:= _IdRoba_J
- _IdRoba_J:=ID_J()
-else
- P_Roba(@ _Idroba)
-endif
+P_Roba(@ _Idroba)
+
 select roba
 select pripr
 
@@ -724,11 +718,19 @@ function UzorTxt()
 *{
 local cId
 
+
 cId:="  "
+if IsPdv() .and. _IdTipDok == "10" .and. IsIno(_IdPartner)
+ InoKlauzula()
+ if EMPTY(alltrim(_txt2))
+	 cId:="IN"
+ endif
+endif
 if (nRbr==1 .and. val(_podbr)<1)
  Box(,9,75)
  @ m_x+1,m_Y+1  SAY "Uzorak teksta (<c-W> za kraj unosa teksta):"  GET cId pict "@!"
  read
+ 
  if lastkey()<>K_ESC .and. !empty(cId)
    P_Ftxt(@cId)
    SELECT ftxt
@@ -749,12 +751,24 @@ if (nRbr==1 .and. val(_podbr)<1)
  private fUMemu:=.t.
  _txt2:=MemoEdit(_txt2,m_x+3,m_y+1,m_x+9,m_y+76)
  fUMemu:=NIL
- BosTipke()
+ //BosTipke()
  setcolor(Normal)
  BoxC()
 endif
 return
 *}
+
+static function InoKlauzula()
+
+PushWa() 
+	SELECT FTXT
+	seek "IN"
+	if !found()
+		APPEND BLANK
+		replace id with "IN", ;
+		        naz with "Porezno oslobadjanje na osnovu (nulta stopa) na osnovu clana 27. stav 1. tacka 1. ZPDV - izvoz dobara iz BIH"
+	endif
+PopWa()
 
 
 /*! \fn GetUsl(fNovi)

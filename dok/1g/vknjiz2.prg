@@ -4,42 +4,6 @@
  * ----------------------------------------------------------------
  *                                     Copyright Sigma-com software 
  * ----------------------------------------------------------------
- * $Source: c:/cvsroot/cl/sigma/fmk/fakt/dok/1g/vknjiz2.prg,v $
- * $Author: mirsad $ 
- * $Revision: 1.10 $
- * $Log: vknjiz2.prg,v $
- * Revision 1.10  2003/07/06 21:50:54  mirsad
- * nova varijanta: unos radnog naloga na 12-ki (FMK.INI/KUMPATH/FAKT/RadniNalozi=D)
- *
- * Revision 1.9  2003/04/14 20:27:28  ernad
- * bug: lock requiered pri unosu partnera
- *
- * Revision 1.8  2003/04/12 23:00:39  ernad
- * O_Edit (O_S_PRIREMA)
- *
- * Revision 1.7  2003/01/21 15:01:58  ernad
- * probelm excl fakt - kalk ?! direktorij kalk
- *
- * Revision 1.6  2002/07/05 10:34:34  mirsad
- * no message
- *
- * Revision 1.5  2002/07/04 19:04:08  ernad
- *
- *
- * ciscenje sifrarnik fakt
- *
- * Revision 1.4  2002/07/04 08:34:19  mirsad
- * dokumentovanje ini parametara
- *
- * Revision 1.3  2002/07/01 09:02:20  mirsad
- * no message
- *
- * Revision 1.2  2002/06/18 13:01:05  sasa
- * no message
- *
- * Revision 1.1.1.1  2002/06/17 18:30:18  ernad
- * no message
- *
  *
  */
 

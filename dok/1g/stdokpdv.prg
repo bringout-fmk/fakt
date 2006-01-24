@@ -111,6 +111,7 @@ local nFZaokr:=0
 local nDrnZaokr:=0
 local cDokNaz
 local nUkKol:=0
+local lIno:=.f.
 
 // ako je kupac pdv obveznik, ova varijable je .t.
 local lPdvObveznik
@@ -143,6 +144,22 @@ nRec:=RecNO()
 // ukupna kolicina
 nUkKol := 0
 
+
+
+// 999999.999 => "       .  "
+cPom := STRTRAN(PIC_CIJENA(), "9", " ")
+
+// ".  "
+cPom := LTRIM(cPom)
+// LEN(".  ") = 3
+nPom := LEN( cPom )
+// dvije decimale
+nPom := nPom - 1
+// setuj broj decimala
+DEC_CIJENA(nPom)
+
+
+lIno:=.f.
 do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==cBrDok
 	// Nastimaj (hseek) Sifr.Robe Na Pripr->IdRoba
 	NSRNPIdRoba()   
@@ -151,7 +168,8 @@ do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==c
 	select tarifa
 	hseek roba->idtarifa
 	select pripr
-	
+
+		
      	aMemo:=ParsMemo(txt)
 	cIdRoba := field->idroba
 	
@@ -183,9 +201,28 @@ do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==c
 	// procenat pdv-a
 	nPPDV := tarifa->opp
 	
+	// rn Veleprodaje
+	if cIdTipDok == "10"
+		cIdPartner = pripr->IdPartner
+		// ino faktura
+		if IsIno(cIdPartner)
+			nPPDV:=0
+			lIno:=.t.
+		endif
+	endif
+
 	// kolicina
 	nKol := field->kolicina
 	nRCijen := field->cijena
+
+	
+	if LEFT(pripr->DINDEM, 3) <> LEFT(ValBazna(), 3) 
+		// preracunaj u EUR
+		// omjer EUR / KM
+      		nRCijen:= nRCijen / OmjerVal( ValBazna(), pripr->DINDEM, pripr->datdok)
+		nRCijen:=ROUND(nRCijen, DEC_CIJENA() )
+   	endif
+
 
 	// zasticena cijena, za krajnjeg kupca
 	if RobaZastCijena(tarifa->id)  .and. !lPdvObveznik
@@ -202,7 +239,7 @@ do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==c
 	// ako je 13-ka ili 27-ca
 	if (field->idtipdok == "13" .and. glCij13Mpc) .or. (field->idtipdok $ "11#27" .and. gMP $ "1234567") 
 		// cjena bez pdv-a
-		nCjPDV:= nRCijen
+		nCjPDV:= nRCijen	
 		nCjBPDV := (nRCijen / (1 + nPPDV/100))
 	else
 		// cjena bez pdv-a
@@ -329,6 +366,14 @@ add_drntext("P07", ALLTRIM(STR(gnTMarg)) )
 
 // da li se formira automatsko zaglavlje
 add_drntext("P10", gStZagl )
+
+if lIno
+ // ino faktura
+ add_drntext("P11", "INO" )
+else
+ // domaca faktura
+ add_drntext("P11", "DOMACA" )
+endif
 
 // dodaj total u DRN
 add_drn(cBrDok, dDatDok, dDatVal, dDatIsp, cTime, nUkBPDV, nUkVPop, nUkBPDVPop, nUkPDV, nTotal, nCSum, nUkPopNaTeretProdavca, nDrnZaokr, nUkKol)

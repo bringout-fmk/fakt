@@ -1153,6 +1153,8 @@ _DatOtp:=CToD("")
 _BrNar:=SPACE(8)
 _DatPl:=CToD("")
 _VezOtpr:=""
+_Dest:=""
+
 
 if lDoks2
 	d2k1:=SPACE(15)
@@ -1410,13 +1412,19 @@ if (nRbr==1 .and. VAL(_podbr) < 1)
 			endif
 		endif
    		
-		if (glDistrib .and. _idtipdok$"10#12#13#26#21#22")
+		if (glDistrib .and. _idtipdok $ "10#12#13#26#21#22")
      			@ m_x+11,m_y+31  SAY "Relacija   :" get _idrelac  picture "@!" valid {|| _idtipdok$"21#22".or.JeStorno10().and.PuniDVRiz10().or.IzborRelacije(@_IdRelac,@_IdDist,@_IdVozila,@_datdok,@_marsruta)}
    		endif
 
+		if _idTipDok == "10"
+		      @ m_x+10, m_y+2 SAY "Valuta ?" GET _DINDEM PICT "@!" 
+		else
+		      @ m_x+10, m_y+1 SAY " "
+		endif
+		
 		_Dest:=PADR(_Dest, 80)
    		if (gDest .and. !glDistrib)
-     		      @  m_x+10, m_y+2  SAY "Destinacija :" get _Dest PICT "@S50"
+     		      @  m_x+10, col()+2  SAY "Destinacija:" get _Dest PICT "@S46"
    		endif
 
 
@@ -1516,18 +1524,18 @@ endif
 
 @ m_x+11,col()+2 SAY "Podbr.:" GET _PodBr VALID V_Podbr()
 
-cDSFINI:=IzFMKINI('SifRoba','DuzSifra','10',SIFPATH)
+cDSFINI:=IzFMKINI('SifRoba','DuzSifra','10', SIFPATH)
 
 
-if fID_J
-	@ m_x+13,m_y+2 SAY "Artikal  " GET _IdRoba_J PICT "@!S10" WHEN {|| _idroba_J:=padr(_Idroba_J,VAL(cDSFINI)),W_Roba()} valid {|| _Idroba_J:=iif(len(trim(_Idroba_J))<10,left(_Idroba_J,10),_Idroba_J), V_Roba(),GetUsl(fnovi), NijeDupla(fNovi)}
-else
+//if fID_J
+//	@ m_x+13,m_y+2 SAY "Artikal  " GET _IdRoba_J PICT "@!S10" WHEN {|| _idroba_J:=padr(_Idroba_J,VAL(cDSFINI)),W_Roba()} valid {|| _Idroba_J:=iif(len(trim(_Idroba_J))<10,left(_Idroba_J,10),_Idroba_J), V_Roba(),GetUsl(fnovi), NijeDupla(fNovi)}
+//else
 	// normalan prikaz
-	@ m_x+13,m_y+2  SAY "Artikal  " get _IdRoba ;
+	@ m_x+13,m_y+2  SAY "Artikal: " get _IdRoba ;
 	    pict "@!S10" ;
-	    when {|| _idroba:=padr(_idroba,VAL(cDSFINI)),W_Roba()} ;
-	    valid {|| _idroba:=iif(len(trim(_idroba))<10,left(_idroba,10),_idroba), V_Roba(), GetUsl(fnovi), NijeDupla(fNovi)}
-endif
+	    when {|| _idroba:=padr(_idroba, VAL(cDSFINI)), W_Roba()} ;
+	    valid {|| _idroba:= iif(len(trim(_idroba))<10, left(_idroba,10), _idroba), V_Roba(), GetUsl(fnovi), NijeDupla(fNovi) }
+//endif
 
 RKOR2:=0
 
@@ -1554,7 +1562,7 @@ if (gSamokol!="D" .and. !glDistrib)
 endif
 
 if (gVarC $ "123" .and. _idtipdok $ "10#12#20#21#25")
-	@  m_x+14+RKOR2,m_y+59  SAY "Cijena (1/2/3):" GET cTipVPC
+	@  m_x+14+RKOR2, m_y+59  SAY "Cijena (1/2/3):" GET cTipVPC
 endif
 
 RKOR:=0
@@ -1626,7 +1634,7 @@ if (gSamokol != "D")  // samo kolicine
 
 	else
 		
-    		@ m_x+16+RKOR+RKOR2, 25  SAY IF( _idtipdok=="13".and.( gVar13=="2" .or. glCij13Mpc), "MPC.s.PDV", "Cijena") GET _Cijena ;
+    		@ m_x+16+RKOR+RKOR2, 25  SAY IF( _idtipdok=="13".and.( gVar13=="2" .or. glCij13Mpc), "MPC.s.PDV", "Cijena ("+ValDomaca()+")") GET _Cijena ;
 		     PICT piccdem ;
 		     WHEN  _podbr<>" ." .and. KLevel<="1" .and. SKCKalk(.t.) ;
 		     VALID SKCKalk(.f.)
@@ -1767,14 +1775,9 @@ endif
 _Rbr:=RedniBroj(nRbr)
 
 // if _DINDEM==left(ValSekund(),3)   // preracunaj u dinare
-if _DINDEM!=left(ValBazna(),3)   // preracunaj u dinare
-	if _DINDEM==left(ValSekund(),3)   // preracunaj u dinare
-      		_Cijena:=_Cijena*UBaznuValutu(_datdok)
-   	else
-      		_Cijena:=_Cijena*OmjerVal(ValBazna(),_DINDEM,_datdok)
-		// iz valute tipa "O" u baznu
-   	endif
-endif
+//if _DINDEM <> left(ValBazna(),3) 
+//      	_Cijena:=_Cijena * OmjerVal(ValBazna(),_DINDEM,_datdok)
+//endif
 
 if lPoNarudzbi
 	if lGenStavke
@@ -1852,7 +1855,6 @@ if cVar=="0"   // when
    		endif
   
 
-/// benjaminjahic, 23.06.2005
       else  // ako je novi, a koristi se rok placanja iz Partn/ROKP
 		// i ne koriste se Rabatne skale - odnosno ili jedno ili drugo
 		if IzFmkIni("Svi", "RokPlIzSifPartn", "N", SIFPATH) = "D" .and. !IsRabati()
@@ -2641,18 +2643,24 @@ return cVrati
  
 function EdDoks2()
 *{
+
 local cPom:="", nArr:=SELECT(), GetList:={}
 
-  cPom := IzFMKINI("FAKT","Doks2opis","dodatnih podataka",KUMPATH)
+cPom := IzFMKINI("FAKT","Doks2Edit","N", KUMPATH) 
+if cPom == "N"
+	return
+endif
+ 
+cPom := IzFMKINI("FAKT","Doks2opis","dodatnih podataka",KUMPATH)
 
-  if Pitanje(,"Zelite li unos/ispravku "+cPom+"? (D/N)","N")=="N"
+if Pitanje(,"Zelite li unos/ispravku "+cPom+"? (D/N)","N")=="N"
     SELECT(nArr)
     return
-  endif
+endif
 
- // uüitajmo dodatne podatke iz FMK.INI u aDodPar
- // ---------------------------------------------
- aDodPar := {}
+// ucitajmo dodatne podatke iz FMK.INI u aDodPar
+// ---------------------------------------------
+aDodPar := {}
 
  AADD( aDodPar , IzFMKINI( "Doks2" , "ZK1" , "K1" , KUMPATH )  )
  AADD( aDodPar , IzFMKINI( "Doks2" , "ZK2" , "K2" , KUMPATH )  )
@@ -3000,7 +3008,9 @@ do while .t.
 	  @ m_x+2 ,m_y+2 SAY "Kolicina" GET _kolicina valid {|| _kolicina<>0 } pict pickol
 	  read
 	  if lastkey()==K_ESC
-	    boxc(); close all; return DE_CONT
+	    boxc()
+	    close all
+	    return DE_CONT
 	  endif
 	  _cijena:=nDug/_kolicina
 	  if _cijena<0
