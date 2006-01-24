@@ -59,7 +59,11 @@ endif
 
 fill_porfakt_data(cIdFirma, cIdTipDok, cBrDok, lPBarKod, lSamoKol)
 
+if cIdTipDok == "13"
+  omp_print()
+else
 pf_a4_print()
+endif
 
 return
 *}
@@ -71,6 +75,7 @@ function fill_porfakt_data(cIdFirma, cIdTipDok, cBrDok, lBarKod, lSamoKol)
 local cTxt1,cTxt2,cTxt3,cTxt4,cTxt5
 local cIdPartner
 local dDatDok
+local cDestinacija
 local dDatVal
 local dDatIsp
 local aMemo
@@ -105,6 +110,8 @@ local nZaokr
 local nFZaokr:=0
 local nDrnZaokr:=0
 local cDokNaz
+local nUkKol:=0
+
 // ako je kupac pdv obveznik, ova varijable je .t.
 local lPdvObveznik
 
@@ -133,6 +140,8 @@ nZaokr := zaokr
 
 nRec:=RecNO()
 
+// ukupna kolicina
+nUkKol := 0
 
 do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==cBrDok
 	// Nastimaj (hseek) Sifr.Robe Na Pripr->IdRoba
@@ -233,6 +242,14 @@ do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==c
 
 	++ nCSum
 	
+	// planika treba sumarne kolicine na dokumentu
+	if IsPlanika()
+	  if roba->k2 <> "X"
+	  	nUkkol += nKol
+	  endif
+	endif
+	
+	
 	add_rn(cBrDok, cRbr, cPodBr, cIdRoba, cRobaNaz, cJmj, nKol, nCjPDV, nCjBPDV, nCj2PDV, nCj2BPDV, nPopust, nPPDV, nVPDV, nUkStavka, nPopNaTeretProdavca, nVPopNaTeretProdavca )
 
 	select pripr
@@ -262,6 +279,12 @@ dDatIsp := CToD(aMemo[7])
 cBrOtpr := aMemo[6]
 cBrNar  := aMemo[8]
 
+if LEN(aMemo) >= 18
+	cDestinacija := aMemo[18]
+else
+	cDestinacija := ""
+endif
+
 // mjesto
 add_drntext("D01", gMjStr)
 // naziv dokumenta
@@ -278,6 +301,9 @@ add_drntext("D06", cBrNar)
 
 // DM/EURO
 add_drntext("D07", cDinDem)
+
+// Destinacija
+add_drntext("D08", cDestinacija)
 
 // tekst na kraju fakture F04, F05, F06
 fill_dod_text(aMemo[2])
@@ -305,7 +331,7 @@ add_drntext("P07", ALLTRIM(STR(gnTMarg)) )
 add_drntext("P10", gStZagl )
 
 // dodaj total u DRN
-add_drn(cBrDok, dDatDok, dDatVal, dDatIsp, cTime, nUkBPDV, nUkVPop, nUkBPDVPop, nUkPDV, nTotal, nCSum, nUkPopNaTeretProdavca, nDrnZaokr)
+add_drn(cBrDok, dDatDok, dDatVal, dDatIsp, cTime, nUkBPDV, nUkVPop, nUkBPDVPop, nUkPDV, nTotal, nCSum, nUkPopNaTeretProdavca, nDrnZaokr, nUkKol)
 
 return
 *}
@@ -425,6 +451,8 @@ if !lFromMemo .and. partn->id == cId
 	cPartAdres := partn->adresa
 	cPartMjesto := partn->mjesto
 	cPartPtt := partn->ptt
+
+ 
 else
 	if LEN(aMemo) == 0
 		cPartNaziv := ""
@@ -500,7 +528,7 @@ for i:=1 to 5
   endif
   if !empty(cPom)
 	if !lPrazno
-		cBanke += "; "
+		cBanke += ", "
 	endif
 	cBanke += cPom
 	lPrazno := .f.

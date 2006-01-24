@@ -607,9 +607,9 @@ IF lPrikTar
 	endif
   	if _IdTipdok=="13"
 		if IsPDV()
-     			@ m_X+16,m_y+45 SAY "PC u sifraniku : "
+     			@ m_X+16,m_y+47 SAY "MPC.s.PDV sif:"
 		else
-     			@ m_X+16,m_y+45 SAY "MPC u sifraniku: "
+     			@ m_X+16,m_y+47 SAY "MPC u sif:"
 		endif
 		?? str(roba->mpc,8,2)
   	endif

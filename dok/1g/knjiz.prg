@@ -364,7 +364,7 @@ next
 private cTipVPC:="1"
 
 if gVarC $ "123"
-	cTipVPC:=IzFmkIni("FAKT","TekVPC","1",SIFPATH)
+	cTipVPC:=IzFmkIni("FAKT","TekVPC","1", SIFPATH)
 endif
 
 
@@ -1133,7 +1133,8 @@ if IzFmkIni("FAKT","Konsignacija","N",KUMPATH)=="N"
   	ASIZE(h,LEN(aPom))
 endif
 
-lDoks2:=(IzFmkIni("FAKT","Doks2","N",KUMPATH)=="D")
+// doks2 je od sada .t. po defaultu
+lDoks2:=(IzFmkIni("FAKT","Doks2","D", KUMPATH)=="D")
 
 AFILL(h,"")
 
@@ -1210,8 +1211,13 @@ if !fnovi
        			d2n2:=aMemo[17]
      		endif
    	endif
+
+	if LEN(aMemo)>=18
+		public _DEST := aMemo[18]
+	endif
 else
 	_serbr:=SPACE(LEN(serbr))
+	public _DEST := ""
    	if glDistrib
      		_ambp:=0
 		_ambk:=0
@@ -1328,7 +1334,8 @@ if (nRbr==1 .and. VAL(_podbr) < 1)
      		endif
    	endif
   	do while .t.
-   		altd()
+		
+		
 		@  m_x+3,m_y+40 SAY "Datum:" GET _datDok
    		@  m_x+3,m_y+col()+2 SAY "Broj:" GET _BrDok WHEN gMreznoNum=="N" VALID !EMPTY(_BrDok).and.(!glDistrib.or.!JeStorno10().or.PuniDVRiz10())
 		//if IzFMkIni('FAKT',"IdPartnNaF",'N',KUMPATH)=="D" .or.;
@@ -1352,7 +1359,7 @@ if (nRbr==1 .and. VAL(_podbr) < 1)
        				@  m_x+7,m_y+2  SAY "Prod.mj." get _idpm valid {|| P_IDPM(@_idpm,_idpartner)}
      			endif
    		else
-     			if IzFMKINI("FAKT","KupacMalaSlova","N",KUMPATH)=="D"
+     			if IzFMKINI("FAKT","KupacMalaSlova","D", KUMPATH)=="D"
        				lUSTipke:=.t.
        				@  m_x+5,m_y+2  SAY "Partner " get _Txt3a  picture "@S30" valid IzSifre()
        				@  m_x+6,m_y+2  SAY "        " get _Txt3b  picture "@"
@@ -1407,9 +1414,9 @@ if (nRbr==1 .and. VAL(_podbr) < 1)
      			@ m_x+11,m_y+31  SAY "Relacija   :" get _idrelac  picture "@!" valid {|| _idtipdok$"21#22".or.JeStorno10().and.PuniDVRiz10().or.IzborRelacije(@_IdRelac,@_IdDist,@_IdVozila,@_datdok,@_marsruta)}
    		endif
 
-   		// dodatno polje DEST   <-- gradiz
+		_Dest:=PADR(_Dest, 80)
    		if (gDest .and. !glDistrib)
-     			@  m_x+10,m_y+31  SAY "Destinacija :" get _Dest
+     		      @  m_x+10, m_y+2  SAY "Destinacija :" get _Dest PICT "@S50"
    		endif
 
 
@@ -1461,7 +1468,6 @@ if (nRbr==1 .and. VAL(_podbr) < 1)
   	
 	ChSveStavke(fNovi)
 else
-	altd()
 	@ m_x+1,m_y+2 SAY gNFirma 
 	?? "  RJ:", _IdFirma
    	@ m_x+4,m_y+2 SAY PADR(aPom[ASCAN(aPom,{|x|_IdTipdok==LEFT(x,2)})],35)
@@ -1508,23 +1514,19 @@ else
 	@ m_x+11,m_y+2 SAY "R.br:" GET nRbr Picture "9999"
 endif
 
-if (gNovine=="D")
-	if fNovi
-     		_idroba:=SPACE(LEN(_idroba))
-     		_kolicina:=0
-   	endif
-else
-	@ m_x+11,col()+2 SAY "Podbr.:" GET _PodBr VALID V_Podbr()
-endif
+@ m_x+11,col()+2 SAY "Podbr.:" GET _PodBr VALID V_Podbr()
 
 cDSFINI:=IzFMKINI('SifRoba','DuzSifra','10',SIFPATH)
 
-altd()
 
 if fID_J
 	@ m_x+13,m_y+2 SAY "Artikal  " GET _IdRoba_J PICT "@!S10" WHEN {|| _idroba_J:=padr(_Idroba_J,VAL(cDSFINI)),W_Roba()} valid {|| _Idroba_J:=iif(len(trim(_Idroba_J))<10,left(_Idroba_J,10),_Idroba_J), V_Roba(),GetUsl(fnovi), NijeDupla(fNovi)}
 else
-	@ m_x+13,m_y+2  SAY "Artikal  " get _IdRoba pict "@!S10" when {|| _idroba:=padr(_idroba,VAL(cDSFINI)),W_Roba()} valid {|| _idroba:=iif(len(trim(_idroba))<10,left(_idroba,10),_idroba), V_Roba(),GetUsl(fnovi),NijeDupla(fNovi)}
+	// normalan prikaz
+	@ m_x+13,m_y+2  SAY "Artikal  " get _IdRoba ;
+	    pict "@!S10" ;
+	    when {|| _idroba:=padr(_idroba,VAL(cDSFINI)),W_Roba()} ;
+	    valid {|| _idroba:=iif(len(trim(_idroba))<10,left(_idroba,10),_idroba), V_Roba(), GetUsl(fnovi), NijeDupla(fNovi)}
 endif
 
 RKOR2:=0
@@ -1547,12 +1549,8 @@ if (pripr->(fieldpos("K2"))<>0 .and. gDK2=="D")
 	@ m_x+14+RKOR2,m_y+66 SAY "K2" GET _K2 pict "@!"
 endif
 
-if gNovine=="D"
-
-else
-	if (gSamokol!="D" .and. !glDistrib)
+if (gSamokol!="D" .and. !glDistrib)
     		@ m_x+14+RKOR2,m_y+2  SAY JokSBr()+" "  get _serbr pict "@s15"  when _podbr<>" ."
-   	endif
 endif
 
 if (gVarC $ "123" .and. _idtipdok $ "10#12#20#21#25")
@@ -1618,7 +1616,7 @@ endif
 
 private trabat:="%"
 
-if (gSamokol!="D")  // samo kolicine
+if (gSamokol != "D")  // samo kolicine
 	if (_idtipdok=="19" .and. IzFMKIni("FAKT","19KaoRacunParticipacije","N",KUMPATH)=="D")
     		_trabat:="I"
     		_rabat:=_kolicina*_cijena*(1-_rabat/100)
@@ -1627,15 +1625,30 @@ if (gSamokol!="D")  // samo kolicine
     		@ m_x+16+RKOR+RKOR2,col()+2 SAY "Participacija" GET _Rabat PICT "9999.999" when _podbr<>" ."
 
 	else
-		if (gNovine=="D" .and. fNovi)
-    			@ m_x+16+RKOR+RKOR2,25 SAY if(_idtipdok=="13".and.(gVar13=="2".or.glCij13Mpc),"MP cijena","Cijena")+TRANSFORM(_Cijena,piccdem)
-   		else
-    			@ m_x+16+RKOR+RKOR2,25  SAY IF(_idtipdok=="13".and.(gVar13=="2".or.glCij13Mpc),"MP cijena","Cijena") GET _Cijena   PICT piccdem WHEN  _podbr<>" ." .and. KLevel<="1" .and. SKCKalk(.t.) VALID SKCKalk(.f.)
-   		endif
+		
+    		@ m_x+16+RKOR+RKOR2, 25  SAY IF( _idtipdok=="13".and.( gVar13=="2" .or. glCij13Mpc), "MPC.s.PDV", "Cijena") GET _Cijena ;
+		     PICT piccdem ;
+		     WHEN  _podbr<>" ." .and. KLevel<="1" .and. SKCKalk(.t.) ;
+		     VALID SKCKalk(.f.)
+		     
    		if !(_idtipdok $ "12#13").or.(_idtipdok=="12".and.gV12Por=="D")
-			@  m_x+16+RKOR+RKOR2,col()+2  SAY "Rabat" get _Rabat pict "9999.999" when _podbr<>" ." .and. !_idtipdok$"15#27"
-      			@ m_x+16+RKOR+RKOR2,col()+1  GET TRabat when {||  trabat:="%",!_idtipdok$"11#15#27" .and. _podbr<>" ."} valid trabat $ "% AUCI" .and. V_Rabat()  pict "@!"
-    			@ m_x+16+RKOR+RKOR2,col()+2 SAY "Porez" GET _Porez pict "99.99"  when {|| if( fNovi .and. _idtipdok=="10" .and. IzFMKIni("FAKT","PPPNuditi","N",KUMPATH)=="D".and.ROBA->tip!="U" , _porez := TARIFA->opp , ), _podbr<>" ." .and. !(roba->tip $ "KV") .and. !_idtipdok$"11#15#27"} valid V_Porez()
+			@  m_x+16+RKOR+RKOR2,col()+2  SAY "Rabat" get _Rabat ;
+			     pict "9999.999" ;
+			     when _podbr<>" ." .and. !_idtipdok$"15#27"
+			
+      			@ m_x+16+RKOR+RKOR2,col()+1  GET TRabat ;
+			     when {||  trabat:="%",!_idtipdok$"11#15#27" .and. _podbr<>" ."} ;
+			     valid trabat $ "% AUCI" .and. V_Rabat() ;
+			     pict "@!"
+		
+		if !IsPdv()
+			// nista porez kada je PDV rezim
+    			@ m_x+16+RKOR+RKOR2,col()+2 SAY "Porez" GET _Porez ;
+			     pict "99.99" ;
+			     when {|| if( fNovi .and. _idtipdok=="10" .and. IzFMKIni("FAKT","PPPNuditi","N",KUMPATH)=="D".and.ROBA->tip!="U" , _porez := TARIFA->opp , ), _podbr<>" ." .and. !(roba->tip $ "KV") .and. !_idtipdok$"11#15#27"} ;
+			     valid V_Porez()
+		endif
+		
    		endif
 		// SKONTO
 		if IsRabati()
@@ -1654,15 +1667,6 @@ read
 
 ESC_return 0
 
-//if (_idTipDok=="11")
-	//aPorezi:={}
-	//SetAPorezi(@aPorezi)
-	//_trabat:="%"
-	//nVrijednost:=_kolicina*_cijena
-	//nMPCbezPOR:=MpcBezPor(nVrijednost, aPorezi)
-	//_rabat:=(nMPCBezPOR * (1-_rabat/100))
-//endif
-
 if (_idtipdok=="19" .and. IzFMKIni("FAKT","19KaoRacunParticipacije","N",KUMPATH)=="D")
 	_trabat:="%"
    	_rabat:=(_kolicina*_cijena-_rabat)/(_kolicina*_cijena)*100
@@ -1673,11 +1677,89 @@ if !(_idtipdok $ "12#13") .and. gSamokol!="D"
 endif
 
 if (_podbr==" ." .or.  roba->tip="U" .or. (nrbr==1 .and. val(_podbr)<1))
-	_txt2:=OdsjPLK(_txt2)           // odsjeci na kraju prazne linije
+	
+	// odsjeci na kraju prazne linije
+	_txt2:=OdsjPLK(_txt2)           
      	if !"Faktura formirana na osnovu" $ _txt2
         	_txt2 += CHR(13)+Chr(10)+_VezOtpr
      	endif
-    	_txt:=Chr(16)+trim(_txt1)+Chr(17) + Chr(16)+_txt2+Chr(17)+Chr(16)+trim(_txt3a)+Chr(17) + Chr(16)+_txt3b+Chr(17)+Chr(16)+trim(_txt3c)+Chr(17)+Chr(16)+_BrOtp+Chr(17)+Chr(16)+dtoc(_DatOtp)+Chr(17)+Chr(16)+_BrNar+Chr(17)+Chr(16)+dtoc(_DatPl)+Chr(17)+IIF(Empty(_VezOtpr),Chr(16)+ ""+Chr(17), Chr(16)+_VezOtpr+Chr(17))+if(lDoks2,Chr(16)+d2k1+Chr(17) , "" )+IF(lDoks2 , Chr(16)+d2k2+Chr(17) , "" )+IF(lDoks2,Chr(16)+d2k3+Chr(17) , "" )+IF(lDoks2,Chr(16)+d2k4+Chr(17) , "" )+IF(lDoks2,Chr(16)+d2k5+Chr(17) , "" )+IF(lDoks2,Chr(16)+d2n1+Chr(17) , "" )+IF( lDoks2 , Chr(16)+d2n2+Chr(17) , "" )
+	
+    	//1
+	_txt:=Chr(16)+trim(_txt1)+Chr(17) 
+	_txt += Chr(16)+_txt2+Chr(17)
+	_txt += Chr(16)+trim(_txt3a)+Chr(17) 
+	_txt += Chr(16)+_txt3b+Chr(17)
+	_txt += Chr(16)+trim(_txt3c)+Chr(17)
+	
+	// 6 - br otpr
+	_txt += Chr(16)+_BrOtp+Chr(17)
+	// 7 - dat otpr
+	_txt += Chr(16)+dtoc(_DatOtp)+Chr(17)
+	// 8 - br nar
+	_txt += Chr(16)+_BrNar+Chr(17)
+	// 9 - dat nar
+	_txt += Chr(16)+dtoc(_DatPl)+Chr(17)
+	
+	// 10
+	cPom:=_VezOtpr
+	_txt += Chr(16)+ cPom + Chr(17) 
+	
+	// 11
+ 	if lDoks2
+		cPom:= d2k1
+	else
+		cPom:= ""
+	endif
+	_txt += Chr(16)+ cPom + Chr(17) 
+
+ 	if lDoks2
+		cPom:= d2k2
+	else
+		cPom:= ""
+	endif
+	_txt += Chr(16)+ cPom + Chr(17) 
+
+	if lDoks2
+		cPom:= d2k3
+	else
+		cPom:= ""
+	endif
+	_txt += Chr(16)+ cPom + Chr(17) 
+
+ 	if lDoks2
+		cPom:= d2k4
+	else
+		cPom:= ""
+	endif
+	_txt += Chr(16)+ cPom + Chr(17) 
+
+ 	if lDoks2
+		cPom:= d2k5
+	else
+		cPom:= ""
+	endif
+	_txt += Chr(16)+ cPom + Chr(17) 
+
+	// 16
+	if lDoks2
+		cPom:= d2n1
+	else
+		cPom:= ""
+	endif
+	_txt += Chr(16)+ cPom + Chr(17) 
+
+	// 17
+	if lDoks2
+		cPom:= d2n2
+	else
+		cPom:= ""
+	endif
+	_txt += Chr(16)+ cPom + Chr(17) 
+
+	// 18 - Destinacija
+	cPom := ALLTRIM(_Dest)
+	_txt += Chr(16)+ cPom + Chr(17) 
+
 else
 	_txt:=""
 endif
@@ -1699,7 +1781,7 @@ if lPoNarudzbi
      		pIzgSt:=.t.
      		// vise od jedne stavke
      		for i:=1 to LEN(aNabavke)-1
-       			// generiçi sve izuzev posljednje
+       			// generisi sve izuzev posljednje
        			APPEND BLANK
        			_rbr:=RedniBroj(nRBr)
        			_kolicina:=aNabavke[i,3]
@@ -1754,7 +1836,6 @@ if gVFRP0 == "D"
 	lRP0:=.f.
 endif
 
-altd()
 if cVar=="0"   // when
 	if nRokPl<0
      		return .t.   // ne diraj nista

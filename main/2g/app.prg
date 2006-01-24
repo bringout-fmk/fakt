@@ -735,7 +735,7 @@ cSekcija:="BarKod"; cVar:="NazRTM"
 IzFmkIni (cSekcija,cVar, IzFMkIni(cSekcija,cVar,'barkod') , SIFPATH)
 
 public glDistrib := (IzFmkIni("FAKT","Distribucija","N",KUMPATH)=="D")
-public gDest := (IzFmkIni("FAKT","DestinacijaNaFakturi","N",KUMPATH)=="D")
+public gDest := (IzFmkIni("FAKT","Destinacija", "N", KUMPATH)=="D")
 public gPovDob := IzFmkIni("FAKT_TipDok01","StampaPovrataDobavljacu_DefaultOdgovor","0",KUMPATH)
 
 public gUVarPP := IzFMKINI("POREZI","PPUgostKaoPPU","M")
@@ -776,7 +776,7 @@ gPartnBlock:={|Ch| FaPartnBlock(Ch)}
 
 lBenjo:=IsTrgom()
 
-public glCij13Mpc:=(IzFmkIni("FAKT","Cijena13MPC","N",KUMPATH)=="D")
+public glCij13Mpc:=(IzFmkIni("FAKT","Cijena13MPC","D", KUMPATH)=="D")
 
 public gcLabKomLin:=IzFmkIni("FAKT","PozivZaLabeliranje","labelira labelu",KUMPATH)
 public gNovine:=(IzFmkIni("STAMPA","Opresa","N",KUMPATH))

@@ -4,57 +4,6 @@
  * ----------------------------------------------------------------
  *                                     Copyright Sigma-com software 
  * ----------------------------------------------------------------
- * $Source: c:/cvsroot/cl/sigma/fmk/fakt/db/2g/db.prg,v $
- * $Author: sasavranic $ 
- * $Revision: 1.15 $
- * $Log: db.prg,v $
- * Revision 1.15  2004/02/12 15:37:16  sasavranic
- * Kopiranje podataka za novu grupu po uzoru na postojecu.
- *
- * Revision 1.14  2004/01/13 19:07:53  sasavranic
- * appsrv konverzija
- *
- * Revision 1.13  2004/01/05 14:19:30  sasavranic
- * Pohranjivanje i nar.txt u sezonu
- *
- * Revision 1.12  2003/10/13 12:36:23  sasavranic
- * no message
- *
- * Revision 1.11  2003/07/24 16:05:48  sasa
- * stampa podataka o bankama na narudzbenici
- *
- * Revision 1.10  2003/07/07 14:09:36  sasa
- * Prebacene pomocne tabele POMGN i PPOMGN.DBF u KUMPATH
- *
- * Revision 1.9  2002/10/15 13:24:33  sasa
- * rjesena dilema prenosa sezona
- *
- * Revision 1.8  2002/07/04 11:13:51  mirsad
- * dokumentovanje ini parametara
- *
- * Revision 1.7  2002/07/04 08:34:19  mirsad
- * dokumentovanje ini parametara
- *
- * Revision 1.6  2002/06/26 14:52:32  ernad
- *
- *
- * dokumentovanje tabela
- *
- * Revision 1.5  2002/06/26 08:00:53  sasa
- * sredjen method Kreiraj(nArea)
- *
- * Revision 1.4  2002/06/25 13:41:35  sasa
- * no message
- *
- * Revision 1.3  2002/06/20 13:55:27  ernad
- * izbaciti create RJ (postoji u fmk/svi)
- *
- * Revision 1.2  2002/06/18 08:30:42  sasa
- * no message
- *
- * Revision 1.1.1.1  2002/06/17 18:30:18  ernad
- * no message
- *
  *
  */
  
