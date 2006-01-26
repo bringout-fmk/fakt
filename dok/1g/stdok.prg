@@ -696,7 +696,9 @@ private cPom:=""
 private cFaxT:=""
 //cIniName:=PRIVPATH+'fmk.ini'
 cFaxT:=IzFmkIni('UpitFax','FaxText','UpisiProizvoljanText',PRIVPATH)
+
 if lUgRab
+
 	cPom2:=SPACE(gnlMarg)+PADC("KUPAC",22)+SPACE(29)+PADC("PRODAVAC",22)
    	if fDelphiRB
      		UzmiIzIni(cIniName,'Varijable','Potpis',cPom2,'WRITE')
@@ -707,7 +709,9 @@ if lUgRab
        			? cPom2
      		endif
    	endif
+
 elseif cIdTipDok $ "00#01#19"
+
 	if fDelphiRB
      		UzmiIzIni(cIniName,'Varijable','Potpis',g10Str2T,'WRITE')
    	else
@@ -718,6 +722,7 @@ elseif cIdTipDok $ "00#01#19"
      		endif
    	endif
 else
+
 	cPom:="G"+cIdTipDok+"STR2T"
    	if fDelphiRB
      		UzmiIzIni(cIniName,'Varijable','Potpis',&cPom,'WRITE')
@@ -725,11 +730,16 @@ else
      		if IzFmkIni('UpitFax','Slati','N',PRIVPATH)=='D'
        			? cFaxT
      		else
-        		if cIdTipDok=="13".and.IzFMKIni("STAMPA","Opresa","N",KUMPATH)=="D".and.IzFMKINI("STAMPA","Opresa13ka_A4","N",KUMPATH)<>"D"
-          			? SPACE(10)+&cPom
-        		else
-          			? &cPom
-        		endif
+
+			cPotpis:=&cPom
+			cPotpis:=STRTRAN(cPotpis, "?S_5?", SPACE(5) )
+			cPotpis:=STRTRAN(cPotpis, "?S_10?", SPACE(10) )
+			aPotpis:= lomi_tarabe(cPotpis)
+
+			for i :=1 to LEN(aPotpis)
+			   p_line( aPotpis[i], 10, .f.)
+			next
+
      		endif
    	endif
 endif
