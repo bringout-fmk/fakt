@@ -183,24 +183,30 @@ return
  
 function Setuj_Txt()
 *{
-LOCAL cPor:=""
-  select ftxt; hseek ugov->iddodtxt; cDodTxt:=TRIM(naz)
-  hseek ugov->idtxt
-  IF IzFMKINI("Fakt_Ugovori","UNapomenuSamoBrUgovora","D")=="D"
-    cVezaUgovor := "Veza: "+trim(ugov->id)
-  ELSE
-    cVezaUgovor := "Veza: UGOVOR: "+trim(ugov->id)+" od "+dtoc(ugov->datod)
-  ENDIF
-  IF lOpor
-    cPor:=IzFmkIni("FAKT","DodatniTXTZaSlucajObracunatogPoreza","Porez na promet proizvoda je obracunat na osnovu izjave kupca.",KUMPATH)
-  ELSE
-    cPor:=IzFmkIni("FAKT","DodatniTXTZaSlucajOslobadjanjaOdPoreza","Na osnovu izjave kupca porez na promet proizvoda nije obracunat.",KUMPATH)
-  ENDIF
-  _txt2 := trim(cPor) + chr(13)+chr(10) + ;
-           trim(ftxt->naz) + chr(13)+chr(10) + ;
-           IF(gNovine=="D","",cVezaUgovor+chr(13)+chr(10)) + cDodTxt
-  _datpl := _datdok + UGOV->rokpl
-RETURN
+local cPor:=""
+
+select ftxt
+hseek ugov->iddodtxt
+cDodTxt:=TRIM(naz)
+hseek ugov->idtxt
+
+IF IzFMKINI("Fakt_Ugovori","UNapomenuSamoBrUgovora","D")=="D"
+	cVezaUgovor := "Veza: " + trim(ugov->id)
+ELSE
+	cVezaUgovor := "Veza: UGOVOR: " + trim(ugov->id) + " od " + DToC(ugov->datod)
+ENDIF
+
+IF lOpor
+	cPor:=IzFmkIni("FAKT","DodatniTXTZaSlucajObracunatogPoreza","Porez na promet proizvoda je obracunat na osnovu izjave kupca.",KUMPATH)
+ELSE
+	cPor:=IzFmkIni("FAKT","DodatniTXTZaSlucajOslobadjanjaOdPoreza","Na osnovu izjave kupca porez na promet proizvoda nije obracunat.",KUMPATH)
+ENDIF
+
+_txt2 := trim(cPor) + chr(13)+chr(10) + trim(ftxt->naz) + chr(13)+chr(10) + IF(gNovine=="D","",cVezaUgovor + chr(13)+chr(10) ) + cDodTxt
+
+_datpl := _datdok + ugov->rokpl
+
+return
 *}
 
 

@@ -256,10 +256,19 @@ go (nRec)
 // nafiluj ostale podatke vazne za sam dokument
 aMemo := ParsMemo(txt)
 dDatDok := datdok
-dDatVal := CToD(aMemo[9])
-dDatIsp := CToD(aMemo[7])
-cBrOtpr := aMemo[6]
-cBrNar  := aMemo[8]
+
+if LEN(aMemo) <= 5
+	dDatVal := dDatDok
+	dDatIsp := dDatDok
+	cBrOtpr := ""
+	cBrNar  := ""
+else
+	dDatVal := CToD(aMemo[9])
+	dDatIsp := CToD(aMemo[7])
+	cBrOtpr := aMemo[6]
+	cBrNar  := aMemo[8]
+endif
+
 
 // mjesto
 add_drntext("D01", gMjStr)

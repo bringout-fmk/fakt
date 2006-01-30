@@ -146,6 +146,7 @@ Box("#PARAMETRI ZA GENERACIJU FAKTURA PO UGOVORIMA",7,70)
   read
 BoxC()
 
+altd()
 lSamoAktivni := (cSamoAktivni=="D")
 SELECT UGOV
 if lSamoAktivni
@@ -384,6 +385,7 @@ do while !eof() .and. id==cidugov
    _idtipdok:=cidtipdok
    _brdok:=cBrDok
    _datdok:=dDatDok
+   _datpl:=dDatDok
    _kolicina:=nKolicina
    _idroba:=rugov->idroba
    select roba; hseek _idroba
