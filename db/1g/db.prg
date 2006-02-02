@@ -119,19 +119,34 @@ if goModul:lOpcine
 	O_OPS
 endif
 
-O_KONTO
-O_SAST
-O_PARTN
-O_ROBA
+SELECT F_KONTO
+if !used()
+	O_KONTO
+endif
 
-#ifdef CAX
-	select (F_PRIPR)
-  	use
-#endif
+SELECT F_SAST
+if !used()
+	O_SAST
+endif
+
+SELECT F_PARTN
+if !used()
+	O_PARTN
+endif
+
+SELECT F_ROBA
+if !used()
+	O_ROBA
+endif
 
 if (PCount()==0)
+
+	
 	O_S_PRIPR
- 	O_FAKT
+	SELECT F_FAKT
+	if !used()
+	 	O_FAKT
+	endif
 else
  	O_PFAKT
 endif

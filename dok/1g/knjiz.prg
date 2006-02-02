@@ -2124,7 +2124,7 @@ return _BrDok
  *  \param cBrDok
  */
  
-function StampTXT(cIdFirma,cIdTipDok,cBrDok)
+function StampTXT(cIdFirma, cIdTipDok, cBrDok)
 *{
 private InPicDEM:=PicDEM  // picture iznosa
 private InPicCDEM:=PicCDEM  // picture iznosa
@@ -2134,7 +2134,13 @@ if IsPDV()
 		if cIdFirma == nil
 			Stdok2p_rb()
 		else
-			Stdok2p_rb(cIdFirma, cIdTipDok, cBrDok)
+			// poziv iz stame liste dokumenata, pitaj
+			if Pitanje(, "Stampa graficka faktura ? ", "N") == "D"
+					
+				Stdok2p_rb(cIdFirma, cIdTipDok, cBrDok)
+			else
+				StdokPdv(cIdFirma, cIdTipDok, cBrDok)
+			endif
 		endif
 	
 	else	

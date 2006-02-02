@@ -6,226 +6,14 @@
  * ----------------------------------------------------------------
  */
 
-/*! \file fmk/fakt/dok/1g/stdok2.prg
- *  \brief Stampa fakture u varijanti 2
- */
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_ExePath_FAKT_KrozDelphi
-  * \brief Da li se dokumenti stampaju kroz Delphi RB ?
-  * \param N - ne, default vrijednost
-  * \param D - da
-  */
-*string FmkIni_ExePath_FAKT_KrozDelphi;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_SifPath_SifRoba_PBarkod
-  * \brief Da li se mogu ispisivati bar-kodovi u dokumentima ?
-  * \param 0 - ne, default vrijednost
-  * \param 1 - da, na upit "Zelite li ispis bar-kodova?" ponudjen je odgovor "N"
-  * \param 2 - da, na upit "Zelite li ispis bar-kodova?" ponudjen je odgovor "D"
-  */
-*string FmkIni_SifPath_SifRoba_PBarkod;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_ExePath_FAKT_NazRTM
-  * \brief Naziv RTM fajla koji se koristi za stampu dokumenta kroz Delphi RB
-  * \param fakt1 - default vrijednost
-  */
-*string FmkIni_ExePath_FAKT_NazRTM;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_ExePath_FAKT_NazRTMFax
-  * \brief Naziv RTM fajla koji se koristi za stampu dokumenta za slanje faksom
-  * \param fax1 - default vrijednost
-  */
-*string FmkIni_ExePath_FAKT_NazRTMFax;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_ExePath_FAKT_StampaWin2000
-  * \brief Da li je operativni sistem Windows 2000 ?
-  * \param N - ne, default vrijednost
-  * \param D - da
-  */
-*string FmkIni_ExePath_FAKT_StampaWin2000;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_ExePath_FAKT_PozivDelphiRB
-  * \brief Komanda za poziv Delphi RB-a za operativni sistem Windows 2000 
-  * \param DelphiRB - default vrijednost
-  */
-*string FmkIni_ExePath_FAKT_PozivDelphiRB;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_ExePath_FAKT_10Duplo
-  * \brief Da li se koristi dupli prored fakture ako faktura ima do 10 stavki?
-  * \param N - ne, default vrijednost
-  * \param D - da
-  */
-*string FmkIni_ExePath_FAKT_10Duplo;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_ExePath_FAKT_StampaViseDokumenata
-  * \brief Da li se moze stampati vise od jednog dokumenta u pripremi ?
-  * \param N - ne, default vrijednost
-  * \param D - da
-  */
-*string FmkIni_ExePath_FAKT_StampaViseDokumenata;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_KumPath_Zaglavlje_Linija1
-  * \brief 1.red zaglavlja dokumenta pri stampanju kroz Delphi RB
-  * \param gNFirma - default vrijednost
-  */
-*string FmkIni_KumPath_Zaglavlje_Linija1;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_KumPath_Zaglavlje_Linija2
-  * \brief 2.red zaglavlja dokumenta pri stampanju kroz Delphi RB
-  * \param - - nije definisano, default vrijednost
-  */
-*string FmkIni_KumPath_Zaglavlje_Linija2;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_KumPath_Zaglavlje_Linija3
-  * \brief 3.red zaglavlja dokumenta pri stampanju kroz Delphi RB
-  * \param - - nije definisano, default vrijednost
-  */
-*string FmkIni_KumPath_Zaglavlje_Linija3;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_KumPath_Zaglavlje_Linija4
-  * \brief 4.red zaglavlja dokumenta pri stampanju kroz Delphi RB
-  * \param - - nije definisano, default vrijednost
-  */
-*string FmkIni_KumPath_Zaglavlje_Linija4;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_KumPath_Zaglavlje_Linija5
-  * \brief 5.red zaglavlja dokumenta pri stampanju kroz Delphi RB
-  * \param - - nije definisano, default vrijednost
-  */
-*string FmkIni_KumPath_Zaglavlje_Linija5;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_KumPath_FAKT_CekanjeNaSljedeciPozivDRB
-  * \brief Broj sekundi cekanja na provjeru da li je Delphi RB zavrsio posljednji zadani posao 
-  * \param 6 - default vrijednost
-  */
-*string FmkIni_KumPath_FAKT_CekanjeNaSljedeciPozivDRB;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_ExePath_POREZI_PPUgostKaoPPU
-  * \brief Odredjuje nacin obracuna poreza u maloprodaji (u ugostiteljstvu)
-  * \param M - racuna PRUC iskljucivo koristeci propisani donji limit RUC-a, default vrijednost
-  * \param R - racuna PRUC na osnovu stvarne RUC ili na osnovu pr.d.lim.RUC-a ako je stvarni RUC manji od propisanog limita
-  * \param J - metoda koju koriste u Jerry-ju
-  * \param D - racuna PPU a ne PRUC (stari sistem), s tim da se PP racuna na istu osnovicu kao i PPU
-  * \param N - racuna PPU a ne PRUC (stari sistem), s tim da se PP racuna na istu osnovicu kao i PPP
-  */
-*string FmkIni_ExePath_POREZI_PPUgostKaoPPU;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_SifPath_SifRoba_PDRazmak
-  * \brief Ako se stampaju bar-kodovi u dokumentu, da li se pravi razmak izmedju stavki u dokumentu ?
-  * \param N - ne, default vrijednost
-  * \param D - da
-  */
-*string FmkIni_SifPath_SifRoba_PDRazmak;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_PrivPath_UpitFax_Slati
-  * \brief Ako se stampa preko Delphi RB-a, da li se pravi dokument za slanje faksom ?
-  * \param N - ne, default vrijednost
-  * \param D - da
-  */
-*string FmkIni_PrivPath_UpitFax_Slati;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_ExePath_DELPHIRB_Aktivan
-  * \brief Indikator aktivnosti Delphi RB-a
-  * \param 1 - aktivan
-  * \param 0 - nije aktivan
-  */
-*string FmkIni_ExePath_DELPHIRB_Aktivan;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_SifPath_FAKT_Opcine
-  * \brief Koristi li se sifrarnik opcina i sifra opcine u sifrarniku partnera?
-  * \param N - ne, default vrijednost
-  * \param D - da
-  */
-*string FmkIni_SifPath_FAKT_Opcine;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_KumPath_FAKT_KupacDesno
-  * \brief Da li se podaci o kupcu ispisuju uz desnu marginu dokumenta ?
-  * \param N - ne, default vrijednost
-  * \param D - da
-  */
-*string FmkIni_KumPath_FAKT_KupacDesno;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_KumPath_FAKT_I19jeOtpremnica
-  * \brief Da li se i dokument tipa 19 tretira kao otpremnica ?
-  * \param N - ne, default vrijednost
-  * \param D - da
-  */
-*string FmkIni_KumPath_FAKT_I19jeOtpremnica;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_KumPath_FAKT_PrikaziNaruciocaAkoJeRazlicitOdKupca
-  * \brief Ako je narucilac razlicit od kupca, da li se stampa narucilac?
-  * \param D - da, default vrijednost
-  * \param N - ne
-  */
-*string FmkIni_KumPath_FAKT_PrikaziNaruciocaAkoJeRazlicitOdKupca;
-
-
-/*! \ingroup ini
- *  \var *string FmkIni_ExePath_FAKT_DelphiRB
- *  \brief Da li ce se fakture stampati kroz DelphiRB ?
- *  \param D  - Prilikom poziva stampe dokumenti se stampaju kroz DelphiRB
- *  \param N  - Obicna stampa dokumenata
- *  \param P  - Pitanje prilikom poziva stampe DelphiRB ili obicni TXT
- */
-*string FmkIni_ExePath_FAKT_DelphiRB;
-
-
-/*! \fn StDok2()
- *  \brief Stampa fakture u varijanti 2
- *  \param cIdFirma
- *  \param cIdTipDok
- *  \param cBrDok
- */
  
-function StDok2P_rb()
-*{
-parameters cIdFirma
-private cIdTipDok
-private cBrDok
+function StDok2P_rb( c1, c2, c3)
+
+private cIdFirma := c1
+private cIdTipDok := c2
+private cBrDok := c3
+
+
 private i,nCol1:=0
 private cTxt1
 private cTxt2
@@ -246,26 +34,21 @@ if gAppSrv
    fclose(nH)
 endif
 
+close all
+
 if pcount()==3
- O_Edit(.t.)
+	O_Edit(.t.)
 else
- O_Edit()
+	O_Edit()
 endif
 
-fDelphiRB:=.f.
-cIniName:=""
-
-
-if !gAppSrv .and. IzFmkIni('FAKT','DelphiRB','N')=='D'
-  fDelphiRB:=.t.
-  cIniName:=EXEPATH+'ProIzvj.ini'
+// neka divlja varijabla
+if "U" $ TYPE("lSSIP99") .or. !VALTYPE(lSSIP99)=="L" 
+	lSSIP99:= .f.
 endif
 
-if !gAppSrv .and. IzFmkIni('FAKT','KrozDelphi','N')=='D'
-  fDelphiRB:=.t.
-  cIniName:=EXEPATH+'ProIzvj.ini'
-endif
-
+fDelphiRB:=.t.
+cIniName:=EXEPATH+'ProIzvj.ini'
 
 // fPBarkod - .t. stampati barkod, .f. ne stampati
 private cPombk:=IzFmkIni("SifRoba","PBarkod","0",SIFPATH)
@@ -302,6 +85,7 @@ select PRIPR
 if fDelphiRb .and. (IdTipDok $ "11#27")
 	cRTM := ALLTRIM(cRTM) + "mp"
 endif
+
 // za otpremnice dodaj "op"
 if fDelphiRb .and. (IdTipDok $ "10") .and. (gDodPar == "1")
 	cRTM := ALLTRIM(cRTM) + "op"
@@ -313,7 +97,9 @@ if pcount()==0  // poziva se faktura iz pripreme
 	cIdFirma:=IdFirma
 	cBrDok:=BrDok
 endif
+
 seek cIdFirma+cIdTipDok+cBrDok
+
 NFOUND CRET
 
 IF idtipdok=="01" .and. kolicina<0 .and. gPovDob$"DN"
@@ -495,8 +281,18 @@ cDinDEM:=dindem
 
 do while idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==cBrDok .and. !eof()
 	NSRNPIdRoba()   // Nastimaj (hseek) Sifr.Robe Na Pripr->IdRoba
+
+	SELECT ROBA
+	seek pripr->idroba
 	
-	if alltrim(podbr)=="."   .or. roba->tip="U"
+	SELECT TARIFA
+	seek roba->idtarifa
+
+	SELECT pripr
+
+	cIdPartner := pripr->idpartner
+	
+	if alltrim(podbr)=="." .or. roba->tip="U"
      		aMemo:=ParsMemo(txt)
       		cTxt1:=padr(aMemo[1],40)
    	endif
@@ -535,18 +331,26 @@ do while idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==cBrDok .and. !
        			replace idtarifa with roba->idtarifa
 			select pripr
 	endif
-		
-        cPDV:= STR(tarifa->opp, 2, 0)+"%"
+			
+			
+	    
+	nStopa := tarifa->opp
+	cIdTarifa := tarifa->id
+	if IsIno(cIdPartner)
+		cPDV := "0"
+		nStopa := 0
+	else
+	       	cPDV:= STR(tarifa->opp, 2, 0)+"%"
+	endif
+	
 
       	select pom
       	replace rbr with pripr->(RBr()) ,;
                    Sifra  with pripr->(StIdROBA(idroba))
       	select pripr
 
-       	select tarifa
-       	hseek roba->idtarifa
        	select pom
-       	replace POREZ1 with transform(tarifa->opp,"9999.9%")
+       	replace POREZ1 with transform(nStopa, "9999.9%")
        	select pripr
      	
 	select pom
@@ -574,31 +378,39 @@ do while idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==cBrDok .and. !
 	     nCijena2 := pripr->cijena * (1- pripr->rabat/100) * Koef(cDinDem)
 
               replace Cijena2 with pripr->(transform(nCijena2 , piccdem))
-	     
-              cPDV:=str(tarifa->opp, 2, 0)+"%"
-	      select pom
-              replace POR with pripr->(cPDV)
+
+
+		nStopa := tarifa->opp
+		cIdTarifa := tarifa->id
+		if IsIno(cIdPartner)
+			cPDV := "0"
+			nStopa := 0
+		else
+	       		cPDV:= STR(nStopa, 2, 0)+"%"
+		endif
+
+	        select pom
+                replace POR with pripr->(cPDV)
                
-              replace UKUPNO with pripr->(transform(round(kolicina()* cijena * Koef(cDinDem), nZaokr), picdem))
-              replace UKUPNO2 with pripr->(transform(round(kolicina()*nCijena2*Koef(cDinDem), nZaokr), picdem))
+                replace UKUPNO with pripr->(transform(round(kolicina()* cijena * Koef(cDinDem), nZaokr), picdem))
+                replace UKUPNO2 with pripr->(transform(round(kolicina()*nCijena2*Koef(cDinDem), nZaokr), picdem))
               select pripr
            
-	      nPDV:=ROUND(kolicina()* Koef(cDinDem)* nCijena2, nZaokr) * tarifa->opp/100
+	        nPDV:=ROUND(kolicina()* Koef(cDinDem)* nCijena2, nZaokr) * nStopa/100
 
-             // napuni tabelu poreza
-	     select por
-             cPDV:=str(tarifa->opp,2,0)+"%"
+             	// napuni tabelu poreza
+	        select por
 	     
-             seek cPDV
+                seek cPDV
                
-	       if !found()
-         	 ++nPorZaIspis
-	      	 append blank
-	      	 replace por with cPDV
-	       endif
+	        if !found()
+         	  ++nPorZaIspis
+	      	  append blank
+	      	  replace por with cPDV
+	        endif
 	       
-             replace iznos with iznos+nPDV
-             select pripr
+                replace iznos with iznos+nPDV
+                select pripr
 	      
        if fPBarKod
          select pom
@@ -704,6 +516,8 @@ else
 endif
 
 BEEP(1)
+
+
 IF lSSIP99
     cKomLin += " /P"
 ENDIF

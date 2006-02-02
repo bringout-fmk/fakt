@@ -4,43 +4,6 @@
  * ----------------------------------------------------------------
  *                                     Copyright Sigma-com software 
  * ----------------------------------------------------------------
- * $Source: c:/cvsroot/cl/sigma/fmk/fakt/dok/1g/stdatn.prg,v $
- * $Author: sasavranic $ 
- * $Revision: 1.10 $
- * $Log: stdatn.prg,v $
- * Revision 1.10  2004/03/18 09:18:01  sasavranic
- * Uslov za radni nalog na pregledu dokumenata te kartici artikla
- *
- * Revision 1.9  2003/04/25 10:44:36  ernad
- * ispravka za Planiku: parametar Cijena13MPC=D vise ne setuje MPC u sifrarniku pri promjeni cijene u unosu 13-ke
- *
- * Revision 1.8  2003/03/29 09:52:39  mirsad
- * Ispravka bug-a na tabelarnom pregledu dokumenata: nakon omoguæavanja uslova za opæinu za tabelarni prikaz poèeo ispadati u situaciji kada se vraæa dokument u pripremu a ne izabere se prelazak u nju
- *
- * Revision 1.7  2003/03/27 15:13:45  mirsad
- * izvjestaj "specif.prodaje" sada radi kao i uslov za opcinu za tabelarni prikaz liste dokumenata
- *
- * Revision 1.6  2002/12/21 11:53:29  mirsad
- * ispravke: f-ja crypt() zamijenjena sa cryptsc() u prikazu kolone operatera
- *
- * Revision 1.5  2002/09/13 12:34:22  mirsad
- * dokumentovanje INI parametara
- *
- * Revision 1.4  2002/07/04 19:04:08  ernad
- *
- *
- * ciscenje sifrarnik fakt
- *
- * Revision 1.3  2002/07/04 08:34:19  mirsad
- * dokumentovanje ini parametara
- *
- * Revision 1.2  2002/06/18 09:10:57  sasa
- * no message
- *
- * Revision 1.1.1.1  2002/06/17 18:30:18  ernad
- * no message
- *
- *
  */
 
 /*! \file fmk/fakt/dok/1g/stdatn.prg
@@ -611,6 +574,7 @@ do case
          DaTBDirektni() // ELIB, promjeni tbrowse na edit rezim
        ENDIF
      ENDIF
+     
   case Ch==K_ENTER .and. gTBDir=="N"
      select doks
      nTrec:=recno()
@@ -619,7 +583,7 @@ do case
      _cBrDok:=brdok
      close all
      O_Edit()
-     StampTXT(_cidfirma,_cIdTipdok,_cbrdok)
+     StampTXT(_cidfirma, _cIdTipdok, _cbrdok)
      select (F_DOKS); use
      O_DOKS
      if lOpcine

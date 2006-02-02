@@ -224,6 +224,7 @@
 function StDok2()
 *{
 parameters cIdFirma,cIdTipDok,cBrDok
+
 private i,nCol1:=0,cTxt1,cTxt2,aMemo,nMPVBP:=nVPVBP:=0
 private cpom,cpombk
 private cTi,nUk,nRab,nUk2:=nRab2:=0
