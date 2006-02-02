@@ -256,7 +256,7 @@ do while .t.
                idroba   with KALK->idroba,;
                cijena   with KALK->fcj,;
                rabat    with KALK->rabat,;
-               dindem   with "DEM"
+               dindem   with "KM"
        IF lPoNarudzbi .and. FIELDPOS("IDNAR")<>0
          replace idnar with KALK->idnar, brojnar with KALK->brojnar
        ENDIF
