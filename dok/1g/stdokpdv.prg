@@ -112,6 +112,12 @@ local nDrnZaokr:=0
 local cDokNaz
 local nUkKol:=0
 local lIno:=.f.
+local nPom1
+local nPom2
+local nPom3
+local nPom4
+local nPom5
+
 
 // ako je kupac pdv obveznik, ova varijable je .t.
 local lPdvObveznik
@@ -137,27 +143,14 @@ dDatDok := datdok
 dDatVal := dDatDok
 dDatIsp := dDatDok
 cDinDem := dindem
-nZaokr := zaokr
 
 nRec:=RecNO()
 
 // ukupna kolicina
 nUkKol := 0
 
-
-
-// 999999.999 => "       .  "
-cPom := STRTRAN(PIC_CIJENA(), "9", " ")
-
-// ".  "
-cPom := LTRIM(cPom)
-// LEN(".  ") = 3
-nPom := LEN( cPom )
-// dvije decimale
-nPom := nPom - 1
-// setuj broj decimala
-DEC_CIJENA(nPom)
-
+DEC_CIJENA(ZAO_CIJENA())
+DEC_VRIJEDNOST(ZAO_VRIJEDNOST())
 
 lIno:=.f.
 do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==cBrDok
@@ -237,6 +230,7 @@ do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==c
 	endif
 	
 	// ako je 13-ka ili 27-ca
+	// cijena bez pdv se utvrdjuje unazad 
 	if (field->idtipdok == "13" .and. glCij13Mpc) .or. (field->idtipdok $ "11#27" .and. gMP $ "1234567") 
 		// cjena bez pdv-a
 		nCjPDV:= nRCijen	
@@ -264,18 +258,43 @@ do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==c
 	nCj2BPDV := (nCjBPDV - nVPopust)
 	// izracuna PDV na cijenu sa popustom
 	nCj2PDV := (nCj2BPDV * (1 + nPPDV/100))
-	// preracunaj VPDV sa popustom
-	nVPDV := (nCj2BPDV * (nPPDV/100))
+	
 	// ukupno stavka
 	nUkStavka := nKol * nCj2PDV
+	nUkStavke := ROUND(nUkStavka, ZAO_VRIJEDNOST())
 
-	// sumiraj vrijednosti
-	nUkVPop += nKol * nVPopust
-	nUkPDV += nKol * nVPDV
-	nUkBPDV += nKol * nCjBPDV
-	nUkBPDVPop += nKol * nCj2BPDV
-	nTotal += nKol * (nCj2BPDV + nVPDV)
-	nUkPopNaTeretProdavca += nKol * nVPopNaTeretProdavca 
+	nPom1 := nKol * nCjBPDV 
+	nPom1 := ROUND(nPom1, ZAO_VRIJEDNOST())
+	// ukupno bez pdv
+	nUkBPDV += nPom1 
+	
+
+	// ukupno popusta za stavku
+	nPom2 := nKol * nVPopust
+	nPom2 := ROUND(nPom2, ZAO_VRIJEDNOST())
+	nUkVPop += nPom2
+
+	// preracunaj VPDV sa popustom
+	nVPDV := (nCj2BPDV * (nPPDV/100))
+
+
+	//  ukupno vrijednost bez pdva sa uracunatim poputstom
+	nPom3 := nPom1 - nPom2 
+	nPom3 := ROUND(nPom3, ZAO_VRIJEDNOST())
+	nUkBPDVPop += nPom3
+	
+
+	// ukupno PDV za stavku = (ukupno bez pdv - ukupno popust) * stopa
+	nPom4 := nPom3 * nPPDV/100
+	nPom4 := ROUND(nPom4, ZAO_VRIJEDNOST())
+	nUkPDV += nPom4
+	
+	// ukupno za stavku sa pdv-om
+	nTotal +=  nPom3 + nPom4
+
+	nPom5 := nKol * nVPopNaTeretProdavca
+	nPom5 := ROUND(nPom5, ZAO_VRIJEDNOST())
+	nUkPopNaTeretProdavca += nPom5
 
 	++ nCSum
 	
@@ -294,16 +313,16 @@ do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==c
 enddo	
 
 // zaokruzenje
-nFZaokr := ROUND(nTotal, nZaokr) - ROUND2(ROUND(nTotal, nZaokr), gFZaok)
+nFZaokr := ROUND(nTotal, ZAO_VRIJEDNOST()) - ROUND2(ROUND(nTotal, ZAO_VRIJEDNOST()), gFZaok)
 if (gFZaok <> 9 .and. ROUND(nFZaokr, 4) <> 0)
 	nDrnZaokr := nFZaokr
 endif
 
-nTotal := ROUND(nTotal - nDrnZaokr, nZaokr)
+nTotal := ROUND(nTotal - nDrnZaokr, ZAO_VRIJEDNOST())
 
-nUkPopNaTeretProdavca := ROUND(nUkPopNaTeretProdavca, nZaokr)
-nUkBPDV := ROUND( nUkBPDV, nZaokr )
-nUkVPop := ROUND( nUkVPop, nZaokr )
+nUkPopNaTeretProdavca := ROUND(nUkPopNaTeretProdavca, ZAO_VRIJEDNOST())
+nUkBPDV := ROUND( nUkBPDV, ZAO_VRIJEDNOST() )
+nUkVPop := ROUND( nUkVPop, ZAO_VRIJEDNOST() )
 
 select pripr
 go (nRec)
@@ -600,4 +619,42 @@ add_drntext("I14", ALLTRIM(gFText3))
 return
 *}
 
+
+// ------------------------------------
+// ------------------------------------
+static function ZAO_VRIJEDNOST()
+local nPos
+local nLen
+
+// 999.99
+nPos := AT(".", PicDem)
+// = 4
+nLen := LEN(PicDEM) 
+// = 6
+
+if nPos == 0
+	nPos := nLen
+endif
+
+return nLen - nPos
+
+
+// ------------------------------------
+// ------------------------------------
+static function ZAO_CIJENA()
+local nPos
+local nLen
+
+altd()
+// 999.99
+nPos := AT(".", PicCDem)
+// = 4
+nLen := LEN(PicDEM) 
+// = 6
+
+if nPos == 0
+	nPos := nLen
+endif
+
+return nLen - nPos
 
