@@ -22,36 +22,47 @@
  *  \todo Prebaciti u /RPT
  */
 
-
 function StOLPP()
 *{
-LOCAL nMirso:=0, nsMir1:=0, nsMir2:=0, ii:=0, InPicDem:=picdem, GetList:={}
-LOCAL InPicKol:=pickol
+// sada se koristi StOLPDV()
+StOLPDV()
+return
+*}
 
- private cRegion:=GetRegion()
+// stampa obracunskog lista PDV-a
+function StOLPDV()
+*{
+local nUkPDV:=0
+local nTotPDV:=0
+local ii:=0
+local InPicDem:=picdem
+local GetList:={}
+local InPicKol:=pickol
 
- O_PARTN
- O_ROBA
- O_TARIFA
- O_PRIPR
+private cRegion:=GetRegion()
 
- gOstr    := "D"
- gnRedova := gPStranica+64
- picdem   := "99999999.99"
- pickol   := SUBSTR(pickol,2)
+O_PARTN
+O_ROBA
+O_TARIFA
+O_PRIPR
 
- SELECT PRIPR
+gOstr    := "D"
+gnRedova := gPStranica+64
+picdem   := "99999999.99"
+pickol   := SUBSTR(pickol,2)
+
+SELECT PRIPR
 
 IF glCij13Mpc
-  cpmp:="9"
+	cPmp:="9"
 ELSEIF EMPTY(g13dcij) .and. gVar13!="2"
- Box(,1,50)
-  cpmp:="9"
-  @ m_x+1,m_y+2 SAY "Prikaz MPC ( 1/2/3/4/5/6/9 iz fakt-a) " GET cPMP valid cpmp $ "1234569"
-  read
- BoxC()
+	Box(,1,50)
+  		cPmp:="9"
+  		@ m_x+1,m_y+2 SAY "Prikaz MPC ( 1/2/3/4/5/6/9 iz fakt-a) " GET cPMP valid cpmp $ "1234569"
+  		read
+ 	BoxC()
 ELSE
- cPMP:=g13dcij
+	cPMP:=g13dcij
 ENDIF
 
 cTxt1:=""
@@ -61,203 +72,196 @@ cTxt3b:=""
 cTxt3c:=""
 
 if val(podbr)=0  .and. val(rbr)==1
-   aMemo:=ParsMemo(txt)
-   if len(aMemo)>0
-     cTxt1:=padr(aMemo[1],40)
-   endif
-   if len(aMemo)>=5
-    cTxt2:=aMemo[2]
-    cTxt3a:=aMemo[3]
-    cTxt3b:=aMemo[4]
-    cTxt3c:=aMemo[5]
-   endif
+	aMemo:=ParsMemo(txt)
+   	if len(aMemo)>0
+     		cTxt1:=padr(aMemo[1],40)
+   	endif
+   	if len(aMemo)>=5
+    		cTxt2:=aMemo[2]
+    		cTxt3a:=aMemo[3]
+    		cTxt3b:=aMemo[4]
+    		cTxt3c:=aMemo[5]
+   	endif
 else
-  Beep(2)
-  Msg("Prva stavka mora biti  '1.'  ili '1 ' !",4)
-  return
+	Beep(2)
+  	Msg("Prva stavka mora biti  '1.'  ili '1 ' !",4)
+  	return
 endif
 
+cIdFirma := IDFIRMA
+cIdVd    := IDTIPDOK
+cBrDok   := BRDOK
 
- cIdFirma := IDFIRMA
- cIdVd    := IDTIPDOK
- cBrDok   := BRDOK
+m:="ÄÄÄ ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ ÄÄÄ ÄÄÄÄÄÄÄÄÄÄ ÄÄÄÄÄÄÄÄÄÄÄ ÄÄÄÄÄÄÄÄÄÄÄ ÄÄÄÄÄÄ ÄÄÄÄÄ ÄÄÄÄÄÄÄÄÄ ÄÄÄÄÄÄÄÄÄÄ ÄÄÄÄÄÄÄÄÄÄÄ"
 
- m:="ÄÄÄ ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ ÄÄÄ ÄÄÄÄÄÄÄÄÄÄ ÄÄÄÄÄÄÄÄÄÄÄ ÄÄÄÄÄÄÄÄÄÄÄ ÄÄ ÄÄÄÄÄ ÄÄÄÄÄÄÄÄÄ ÄÄÄÄÄÄÄÄÄÄ ÄÄÄÄÄÄÄÄÄÄÄ ÄÄ ÄÄÄÄÄ ÄÄÄÄÄÄÄÄÄ ÄÄÄÄÄÄÄÄÄÄÄ ÄÄÄÄÄÄÄÄÄÄÄ ÄÄÄÄÄÄÄÄÄÄÄ"
+nC1:=10
+nC2:=25
+nC3:=40
+nC4:=0
+nC5:=0
 
- nC1:=10; nc2:=25; nc3:=40; nC4:=0; nC5:=0
+START PRINT RET
 
- START PRINT RET
+nU1:=nU2:=nU3:=0
 
- nU1:=nU2:=nU3:=nU4:=0
+ZOlPDV()
 
- ZOlPP()
+PRIVATE nColR:=10
 
- PRIVATE nColR:=10
+DO WHILE !EOF() .and. cIdfirma+cIdVd+cBrDok==IDFIRMA+IDTIPDOK+BRDOK
 
- DO WHILE !EOF() .and. cIdfirma+cIdVd+cBrDok==IDFIRMA+IDTIPDOK+BRDOK
+	NSRNPIdRoba()   // Nastimaj (hseek) Sifr.Robe Na Pripr->IdRoba
 
-   NSRNPIdRoba()   // Nastimaj (hseek) Sifr.Robe Na Pripr->IdRoba
+   	aPorezi:={}
+   	SELECT PRIPR
+   	cTarifa:=TarifaR(cRegion,ROBA->id,@aPorezi)
 
-   aPorezi:={}
-   SELECT PRIPR
-   cTarifa:=TarifaR(cRegion,ROBA->id,@aPorezi)
+	IF gVar13!="2"
+     		if cPMP=="2"
+      			nMPCSAPP:=roba->mpc2
+     		elseif cPMP=="3"
+      			nMPCSAPP:=roba->mpc3
+     		elseif cPMP=="4"
+      			nMPCSAPP:=roba->mpc4
+     		elseif cPMP=="5"
+      			nMPCSAPP:=roba->mpc5
+     		elseif cPMP=="6"
+      			nMPCSAPP:=roba->mpc6
+     		elseif cpmp=="1"
+      			nMPCSAPP:=roba->mpc
+     		else
+      			nMPCSAPP:=pripr->cijena
+     		endif
+   	ELSE
+     		nMPCSaPP:=cijena
+   	ENDIF
 
+   	if kolicina==0   // nivelacija:TNAM
+     		nMPC1 := MpcBezPor( iznos , aPorezi )
+     		nMPC2 := nMPC1 + Izn_P_PPP( nMPC1 , aPorezi )
+   	else
+     		nMPC1 := MpcBezPor( nMPCSaPP , aPorezi )
+     		nMPC2 := nMPC1 + Izn_P_PPP( nMPC1 , aPorezi )
+   	endif
 
-   IF gVar13!="2"
-     if cPMP=="2"
-      nMPCSAPP:=roba->mpc2
-     elseif cPMP=="3"
-      nMPCSAPP:=roba->mpc3
-     elseif cPMP=="4"
-      nMPCSAPP:=roba->mpc4
-     elseif cPMP=="5"
-      nMPCSAPP:=roba->mpc5
-     elseif cPMP=="6"
-      nMPCSAPP:=roba->mpc6
-     elseif cpmp=="1"
-      nMPCSAPP:=roba->mpc
-     else
-      nMPCSAPP:=pripr->cijena
-     endif
-   ELSE
-     nMPCSaPP:=cijena
-   ENDIF
+   	if prow()>gnRedova-2 .and. gOstr=="D"
+   		FF
+		ZOlPDV()
+   	endif
 
-   if kolicina==0   // nivelacija:TNAM
-     nMPC1 := MpcBezPor( iznos , aPorezi )
-     nMPC2 := nMPC1 + Izn_P_PPP( nMPC1 , aPorezi )
-     // nMPC2:=Iznos/(1+tarifa->ppp/100)
-     // nMPC1:=nMPC2/(1+tarifa->opp/100)
-   else
-     nMPC1 := MpcBezPor( nMPCSaPP , aPorezi )
-     nMPC2 := nMPC1 + Izn_P_PPP( nMPC1 , aPorezi )
-     // nMPC2:=nMPCSaPP/(1+tarifa->ppp/100)
-     // nMPC1:=nMPC2/(1+tarifa->opp/100)
-   endif
+   	// 1 red
+   	? rbr
+   	nColR:=pcol()+1
+   	// 2 red
+   	aRoba:=SjeciStr(roba->naz,20)
+   	@ prow(),pcol()+1 SAY aRoba[1]
+   	// 3 red
+   	@ prow(),pcol()+1 SAY roba->jmj
 
-   if prow()>gnRedova-2 .and. gOstr=="D"; FF; ZOlPP(); endif
-                                // bilo:  EJECTNA0
-   ? rbr
-   nColR:=pcol()+1
+   	nPom:=at("/",ctarifa)
+   	IF nPom>0
+    		cT1:=padr( left(ctarifa,npom-1),6)
+   	ELSE
+    		cT1:=cTarifa
+   	ENDIF
 
-   aRoba:=SjeciStr(roba->naz,20)
-   @ prow(),pcol()+1 SAY aRoba[1]
-   @ prow(),pcol()+1 SAY roba->jmj
+   	// 4 red
+   	@ prow(),pcol()+1 say kolicina pict pickol
+   
+   	// 5 red // mpc bez pdv pojedinacno
+   	@ prow(),pcol()+1 say nMPC1 pict "99999999.99"
+   	nC1:=pcol()+1
 
-   nPom:=at("/",ctarifa)
-   IF nPom>0
-    cT1:=padr( left(ctarifa,npom-1),2)
-    cT2:=padr( substr(ctarifa,npom+1) ,2)
-   ELSE
-    cT1:=LEFT(ctarifa,1)+" "
-    cT2:="  "
-   ENDIF
+   	// 6 red // mpc bez pdv ukupno
+   	@ prow(),pcol()+1 say nMPC1*kolicina pict picdem
+   
+   	// 7 red // TB
+   	@ prow(),pcol()+1 say cT1
 
-   @ prow(),pcol()+1 say kolicina pict pickol
+   	// 8 red // TB %
+   	@ prow(),pcol()+1 say aPorezi[POR_PPP] pict "99.9"
+	?? "%"
+   	nC4:=pcol()+1
 
-   @ prow(),pcol()+1 say nMPC1 pict "99999999.99"
-   nC1:=pcol()+1
+   	// 9 red  // PDV ukupno
+   	@ prow(),pcol()+1 say (nUkPDV:=(nMPC2-nMPC1)*kolicina) pict "999999.99"
+   	nTotPDV+=nUkPDV
 
-   @ prow(),pcol()+1 say nMPC1*kolicina pict picdem
-   @ prow(),pcol()+1 say cT1
+   	// 10 red // MPC sa PDV pojedinacno
+   	@ prow(),pcol()+1 say nMPC2 pict "9999999.99"
+   	nC2:=pcol()+1
 
-   @ prow(),pcol()+1 say aPorezi[POR_PPP] pict "99.9"; ?? "%"
-   nC4:=pcol()+1
+   	// 11 red // MPC sa PDV ukupno
+   	@ prow(),pcol()+1 say nMPC2*kolicina pict picdem
+   	
 
-   @ prow(),pcol()+1 say (nMirso:=(nMPC2-nMPC1)*kolicina) pict "999999.99"
-   nsMir1+=nMirso
+	if kolicina==0     // nivelacija:TNAM
+    		nU1+=nMpc1
+		nU2+=nMpc2
+   	else
+     		nU1+=nMpc1*kolicina
+		nU2+=nMpc2*kolicina
+   	endif
 
-   @ prow(),pcol()+1 say nMPC2 pict "9999999.99"
-   nC2:=pcol()+1
+	// ostatak robe naziva ako postoji
+   	for ii=2 to len(aRoba)
+    		@ prow()+1,nColR SAY aRoba[ii]
+   	next
 
-   @ prow(),pcol()+1 say nMPC2*kolicina pict picdem
-   @ prow(),pcol()+1 say cT2
+   	skip 1
 
-   @ prow(),pcol()+1 say aPorezi[POR_PP] pict "99.9"; ?? "%"
-   IF kolicina==0   // nivelacija:TNAM
-     nPor:=MpcBezPor( iznos , aPorezi )
-     // nPor:=iznos/(1+tarifa->opp/100)/(1+tarifa->ppp/100)
-   ELSE
-     nPor:=Izn_P_PP(nMPC1, aPorezi)+Izn_P_PPP(nMPC1, aPorezi)
-     // nPor:=nMPC1*tarifa->opp/100+nMPC2*tarifa->ppp/100
-   ENDIF
-   nC5:=pcol()+1
+ENDDO
 
-   @ prow(),pcol()+1 say IF(kolicina==0,nPor,nPor*kolicina)-nMirso pict "999999.99"
-   nsMir2+=(IF(kolicina==0,nPor,nPor*kolicina)-nMirso)
+if prow()>gnRedova-4 .and. gOstr=="D"
+	FF
+	ZOlPDV()
+endif
 
-   @ prow(),pcol()+1 say nMPCSAPP          pict picdem
-   nC3:=pcol()+1
+? m
+? "Ukupno :"
+@ prow(),nC1   say    nU1  pict picdem
+@ prow(),nC4   say nTotPDV pict "999999.99"
+@ prow(),nC2   say    nU2  pict picdem
+? STRTRAN(m," ","Ä")
+?
 
-   if kolicina==0     // nivelacija:TNAM
-     @ prow(),pcol()+1 say Iznos pict picdem
-     @ prow(),pcol()+1 say  nPor pict picdem
-     nU1+=nmpc1;nU2+=nMpc2
-     nU3+=iznos; nU4+=nPor
-   else
-     @ prow(),pcol()+1 say nMPCSAPP*kolicina pict picdem
-     @ prow(),pcol()+1 say  nPor*kolicina pict picdem
-     nU1+=nmpc1*kolicina; nU2+=nMPC2*kolicina
-     nU3+=nMPCsaPP*kolicina;  nU4+=nPor*kolicina
-   endif
+FF
 
-   for ii=2 to len(aRoba)
-    @ prow()+1,nColR SAY aRoba[ii]
-   next
+END PRINT
 
-   skip 1
-
- ENDDO
-
- if prow()>gnRedova-4 .and. gOstr=="D"; FF; ZOlPP(); endif
-                              // bilo:  EJECTNA0
-
- ? m
- ? "Ukupno :"
- @ prow(),nc1   say    nu1  pict picdem
- @ prow(),nc4   say nsMir1  pict "999999.99"
- @ prow(),nc2   say    nu2  pict picdem
- @ prow(),nc5   say nsMir2  pict "999999.99"
- @ prow(),nc3   say    nu3  pict picdem
- @ prow(),pcol()+1 say    nu4  pict picdem
- ? STRTRAN(m," ","Ä")
- ?
-
- FF
-
- END PRINT
-
- picdem:=InPicDem
- pickol:=InPicKol
+picdem:=InPicDem
+pickol:=InPicKol
 
 return
 *}
 
-
-/*! \fn ZOLPP()
- *  \brief Obracunski list poreza na promet
- */
- 
-function ZOLPP()
+// zaglavlje obracunskog lista 
+function ZOLPDV()
 *{
-LOCAL cNaslov:=StrKZN("OBRA^UNSKI LIST POREZA NA PROMET","7",gKodnaS),cPom1,cPom2,c
+LOCAL cNaslov:=StrKZN("OBRA^UNSKI LIST PDV-A","7",gKodnaS),cPom1,cPom2,c
 ZagFirma()
 @ prow()+1,35 SAY cNaslov
 ?
-select partn; hseek pripr->idpartner; select pripr
+select partn
+hseek pripr->idpartner
+select pripr
 @ prow()+1,20 SAY "Po dokumentu: "+idtipdok+"   "
 ?? StrKZN("Sjedi{te:","7",gKodnaS)
 @ prow()+1,33 SAY "Broj: "; ?? brdok,"od:",SrediDat(datdok)
 
 P_COND2
 
-?  StrKZN("ÚÄÄÂÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÂÄÄÄÂÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄ¿","7",gKodnaS)
-?  StrKZN("³  ³                    ³   ³          ³   Prod.cijena bez por.³ Porez na promet  ³ Prodajna cijena sa   ³   Poseban porez  ³  Prod.cij.sa porezom  ³ Porez na ³","7",gKodnaS)
-       c:="³R.³       Naziv        ³jed³ koli~ina ³   na promet proizvoda ³    proizvoda     ³ porezom na pr.proizv.³                  ³na prom.proiz.i pos.por³  promet  ³"
+? StrKZN("ÚÄÄÂÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÂÄÄÄÂÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿","7",gKodnaS)
+
+? StrKZN("³  ³                    ³   ³          ³   Prodajna cijena     ³         PDV          ³   Prodajna cijena    ³","7",gKodnaS)
+c:="³R.³       Naziv        ³jed³ koli~ina ³   bez PDV-a           ³                      ³   sa PDV-om          ³"
+
 ? StrKZN(c,"7",gKodnaS)
-?  StrKZN("³br³                    ³mj.³          ÃÄÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÄÅÄÄÂÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÄÅÄÄÂÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÄ´          ³","7",gKodnaS)
-?  StrKZN("³  ³                    ³   ³          ³ Pojedin.  ³   Ukupna  ³TB³Stopa³ Iznos   ³ Pojedin. ³  Ukupna   ³TB³Stopa³ Iznos   ³  Pojedin. ³  Ukupna   ³  UKUPNO  ³","7",gKodnaS)
-?  StrKZN("ÀÄÄÁÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÁÄÄÄÁÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÁÄÄÁÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÁÄÄÁÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÙ","7",gKodnaS)
+
+? StrKZN("³br³                    ³mj.³          ÃÄÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÂÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÄ´","7",gKodnaS)
+? StrKZN("³  ³                    ³   ³          ³ Pojedin.  ³   Ukupna  ³TB    ³Stopa³ Iznos   ³ Pojedin. ³  Ukupna   ³","7",gKodnaS)
+? StrKZN("ÀÄÄÁÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÁÄÄÄÁÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÁÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÙ","7",gKodnaS)
+
 return
 *}
 
