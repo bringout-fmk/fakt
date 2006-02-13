@@ -266,6 +266,9 @@ Izbor:=1
 
 CheckROnly(KUMPATH + "\FAKT.DBF")
 
+// setuj parametre pri pokretanju modula
+s_params()
+
 O_DOKS
 SELECT doks
 TrebaRegistrovati(20)

@@ -29,6 +29,14 @@
 *string FmkIni_ExePath_Fakt_NazRTMFax;
 
 
+// ------------------------------------------
+// setuju parametre pri pokretanju modula
+// napuni sifrarnike
+// ------------------------------------------
+function s_params()
+fill_part()
+
+return
 
 /*! \fn Mnu_Params()
  *  \brief Otvara glavni menij sa parametrima

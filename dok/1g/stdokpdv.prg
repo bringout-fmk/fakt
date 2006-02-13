@@ -112,6 +112,7 @@ local nDrnZaokr:=0
 local cDokNaz
 local nUkKol:=0
 local lIno:=.f.
+local cPdvOslobadjanje:=""
 local nPom1
 local nPom2
 local nPom3
@@ -201,6 +202,13 @@ do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==c
 		if IsIno(cIdPartner)
 			nPPDV:=0
 			lIno:=.t.
+		endif
+
+		// ako je po nekom clanu PDV-a partner oslobodjenj
+		// placanja PDV-a
+		cPdvOslobadjanje := PdvOslobadjanje(cIdPartner)
+		if !EMPTY(cPdvOslobadjanje)
+			nPPDV:=0
 		endif
 	endif
 
@@ -395,7 +403,9 @@ add_drntext("P07", ALLTRIM(STR(gnTMarg)) )
 // da li se formira automatsko zaglavlje
 add_drntext("P10", gStZagl )
 
-if lIno
+if !EMPTY(cPdvOslobadjanje)
+ add_drntext("P11", cPdvOslobadjanje)
+elseif lIno
  // ino faktura
  add_drntext("P11", "INO" )
 else
