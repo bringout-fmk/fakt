@@ -9,7 +9,7 @@
 	#include "sc.ch"
 #endif
 
-#define D_FA_VERZIJA "02.32"
+#define D_FA_VERZIJA "02.32b"
 #define D_FA_PERIOD  "11.94-13.02.06"
 
 
