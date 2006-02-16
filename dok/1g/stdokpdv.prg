@@ -60,9 +60,9 @@ endif
 fill_porfakt_data(cIdFirma, cIdTipDok, cBrDok, lPBarKod, lSamoKol)
 
 if cIdTipDok == "13"
-  omp_print()
+	omp_print()
 else
-pf_a4_print()
+	pf_a4_print()
 endif
 
 return
@@ -362,6 +362,9 @@ endif
 add_drntext("D01", gMjStr)
 // naziv dokumenta
 add_drntext("D02", cDokNaz)
+
+// Destinacija
+add_drntext("D09", cIdTipDok)
 
 // slovima iznos fakture
 add_drntext("D04", Slovima( nTotal - nUkPopNaTeretProdavca , cDinDem))
