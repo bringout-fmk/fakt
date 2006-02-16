@@ -294,7 +294,8 @@ do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==c
 
 	// ukupno PDV za stavku = (ukupno bez pdv - ukupno popust) * stopa
 	nPom4 := nPom3 * nPPDV/100
-	nPom4 := ROUND(nPom4, ZAO_VRIJEDNOST())
+	// povecaj preciznost
+	nPom4 := ROUND(nPom4, ZAO_VRIJEDNOST() + 2)
 	nUkPDV += nPom4
 	
 	// ukupno za stavku sa pdv-om
@@ -319,6 +320,11 @@ do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==c
 	select pripr
 	skip
 enddo	
+
+// zaokruzi pdv na zao_vrijednost()
+nUkPDV := ROUND( nUkPDV, ZAO_VRIJEDNOST() ) 
+
+nTotal := (nUkBPDVPop + nUkPDV)
 
 // zaokruzenje
 nFZaokr := ROUND(nTotal, ZAO_VRIJEDNOST()) - ROUND2(ROUND(nTotal, ZAO_VRIJEDNOST()), gFZaok)
