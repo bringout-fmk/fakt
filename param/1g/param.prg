@@ -287,12 +287,6 @@ if !IsPdv()
 	nX++
 	@ m_x+nX, m_y+2 SAY "Novi korisnicki interfejs D-da/N-ne/R-rudnik/T-test" GET gNW VALID gNW $ "DNRT" PICT "@!"
 	nX++
-endif
-
-  	@ m_x+nX, m_y+2 SAY "Na kraju fakture izvrsiti zaokruzenje" GET gFZaok PICT "99"
-	nX++
-
-if !IsPdv()
   	@ m_x+nX, m_y+2 SAY "Svaki izlazni fajl ima posebno ime ?" GET gImeF VALID gImeF $ "DN"
 	nX++
 	
@@ -356,7 +350,6 @@ if (LASTKEY()<>K_ESC)
    	Wpar("no",gNovine)
    	Wpar("ds",gnDS)
    	WPar("vz",gVlZagl)
-   	WPar("fz",gFZaok)
    	WPar("if",gImeF)
    	WPar("95",gKomLin)   // prvenstveno za win 95
    	WPar("k1",@gDk1)
@@ -559,16 +552,30 @@ return
  
 function SetPict()
 *{
+local nX
+
 private  GetList:={}
 
 O_PARAMS
 
 PicKol:=STRTRAN(PicKol,"@Z ","")
 
-Box(,4,60,.f.,"PARAMETRI PRIKAZA - PICTURE KODOVI")
-	@ m_x+1,m_y+2 SAY "Prikaz cijene   " GET PicCDem
-  	@ m_x+2,m_y+2 SAY "Prikaz iznosa   " GET PicDem
-  	@ m_x+3,m_y+2 SAY "Prikaz kolicine " GET PicKol
+nX:=1
+Box(, 6, 60, .f.,"PARAMETRI PRIKAZA")
+
+	@ m_x+nX,m_y+2 SAY "Prikaz cijene   " GET PicCDem
+	nX++
+	
+  	@ m_x+nX, m_y+2 SAY "Prikaz iznosa   " GET PicDem
+	nX++
+	
+  	@ m_x+nX, m_y+2 SAY "Prikaz kolicine " GET PicKol
+	nX++
+
+  	@ m_x+nX, m_y+2 SAY "Na kraju fakture izvrsiti zaokruzenje" GET gFZaok PICT "99"
+	nX++
+
+
   	read
 BoxC()
 
@@ -576,6 +583,7 @@ if (LASTKEY()<>K_ESC)
    	WPar("p0", PicCDem)
    	WPar("p1", PicDem)
    	WPar("p2", PicKol)
+   	WPar("fz", gFZaok)
 endif
 
 return 
