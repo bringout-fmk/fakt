@@ -287,14 +287,19 @@ if !IsPdv()
 	nX++
 	@ m_x+nX, m_y+2 SAY "Novi korisnicki interfejs D-da/N-ne/R-rudnik/T-test" GET gNW VALID gNW $ "DNRT" PICT "@!"
 	nX++
+endif
+
   	@ m_x+nX, m_y+2 SAY "Na kraju fakture izvrsiti zaokruzenje" GET gFZaok PICT "99"
 	nX++
+
+if !IsPdv()
   	@ m_x+nX, m_y+2 SAY "Svaki izlazni fajl ima posebno ime ?" GET gImeF VALID gImeF $ "DN"
 	nX++
 	
   	@ m_x+nX, m_y+2 SAY "Komandna linija za RTF fajl:" GET gKomLin PICT "@S40"
 	nX++
 endif
+
   	@ m_x+nX, m_y+2 SAY "Inicijalna meni-opcija (1/2/.../G)" GET gIMenu VALID gIMenu $ "123456789ABCDEFG" PICT "@!"
 	nX := nX+3
 	
