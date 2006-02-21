@@ -1027,3 +1027,18 @@ RETURN lVrati
 *}
 
 
+// ako 
+function v_pretvori(cPretvori, cDinDem, dDatDok, nCijena)
+
+if !(cPretvori $ "DN")
+	MsgBeep("preracunati cijenu u valutu dokumenta "+cDinDem+" ##(D)a ili (N)e ?")
+	return .f.
+endif
+
+if cPretvori == "D"
+	nCijena := nCijena * OmjerVal( ValBazna(), cDinDem, dDatDok)
+	cPretvori := "N"
+endif
+
+ShowGets()
+return .t.

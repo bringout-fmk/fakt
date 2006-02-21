@@ -1105,6 +1105,7 @@ local nXpom
 local nYpom
 local nRec
 local aMemo
+local cPretvori := "N"
 local nPom:=IF(VAL(gIMenu)<1,ASC(gIMenu)-55,VAL(gIMenu))
 
 private aPom:={"00 - Pocetno stanje     ",;
@@ -1634,10 +1635,17 @@ if (gSamokol != "D")  // samo kolicine
 
 	else
 		
-    		@ m_x+16+RKOR+RKOR2, 25  SAY IF( _idtipdok=="13".and.( gVar13=="2" .or. glCij13Mpc), "MPC.s.PDV", "Cijena ("+ValDomaca()+")") GET _Cijena ;
+    		@ m_x+16+RKOR+RKOR2, 25  SAY IF( _idtipdok=="13".and.( gVar13=="2" .or. glCij13Mpc), "MPC.s.PDV", "Cijena ("+ALLTRIM(ValDomaca())+")") GET _Cijena ;
 		     PICT piccdem ;
 		     WHEN  _podbr<>" ." .and. KLevel<="1" .and. SKCKalk(.t.) ;
 		     VALID SKCKalk(.f.)
+
+		if ( PADR(_dindem, 3) <> PADR(ValDomaca(), 3) ) 
+			@ m_x+16+ RKOR + RKOR2, col() + 2 SAY "Pr"  GET cPretvori ;
+			PICT "@!" ;
+			VALID v_pretvori(@cPretvori, _DinDem, _DatDok, @_Cijena )
+		endif
+
 		     
    		if !(_idtipdok $ "12#13").or.(_idtipdok=="12".and.gV12Por=="D")
 			@  m_x+16+RKOR+RKOR2,col()+2  SAY "Rabat" get _Rabat ;
