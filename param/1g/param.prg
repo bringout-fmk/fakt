@@ -57,35 +57,37 @@ O_PARAMS
 SELECT params
 USE
 
+
 AADD(opc,"1. postaviti osnovne podatke o firmi           ")
 AADD(opcexe,{|| SetFirma()})
 
 AADD(opc,"2. postaviti varijante obrade dokumenata       ") 
 AADD(opcexe,{|| SetVarijante()})
 
-AADD(opc,"3. postaviti varijante izgleda dokumenata      ")
+AADD(opc,"3. izgled dokumenata      ")
 AADD(opcexe,{|| SetT1()})
 
-AADD(opc,"4. nazivi dokumenata i teksta na kraju (potpis)")
-AADD(opcexe,{|| SetT2()})
-
-AADD(opc,"5. postaviti parametre prikaza cijene,%,iznosa ")
-AADD(opcexe,{|| SetPICT()})
-
-AADD(opc,"6. postaviti parametre - razno                 ")
-AADD(opcexe,{|| SetRazno()})
-
-if !IsPDV()
-	AADD(opc,"7. parametri Win stampe (DelphiRB)             ")
-	AADD(opcexe,{|| P_WinFakt()})
-endif
 if IsPDV()
-	AADD(opc,"7. parametri zaglavlja             ")
+	AADD(opc,"4. izgled dokumenata - zaglavlje ")
 	AADD(opcexe,{|| ZaglParams()})
 endif
 
+AADD(opc,"5. nazivi dokumenata i teksta na kraju (potpis)")
+AADD(opcexe,{|| SetT2()})
+
+AADD(opc,"6. prikaza cijena, iznos ")
+AADD(opcexe,{|| SetPICT()})
+
+AADD(opc,"7. postaviti parametre - razno                 ")
+AADD(opcexe,{|| SetRazno()})
+
+if !IsPDV()
+	AADD(opc,"W. parametri Win stampe (DelphiRB)             ")
+	AADD(opcexe,{|| P_WinFakt()})
+endif
+
 AADD(opc,"8. parametri stampaca                          ")
-AADD(opcexe,{|| PPrint()})
+AADD(opcexe,{|| PushWa(), PPrint(), PopWa() })
 
 if IsRabati()
 	AADD(opc,"9. rabatne skale            ")
@@ -312,10 +314,10 @@ endif
   	@ m_x+nX, m_y+2 SAY "Duzina sifre artikla sinteticki " GET gnDS VALID gnDS>0 PICT "9"
 	nX++
 
-  	@ m_x+nX, m_y+2 SAY "Naziv fajla obrasca narudzbenice" GET gFNar VALID V_VNar()
+  	@ m_x+nX, m_y+2 SAY "Obrazac narudzbenice " GET gFNar VALID V_VNar()
 	nX++
 	
-  	@ m_x+nX, m_y+2 SAY "Naziv fajla teksta ugovora o rabatu" GET gFUgRab VALID V_VUgRab()
+  	@ m_x+nX, m_y+2 SAY "Obrazac ugovor rabat " GET gFUgRab VALID V_VUgRab()
 	nX++
 
   	@ m_x+nX, m_y+2 SAY "Voditi samo kolicine " GET gSamoKol PICT "@!" VALID gSamoKol $ "DN"
@@ -364,8 +366,13 @@ return
 *}
 
 
+// ---------------------------------------------
+// ---------------------------------------------
 function ZaglParams()
 *{
+local nSay := 17
+local sPict := "@S55"
+local nX := 1
 private cSection:="1"
 private cHistory:=" "
 private aHistory:={}
@@ -380,26 +387,72 @@ gFText3 := PADR(gFText3, 72)
 gFTelefon := PADR(gFTelefon, 72)
 gFEmailWeb := PADR(gFEmailWeb, 72)
 
-Box( , 20, 77, .f., "Parametri zaglavlja")
-	// opci podaci
-	@ m_x+2,m_y+2 SAY "Puni naziv firme:" GET gFNaziv 
-	@ m_x+3,m_y+2 SAY "Adresa firme:" GET gFAdresa
-  	@ m_x+4,m_y+2 SAY "Ident.broj:" GET gFIdBroj
-	@ m_x+5,m_y+2 SAY "Telefoni:" GET gFTelefon PICT "@S60"
-	@ m_x+6,m_y+2 SAY "email/web:" GET gFEmailWeb PICT "@S60"
-  	// banke
-	@ m_x+8,m_y+2 SAY "Banka 1:" GET gFBanka1
-  	@ m_x+9,m_y+2 SAY "Banka 2:" GET gFBanka2
-  	@ m_x+10,m_y+2 SAY "Banka 3:" GET gFBanka3
-  	@ m_x+11,m_y+2 SAY "Banka 4:" GET gFBanka4
-  	@ m_x+12,m_y+2 SAY "Banka 5:" GET gFBanka5
-	// dodatni redovi
-  	@ m_x+14,m_y+2 SAY "Slobodni red:" GET gFText1 PICT "@S60"
-  	@ m_x+15,m_y+2 SAY "Slobodni red:" GET gFText2 PICT "@S60"
-  	@ m_x+16,m_y+2 SAY "Slobodni red:" GET gFText3 PICT "@S60"
+Box( , 20, 77, .f., "Izgleda dokumenata - zaglavlje")
 
-	@ m_x+18,m_y+2 SAY "Koristiti automatsko zaglavlje (D/N)?" GET gStZagl VALID gStZagl$"DN" PICT "@!"
+	// opci podaci
+	@ m_x+nX, m_y+2 SAY PADL("Puni naziv firme:", nSay) GET gFNaziv ;
+		PICT sPict
+	nX++
+	
+	@ m_x+nX, m_y+2 SAY PADL("Adresa firme:", nSay) GET gFAdresa ;
+		PICT sPict 
+	nX++
+	
+  	@ m_x+nX, m_y+2 SAY PADL("Ident.broj:", nSay) GET gFIdBroj
+	nX++
+	
+	@ m_x+nX, m_y+2 SAY PADL("Telefoni:", nSay) GET gFTelefon ;
+		PICT sPict 
+	nX++
+	
+	@ m_x+nX, m_y+2 SAY PADL("email/web:", nSay) GET gFEmailWeb ;
+		PICT sPict 
+	nX++
+	
+  	// banke
+	@ m_x+nX,  m_y+2 SAY PADL("Banka 1:", nSay) GET gFBanka1 ;
+		PICT sPict
+	nX++
+	
+  	@ m_x+nX,  m_y+2 SAY PADL("Banka 2:", nSay) GET gFBanka2 ;
+		PICT sPict
+	nX++
+	
+  	@ m_x+nX, m_y+2 SAY PADL("Banka 3:", nSay) GET gFBanka3 ;
+		PICT sPict
+	nX++
+	
+  	@ m_x+nX, m_y+2 SAY PADL("Banka 4:", nSay) GET gFBanka4 ;
+		PICT sPict
+	nX++
+	
+  	@ m_x+nX, m_y+2 SAY PADL("Banka 5:", nSay) GET gFBanka5 ;
+		PICT sPict
+	nX += 2
+	
+	// dodatni redovi
+  	@ m_x+nX, m_y+2 SAY "Proizvoljan sadrzaj na kraju"
+	nX++
+	
+  	@ m_x+nX, m_y+2 SAY PADL("Red 1:", nSay) GET gFText1 ;
+		PICT sPict
+	nX++
+	
+	
+  	@ m_x+nX, m_y+2 SAY PADL("Red 2:", nSay) GET gFText2 ;
+		PICT sPict
+	nX++
+	
+  	@ m_x+nX, m_y+2 SAY PADL("Red 3:", nSay) GET gFText3 ;
+		PICT sPict
+	nX += 2
+
+	@ m_x+ nX, m_y+2 SAY "Koristiti automatsko zaglavlje (D/N)?" GET gStZagl ;
+		VALID gStZagl $ "DN" PICT "@!"
+
+		 
   	read
+	
 BoxC()
 
 
@@ -494,7 +547,7 @@ O_PARAMS
 
 gMjStr:=PADR(gMjStr,20)
 
-Box(,6,60,.f.,"MATICNA FIRMA, BAZNA VALUTA")
+Box(, 6, 60, .f.,"Podaci o maticnoj firmi")
 	@ m_x+2,m_y+2 SAY "Firma: " GET gFirma
   	@ m_x+3,m_y+2 SAY "Naziv: " GET gNFirma
   	@ m_x+3,col()+2 SAY "TIP SUBJ.: " GET gTS
@@ -1082,6 +1135,10 @@ function SetT1()
 *{
 local nX
 
+local nDx1 := 0
+local nDx2 := 0
+local nDx3 := 0
+
 private GetList:={}
 private cIzvj:="1"
 
@@ -1093,12 +1150,19 @@ endif
 
 RPar("c1",@cIzvj)
 
+cSection := "F"
+RPar("x1", @nDx1)
+RPar("x2", @nDx2)
+RPar("x3", @nDx3)
+cSection := "1"
+
 nX:=2
-Box(,22,76,.f.,"VARIJANTE IZGLEDA DOKUMENATA")
+Box(,22,76,.f.,"Izgled dokumenata")
+
+       if !IsPdv()
 	@ m_x + nX, m_y+2 SAY "Prikaz cijena podstavki/cijena u glavnoj stavci (1/2)" GET cIzvj
 	nX++
   	
-	if !IsPdv()
  	 @ m_x + nX, m_y+2 SAY "Izgled fakture 1/2/3" GET gTipF VALID gTipF $ "123"
 	 nX++
   	 @ m_x + nX, m_y+2 SAY "Varijanta 1/2/3/4/9/A/B" GET gVarF VALID gVarF $ "12349AB"
@@ -1110,6 +1174,7 @@ Box(,22,76,.f.,"VARIJANTE IZGLEDA DOKUMENATA")
   	@ m_x + nX, m_y+2 SAY "Lijeva margina pri stampanju " GET gnLMarg PICT "99"
 	nX++
   	
+	// legacy
 	if !IsPdv()
 	 @ m_x+ nX, m_y+35 SAY "L.marg.za v.2/9/A5 " GET gnLMargA5 PICT "99"
 	 nX++
@@ -1117,7 +1182,8 @@ Box(,22,76,.f.,"VARIJANTE IZGLEDA DOKUMENATA")
 	
   	@ m_x+ nX, m_y+2 SAY "Gornja margina " GET gnTMarg PICT "99"
 	nX++
-	
+
+	// legacy
 	if !IsPdv()
   	 @ m_x + nX, m_y+2 SAY "Koristiti A5 obrazac u varijanti 9 D/N/0" GET gFormatA5 PICT "@!" VALID gFormatA5 $ "DN0"
 	 nX++
@@ -1141,13 +1207,10 @@ Box(,22,76,.f.,"VARIJANTE IZGLEDA DOKUMENATA")
 	 nX++
   	 @ m_x + nX, m_y+2 SAY "Znak kojim se precrtava dio teksta na papiru" GET gZnPrec
 	 nX++
-        endif
-	
-  	@ m_x + nX, m_y+2 SAY "Broj linija za odvajanje tabele od broja dokumenta" GET gOdvT2 VALID gOdvT2>=0 PICT "9"
-	nX++
-        
 
-	if !IsPdv()
+     	 @ m_x + nX, m_y+2 SAY "Broj linija za odvajanje tabele od broja dokumenta" GET gOdvT2 VALID gOdvT2>=0 PICT "9"
+	 nX++
+
   	  @ m_x + nX, m_y+2 SAY "Nacin crtanja tabele (0/1/2) ?" GET gTabela VALID gTabela<3.and.gTabela>=0 PICT "9"
 	nX++
   	  @ m_x + nX, m_y+2 SAY "Zaglavlje na svakoj stranici D/N  (1/2) ? " GET gZagl VALID gZagl $ "12" PICT "@!"
@@ -1174,6 +1237,19 @@ Box(,22,76,.f.,"VARIJANTE IZGLEDA DOKUMENATA")
 	  nX++
 	endif
 
+	if IsPdv()
+	 nX += 2
+	 @ m_x+nX, m_y+2 SAY "Koordinate iznad kupac/ispod kupac/nar_otp-tabela"
+	 nX ++
+	
+	 @ m_x+nX, m_y+2 SAY "DX-1 :" GET nDx1 ;
+	         PICT "99" 
+	 @ m_x+nX, col()+2 SAY "DX-2 :" GET nDx2 ;
+	         PICT "99" 
+	 @ m_x+nX, col()+2 SAY "DX-3 :" GET nDx3 ;
+	         PICT "99" 
+	endif
+	
   	read
 BoxC()
 
@@ -1208,6 +1284,13 @@ if (LASTKEY()<>K_ESC)
 
    	WPar("H1",gPDVDrb)
    	WPar("H2",gPDVDokVar)
+   	
+	cSection := "F"
+	WPar("x1", nDx1)
+	WPar("x2", nDx2)
+	WPar("x3", nDx3)
+	cSection := "1"
+	
 endif
 
 return 
@@ -1616,7 +1699,7 @@ g27Str2T:=PADR(g27Str2T,132)
 g27Str2R:=PADR(g27Str2R,132)
 gNazPotStr:=PADR(gNazPotStr,132)
 
-Box(,22,76,.f.,"ISPIS NAZIVA DOKUMENATA I TEKSTA NA KRAJU (POTPIS), 1.strana")
+Box(,22,76,.f.,"Naziv dokumenata, potpis na kraju, str. 1")
 	@ m_x+ 1,m_y+2 SAY "06 - Tekst"      GET g06Str
   	@ m_x+ 2,m_y+2 SAY "06 - Potpis TXT" GET g06Str2T PICT"@S50"
   	@ m_x+ 3,m_y+2 SAY "06 - Potpis RTF" GET g06Str2R PICT"@S50"
@@ -1641,7 +1724,7 @@ Box(,22,76,.f.,"ISPIS NAZIVA DOKUMENATA I TEKSTA NA KRAJU (POTPIS), 1.strana")
   	read
 BoxC()
 
-Box(,19,76,.f.,"ISPIS NAZIVA DOKUMENATA I TEKSTA NA KRAJU (POTPIS), 2.strana")
+Box(,19, 76,.f.,"Naziv dokumenata, potpis na kraju, str. 2")
 	@ m_x+ 1,m_y+2 SAY "20 - Tekst"      GET g20Str
   	@ m_x+ 2,m_y+2 SAY "20 - Potpis TXT" GET g20Str2T PICT "@S50"
   	@ m_x+ 3,m_y+2 SAY "20 - Potpis RTF" GET g20Str2R PICT "@S50"
@@ -2106,8 +2189,8 @@ RPar("id", gcRabDok)
 gcRabDef:=PADR(gcRabDef, 10)
 
 Box(,4,60,.f.,"RABATNE SKALE")
-  	@ m_x+1,m_y+2 SAY "Default rabat (oznaka)    :" GET gcRabDef VALID !Empty(gcRabDef)
-	@ m_x+2,m_y+2 SAY "Default iznos rabata (1-5):" GET gcRabIDef VALID gcRabIDef$"12345" PICT "!@"
+  	@ m_x+1,m_y+2 SAY "Tekuca vr. rabat (oznaka)    :" GET gcRabDef VALID !Empty(gcRabDef)
+	@ m_x+2,m_y+2 SAY "Tekuci iznos rabata (1-5):" GET gcRabIDef VALID gcRabIDef$"12345" PICT "!@"
 	@ m_x+3,m_y+2 SAY "Odnosi se na sljedece tipove dok. (10#12):" 
 	@ m_x+4,m_y+2 GET gcRabDok VALID !Empty(gcRabDok) PICT "@S20"
   	READ

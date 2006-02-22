@@ -119,9 +119,26 @@ local nPom3
 local nPom4
 local nPom5
 
-
 // ako je kupac pdv obveznik, ova varijable je .t.
 local lPdvObveznik
+
+local nDx1 := 0
+local nDx2 := 0
+local nDx3 := 0
+
+// radi citanja parametara
+private cSection:="F"
+private cHistory:=" "
+private aHistory:={}
+
+SELECT F_PARAMS
+if !used()
+	O_PARAMS
+endif
+RPar("x1", @nDx1)
+RPar("x2", @nDx2)
+RPar("x3", @nDx3)
+
 
 // napuni firmine podatke
 fill_firm_data()
@@ -421,6 +438,14 @@ else
  // domaca faktura
  add_drntext("P11", "DOMACA" )
 endif
+
+// redova iznad "kupac"
+add_drntext("X01", STR( nDx1, 2, 0) )
+// redova ispod "kupac"
+add_drntext("X02", STR( nDx2, 2, 0) )
+// redova izmedju broja narudbze i tabele
+add_drntext("X03", STR( nDx3, 2, 0) )
+
 
 // dodaj total u DRN
 add_drn(cBrDok, dDatDok, dDatVal, dDatIsp, cTime, nUkBPDV, nUkVPop, nUkBPDVPop, nUkPDV, nTotal, nCSum, nUkPopNaTeretProdavca, nDrnZaokr, nUkKol)
