@@ -2808,18 +2808,32 @@ return cVrati
  *  \return aNiz
  */
  
-function TokToNiz(cTok,cSE)
+function TokToNiz(cTok, cSE)
 *{
-local aNiz:={}, nE:=0, i:=0, cE:=""
-  if cSE==nil 
-  cSE := "." 
-  endif
-  nE := NUMTOKEN(cTok,cSE)
-  for i:=1 to nE
-    cE := TOKEN(cTok,cSE,i)
-    AADD(aNiz,cE)
-  next
-return (aNiz)
+local aNiz
+local nE:=0, i:=0, cE:=""
+
+if cSE==nil 
+	  cSE := "." 
+endif
+
+altd()
+aNiz:={}
+do while .t.
+	//    AT( #13#10, prvi_red#13#10drugired)
+	nPos := AT(cSe, cTok)
+	if nPos == 0
+		AADD(aNiz, cTok)
+		exit
+	else
+		// nasao sam token
+		AADD(aNiz, LEFT(cTok, nPos - 1))
+		cTok := SUBSTR(cTok, nPos + LEN(cSe))
+	endif
+enddo
+
+  
+return aNiz
 *}
 
 

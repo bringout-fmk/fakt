@@ -44,7 +44,7 @@ dDatDok:=DatDok
 cIdTipDok:=IdTipDok
 
 // prikaz samo kolicine
-if cIdTipDok $ "12#19#21#26"
+if cIdTipDok $ "01#00#12#19#21#26"
 	if (gPSamoKol == "0" .and. Pitanje(,"Prikazati samo kolicine (D/N)", "N") == "D") .or. gPSamoKol == "D"
 		lSamoKol:=.t.
 	endif
@@ -213,7 +213,7 @@ do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==c
 	nPPDV := tarifa->opp
 	
 	// rn Veleprodaje
-	if cIdTipDok == "10"
+	if cIdTipDok $ "10#12"
 		cIdPartner = pripr->IdPartner
 		// ino faktura
 		if IsIno(cIdPartner)
@@ -384,7 +384,7 @@ endif
 // mjesto
 add_drntext("D01", gMjStr)
 // naziv dokumenta
-add_drntext("D02", cDokNaz)
+add_drntext("D02", cDokNaz )
 
 // Destinacija
 add_drntext("D09", cIdTipDok)
@@ -458,12 +458,14 @@ function fill_potpis(cIdVD)
 *{
 local cPom
 local cPotpis
-local cStdPot
 
-cStdPot := "                           Odobrio                     Primio "
 
-if (cIdVd $ "01#00#19") 
-	cPotpis := cStdPot
+
+if (cIdVd $ "01#00") 
+	cPotpis := REPLICATE(" ", 12) + "Odobrio" + REPLICATE(" ", 25) + "Primio"
+
+elseif cIdVd $ "19"
+	cPotpis := REPLICATE(" ", 12) + "Odobrio" + REPLICATE(" ", 25) + "Predao"
 else
    	cPom:="G"+cIdVD+"STR2T"
    	cPotpis := &cPom
@@ -483,11 +485,11 @@ local cPom
 local cSamoKol
 
 if (cIdVd == "01")
-	cNaz := "Prijem robe u magacin br. "
+	cNaz := "Prijem robe u magacin br."
 elseif (cIdVd == "00")
-	cNaz := "Pocetno stanje br. "
+	cNaz := "Pocetno stanje br."
 elseif (cIdVD == "19")
-	cNaz := "Izlaz po ostalim osnovama br. "
+	cNaz := "Izlaz po ostalim osnovama br."
 else
  	cPom:="G" + cIdVd + "STR"
  	cNaz := &cPom
@@ -520,9 +522,8 @@ aLines := TokToNiz(cTxt, Chr(13) + Chr(10))
 
 nFId := 20
 nCnt := 0
-
 for i:=1 to LEN(aLines)
-	add_drntext("F" + ALLTRIM(STR(nFId)), aLines[i] + " ")
+	add_drntext("F" + ALLTRIM(STR(nFId)), aLines[i])
 	++ nFId
 	++ nCnt
 next
