@@ -120,7 +120,8 @@ local nPom4
 local nPom5
 
 // ako je kupac pdv obveznik, ova varijable je .t.
-local lPdvObveznik
+local lPdvObveznik := .f.
+local lKomisionar := .f.
 
 local nDx1 := 0
 local nDx2 := 0
@@ -212,9 +213,10 @@ do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==c
 	// procenat pdv-a
 	nPPDV := tarifa->opp
 	
+	cIdPartner = pripr->IdPartner
+	
 	// rn Veleprodaje
-	if cIdTipDok $ "10#12"
-		cIdPartner = pripr->IdPartner
+	if cIdTipDok == "10"
 		// ino faktura
 		if IsIno(cIdPartner)
 			nPPDV:=0
@@ -226,6 +228,14 @@ do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==c
 		cPdvOslobadjanje := PdvOslobadjanje(cIdPartner)
 		if !EMPTY(cPdvOslobadjanje)
 			nPPDV:=0
+		endif
+	endif
+
+	if cIdTipDok == "12"
+		if IsProfil(cIdPartner, "KMS")
+			// radi se o komisionaru
+			lKomisionar := .t.
+			nPPDV := 0
 		endif
 	endif
 
@@ -429,15 +439,23 @@ add_drntext("P07", ALLTRIM(STR(gnTMarg)) )
 // da li se formira automatsko zaglavlje
 add_drntext("P10", gStZagl )
 
-if !EMPTY(cPdvOslobadjanje)
- add_drntext("P11", cPdvOslobadjanje)
-elseif lIno
- // ino faktura
- add_drntext("P11", "INO" )
-else
- // domaca faktura
- add_drntext("P11", "DOMACA" )
-endif
+do case
+
+ case cIdTipDok == "12" .and. lKomisionar
+ 	add_drntext("P11", "KOMISION")
+
+ case lIno
+ 	// ino faktura
+ 	add_drntext("P11", "INO" )
+
+ case !EMPTY(cPdvOslobadjanje)
+ 	add_drntext("P11", cPdvOslobadjanje)
+	
+ otherwise
+ 	// domaca faktura
+ 	add_drntext("P11", "DOMACA" )
+
+endcase
 
 // redova iznad "kupac"
 add_drntext("X01", STR( nDx1, 2, 0) )

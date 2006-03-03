@@ -1,5 +1,7 @@
 #include "\dev\fmk\fakt\fakt.ch"
 
+static lKonsignacija := .f.
+static lDoks2 := .t.
 /*
  * ----------------------------------------------------------------
  *                                     Copyright Sigma-com software 
@@ -1107,37 +1109,52 @@ local nRec
 local aMemo
 local cPretvori := "N"
 local nPom:=IF(VAL(gIMenu)<1,ASC(gIMenu)-55,VAL(gIMenu))
+local lTxtNaKraju := .f.
 
-private aPom:={"00 - Pocetno stanje     ",;
-               "01 - Ulaz / Radni nalog ",;
-	       "06 - Ulaz u konsig.skladiste",;
-               "10 - Racun veleprodaje",;
-               "11 - Racun maloprodaje",;
-               "12 - Otpremnica",;
-               "13 - Otpremnica u maloprodaju",;
-               "15 - Izlaz iz MP putem VP",;
-               "16 - Konsignacioni racun",;
-               "19 - "+Naziv19ke(),;
-               "20 - Predracun",;
-  IF(glDistrib,"21 - Teretni list",;
-               "21 - Revers"),;
-               "22 - Realizovane otpremnice   ",;
-               "25 - Knjizna obavijest        ",;
-               "26 - Narudzbenica             ",;
-               "27 - Predracun MP             "},  h[16]
-
-
-if IzFmkIni("FAKT","Konsignacija","N",KUMPATH)=="N"
-	ADEL(aPom,9)
-  	ADEL(aPom,3)
-  	ASIZE(aPom,LEN(aPom)-2)
-  	ASIZE(h,LEN(aPom))
-endif
-
-// doks2 je od sada .t. po defaultu
+lKonsignacija := IzFmkIni("FAKT","Konsignacija","N",KUMPATH) == "D"
 lDoks2:=(IzFmkIni("FAKT","Doks2","D", KUMPATH)=="D")
 
-AFILL(h,"")
+private aPom:={}
+
+AADD(aPom, "00 - Pocetno stanje                ")
+AADD(aPom, "01 - Ulaz / Radni nalog ")
+if lKonsignacija
+	AADD(aPom, "06 - Ulaz u konsig.skladiste")
+endif
+
+AADD(aPom, "10 - Porezna faktura")
+
+AADD(aPom, "11 - Porezna faktura gotovina")
+AADD(aPom, "12 - Otpremnica" )
+
+AADD(aPom, "13 - Otpremnica u maloprodaju")
+
+if lKonsignacija
+AADD(aPom, "16 - Konsignacioni racun")
+endif
+
+AADD(aPom, "19 - "+Naziv19ke())
+
+AADD(aPom, "20 - Ponuda/Avansna faktura") 
+
+if glDistrib
+  AADD(aPom, "21 - Teretni list")
+else
+  AADD(aPom, "21 - Revers")
+endif
+
+
+AADD(aPom, "22 - Realizovane otpremnice   ")
+
+AADD(aPom, "25 - Knjizna obavijest ")
+
+AADD(aPom, "26 - Narudzbenica ")
+
+AADD(aPom, "27 - Ponuda/Avansna faktura gotovina") 
+
+h:= {}
+ASIZE(h, LEN(aPom))
+AFILL(h, "")
 
 private nRokPl:=0
 private cOldKeyDok:=_idfirma+_idtipdok+_brdok
@@ -1543,7 +1560,7 @@ RKOR2:=0
 if lPoNarudzbi
 	if (_idtipdok="0")
      		RKOR2+=3
-     		@ m_x+14,m_y+2 SAY "Po narudzbi br." GET _brojnar
+     		@ m_x+14,m_y+2 SAY "Po nar/ugov br." GET _brojnar
      		@ m_x+15,m_y+2 SAY "za narucioca" GET _idnar pict "@!" valid empty(_idnar) .or. P_Firma(@_idnar,15,25)
    	endif
 endif
@@ -1563,7 +1580,7 @@ if (gSamokol!="D" .and. !glDistrib)
 endif
 
 if (gVarC $ "123" .and. _idtipdok $ "10#12#20#21#25")
-	@  m_x+14+RKOR2, m_y+59  SAY "Cijena (1/2/3):" GET cTipVPC
+	@  m_x + 14 + RKOR2, m_y + 59  SAY "Cijena (1/2/3):" GET cTipVPC
 endif
 
 RKOR:=0
@@ -1649,7 +1666,7 @@ if (gSamokol != "D")  // samo kolicine
 		     
    		if !(_idtipdok $ "12#13").or.(_idtipdok=="12".and.gV12Por=="D")
 			@  m_x+16+RKOR+RKOR2,col()+2  SAY "Rabat" get _Rabat ;
-			     pict "9999.999" ;
+			     pict PicCDem ;
 			     when _podbr<>" ." .and. !_idtipdok$"15#27"
 			
       			@ m_x+16+RKOR+RKOR2,col()+1  GET TRabat ;
@@ -1688,7 +1705,21 @@ if (_idtipdok=="19" .and. IzFMKIni("FAKT","19KaoRacunParticipacije","N",KUMPATH)
    	_rabat:=(_kolicina*_cijena-_rabat)/(_kolicina*_cijena)*100
 endif
 
-if !(_idtipdok $ "12#13") .and. gSamokol!="D"
+lTxtNaKraju := .t.
+
+if _IdTipDok $ "13" .or. gSamoKol == "D"
+	lTxtNaKraju:=.f.
+endif
+
+if (_IdTipDok == "12") 
+	if  IsKomision(_IdPartner)
+		lTxtNaKraju := .t.
+	else
+		lTxtNaKraju := .f.
+	endif
+endif
+
+if lTxtNaKraju
 	UzorTxt()
 endif
 
@@ -3061,8 +3092,6 @@ do while .t.
        BoxC()
     case izbor == 5
        ObracunajPP()
-    case izbor == 6 .and. gNovine=="D"
-       MenuNovine()
     case izbor == 6 .and. glDistrib
        MenuSistOtp()
     case izbor == 7

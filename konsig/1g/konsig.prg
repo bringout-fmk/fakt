@@ -63,7 +63,9 @@ RPar("c2",@dOd     )
       aUsl1 := Parsiraj( qqRJ     , "IdFirma"  )
       aUsl2 := Parsiraj( qqTipDok , "IdTipDok" )
 
-      IF aUsl1<>NIL .and. aUsl2<>NIL; EXIT; ENDIF
+      IF aUsl1<>NIL .and. aUsl2<>NIL
+      	EXIT
+      ENDIF
 
     ENDDO
   BoxC()
@@ -87,7 +89,7 @@ RPar("c2",@dOd     )
   SET FILTER TO &cFilt
   GO TOP
 
-  // matrica pripreme (IDROBA,CARTAR,KOLICINA,CIJENA,ROBA->naz)
+  // matrica pripreme (IDROBA, CARTAR, KOLICINA, CIJENA, ROBA->naz)
   aPrip := {}
 
   DO WHILE !EOF()
@@ -98,7 +100,7 @@ RPar("c2",@dOd     )
       SKIP 1
     ENDDO
     cPom := IzSifK("ROBA","CTAR",cIdRoba,.f.)
-    AADD( aPrip , { cIdRoba , cPom , nKolicina , 0 , Ocitaj(F_ROBA,cIdRoba,"naz") } )
+    AADD( aPrip , { cIdRoba , cPom , nKolicina , 0 , Ocitaj(F_ROBA, cIdRoba, "naz") } )
   ENDDO
 
   SET FILTER TO
@@ -113,7 +115,7 @@ RPar("c2",@dOd     )
    if idfirma+idtipdok <> cIdRJ+"16"
       cBrDok:=UBrojDok(1,gNumDio,"")
    else
-      cBrDok:=UBrojDok( val(left(brdok,gNumDio))+1, ;
+      cBrDok:=UBrojDok( VAL(left(brdok,gNumDio))+1, ;
                         gNumDio, ;
                         right(brdok,len(brdok)-gNumDio) ;
                       )

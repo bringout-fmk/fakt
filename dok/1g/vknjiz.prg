@@ -726,6 +726,15 @@ if IsPdv() .and. _IdTipDok == "10" .and. IsIno(_IdPartner)
 	 cId:="IN"
  endif
 endif
+
+if IsPdv() .and. _IdTipDok == "12" .and. IsProfil(_IdPartner, "KMS")
+ // komisiona otprema klauzula
+ KmsKlauzula()
+ if EMPTY(alltrim(_txt2))
+	 cId:="KS"
+ endif
+endif
+
 if (nRbr==1 .and. val(_podbr)<1)
  Box(,9,75)
  @ m_x+1,m_Y+1  SAY "Uzorak teksta (<c-W> za kraj unosa teksta):"  GET cId pict "@!"
@@ -758,6 +767,10 @@ endif
 return
 *}
 
+
+// ----------------------------
+// ino klauzula
+// ----------------------------
 static function InoKlauzula()
 
 PushWa() 
@@ -767,6 +780,23 @@ PushWa()
 		APPEND BLANK
 		replace id with "IN", ;
 		        naz with "Porezno oslobadjanje na osnovu (nulta stopa) na osnovu clana 27. stav 1. tacka 1. ZPDV - izvoz dobara iz BIH"
+	endif
+PopWa()
+return
+
+// ----------------------------
+// komision klauzula
+// ----------------------------
+static function KmsKlauzula()
+
+PushWa() 
+	SELECT FTXT
+	seek "KS"
+	if !found()
+		APPEND BLANK
+		replace id with "KS", ;
+		        naz with "Dostava nije oporeziva, na osnovu Pravilnika o primjeni Zakona o PDV-u"+;
+			Chr(13)+Chr(10)+"clan 6. tacka 3."
 	endif
 PopWa()
 
@@ -781,6 +811,7 @@ function GetUsl(fNovi)
 private GetList:={}
 
 if gTBDir="N"
+
 if !(roba->tip="U")
  devpos(m_x+13,m_y+25)
  ?? space(40)
@@ -793,6 +824,7 @@ endif
 if roba->tip $ "UT" .and. fnovi
   _kolicina:=1
 endif
+
 if roba->tip=="U"
   _txt1 := PADR( IF( fNovi , ROBA->naz , _txt1 ) , 320 )
   IF fNovi
@@ -990,7 +1022,7 @@ LOCAL lVrati:=.t., nArr:=SELECT(), nIsporuceno, nNaruceno, dNajstariji:=CTOD("")
     SELECT UGOV
     nNaruceno:=0
     // izracunajmo ukupnu narucenu kolicinu i utvrdimo datum najstarije
-    // narudzbe
+    /// narudzbe
     DO WHILE !EOF() .and. aktivan+vrsta+idpartner=="D"+"G"+_idpartner
       SELECT RUGOV
       HSEEK UGOV->id+_idroba
