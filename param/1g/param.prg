@@ -380,6 +380,8 @@ private GetList:={}
 
 O_PARAMS
 
+UsTipke()
+
 gFIdBroj := PADR(gFIdBroj, 13)
 gFText1 := PADR(gFText1, 72)
 gFText2 := PADR(gFText2, 72)
