@@ -2,6 +2,8 @@
 
 static lKonsignacija := .f.
 static lDoks2 := .t.
+static lDirty := .t.
+
 /*
  * ----------------------------------------------------------------
  *                                     Copyright Sigma-com software 
@@ -521,27 +523,28 @@ do case
     		Box("ist", 19, 75, .f.)
    		Scatter()
     		nRbr:=RbrUnum(_Rbr)
-    		// PushHT("Elementi")
     		if EditPripr(.f.)==0
-     			// PopHt()
      			BoxC()
      			return DE_CONT
     		else
-     			// PopHt()
      			Gather()
-			PrCijSif()  // ako treba, promijeni cijenu u sifrarniku
+			// ako treba, promijeni cijenu u sifrarniku
+			PrCijSif()  
 			BoxC()
+			lDirty:=.t.
      			return DE_REFRESH
     		endif
 	case Ch==K_CTRL_A  .and. gTBDir="N"
         	ProdjiKrozStavke()
+		lDirti:=.t.
         	return DE_REFRESH
 	case Ch==K_CTRL_N  .and. gTBDir="N"
         	NoveStavke()
+		lDirty:=.t.
         	return DE_REFRESH
 	case Ch=K_CTRL_P
-        	altd()
 		PrintDok()
+		lDirty:=.f.
         	return DE_REFRESH
 	case Ch==K_ALT_L
         	close all
@@ -570,10 +573,12 @@ do case
         	endif
         	CLOSE ALL
         	Azur()
+		lDirty:=.t.
         	O_Edit()
         	return DE_REFRESH
 	case Ch==K_CTRL_F9
 		BrisiPripr()
+		lDirty:=.t.
         	return DE_REFRESH
 		
 	case Ch==K_F5
@@ -629,6 +634,7 @@ do case
 		endif
 	case Ch==K_F9
         	Iz20u10() 
+		lDirty:=.t.
         	return DE_REFRESH
 		
 	case Ch==K_ALT_F10
@@ -640,6 +646,7 @@ do case
        			next
        			keyboard cSekv
       		next
+		lDirty:=.t.
       		return DE_REFRESH
 		
 	case Ch==K_F10
@@ -652,15 +659,24 @@ do case
        		O_Edit()
        		return DE_REFRESH
 		
-	case Ch=K_ALT_N
+	case Ch==K_ALT_N
+		if lDirty
+			MsgBeep("Podaci su mjenjani nakon posljednje stampe##"+;
+			"Molimo ponovite stampu dokumenta da bi podaci#" +;
+			"na narudzbenici bili azurni")
+			return DE_CONT
+		endif
        		SELECT PRIPR
 		nRec:=RECNO()
        		GO TOP
-       		StNarKup()
+		nar_print(.t.)
+		
+		O_Edit()
+		SELECT PRIPR
        		GO (nRec)
        		return DE_CONT
 		
-	case Ch=K_ALT_U
+	case Ch==K_ALT_U
        		SELECT PRIPR
 		nRec:=RECNO()
        		GO TOP

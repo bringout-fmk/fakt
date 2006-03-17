@@ -1141,6 +1141,12 @@ local nDx1 := 0
 local nDx2 := 0
 local nDx3 := 0
 
+local nSw1 := 72
+local nSw2 := 1
+local nSw3 := 72
+local nSw4 := 31
+local nSw5 := 1
+
 private GetList:={}
 private cIzvj:="1"
 
@@ -1156,6 +1162,12 @@ cSection := "F"
 RPar("x1", @nDx1)
 RPar("x2", @nDx2)
 RPar("x3", @nDx3)
+RPar("x4", @nSw1)
+RPar("x5", @nSw2)
+RPar("x6", @nSw3)
+RPar("x7", @nSw4)
+RPar("x8", @nSw5)
+
 cSection := "1"
 
 nX:=2
@@ -1171,7 +1183,8 @@ Box(,22,76,.f.,"Izgled dokumenata")
 	 nX++
 	endif
 	
-  	@ m_x + nX, m_y+2 SAY "Dodat.redovi po listu " GET gERedova VALID gERedova>=0 PICT "99"
+  	@ m_x + nX, m_y+2 SAY "Dodat.redovi po listu " GET gERedova ;
+	     PICT "999"
 	nX++
   	@ m_x + nX, m_y+2 SAY "Lijeva margina pri stampanju " GET gnLMarg PICT "99"
 	nX++
@@ -1249,8 +1262,23 @@ Box(,22,76,.f.,"Izgled dokumenata")
 	 @ m_x+nX, col()+2 SAY "DX-2 :" GET nDx2 ;
 	         PICT "99" 
 	 @ m_x+nX, col()+2 SAY "DX-3 :" GET nDx3 ;
+	         PICT "99"
+	 nX += 2
+	 
+	 @ m_x+nX, m_y+2 SAY "SW-1 :" GET nSw1 ;
 	         PICT "99" 
+	 @ m_x+nX, col()+2 SAY "SW-2 :" GET nSw2 ;
+	         PICT "99" 
+	 @ m_x+nX, col()+2 SAY "SW-3 :" GET nSw3 ;
+	         PICT "99" 
+         @ m_x+nX, col()+2 SAY "SW-4 :" GET nSw4 ;
+	         PICT "99"
+         @ m_x+nX, col()+2 SAY "SW-5 :" GET nSw5 ;
+	         PICT "99" 
+
 	endif
+
+	
 	
   	read
 BoxC()
@@ -1291,6 +1319,12 @@ if (LASTKEY()<>K_ESC)
 	WPar("x1", nDx1)
 	WPar("x2", nDx2)
 	WPar("x3", nDx3)
+	WPar("x4", nSw1)
+	WPar("x5", nSw2)
+	WPar("x6", nSw3)
+	WPar("x7", nSw4)
+	WPar("x8", nSw5)
+
 	cSection := "1"
 	
 endif

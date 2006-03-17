@@ -65,12 +65,16 @@
 function StNarKup()
 *{
 
-if Pitanje(,"Fmk.NET narudzba (D/N)?","D")=="D"
-	Mnu_Narudzbenica()
-	return
-endif
+//if Pitanje(,"Fmk.NET narudzba (D/N)?","D")=="D"
+//	Mnu_Narudzbenica()
+// return
+//endif
 
-lCijene := ( IzFMKINI("FAKT","NarudzbaSaCijenama","N")=="D" )
+if (IzFmkIni("FAKT","NarudzbaSaCijenama","N")=="D") .or. (Pitanje(,"Prikaz cijena ?", "N") == "D" )
+	lCijene := .t.
+else
+	lCijene := .f.
+endif
 
 START PRINT RET
 gp12cpi()
@@ -81,6 +85,7 @@ if empty(gFNar)
 		QOUT()
 	next
 else
+
 	cyAdresa:=IzFmkIni("NARUDZBENICA","DobAdresa" ,"_",KUMPATH)
     	cyTelefon:=IzFmkIni("NARUDZBENICA","DobTelefon","_",KUMPATH)
     	cyDomZR:=IzFmkIni("NARUDZBENICA","DobDomZR"  ,"_",KUMPATH)

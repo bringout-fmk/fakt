@@ -126,6 +126,11 @@ local lKomisionar := .f.
 local nDx1 := 0
 local nDx2 := 0
 local nDx3 := 0
+local nSw1 := 72
+local nSw2 := 1
+local nSw3 := 72
+local nSw4 := 31
+local nSw5 := 1
 
 // radi citanja parametara
 private cSection:="F"
@@ -139,6 +144,14 @@ endif
 RPar("x1", @nDx1)
 RPar("x2", @nDx2)
 RPar("x3", @nDx3)
+
+RPar("x4", @nSw1)
+RPar("x5", @nSw2)
+RPar("x6", @nSw3)
+RPar("x7", @nSw4)
+// ovaj switch se koristi za poziv ptxt-a ... u principu
+// ovdje mi i ne treba
+RPar("x8", @nSw5)
 
 
 // napuni firmine podatke
@@ -296,17 +309,17 @@ do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==c
 	
 	// ukupno stavka
 	nUkStavka := nKol * nCj2PDV
-	nUkStavke := ROUND(nUkStavka, ZAO_VRIJEDNOST())
+	nUkStavke := ROUND(nUkStavka, ZAO_VRIJEDNOST() + IIF(idtipdok=="13", 4, 0) )
 
 	nPom1 := nKol * nCjBPDV 
-	nPom1 := ROUND(nPom1, ZAO_VRIJEDNOST())
+	nPom1 := ROUND(nPom1, ZAO_VRIJEDNOST() + IIF(idtipdok=="13", 4, 0) )
 	// ukupno bez pdv
 	nUkBPDV += nPom1 
 	
 
 	// ukupno popusta za stavku
 	nPom2 := nKol * nVPopust
-	nPom2 := ROUND(nPom2, ZAO_VRIJEDNOST())
+	nPom2 := ROUND(nPom2, ZAO_VRIJEDNOST() + IIF(idtipdok=="13", 4, 0) )
 	nUkVPop += nPom2
 
 	// preracunaj VPDV sa popustom
@@ -315,14 +328,14 @@ do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==c
 
 	//  ukupno vrijednost bez pdva sa uracunatim poputstom
 	nPom3 := nPom1 - nPom2 
-	nPom3 := ROUND(nPom3, ZAO_VRIJEDNOST())
+	nPom3 := ROUND(nPom3, ZAO_VRIJEDNOST() + IIF(idtipdok=="13", 4, 0))
 	nUkBPDVPop += nPom3
 	
 
 	// ukupno PDV za stavku = (ukupno bez pdv - ukupno popust) * stopa
 	nPom4 := nPom3 * nPPDV/100
 	// povecaj preciznost
-	nPom4 := ROUND(nPom4, ZAO_VRIJEDNOST() + 2)
+	nPom4 := ROUND(nPom4, ZAO_VRIJEDNOST() + IIF(idtipdok=="13", 4, 2))
 	nUkPDV += nPom4
 	
 	// ukupno za stavku sa pdv-om
@@ -465,6 +478,13 @@ add_drntext("X02", STR( nDx2, 2, 0) )
 add_drntext("X03", STR( nDx3, 2, 0) )
 
 
+add_drntext("X04", STR( nSw1, 2, 0) )
+add_drntext("X05", STR( nSw2, 2, 0) )
+add_drntext("X06", STR( nSw3, 2, 0) )
+add_drntext("X07", STR( nSw4, 2, 0) )
+add_drntext("X08", STR( nSw5, 2, 0) )
+
+
 // dodaj total u DRN
 add_drn(cBrDok, dDatDok, dDatVal, dDatIsp, cTime, nUkBPDV, nUkVPop, nUkBPDVPop, nUkPDV, nTotal, nCSum, nUkPopNaTeretProdavca, nDrnZaokr, nUkKol)
 
@@ -562,6 +582,8 @@ local cBrUpisa:=""
 local cPartNaziv:=""
 local cPartAdres:=""
 local cPartMjesto:=""
+local cPartTel:=""
+local cPartFax:=""
 local cPartPTT:=""
 local aMemo:={}
 local lFromMemo:=.f.
@@ -587,8 +609,8 @@ if !lFromMemo .and. partn->id == cId
 	cPartAdres := partn->adresa
 	cPartMjesto := partn->mjesto
 	cPartPtt := partn->ptt
-
- 
+	cPartTel := partn->telefon
+	cPartFax := partn->fax
 else
 	if LEN(aMemo) == 0
 		cPartNaziv := ""
@@ -613,6 +635,11 @@ add_drntext("K11", cPartPTT)
 add_drntext("K03", cIdBroj)
 // porbroj
 add_drntext("K05", cPorBroj)
+
+// tel
+add_drntext("K13", cPartTel)
+// fax
+add_drntext("K14", cPartFax)
 
 if !EMPTY(cIdBroj) 
 	if LEN(ALLTRIM(cIdBroj)) == 12
