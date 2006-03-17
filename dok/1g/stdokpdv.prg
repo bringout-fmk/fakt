@@ -484,6 +484,16 @@ add_drntext("X06", STR( nSw3, 2, 0) )
 add_drntext("X07", STR( nSw4, 2, 0) )
 add_drntext("X08", STR( nSw5, 2, 0) )
 
+do case
+	case nSw5 == 0
+		gPtxtSw := "/noline /s /l /p"
+	case nSw5 == 1
+		gPtxtSw := "/p"
+	otherwise
+		// citaj ini fajl
+		gPtxtSw := nil
+endcase
+
 
 // dodaj total u DRN
 add_drn(cBrDok, dDatDok, dDatVal, dDatIsp, cTime, nUkBPDV, nUkVPop, nUkBPDVPop, nUkPDV, nTotal, nCSum, nUkPopNaTeretProdavca, nDrnZaokr, nUkKol)
