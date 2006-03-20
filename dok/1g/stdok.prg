@@ -866,57 +866,34 @@ return (nil)
 *}
 
 
-/*! \fn StAzFakt()
- *  \brief Stampa azurirane fakture
- */
- 
+// StAzFakt()
+// Stampa azurirane fakture
 function StAzFakt()
-*{
-private opc[2],Izbor:=1,cIdFirma,cIdTipDok,cBrDok
+private cIdFirma, cIdTipDok, cBrDok
 
-Opc[1]:="1. izlaz TXT format     "
-Opc[2]:="2. izlaz RTF format"
+cIdFirma:=gFirma
+cIdTipDok:="10"
+cBrdok:=space(8)
 
-do while .t.
-
- h[1]:="Stampanje azurirane fakture u TXT formatu"
- h[2]:="Stampanje azurirane fakture u RTF formatu"
-
- Izbor:=menu("safa",opc,Izbor,.f.)
-
-   do case
-     case Izbor==0
-       EXIT
-     otherwise
-       cIdFirma:=gFirma; cIdTipDok:="10"; cBrdok:=space(8)
-       Box("",1,35)
-        @ m_x+1,m_y+2 SAY "Dokument:"
-        //if gnw $ "DR"
-        // @ m_x+1,col()+1 SAY cIdFirma
-        //else
-         @ m_x+1,col()+1 GET cIdFirma
-        //endif
-        @ m_x+1,col()+1 SAY "-" GET cIdTipDok
-        @ m_x+1,col()+1 SAY "-" GET cBrDok
+Box("", 2, 35)
+        @ m_x+1, m_y+2 SAY "Dokument:"
+        @ m_x+2, m_y+2 SAY " RJ-tip-broj:" GET cIdFirma
+        @ m_x+2, col()+1 SAY "-" GET cIdTipDok
+        @ m_x+2, col()+1 SAY "-" GET cBrDok
         read
-       BoxC()
-       close all
+BoxC()
 
-       if izbor==1
-         StampTXT(cidfirma,cIdTipdok,cbrdok)
-       else
-          StampRtf(PRIVPATH+"fakt.rtf",cIdFirma,cIdTipDok,cBrDok)
-       endif
-   endcase
+if LASTKEY()==K_ESC
+	return
+endif
 
-enddo
+close all
 
-#Ifdef CAX
-  select (F_PRIPR)
-  if used();  select pripr; use; endif
-#endif
+StampTXT(cidfirma,cIdTipdok,cbrdok)
+
+SELECT PRIPR
+use
 return
-*}
 
 
 /*! \fn RbrUNum(cRBr)

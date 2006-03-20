@@ -142,7 +142,11 @@ endif
 if (PCount()==0)
 
 	
-	O_S_PRIPR
+	SELECT F_PRIPR
+	if !used()
+		O_S_PRIPR
+	endif
+	
 	SELECT F_FAKT
 	if !used()
 	 	O_FAKT
