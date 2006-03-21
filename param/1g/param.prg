@@ -34,6 +34,10 @@
 // napuni sifrarnike
 // ------------------------------------------
 function s_params()
+
+// PTXT 01.50 compatibility switch
+public gPtxtC50 := .t.
+
 fill_part()
 
 return

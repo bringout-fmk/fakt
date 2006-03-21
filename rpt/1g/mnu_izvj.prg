@@ -4,24 +4,6 @@
  * ----------------------------------------------------------------
  *                                     Copyright Sigma-com software 
  * ----------------------------------------------------------------
- * $Source: c:/cvsroot/cl/sigma/fmk/fakt/rpt/1g/mnu_izvj.prg,v $
- * $Author: sasa $ 
- * $Revision: 1.4 $
- * $Log: mnu_izvj.prg,v $
- * Revision 1.4  2002/07/05 14:36:32  sasa
- * ubaceni izvjestaji za korisnike: rudnik, vindija, konsignacija
- *
- * Revision 1.3  2002/07/05 08:35:40  ernad
- *
- *
- * fakt <-> kalk opcija nedostajala
- *
- * Revision 1.2  2002/07/03 12:40:41  sasa
- * implementirana f-ja izvj()
- *
- * Revision 
- *
- *
  */
 
 /*! \file fmk/fakt/rpt/1g/mnu_izvj.prg
@@ -37,6 +19,9 @@ function Izvj()
 private opc:={}
 private opcexe:={}
 private Izbor:=1
+
+// PTXT compatibility  sa ver < 1.52
+gPtxtC50 := .t.
 
 AADD(opc,"1. stanje robe                               ")
 AADD(opcexe,{|| StanjeRobe()})

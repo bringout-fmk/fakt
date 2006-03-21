@@ -853,8 +853,12 @@ do while lJos
     		lJos:=.f.
   	endif
   	cPom:=idtipdok
+	
+	gPtxtC50 := .f.
   	StampTXT(nil,cPom,nil)
+	
   	O_Edit()
+
 enddo
 if lSSIP99
 	if IzFMKIni("STAMPA","Opresa","N",KUMPATH)=="D"

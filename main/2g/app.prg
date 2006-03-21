@@ -289,6 +289,8 @@ method mMenuStandard
 private opc:={}
 private opcexe:={}
 
+say_fmk_ver()
+
 AADD(opc,"1. unos/ispravka dokumenta             ")
 if (ImaPravoPristupa(goModul:oDataBase:cName,"DOK","UNOSDOK"))
 	AADD(opcexe,{|| Knjiz()})

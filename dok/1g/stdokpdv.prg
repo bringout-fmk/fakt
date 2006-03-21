@@ -484,11 +484,14 @@ add_drntext("X06", STR( nSw3, 2, 0) )
 add_drntext("X07", STR( nSw4, 2, 0) )
 add_drntext("X08", STR( nSw5, 2, 0) )
 
+// fakturu stampaj u ne-compatibility modu
+gPtxtC50 := .f.
 do case
 	case nSw5 == 0
 		gPtxtSw := "/noline /s /l /p"
 	case nSw5 == 1
 		gPtxtSw := "/p"
+		
 	otherwise
 		// citaj ini fajl
 		gPtxtSw := nil
