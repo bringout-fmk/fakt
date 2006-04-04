@@ -137,12 +137,6 @@ if Pitanje(,"Nulirati datoteke prenosa prije nastavka ?","D")=="D"
   close all
 endif
 
-fSifk:=.f.
-if Izfmkini('Svi','Sifk','N')=="D"
-   fSifk:=.t.
-endif
-
-
 O__FAKT
 IF cSinSFormula!="99"       // bilo:gNovine=="D"
   INDEX ON idfirma+idtipdok+brdok+idroba TO "_FAKTTMP"
@@ -242,12 +236,10 @@ endif
 close all
 
 O_ROBA
-
-
-if fsifk
-   O_SIFK;  O_SIFV
-endif
+O_SIFK
+O_SIFV
 O__ROBA
+
 INDEX ON id TO "_ROBATMP"  // index radi trazenja
 
 select _roba
@@ -273,9 +265,7 @@ do while !eof()
      append blank
      Gather()
     endif
-    if fsifk
-      SifkFill(PRIVPATH+"_SIFK",PRIVPATH+"_SIFV","ROBA",_fakt->idroba)
-    endif
+    SifkFill(PRIVPATH+"_SIFK",PRIVPATH+"_SIFV","ROBA",_fakt->idroba)
   endif
 
   select _fakt
@@ -313,8 +303,6 @@ PRIVATE cKonvFirma  := ""
 PRIVATE cKonvBrDok  := ""
 
 PPPDisk(.t.)
-
-fSifk:=.t.
 
 if Klevel<>"0"
     Beep(2)
@@ -412,9 +400,7 @@ if cDn1=="D"
     			UpisiURF("ROBA: dodajem "+_id+"-"+_naz,cRFajl,.t.,.f.)
     			append blank
     			gather()
-    			if fSifk
-      				SifKOsv(PRIVPATH+"_SIFK",PRIVPATH+"_SIFV","ROBA",_id)
-    			endif
+      			SifKOsv(PRIVPATH+"_SIFK",PRIVPATH+"_SIFV","ROBA",_id)
   		else
     			if cDn2=="D"  // zamjeniti postojece sifre
       				cDiff:=""
@@ -422,9 +408,7 @@ if cDn1=="D"
         				UpisiURF("ROBA: osvjezavam "+_id+"-"+_naz+cDiff,cRFajl,.t.,.f.)
       				ENDIF
       				gather()
-      				if fsifk
-        				SifKOsv(PRIVPATH+"_SIFK",PRIVPATH+"_SIFV","ROBA",_id)
-      				endif
+        			SifKOsv(PRIVPATH+"_SIFK",PRIVPATH+"_SIFV","ROBA",_id)
     			else
       				if cdn3=="D"
         				Scatter()
