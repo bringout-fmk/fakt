@@ -670,12 +670,26 @@ do case
 		nRec:=RECNO()
        		GO TOP
 		nar_print(.t.)
-		
 		O_Edit()
 		SELECT PRIPR
        		GO (nRec)
        		return DE_CONT
-		
+	case Ch==K_CTRL_R
+		if lDirty
+			MsgBeep("Podaci su mjenjani nakon posljednje stampe##"+;
+			"Molimo ponovite stampu dokumenta da bi podaci#" +;
+			"na radnom nalogu bili azurni.")
+			return DE_CONT
+		endif
+       		SELECT PRIPR
+		nRec:=RECNO()
+       		GO TOP
+		rnal_print(.t.)
+		O_Edit()
+		SELECT PRIPR
+       		GO (nRec)
+       		return DE_CONT
+
 	case Ch==K_ALT_U
        		SELECT PRIPR
 		nRec:=RECNO()
