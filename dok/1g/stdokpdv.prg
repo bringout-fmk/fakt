@@ -131,6 +131,7 @@ local nSw2 := 1
 local nSw3 := 72
 local nSw4 := 31
 local nSw5 := 1
+local nSw6 := 1
 
 // radi citanja parametara
 private cSection:="F"
@@ -152,7 +153,8 @@ RPar("x7", @nSw4)
 // ovaj switch se koristi za poziv ptxt-a ... u principu
 // ovdje mi i ne treba
 RPar("x8", @nSw5)
-
+// narudzbenice - samo kolicine 0, cijene 1
+RPar("x9", @nSw6)
 
 // napuni firmine podatke
 fill_firm_data()
@@ -483,6 +485,7 @@ add_drntext("X05", STR( nSw2, 2, 0) )
 add_drntext("X06", STR( nSw3, 2, 0) )
 add_drntext("X07", STR( nSw4, 2, 0) )
 add_drntext("X08", STR( nSw5, 2, 0) )
+add_drntext("X09", STR( nSw6, 1, 0) )
 
 // fakturu stampaj u ne-compatibility modu
 gPtxtC50 := .f.

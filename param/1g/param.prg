@@ -1150,6 +1150,7 @@ local nSw2 := 1
 local nSw3 := 72
 local nSw4 := 31
 local nSw5 := 1
+local nSw6 := 1
 
 private GetList:={}
 private cIzvj:="1"
@@ -1171,6 +1172,7 @@ RPar("x5", @nSw2)
 RPar("x6", @nSw3)
 RPar("x7", @nSw4)
 RPar("x8", @nSw5)
+RPar("x9", @nSw6)
 
 cSection := "1"
 
@@ -1278,8 +1280,12 @@ Box(,22,76,.f.,"Izgled dokumenata")
          @ m_x+nX, col()+2 SAY "SW-4 :" GET nSw4 ;
 	         PICT "99"
          @ m_x+nX, col()+2 SAY "SW-5 :" GET nSw5 ;
-	         PICT "99" 
-
+	         PICT "99"
+	 nX += 2	 
+	
+	 @ m_x+nX, m_y+2 SAY "SW-6 :" GET nSw6 ;
+	         PICT "9" 
+	
 	endif
 
 	
@@ -1328,6 +1334,7 @@ if (LASTKEY()<>K_ESC)
 	WPar("x6", nSw3)
 	WPar("x7", nSw4)
 	WPar("x8", nSw5)
+	WPar("x9", nSw6)
 
 	cSection := "1"
 	
