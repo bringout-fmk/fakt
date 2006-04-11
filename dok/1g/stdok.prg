@@ -896,6 +896,56 @@ use
 return
 
 
+// Stampa azuriranih faktura od broja do broja
+function StAzPeriod()
+private cIdFirma, cIdTipDok, cBrOd, cBrDo
+
+cIdFirma:=gFirma
+cIdTipDok:="10"
+cBrOd:=space(8)
+cBrDo:=space(8)
+
+Box("", 4, 35)
+        @ m_x+1, m_y+2 SAY "Dokument:"
+        @ m_x+2, m_y+2 SAY " RJ-tip:" GET cIdFirma
+        @ m_x+2, col()+1 SAY "-" GET cIdTipDok
+        @ m_x+3, m_y+2 SAY "Brojevi:" 
+	@ m_x+4, m_y+3 SAY "od" GET cBrOd VALID !EMPTY(cBrOd)
+	@ m_x+4, col()+1 SAY "do" GET cBrDo VALID !EMPTY(cBrDo)
+        read
+BoxC()
+
+if LASTKEY()==K_ESC
+	return
+endif
+
+close all
+O_DOKS
+set order to tag "1"
+hseek cIdFirma + cIdTipDok
+
+if Found()
+	do while !EOF() .and. doks->idfirma = cIdFirma .and. doks->idtipdok = cIdTipDok
+		nTRec := RecNo()
+		
+		if ALLTRIM(doks->brdok) >= ALLTRIM(cBrOd) .and. ALLTRIM(doks->brdok) <= ALLTRIM(cBrDo) 
+			StampTXT(doks->idfirma,doks->idtipdok,doks->brdok)
+		endif
+		
+		select doks
+		go (nTRec)
+		skip
+	enddo
+else
+	MsgBeep("Trazeni tip dokumenta ne postoji!")
+endif
+
+SELECT PRIPR
+use
+return
+
+
+
 /*! \fn RbrUNum(cRBr)
  *  \brief 
  *  \param cRBr
