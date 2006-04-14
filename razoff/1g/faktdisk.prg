@@ -176,6 +176,7 @@ Boxc()
 qqSpecUslov:=TRIM(qqSpecUslov)
 
 if Pitanje(,"Prenijeti u datoteku prenosa fakt sa ovim kriterijom ?","D")=="D"
+  altd()
   select fakt
   if !flock(); Msg("FAKT je zauzeta ",3); closeret; endif
 
@@ -199,10 +200,14 @@ if Pitanje(,"Prenijeti u datoteku prenosa fakt sa ovim kriterijom ?","D")=="D"
   go top
 
   MsgO("Prolaz kroz FAKT...")
+  
   StartPrint(.t.)
+  
   ? "FAKT - U DATOTECI ZA PRENOS SU SLJEDECI DOKUMENTI - FAKT:"
-  ?; ? "FIRMA³ TIP ³  BROJ  ³  DATUM "
-     ? "-----------------------------"
+  ?
+  ? "FIRMA³ TIP ³  BROJ  ³  DATUM "
+  ? "-----------------------------"
+  
   do while !eof()
     select FAKT
     IF cSinSFormula!="99"; nDuzSintSifre:=&cSinSFormula; ENDIF
@@ -225,7 +230,9 @@ if Pitanje(,"Prenijeti u datoteku prenosa fakt sa ovim kriterijom ?","D")=="D"
      ? "  "+idfirma+" ³  "+idtipdok+" ³"+brdok+"³"+DTOC(datdok)
     ENDIF
     skip
+  
   enddo
+  
   EndPrint()
 
   MsgC()

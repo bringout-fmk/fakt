@@ -351,9 +351,10 @@ if cTabela=="D"
      AADD(ImeKol,{ "Datum placanja", {|| datpl} })
    ENDIF
    Kol:={}; for i:=1 to len(ImeKol); AADD(Kol,i); next
-   Box(,20,72)
-   @ m_x+19,m_y+2 SAY " <ENTER> Stampa dokumenta       ³<P> Povrat dokumenta u pripremu³"
-   @ m_x+20,m_y+2 SAY " <R>     Rezervacija/Realizacija³"
+   Box(,21,72)
+   @ m_x+19,m_y+2 SAY " <ENTER> Stampa dokumenta        ³ <P> Povrat dokumenta u pripremu    ³"
+   @ m_x+20,m_y+2 SAY " <N>     Stampa narudzbenice     ³ <B> Stampa radnog naloga           ³ "
+   @ m_x+21,m_y+2 SAY " <R>     Rezervacija/Realizacija ³"
    fUPripremu:=.f.
 
    adImeKol:={}
@@ -381,7 +382,7 @@ if cTabela=="D"
                    {|| .t.}, {|| P_Firma(@widpartner)}, "V" }
    adKol:={}; for i:=1 to len(adImeKol); AADD(adKol,i); next
 
-   ObjDbedit("",20,72,{|| EdDatn()},"","Lista dokumenata...", , , , ,2)
+   ObjDbedit("",20,72,{|| EdDatn()},"",SPACE(35) + "Lista dokumenata...", , , , ,2)
    BoxC()
    if fupripremu
      close all
@@ -553,6 +554,115 @@ END PRINT
 closeret
 *}
 
+// printaj narudzbenicu
+function pr_nar()
+*{
+select doks
+nTrec:=recno()
+_cIdFirma:=idfirma
+_cIdTipDok:=idtipdok
+_cBrDok:=brdok
+
+close all
+O_Edit()
+StampTXT(_cidfirma, _cIdTipdok, _cbrdok, .t.)
+// printaj narudzbu
+nar_print(.t.)
+select (F_DOKS); use
+O_DOKS
+if lOpcine
+	O_PARTN
+	select DOKS
+	set relation to idpartner into PARTN
+endif
+if cFilter==".t."
+	set Filter to
+else
+	set Filter to &cFilter
+endif
+go nTrec
+
+return DE_CONT
+*}
+
+// print radni nalog
+function pr_rn()
+*{
+select doks
+nTrec:=recno()
+_cIdFirma:=idfirma
+_cIdTipDok:=idtipdok
+_cBrDok:=brdok
+close all
+O_Edit()
+StampTXT(_cidfirma, _cIdTipdok, _cbrdok, .t.)
+// printaj radni nalog
+rnal_print(.t.)
+select (F_DOKS); use
+O_DOKS
+if lOpcine
+	O_PARTN
+       	select DOKS
+       	set relation to idpartner into PARTN
+endif
+if cFilter==".t."
+	set Filter to
+else
+	set Filter to &cFilter
+endif
+go nTrec
+return DE_CONT
+*}
+
+// stampaj poresku fakturu
+function pr_pf()
+*{
+select doks
+nTrec:=recno()
+_cIdFirma:=idfirma
+_cIdTipDok:=idtipdok
+_cBrDok:=brdok
+close all
+O_Edit()
+StampTXT(_cidfirma, _cIdTipdok, _cbrdok)
+select (F_DOKS); use
+O_DOKS
+if lOpcine
+	O_PARTN
+       	select DOKS
+       	set relation to idpartner into PARTN
+endif
+if cFilter==".t."
+	set Filter to
+else
+	set Filter to &cFilter
+endif
+go nTrec
+    
+return DE_CONT
+*}
+
+
+function pr_choice()
+*{
+local nSelected
+private Opc:={}
+private opcexe:={}
+private Izbor
+	
+AADD(opc, "   >  stampa dokumenta        " )
+AADD(opcexe, {|| nSelected:=Izbor, Izbor:=0  } )
+AADD(opc, "   >  stampa narudzbenice     " )
+AADD(opcexe, {|| nSelected:=Izbor, Izbor:=0  } )
+AADD(opc, "   >  stampa radnog naloga    " )
+AADD(opcexe, {|| nSelected:=Izbor, Izbor:=0  } )
+
+Izbor := 1
+Menu_SC("pch")
+
+return nSelected
+*}
+
 
 /*! \fn EdDatN()
  *  \brief Ispravka azuriranih dokumenata (u tabelarnom pregledu)
@@ -576,28 +686,14 @@ do case
      ENDIF
      
   case Ch==K_ENTER .and. gTBDir=="N"
-     select doks
-     nTrec:=recno()
-     _cIdFirma:=idfirma
-     _cIdTipDok:=idtipdok
-     _cBrDok:=brdok
-     close all
-     O_Edit()
-     StampTXT(_cidfirma, _cIdTipdok, _cbrdok)
-     select (F_DOKS); use
-     O_DOKS
-     if lOpcine
-       O_PARTN
-       select DOKS
-       set relation to idpartner into PARTN
-     endif
-     if cFilter==".t."
-       set Filter to
-     else
-       set Filter to &cFilter
-     endif
-     go nTrec
-     nRet:=DE_CONT
+     nRet:=pr_pf()
+     
+  case chr(Ch) $ "bB"
+     nRet:=pr_rn()  
+     
+  case chr(Ch) $ "nN"
+     nRet:=pr_nar()
+  
   case chr(Ch) $ "pP" .and. gTBDir=="N"  // povrat
      select doks
      nTrec:=recno()

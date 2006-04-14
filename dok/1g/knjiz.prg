@@ -2197,12 +2197,15 @@ return _BrDok
  *  \param cBrDok
  */
  
-function StampTXT(cIdFirma, cIdTipDok, cBrDok)
+function StampTXT(cIdFirma, cIdTipDok, cBrDok, lJFill)
 *{
 private InPicDEM:=PicDEM  // picture iznosa
 private InPicCDEM:=PicCDEM  // picture iznosa
 
 if IsPDV()
+	if lJFill == nil
+		lJFill := .f.
+	endif
 	if gPdvDrb == "D"
 		if cIdFirma == nil
 			Stdok2p_rb()
@@ -2212,7 +2215,7 @@ if IsPDV()
 					
 				Stdok2p_rb(cIdFirma, cIdTipDok, cBrDok)
 			else
-				StdokPdv(cIdFirma, cIdTipDok, cBrDok)
+				StdokPdv(cIdFirma, cIdTipDok, cBrDok, lJFill)
 			endif
 		endif
 	
@@ -2220,7 +2223,7 @@ if IsPDV()
 		if cIdFirma == nil
 			StDokPDV()
 		else
-			StDokPDV(cIdFirma, cIdTipDok, cBrDok)
+			StDokPDV(cIdFirma, cIdTipDok, cBrDok, lJFill)
 		endif
 	endif
 	

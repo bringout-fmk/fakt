@@ -1,16 +1,20 @@
 #include "\dev\fmk\fakt\fakt.ch"
 
 
-function stdokpdv(cIdFirma, cIdTipDok, cBrDok)
+function stdokpdv(cIdFirma, cIdTipDok, cBrDok, lJFill)
 *{
 local lSamoKol:=.f. // samo kolicine
+
+if lJFill == nil
+	lJFill := .f.
+endif
 
 drn_create()
 drn_open()
 drn_empty()
 
 // otvori tabele
-if PCount()==3
+if PCount()==4
 	O_Edit(.t.)
 else
  	O_Edit()
@@ -34,7 +38,7 @@ endif
 seek cIdFirma+cIdTipDok+cBrDok
 NFOUND CRET
 
-if PCount()==0
+if PCount() <= 1
 	select pripr
 endif
 
@@ -58,6 +62,10 @@ else
 endif
 
 fill_porfakt_data(cIdFirma, cIdTipDok, cBrDok, lPBarKod, lSamoKol)
+
+if lJFill
+	return
+endif
 
 if cIdTipDok == "13"
 	omp_print()

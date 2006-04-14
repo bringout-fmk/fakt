@@ -889,7 +889,7 @@ endif
 
 close all
 
-StampTXT(cidfirma,cIdTipdok,cbrdok)
+StampTXT(cIdFirma,cIdTipDok,cBrDok)
 
 SELECT PRIPR
 use
