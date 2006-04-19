@@ -1468,7 +1468,7 @@ if (nRbr==1 .and. VAL(_podbr) < 1)
      			@ m_x+11,m_y+31  SAY "Relacija   :" get _idrelac  picture "@!" valid {|| _idtipdok$"21#22".or.JeStorno10().and.PuniDVRiz10().or.IzborRelacije(@_IdRelac,@_IdDist,@_IdVozila,@_datdok,@_marsruta)}
    		endif
 
-		if _idTipDok == "10"
+		if _idTipDok $ "10#11#19#20#27"
 		      @ m_x+10, m_y+2 SAY "Valuta ?" GET _DINDEM PICT "@!" 
 		else
 		      @ m_x+10, m_y+1 SAY " "
