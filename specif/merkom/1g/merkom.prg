@@ -3,28 +3,6 @@
  * ----------------------------------------------------------------
  *                                     Copyright Sigma-com software 
  * ----------------------------------------------------------------
- * $Source: c:/cvsroot/cl/sigma/fmk/fakt/specif/merkom/1g/merkom.prg,v $
- * $Author: mirsad $ 
- * $Revision: 1.6 $
- * $Log: merkom.prg,v $
- * Revision 1.6  2003/03/27 15:13:45  mirsad
- * izvjestaj "specif.prodaje" sada radi kao i uslov za opcinu za tabelarni prikaz liste dokumenata
- *
- * Revision 1.5  2002/09/26 10:15:39  sasa
- * doradjen izvjestaj specifikacija robe za partnera
- *
- * Revision 1.4  2002/09/13 08:48:16  mirsad
- * dokumentovanje INI parametara
- *
- * Revision 1.3  2002/07/04 08:34:19  mirsad
- * dokumentovanje ini parametara
- *
- * Revision 1.2  2002/06/19 08:52:50  sasa
- * no message
- *
- * Revision 1.1.1.1  2002/06/17 18:30:18  ernad
- * no message
- *
  *
  */
 
