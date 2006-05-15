@@ -53,6 +53,7 @@ function fa_rbr_regen()
 local nCounter
 local cOldRbr
 local cNewRbr
+local nTotRecord
 
 if !SigmaSif("RBRREG")
 	return
@@ -71,6 +72,9 @@ Box(,3,60)
 @ m_x+1, m_y+2 SAY "Vrsim regeneraciju rednih brojeva fakt..."
 
 nCounter := 0
+nTotRecord := RecCount()
+
+@ m_x+2, m_y+2 SAY "ukupni broj zapisa: " + ALLTRIM(STR(nTotRecord)) 
 
 do while !EOF()
 
@@ -83,7 +87,7 @@ do while !EOF()
 
 	++nCounter
 
-	@ m_x+3, m_y+2 SAY "obradjeno zapisa " + ALLTRIM(STR(nCounter))
+	@ m_x+3, m_y+2 SAY "obradjeno zapisa: " + ALLTRIM(STR(nCounter))
 	
 	skip
 enddo
