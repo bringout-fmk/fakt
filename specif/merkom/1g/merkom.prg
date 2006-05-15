@@ -3,11 +3,6 @@
  * ----------------------------------------------------------------
  *                                     Copyright Sigma-com software 
  * ----------------------------------------------------------------
- *
- */
-
-/*! \file fmk/fakt/specif/merkom/1g/merkom.prg
- *  \brief Specifikacija po robama i po kupcima
  */
 
 
@@ -34,23 +29,29 @@ private aHistory:={}
 private cIdPartner
 private nStrana:=0
 private cLinija
+private lGroup:=.f.
 
 O_FAKT
 O_PARTN
 O_VALUTE
 O_RJ
+O_SIFK
+O_SIFV
 O_ROBA
 
 if lOpcine
 	O_OPS
 endif
 
+// partneri po grupama
+lGroup := p_group()
+
 cIdfirma:=gFirma
 dDatOd:=ctod("")
 dDatDo:=date()
 qqTipDok:=space(20)
 
-Box("#SPECIFIKACIJA PRODAJE PO ARTIKLIMA",11,77)
+Box("#SPECIFIKACIJA PRODAJE PO ARTIKLIMA",12,77)
 	O_PARAMS
 	RPar("c1", @cIdFirma)
 	RPar("d1", @dDatOd)
@@ -88,6 +89,11 @@ Box("#SPECIFIKACIJA PRODAJE PO ARTIKLIMA",11,77)
 			@ m_x+10,m_y+2 SAY "Ne prikazuj robu K2=X "  get cK2X pict "@!" VALID cK2X$"DN"
 			@ m_x+11,m_y+2 SAY "Filter po ROBA->JMJ=PAR "  get cJmjPar pict "@!" VALID cJmjPar$"DN"
  		endif
+		
+		if lGroup
+   			private cPGroup := SPACE(3)
+			@ m_x+12,m_y+2 SAY "Grupa partnera (prazno sve):" GET cPGroup VALID EMPTY(cPGroup) .or. cPGroup $ "VP #AMB#SIS#OST"
+		endif
 		
 		read
  		ESC_BCR
@@ -221,6 +227,7 @@ else  // ako je izabrano "2"
   	nCol1:=10
 	nTKolicina:=0
 	nTIznos:=0
+	
 	do while !eof()
     		nKolicina:=0
 		nIznos:=0
@@ -258,23 +265,39 @@ else  // ako je izabrano "2"
 					loop
         			endif
       			endif
-     			nKolicina+=kolicina
+			
+			if lGroup .and. !EMPTY(cPGroup)
+				cPartn := fakt->idpartner
+				SELECT partn
+				hseek cPartn
+				SELECT fakt
+				if !p_in_group(cPartn, cPGroup)
+					skip
+					loop
+				endif
+			endif
+     			
+			nKolicina+=kolicina
+			
 			if fakt->dindem==left(ValBazna(),3)
 				nIznos+=ROUND( kolicina*Cijena*(1-Rabat/100)*(1+Porez/100) ,ZAOKRUZENJE)
 			else
 				nIznos+=ROUND( kolicina*Cijena*1/UBaznuValutu(datdok)*(1-Rabat/100)*(1+Porez/100) ,ZAOKRUZENJE)
 			endif
-
+			
       			skip 1
     		enddo
+		
     		if prow()>61
 			FF
 			ZaglMerkom()
 		endif
-    		select roba
+    		
+		select roba
 		hseek cIdRoba
 		select fakt
-    		if ROUND(nKolicina,4)<>0
+    		
+		if ROUND(nKolicina,4)<>0
       			? SPACE(gnLMarg)
 			?? STR(++nC,4)+".", cIdRoba, roba->naz
       			nCol1:=PCol()+1
@@ -284,6 +307,7 @@ else  // ako je izabrano "2"
 			nTIznos+=nIznos
     		endif
   	enddo
+	
 endif
 
 if prow()>59
@@ -347,6 +371,11 @@ endif
 if lOpcine .and. !empty(cOpcina)
 	? SPACE(gnLMarg)
 	?? "Opcine: " + TRIM(cOpcina)
+endif
+
+if lGroup .and. !EMPTY(cPGroup)
+	? SPACE(gnLMarg)
+	?? "Grupa partnera: " + TRIM(cPGroup), gr_opis(cPGroup)
 endif
 
 set century off
