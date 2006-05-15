@@ -4,30 +4,6 @@
  * ----------------------------------------------------------------
  *                                     Copyright Sigma-com software 
  * ----------------------------------------------------------------
- * $Source: c:/cvsroot/cl/sigma/fmk/fakt/razoff/1g/faktdisk.prg,v $
- * $Author: mirsad $ 
- * $Revision: 1.5 $
- * $Log: faktdisk.prg,v $
- * Revision 1.5  2002/09/12 07:51:55  mirsad
- * dokumentovanje INI parametara
- *
- * Revision 1.4  2002/07/04 08:34:19  mirsad
- * dokumentovanje ini parametara
- *
- * Revision 1.3  2002/07/03 12:25:27  sasa
- * Ispravljeno ime funkcije FaktDisk() na PrenosDiskete()
- *
- * Revision 1.2  2002/06/18 13:48:35  sasa
- * no message
- *
- * Revision 1.1.1.1  2002/06/17 18:30:18  ernad
- * no message
- *
- *
- */
-
-/*! \file fmk/fakt/razoff/1g/faktdisk.prg
- *  \brief Podesavanje i prenos dokumenata FAKT<->FAKT (modem,diskete)
  */
 
 /*! \ingroup ini
@@ -58,10 +34,6 @@
 
 
 
-/*! \fn PrenosDiskete()
- *  \brief Prenos dokumenta FAKT<->FAKT putem disketa ili modema
- */
- 
 function PrenosDiskete()
 *{
 private opc:={}
@@ -112,39 +84,49 @@ if Pitanje(,"Nulirati datoteke prenosa prije nastavka ?","D")=="D"
   copy structure extended to (PRIVPATH+"struct")
   use
   create (PRIVPATH+"_roba") from (PRIVPATH+"struct")
-  if Izfmkini('Svi','Sifk','N')=="D"
-    O_SIFK
-    copy structure extended to (PRIVPATH+"struct")
-    use
-    create (PRIVPATH+"_SIFK") from (PRIVPATH+"struct")
+  
+  O_SIFK
+  copy structure extended to (PRIVPATH+"struct")
+  use
+  create (PRIVPATH+"_SIFK") from (PRIVPATH+"struct")
 
-    O_SIFV
-    copy structure extended to (PRIVPATH+"struct")
+  O_SIFV
+  copy structure extended to (PRIVPATH+"struct")
+  use
+  create (PRIVPATH+"_SIFV") from (PRIVPATH+"struct")
 
-    use
-    create (PRIVPATH+"_SIFV") from (PRIVPATH+"struct")
+  O_PARTN
+  copy structure extended to (PRIVPATH+"struct")
+  use
+  create (PRIVPATH+"_PARTN") from (PRIVPATH+"struct")
 
-  endif
 
   close all
 
   O__FAKT  // otvara se bez indeksa
   O__ROBA
+  O__PARTN
 
-  select _fakt; zap
-  select _roba; zap
+  select _fakt
+  zap
+  select _roba
+  zap
+  select _partn
+  zap
 
   close all
+  
 endif
 
 O__FAKT
 IF cSinSFormula!="99"       // bilo:gNovine=="D"
-  INDEX ON idfirma+idtipdok+brdok+idroba TO "_FAKTTMP"
+	INDEX ON idfirma+idtipdok+brdok+idroba TO "_FAKTTMP"
 ENDIF
 O_FAKT
 
-SELECT FAKT; set order to 1  // idFirma+Idtipdok+BrDok+RBr
-cidfirma:=gfirma
+SELECT FAKT
+set order to 1  // idFirma+Idtipdok+BrDok+RBr
+cIdfirma:=gfirma
 cIdTipdok:=space(2)
 cBrDok:=space(8)
 
@@ -155,7 +137,7 @@ private dDatOd:=CTOD("")
 private dDatDo:=DATE()
 
 if !empty(cidtipdok)
- qqIdTipdok:=padr(cidtipdok+";",80)
+	qqIdTipdok:=padr(cidtipdok+";",80)
 endif
 Box(,4,70)
  DO WHILE .T.
@@ -176,70 +158,85 @@ Boxc()
 qqSpecUslov:=TRIM(qqSpecUslov)
 
 if Pitanje(,"Prenijeti u datoteku prenosa fakt sa ovim kriterijom ?","D")=="D"
-  altd()
-  select fakt
-  if !flock(); Msg("FAKT je zauzeta ",3); closeret; endif
+	select fakt
+  	if !flock()
+		Msg("FAKT je zauzeta ",3)
+		closeret
+	endif
 
-  PRIVATE cFilt1:=""
-  cFilt1 := "IDFIRMA=="+cm2str(cIdFirma)+".and."+aUsl1+".and."+aUsl3
-  if !empty(dDatOd) .or. !empty(dDatDo)
-    cFilt1 += ".and. DatDok>="+cm2str(dDatOd)+".and. DatDok<="+cm2str(dDatDo)
-  endif
+  	private cFilt1:=""
+  	
+	cFilt1 := "IDFIRMA=="+cm2str(cIdFirma)+".and."+aUsl1+".and."+aUsl3
+  	
+	if !empty(dDatOd) .or. !empty(dDatDo)
+    		cFilt1 += ".and. DatDok>="+cm2str(dDatOd)+".and. DatDok<="+cm2str(dDatDo)
+  	endif
 
-  IF !EMPTY(qqSpecUslov)
-    cFilt1 += ".and.("+qqSpecUslov+")"
-  ENDIF
+  	IF !EMPTY(qqSpecUslov)
+    		cFilt1 += ".and.("+qqSpecUslov+")"
+  	ENDIF
 
-  cFilt1 := STRTRAN(cFilt1,".t..and.","")
+  	cFilt1 := STRTRAN(cFilt1,".t..and.","")
 
-  IF !(cFilt1==".t.")
-    SET FILTER TO &cFilt1
-  ENDIF
+  	IF !(cFilt1==".t.")
+   		SET FILTER TO &cFilt1
+  	ENDIF
 
-  altd()
-  go top
+  	go top
 
-  MsgO("Prolaz kroz FAKT...")
+  	MsgO("Prolaz kroz FAKT...")
   
-  StartPrint(.t.)
+  	StartPrint(.t.)
   
-  ? "FAKT - U DATOTECI ZA PRENOS SU SLJEDECI DOKUMENTI - FAKT:"
-  ?
-  ? "FIRMA³ TIP ³  BROJ  ³  DATUM "
-  ? "-----------------------------"
+	? "FAKT - U DATOTECI ZA PRENOS SU SLJEDECI DOKUMENTI - FAKT:"
+  	?
+  	? "FIRMA³ TIP ³  BROJ  ³  DATUM "
+  	? "-----------------------------"
   
-  do while !eof()
-    select FAKT
-    IF cSinSFormula!="99"; nDuzSintSifre:=&cSinSFormula; ENDIF
-    Scatter()
-    select _FAKT
-    IF cSinSFormula!="99" .and. nDuzSintSifre>0 .and. nDuzSintSifre<10   // bilo:gNovine=="D"
-      _idroba:=LEFT(_idroba,nDuzSintSifre)
-      SEEK _idfirma+_idtipdok+_brdok+_idroba
-      IF FOUND() .and. rabat=_rabat .and. porez=_porez .and. cijena=_cijena
-        REPLACE kolicina WITH kolicina+_kolicina
-      ELSE
-        append ncnl;  Gather2()
-      ENDIF
-    ELSE
-      append ncnl;  Gather2()
-    ENDIF
-    select fakt
-    SKIP 1; cpFirma:=idfirma; cpTipDok:=idtipdok; cpBrDok:=brdok; SKIP -1
-    IF cpFirma+cpTipDok+cpBrDok!=idfirma+idtipdok+brdok
-     ? "  "+idfirma+" ³  "+idtipdok+" ³"+brdok+"³"+DTOC(datdok)
-    ENDIF
-    skip
-  
-  enddo
-  
-  EndPrint()
+  	do while !eof()
+    		select FAKT
+    		IF cSinSFormula != "99"
+			nDuzSintSifre := &cSinSFormula
+		ENDIF
+    		Scatter()
+    		select _FAKT
+    		IF cSinSFormula!="99" .and. nDuzSintSifre>0 .and. nDuzSintSifre<10   // bilo:gNovine=="D"
+      			_idroba:=LEFT(_idroba,nDuzSintSifre)
+      			SEEK _idfirma+_idtipdok+_brdok+_idroba
+      			IF FOUND() .and. rabat=_rabat .and. porez=_porez .and. cijena=_cijena
+        			REPLACE kolicina WITH kolicina+_kolicina
+      			ELSE
+        			append ncnl
+				Gather2()
+      			ENDIF
+    		ELSE
+ 		
+			append ncnl
+			Gather2()
+    		ENDIF
+    	
 
-  MsgC()
+    		select fakt
+    		SKIP 1
+		cpFirma:=idfirma
+		cpTipDok:=idtipdok
+		cpBrDok:=brdok
+		SKIP -1
+    		IF cpFirma+cpTipDok+cpBrDok!=idfirma+idtipdok+brdok
+     			? "  "+idfirma+" ³  "+idtipdok+" ³"+brdok+"³"+DTOC(datdok)
+    		ENDIF
+    	
+		skip
+	enddo
+  	
+	EndPrint()
+
+	MsgC()
 else
-  close all
-  return
+	close all
+  	return
 endif
+
 close all
 
 O_ROBA
@@ -254,29 +251,64 @@ select _roba
 
 MsgO("Osvjezavam datoteku _Roba ... ")
 O__FAKT
-select _fakt; go top
+select _fakt
+go top
 // uzmi samo artikle koji su se pojavili u dokumentima !!!!
 
 do while !eof()
+	select _roba
+  	// nafiluj tabelu _ROBA sa siframa iz dokumenta
+  	seek _fakt->idroba
+  	if !found()
+    		select roba
+    		seek _fakt->idroba
+    		if found()
+     			scatter()
+     			// dodaj u _roba
+     			select _roba
+     			append blank
+     			Gather()
+    		endif
+    		SifkFill(PRIVPATH+"_SIFK",PRIVPATH+"_SIFV","ROBA",_fakt->idroba)
+  	endif
 
-  select _roba
-  // nafiluj tabelu _ROBA sa siframa iz dokumenta
-  seek _fakt->idroba
-  if !found()
-    select roba
-    seek _fakt->idroba
-    if found()
-     scatter()
-     // dodaj u _roba
-     select _roba
-     append blank
-     Gather()
-    endif
-    SifkFill(PRIVPATH+"_SIFK",PRIVPATH+"_SIFV","ROBA",_fakt->idroba)
-  endif
+  	select _fakt
+  	skip
+enddo
+close all
 
-  select _fakt
-  skip
+MsgC()
+
+O_PARTN
+O_SIFK
+O_SIFV
+O__PARTN
+
+INDEX ON id TO "_PARTTMP"  // index radi trazenja
+
+MsgO("Osvjezavam datoteku _Partn ... ")
+O__FAKT
+select _fakt
+go top
+
+do while !EOF()
+	select _partn
+	seek _fakt->idpartner
+	if !found()
+    		select partn
+    		seek _fakt->idpartner
+    		if found()
+     			scatter()
+     			// dodaj u _partn
+     			select _partn
+     			append blank
+     			Gather()
+    		endif
+  		SifkFill(PRIVPATH+"_SIFK",PRIVPATH+"_SIFV","PARTN",_FAKT->idpartner)
+	endif
+
+  	select _fakt
+  	skip
 enddo
 
 MsgC()
@@ -285,8 +317,10 @@ close all
 
 FILECOPY( PRIVPATH+"OUTF.TXT" , PRIVPATH+"_FAKT.TXT" )
 
-aFajlovi:={ PRIVPATH+"_fakt.*", PRIVPATH+"_roba.*", PRIVPATH+"_SIF?.*"}
+aFajlovi:={ PRIVPATH+"_fakt.*", PRIVPATH+"_roba.*", PRIVPATH+"_SIF?.*", PRIVPATH + "_partn.*"}
+
 Zipuj(aFajlovi,cFZaPredaju,cLokPren)
+
 return
 *}
 
@@ -446,6 +480,45 @@ endif // cnd1
 save screen to cs
 
 if cDn1 == "D"
+	VidiFajl(cRFajl)
+endif
+
+restore screen from cs
+save screen to cs
+
+if Pitanje(, "PARTN - dodati nepostojece sifre ?", "D") == "D"
+	close all
+  	O_PARTN
+     	O_SIFK
+	O_SIFV
+  	O__PARTN
+  	set order to 0
+	go top
+	cRFajl := PRIVPATH+"FAKT.RF"
+	UpisiURF("IZVJESTAJ O PROMJENAMA NA SIFRARNIKU PARTNERA:",cRFajl,.t.,.t.)
+	UpisiURF("---------------------------------------------",cRFajl,.t.,.f.)
+		
+  	Box(,1,60)
+  		do while !eof()
+    		@ m_x+1,m_y+2 SAY id; ?? "-",naz
+    		select partn
+		scatter()
+    		select _partn
+    		scatter()
+    		select partn
+		hseek _id
+    		if !found()
+			UpisiURF(_partn->id + " - " + _partn->naz,cRFajl,.t.,.f.)
+			append blank
+      			gather()
+         		SifKOsv(PRIVPATH+"_SIFK",PRIVPATH+"_SIFV","PARTN",_id)
+
+    		endif
+    		select _partn
+    		skip
+  		enddo
+  	BoxC()
+
 	VidiFajl(cRFajl)
 endif
 
