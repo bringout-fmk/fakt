@@ -161,7 +161,7 @@ endif
 if (cFilter==".t.")
 	set filter to
 else
-	set filter to &cFilter
+	set filter to &cFilter 
 endif
 
 EOF CRET
@@ -227,6 +227,17 @@ else  // ako je izabrano "2"
   	nCol1:=10
 	nTKolicina:=0
 	nTIznos:=0
+	nCounter:=0
+	nMX:=0
+	nMY:=0
+	
+	Box(,3,60)
+	
+	set device to screen
+	@ 1+m_x, 2+m_y SAY "formiranje izvjestaja u toku..."
+	nMX := 3+m_x
+	nMY := 2+m_y
+	set device to printer
 	
 	do while !eof()
     		nKolicina:=0
@@ -284,8 +295,17 @@ else  // ako je izabrano "2"
 			else
 				nIznos+=ROUND( kolicina*Cijena*1/UBaznuValutu(datdok)*(1-Rabat/100)*(1+Porez/100) ,ZAOKRUZENJE)
 			endif
+		
+			++nCounter
 			
-      			skip 1
+			// ispisi progres u box-u
+			if nCounter % 50 == 0
+				set device to screen
+				@ nMX, nMY SAY "obradjeno " + ALLTRIM(STR(nCounter)) + " zapisa"
+				set device to printer
+			endif
+      			
+			skip 1
     		enddo
 		
     		if prow()>61
@@ -306,7 +326,10 @@ else  // ako je izabrano "2"
       			nTKolicina+=nKolicina
 			nTIznos+=nIznos
     		endif
+		
   	enddo
+
+	BoxC()
 	
 endif
 
@@ -375,7 +398,7 @@ endif
 
 if lGroup .and. !EMPTY(cPGroup)
 	? SPACE(gnLMarg)
-	?? "Grupa partnera: " + TRIM(cPGroup), gr_opis(cPGroup)
+	?? "Grupa partnera: " + TRIM(cPGroup), " - " + gr_opis(cPGroup)
 endif
 
 set century off

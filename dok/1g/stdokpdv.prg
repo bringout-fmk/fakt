@@ -204,7 +204,7 @@ do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==c
 	hseek roba->idtarifa
 	select pripr
 
-		
+	altd()	
      	aMemo:=ParsMemo(txt)
 	cIdRoba := field->idroba
 	

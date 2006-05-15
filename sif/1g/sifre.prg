@@ -577,8 +577,8 @@ function FaPartnBlock(Ch)
 LOCAL cSif:=PARTN->id, cSif2:=""
 
 if Ch==K_F5
-  IzfUgovor()
-  return DE_REFRESH
+  	IzfUgovor()
+  	return DE_REFRESH
 endif
 
 return DE_CONT
