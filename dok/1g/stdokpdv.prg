@@ -140,6 +140,7 @@ local nSw3 := 72
 local nSw4 := 31
 local nSw5 := 1
 local nSw6 := 1
+local nSw7 := 0
 
 // radi citanja parametara
 private cSection:="F"
@@ -163,6 +164,7 @@ RPar("x7", @nSw4)
 RPar("x8", @nSw5)
 // narudzbenice - samo kolicine 0, cijene 1
 RPar("x9", @nSw6)
+RPar("y1", @nSw7)
 
 // napuni firmine podatke
 fill_firm_data()
@@ -407,7 +409,6 @@ else
 	cBrNar  := aMemo[8]
 endif
 
-
 if LEN(aMemo) >= 18
 	cDestinacija := aMemo[18]
 else
@@ -418,9 +419,6 @@ endif
 add_drntext("D01", gMjStr)
 // naziv dokumenta
 add_drntext("D02", cDokNaz )
-
-// Destinacija
-add_drntext("D09", cIdTipDok)
 
 // slovima iznos fakture
 add_drntext("D04", Slovima( nTotal - nUkPopNaTeretProdavca , cDinDem))
@@ -436,6 +434,12 @@ add_drntext("D07", cDinDem)
 
 // Destinacija
 add_drntext("D08", cDestinacija)
+
+// tip dokumenta
+add_drntext("D09", cIdTipDok)
+
+// radna jedinica
+add_drntext("D10", cIdFirma)
 
 // tekst na kraju fakture F04, F05, F06
 fill_dod_text(aMemo[2])
@@ -494,6 +498,7 @@ add_drntext("X06", STR( nSw3, 2, 0) )
 add_drntext("X07", STR( nSw4, 2, 0) )
 add_drntext("X08", STR( nSw5, 2, 0) )
 add_drntext("X09", STR( nSw6, 1, 0) )
+add_drntext("X10", STR( nSw7, 1, 0) )
 
 // fakturu stampaj u ne-compatibility modu
 gPtxtC50 := .f.
