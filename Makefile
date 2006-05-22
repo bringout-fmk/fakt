@@ -1,5 +1,5 @@
 
-all: 	
+liball: 	
 	make -C main/1g
 	make -C main/2g
 	make -C db/2g
@@ -21,9 +21,9 @@ all:
 	make -C konsig/1g
 	make -C dok/2g
 	make -C gendok/1g
-	make -C 1g
+	make -C 1g exe
 
-clean:		
+cleanall:		
 	make -C main/1g clean
 	make -C main/2g clean
 	make -C db/2g clean
@@ -53,3 +53,5 @@ zip:
 commit:
 	cd 1g; make commit
 
+
+fakt:   cleanall liball
