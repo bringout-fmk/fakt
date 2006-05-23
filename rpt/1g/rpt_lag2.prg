@@ -2,37 +2,8 @@
 
 /*
  * ----------------------------------------------------------------
- *                                     Copyright Sigma-com software 
+ *                           Copyright Sigma-com software 1996-2006 
  * ----------------------------------------------------------------
- * $Source: c:/cvsroot/cl/sigma/fmk/fakt/rpt/1g/rpt_lag2.prg,v $
- * $Author: mirsad $ 
- * $Revision: 1.6 $
- * $Log: rpt_lag2.prg,v $
- * Revision 1.6  2003/05/20 07:29:01  mirsad
- * Formatirao duzinu naziva robe za izvjestaje na 40 znakova.
- *
- * Revision 1.5  2002/09/12 13:02:25  mirsad
- * dokumentovanje INI parametara
- *
- * Revision 1.4  2002/07/04 13:40:38  ernad
- *
- *
- * rbr(3 mjesta) -> (4) u prikazu
- *
- * Revision 1.3  2002/07/04 13:35:04  ernad
- *
- *
- * debug: Stanje robe uzima parametre iz lager liste (a oni se ne mogu ispraviti pri pozivu izvjestaja)
- *
- * Revision 1.2  2002/07/04 08:34:19  mirsad
- * dokumentovanje ini parametara
- *
- * Revision 1.1  2002/06/28 20:59:39  ernad
- *
- *
- * razbijanje izvj.prg
- *
- *
  */
 
 
@@ -54,24 +25,6 @@
 *string FmkIni_ExePath_Svi_SaberiKol;
 
 
-/*! \ingroup ini
-  * \var *string FmkIni_KumPath_CROBA_GledajFakt
-  * \brief Da li se FAKT-dokumenti koriste za utvrdjivanje stanja robe u centralnoj bazi robe CROBA?
-  * \param N - ne, default vrijednost
-  * \param D - da
-  */
-*string FmkIni_KumPath_CROBA_GledajFakt;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_KumPath_CROBA_CROBA_RJ
-  * \brief Lista radnih jedinica ciji se dokumenti odrazavaju na stanje u centralnoj bazi robe CROBA
-  * \param 10#20 - radne jedinice 10 i 20, default vrijednost
-  */
-*string FmkIni_KumPath_CROBA_CROBA_RJ;
-
-
-
 /*! \fn StanjeRobe()
  *  \brief Izvjestaj stanje robe
  */
@@ -84,8 +37,6 @@ private nul,nizl,nRbr,cRR,nCol1:=0,nCol0:=50
 private m:=""
 private nStr:=0
 private cProred:="N"
-private fCRoba:=.f.
-private cRJCR:=IzFmkIni('CROBA','CROBA_RJ','10#20',KUMPATH)
 
 lBezUlaza := ( IzFMKINI("IZVJESTAJI","BezUlaza","N",KUMPATH)=="D" )
 
@@ -187,16 +138,6 @@ endif
 read
 
  ESC_BCR
-
-if IzFmkIni('CROBA','GledajFakt','N',KUMPATH)=='D'
-  if qqRoba = 'CROBA1284#'
-    if pitanje(,'Azurirati u CROBA (D/N)?','N')=='D'
-      fCROBA:=.t.
-    endif
-    qqRoba:=""
-  endif
-endif
-
 
  aUsl1:=Parsiraj(qqRoba,"IdRoba")
  if lBenjo
@@ -303,10 +244,6 @@ cidfirma:=trim(cidfirma)
 
 
 nH:=0
-if fCRoba
- cSQLFile:="c:\sigma\sql"
- ASQLCRoba(@nH,cSQLFile)
-endif
 
 do while !eof()
 
@@ -480,10 +417,6 @@ do while !eof()
      endif
    endif
 
-   if cRR<>"F" .and. fCROBA
-     ASQLCRoba(@nH,"#CONT",cIdroba, 'V', '0',nStanjeCR)
-   endif
-
   endif
 
 enddo
@@ -508,12 +441,6 @@ FF
 END PRINT
 CLOSE ALL; MyFERASE(cTMPFAKT)
 
-
-if fCRoba
-  MsgO("Azuriram SQL-CROBA")
-    ASQLCRoba(@nH,"#END#"+cSQLFile)
-  MsgC()
-endif
 
 CLOSERET
 return

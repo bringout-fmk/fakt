@@ -2,7 +2,7 @@
 
 /*
  * ----------------------------------------------------------------
- *                                     Copyright Sigma-com software 
+ *                          Copyright Sigma-com software 1996-2006 
  * ----------------------------------------------------------------
  */
 
@@ -255,11 +255,6 @@ method mMenu()
 
 private Izbor
 private lPodBugom
-
-if gSql=="D"
-	O_Log()
-endif
-
 
 SETKEY(K_SH_F1,{|| Calc()})
 Izbor:=1

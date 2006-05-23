@@ -9,8 +9,8 @@
 	#include "sc.ch"
 #endif
 
-#define D_FA_VERZIJA "02.49"
-#define D_FA_PERIOD  "11.94-15.05.06"
+#define D_FA_VERZIJA "02.50"
+#define D_FA_PERIOD  "11.94-23.05.06"
 
 
 #ifndef FMK_DEFINED
@@ -34,9 +34,5 @@
 
 #define  ZAOKRUZENJE    2
 
-
-
-
 #define NL  chr(13)+chr(10)
-
 

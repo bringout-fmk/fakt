@@ -38,23 +38,6 @@
 
 
 /*! \ingroup ini
-  * \var *string FmkIni_KumPath_CROBA_GledajFakt
-  * \brief Odredjuje da li ce se koristiti i FAKT-dokumenti za centralno pracenje stanja robe kroz sql-tabelu croba
-  * \param N - default vrijednost
-  * \param D - koriste se FAKT-dokumenti za centralno pracenje stanja robe
-  */
-*string FmkIni_KumPath_CROBA_GledajFakt;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_KumPath_CROBA_CROBA_RJ
-  * \brief Sadrzi sifre firmi/radnih jedinica ciji se dokumenti koriste za centralno pracenje stanja robe
-  * \param 10#20 - gledaj radne jedinice 10 i 20, default vrijednost
-  */
-*string FmkIni_KumPath_CROBA_CROBA_RJ;
-
-
-/*! \ingroup ini
   * \var *string FmkIni_SifPath_SifRoba_ID_J
   * \brief Omogucava koristenje dodatnih skrivenih sifara robe
   * \param N - default vrijednost
@@ -583,37 +566,16 @@ if !fR
 		endif
 		select fakt
     		seek cIdFirma+cIdTipDok+cBrDok
-    		//parametri za croba
-    		fCroba:=(IzFmkIni('CROBA','GledajFakt','N',KUMPATH)=='D')
-    		cROBA_RJ:=IzFmkIni('CROBA','CROBA_RJ','10#20',KUMPATH)
-
-    		if fCROBA
-     			nH:=0
-     			cSQLFile:='c:\sigma\sql'
-     			ASQLCRoba(@nH,cSQLFile)
-    		endif
 
     		do while !eof() .and. cIdFirma==idfirma .and. cIdTipDok==idtipdok .and. cBrDok==brdok
       			skip 1
 			nRec:=RecNo()
 			skip -1
-      			if (fCRoba .and. idfirma$cROBA_RJ)
-        			if (idtipdok="0")
-          				ASQLCRoba(@nH,"#CONT",idroba,"V","1",-kolicina)
-        			elseif (idtipdok="1" .and. !(idtipdok="10".and.serbr="*") .or. idtipdok$"20#27" .and. serbr="*" .or. idtipdok="21")
-          				ASQLCRoba(@nH,"#CONT",idroba,"V","2",-kolicina)
-        			endif
-      			endif
       			
 			DbDelete2()
       			go nRec
     		enddo
     		
-		if fCROba
-     			MsgO("Pokrecem SQL-croba update")
-       			ASQLCroba(@nH,"#END#"+cSQLFile)
-     			Msgc()
-    		endif
   	endif
 endif // !fr
 
@@ -770,7 +732,6 @@ local cKontrolBroj:=""
 local nPom1
 local nPom2
 local nPom3
-local fCRoba:=.f.
 local nHPid
 local cType
 
@@ -896,18 +857,6 @@ set order to tag "ID"
 select pripr
 go top
 
-//parametri za croba
-
-fCroba:=goModul:lCRoba
-cROBA_RJ:=goModul:cRoba_RJ
-
-if fCROBA
-	nH:=0
- 	// zapocni sql
- 	cSQLFile:='c:\sigma\sql'
- 	ASQLCRoba(@nH,cSQLFile)
-endif
-
 Box("#Proces azuriranja u toku",3,60)
 	do while !eof()
   	if lViseDok
@@ -943,14 +892,6 @@ Box("#Proces azuriranja u toku",3,60)
   	endif
   	
 	Gather2() // opet nemoj otkljucavati
-
-   	if (fCRoba .and. idfirma$cRoba_Rj)
-     		if (_idtipdok="0")
-       			ASQLCroba(@nH,"#CONT",_idroba,"V","1",_kolicina)
-     		elseif (_idtipdok="1" .and. !(_idtipdok="10".and._serbr="*") .or._idtipdok$"20#27" .and. _serbr="*" .or. _idtipdok="21")
-       			ASQLCroba(@nH,"#CONT",_idroba,"V","2",_kolicina)
-     		endif
-   	endif
 
   	if (fProtu .and. idtipdok=="13")
      		// appblank2(.f.,.t.)
@@ -1201,11 +1142,6 @@ else
   	endif
 endif
 
-if fCRoba
-	MsgO("Pokrecem SQL-croba update")
-  	ASQLCroba(@nH,"#END#"+cSQLFile)
- 	Msgc()
-endif 
 
 BoxC()
 

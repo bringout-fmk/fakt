@@ -1644,12 +1644,13 @@ else
      		@ m_x+18+RKOR2,m_y+2  SAY "Kolicina " get _Kolicina   pict pickol valid {|| Prepak(_idroba,cPako,@_ambp,@_ambk,_kolicina),ShowGets(),V_Kolicina()}
      		RKOR:=2
    	else
+             /*
      		if (lPoNarudzbi .and. !_idtipdok="0")
        			aNabavke:={}
        			if !fNovi
          			AADD(aNabavke,{0,_cijena,_kolicina,_idnar,_brojnar})
        			endif
-       			KalkNab3m(_idfirma,_idroba,aNabavke)
+       			KalkNab3m(_idfirma,_idroba, aNabavke)
        			if (LEN(aNabavke)>1)
 				lGenStavke:=.t.
 			endif
@@ -1669,6 +1670,7 @@ else
      		else
        			@ m_x+16+RKOR2,m_y+2 SAY "Kolicina " get _Kolicina pict pickol valid V_Kolicina()
      		endif
+              */
    	endif
 endif
 

@@ -1040,26 +1040,4 @@ return
 *}
 
 
-/*
-function O_Log()
-
-local cPom, cLogF
-
-cPom:=KUMPATH+"\SQL"
-DirMak2(cPom)
-cLogF:=cPom+"\"+replicate("0",8)
-
-OKreSQLPar(cPom)
-
-public gSQLSite:=field->_SITE_
-public gSQLUser:=1
-use
-
-//postavi site
-Gw("SET SITE "+Str(gSQLSite))
-Gw("SET TODATABASE OFF")
-Gw("SET MODUL "+gModul)
-return
-
-*/
 
