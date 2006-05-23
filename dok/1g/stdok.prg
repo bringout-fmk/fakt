@@ -590,46 +590,6 @@ return TRIM(cVrati)
 
 
 
-/*! \fn StZaglav2(c1,c2)
- *  \brief Stampa zaglavlja druga varijanta
- *  \param c1
- *  \param c2
- */
- 
-function StZaglav2(c1,c2)
-*{
-LOCAL cPom, i
-  IF IzFMKIni("FAKT","BiratiUplatniRacunZaPrikazUZaglavlju","N",KUMPATH)=="D"
-    cPom := IzFMKIni("FAKT_UplatniRacuni",;
-                     "SifraVrstePlacanja_"+PRIPR->idvrstep,;
-                     "?",;
-                     KUMPATH)
-    IF cPom="#"
-      cPom:=SUBSTR(cPom,2)
-      gzP1:=TUN(cPom,"#")
-      FOR i:=1 TO LEN(gzP1)
-        gzP1[i] := IzFMKIni("FAKT_UplatniRacuni",;
-                            "SifraVrstePlacanja_"+gzP1[i],;
-                            "?",;
-                            KUMPATH)
-        gzP1[i] := PADR( gzP1[i] , 65 )
-      NEXT
-      altd()
-    ELSE
-      gzP1 := PADC(ALLTRIM(cPom),65)
-    ENDIF
-  ELSE
-    gzP1 := NIL
-  ENDIF
-  IF cIdFirma!="10".and.gMjRJ=="D"
-    StZaglavlje("zagl"+cIdFirma+".txt",c2,gzP1)
-  ELSE
-    StZaglavlje(c1,c2,gzP1)
-  ENDIF
-return
-*}
-
-
 /*! \fn JokSBr()
  *  \brief
  */

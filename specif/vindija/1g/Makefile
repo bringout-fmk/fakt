@@ -4,7 +4,7 @@ MMODUL=fakt
 
 SRCDOSROOT=c:\\dev\\fmk\\$(MMODUL)\\specif\\vindija\\1g\\
 
-PRGS=distrib.prg vindija.prg mnu_sif.prg
+PRGS=vindija.prg mnu_sif.prg
 
 CS=
 ASMS=

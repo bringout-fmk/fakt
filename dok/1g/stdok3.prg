@@ -4,26 +4,6 @@
  * ----------------------------------------------------------------
  *                                     Copyright Sigma-com software 
  * ----------------------------------------------------------------
- * $Source: c:/cvsroot/cl/sigma/fmk/fakt/dok/1g/stdok3.prg,v $
- * $Author: mirsad $ 
- * $Revision: 1.5 $
- * $Log: stdok3.prg,v $
- * Revision 1.5  2002/09/16 08:57:51  mirsad
- * dokumentovanje INI parametara
- *
- * Revision 1.4  2002/09/16 08:49:49  mirsad
- * dokumentovanje INI parametara
- *
- * Revision 1.3  2002/07/04 08:34:19  mirsad
- * dokumentovanje ini parametara
- *
- * Revision 1.2  2002/06/18 13:01:05  sasa
- * no message
- *
- * Revision 1.1.1.1  2002/06/17 18:30:18  ernad
- * no message
- *
- *
  */
  
 
@@ -162,7 +142,7 @@ if idtipdok $ "10#11"; nLTxt2+=7; endif
 POCNI STAMPU
 
 P_10CPI
-StZaglav2(gVlZagl,PRIVPATH)
+//StZaglav2(gVlZagl,PRIVPATH)
 
 
 // ---------------- MS 07.04.01

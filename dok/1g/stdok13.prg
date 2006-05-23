@@ -248,7 +248,7 @@ for i:=1 to len(cTxt2)
 next
 if idtipdok $ "10#11"; nLTxt2+=7; endif
  P_10CPI
- StZaglav2(gVlZagl,PRIVPATH)
+ //StZaglav2(gVlZagl,PRIVPATH)
 
 
 if gVarF=="3"
@@ -639,7 +639,7 @@ if idtipdok $ "10#11"
 endif
 
 P_10CPI
-StZaglav2(gVlZagl,PRIVPATH)
+//StZaglav2(gVlZagl,PRIVPATH)
 
 cStr:=idtipdok+" "+trim(brdok)
 cIdTipDok:=IdTipDok
@@ -649,11 +649,7 @@ if !(cIdTipDok $ "00#01#19")
    	cStr:=&cPom+" "+trim(BrDok)
 endif
 
-if IzFMKINI("STAMPA","Opresa13ka_A4","N",KUMPATH)=="D"
-	nPomak:=44+0
-else
-   	nPomak:=44+30
-endif
+nPomak:=44+30
 ?? space(nPomak),gPB_ON+"旼컴컴컴컴컴컴컴컴컴컴컴컴컴컴커"+gPB_OFF
 ? space(1+nPomak),gPB_ON+padc(alltrim(cTxt3a),30)+gPB_OFF
 ? padr(Mjesto(cIdFirma)+", "+dtoc(datdok)+" godine",42)

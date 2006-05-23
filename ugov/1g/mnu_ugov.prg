@@ -1,15 +1,8 @@
 #include "\dev\fmk\fakt\fakt.ch"
 /*
  * ----------------------------------------------------------------
- *                                     Copyright Sigma-com software 
+ *                           Copyright Sigma-com software 2000-2006
  * ----------------------------------------------------------------
- * $Source: c:/cvsroot/cl/sigma/fmk/fakt/ugov/1g/mnu_ugov.prg,v $
- * $Author: sasa $ 
- * $Revision: 1.1 $
- * $Log: mnu_ugov.prg,v $
- * Revision 1.1  2002/07/05 14:25:35  sasa
- * dodat novi prg
- *
  *
  */
 

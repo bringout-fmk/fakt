@@ -4,16 +4,6 @@
  * ----------------------------------------------------------------
  *                                     Copyright Sigma-com software 
  * ----------------------------------------------------------------
- * $Source: c:/cvsroot/cl/sigma/fmk/fakt/dok/1g/stdokm.prg,v $
- * $Author: sasa $ 
- * $Revision: 1.2 $
- * $Log: stdokm.prg,v $
- * Revision 1.2  2002/06/18 13:01:05  sasa
- * no message
- *
- * Revision 1.1.1.1  2002/06/17 18:30:18  ernad
- * no message
- *
  *
  */
  
@@ -330,7 +320,7 @@ LOCAL i:=0
  P_10CPI
  if gBold=="1"; B_ON; endif
  FOR i:=1 TO LEN(aZagl)
-   StZaglav2(aZagl[i],PRIVPATH)
+   //StZaglav2(aZagl[i],PRIVPATH)
  NEXT
  xKA:=prow()
  FOR i:=1 TO LEN(aZagl2)

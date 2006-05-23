@@ -2,33 +2,8 @@
 
 /*
  * ----------------------------------------------------------------
- *                                     Copyright Sigma-com software 
+ *                        Copyright Sigma-com software 1996-2006 
  * ----------------------------------------------------------------
- * $Source: c:/cvsroot/cl/sigma/fmk/fakt/ugov/1g/p_ugov.prg,v $
- * $Author: sasavranic $ 
- * $Revision: 1.7 $
- * $Log: p_ugov.prg,v $
- * Revision 1.7  2004/03/23 15:47:59  sasavranic
- * no message
- *
- * Revision 1.6  2003/03/01 08:42:46  mirsad
- * ispravke bugova-Zips
- *
- * Revision 1.5  2003/02/27 01:27:30  mirsad
- * male dorade za zips
- *
- * Revision 1.4  2002/09/13 11:39:27  mirsad
- * dokumentovanje INI parametara
- *
- * Revision 1.3  2002/07/04 08:34:19  mirsad
- * dokumentovanje ini parametara
- *
- * Revision 1.2  2002/06/19 09:53:44  sasa
- * no message
- *
- * Revision 1.1.1.1  2002/06/17 18:30:18  ernad
- * no message
- *
  *
  */
 
@@ -198,7 +173,6 @@
  */
  
 function P_Ugov(cId,dx,dy)
-*{
 local i
 altd()
 PRIVATE DFTkolicina:=1, DFTidroba:=PADR("ZIPS",10)
@@ -218,15 +192,16 @@ IF RUGOV->(FIELDPOS("DESTIN"))<>0
   AADD (ImeKol,{ "Naziv partnera", {|| Ocitaj(F_PARTN,IdPartner,"NazPartn()") }, ""   } )
 ENDIF
 
-//************ vidi sta ces prikazati ***************************
 if IzFMkIni('Fakt_Ugovori',"Opis",'D')=="D"
   AADD (ImeKol,{ "Opis"   , {|| naz},      "Naz"                                       } )
 endif
+
 if IzFMkIni('Fakt_Ugovori',"Datumi",'D')=="D"
-  // datumi bitni za obraüun
+  // datumi bitni za obracun
   AADD (ImeKol,{ "DatumOd", {|| DatOd},    "DatOd"                                     } )
   AADD (ImeKol,{ "DatumDo", {|| DatDo},    "DatDo"                                     } )
 endif
+
 AADD (ImeKol,{ "Aktivan", {|| Aktivan},  "Aktivan" , {|| .t.}, {|| wAKtivan $ "DN"}   } )
 AADD (ImeKol,{ "TipDok" , {|| IdTipdok}, "IdTipDok"                                  } )
 if IzFMkIni('Fakt_Ugovori',"Vrsta",'D')=="D"
@@ -275,15 +250,12 @@ ELSE
   return PostojiSifra(F_UGOV,IF(cID==NIL,"ID","NAZ2"),10,77,"Lista Ugovora <F5> - definisi ugovorÕÕÕÕ<F6> - izvjestaj/lista za K1='G'",@cId,dx,dy,{|Ch| UgovBlok(Ch)})
 ENDIF
 return
-*}
-
 
 
 /*! \fn UgovBlok(Ch)
  *  \brief Obrada 
  *  \param Ch  - pritisnuti taster
  */
- 
 function UgovBlok(Ch)
 *{
 local GetList:={}, nRec:=0

@@ -612,7 +612,7 @@ else
  	if gBold=="1"
 		B_ON
 	endif
- 	StZaglav2(gVlZagl,PRIVPATH)
+ 	//StZaglav2(gVlZagl,PRIVPATH)
 endif
 
 cIdTipDok:=IdTipDok
@@ -1292,7 +1292,7 @@ FF
 if gZagl=="1"  // zaglavlje na svakoj stranici
  P_10CPI
  if gBold=="1";B_ON;endif
- StZaglav2(gVlZagl,PRIVPATH)
+ //StZaglav2(gVlZagl,PRIVPATH)
  StKupac()
 endif
 if gBold=="1";B_ON;endif

@@ -5,7 +5,7 @@ MMODUL=fakt
 
 SRCDOSROOT=c:\\dev\\fmk\\$(MMODUL)\\ugov\\1g\\
 
-PRGS=genug.prg p_ugov.prg mnu_ugov.prg mnu_tir.prg 
+PRGS=genug.prg p_ugov.prg mnu_ugov.prg  
 CS=
 ASMS=
 

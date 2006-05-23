@@ -53,10 +53,6 @@ if IsKonsig()
 	AADD(opcexe,{|| KarticaKons()})
 endif    	
 
-if IsVindija()
-	AADD(opc,"T. teretni list")
-	AADD(opcexe,{|| TeretniList()})
-endif
 
 private fID_J:=.f.
 if IzFmkIni('SifRoba','ID_J','N')=="D"

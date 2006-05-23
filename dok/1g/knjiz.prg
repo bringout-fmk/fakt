@@ -6,14 +6,13 @@ static lDirty := .t.
 
 /*
  * ----------------------------------------------------------------
- *                                     Copyright Sigma-com software 
+ *                          Copyright Sigma-com software 1996-2006 
  * ----------------------------------------------------------------
  */
 
 /*! \file fmk/fakt/dok/1g/knjiz.prg
  *  \brief
  */
-
 
 /*! \ingroup ini
   * \var *string FmkIni_KumPath_Doks2_ZK1
@@ -1171,11 +1170,7 @@ AADD(aPom, "19 - "+Naziv19ke())
 
 AADD(aPom, "20 - Ponuda/Avansna faktura") 
 
-if glDistrib
-  AADD(aPom, "21 - Teretni list")
-else
-  AADD(aPom, "21 - Revers")
-endif
+AADD(aPom, "21 - Revers")
 
 
 AADD(aPom, "22 - Realizovane otpremnice   ")
@@ -3033,13 +3028,7 @@ opc[2]:="2. sredjivanje rednih br.stavki dokumenta"
 opc[3]:="3. ispravka teksta na kraju fakture"
 opc[4]:="4. svedi protustavkom vrijednost dokumenta na 0"
 opc[5]:="5. obracunaj porez na sve stavke"
-if gNovine=="D"
- opc[6]:="6. novine:priprema tiraza i generacija dostavnica"
-elseif glDistrib
- opc[6]:="6. priprema sistemskih i konacnih otpremnica"
-else
- opc[6]:="-----------------------------------------------"
-endif
+opc[6]:="-----------------------------------------------"
 opc[7]:="7. FAKT  <->  diskete"
 opc[8]:="8. brisanje dokumenta iz pripreme"
 lKonsig := ( IzFMKINI("FAKT","Konsignacija","N",KUMPATH)=="D" )
@@ -3049,11 +3038,7 @@ else
  AADD(opc,"-----------------------------------------------")
 endif
 AADD(opc,"A. kompletiranje iznosa fakture pomocu usluga")
-if glDistrib
- AADD(opc,"B. generacija teretnog lista na osnovu narudzbi")
-else
- AADD(opc,"-----------------------------------------------")
-endif
+AADD(opc,"-----------------------------------------------")
 AADD(opc, "C. import txt-a")
 
 h[1]:=h[2]:=""
@@ -3066,11 +3051,7 @@ do while .t.
     case Izbor==0
 	exit
     case izbor == 1
-	if glDistrib
-	  Gen10iz26()
-	else
-	  GenUg()
-	endif
+	GenUg()
     case izbor == 2
 	SrediRbr()
     case izbor == 3
@@ -3131,8 +3112,6 @@ do while .t.
        BoxC()
     case izbor == 5
        ObracunajPP()
-    case izbor == 6 .and. glDistrib
-       MenuSistOtp()
     case izbor == 7
        PrenosDiskete()
     case izbor == 8
@@ -3162,8 +3141,6 @@ do while .t.
        GKRacun()
     case izbor == 10
        KomIznosFakt()
-    case izbor == 11
-       Teretnilist(.t.)
     case izbor == 12
     	ImportTxt()
   endcase
