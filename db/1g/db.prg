@@ -829,31 +829,13 @@ if lViseDok
 		return
 	endif
 else
-	select doks
-	go top
-	set order to 1
-
+	// ako je samo jedan dokument provjeri da li je u dupli
 	cKontrolBroj:=pripr->(idfirma+idtipdok+brdok)
 
-	seek cKontrolBroj
-
-	lVecPostoji:=(Found() .and. (gMreznoNum=="N" .or. M1 <> "Z"))
-
-	if !lVecPostoji
-		// nema ga u DOKS, ima li ga u FAKT ?
-   		select fakt
-		seek cKontrolBroj
-   		if Found()
-			lVecPostoji:=.t.
-		endif
-	endif
-
-	if lVecPostoji
+	if dupli_dokument(cKontrolBroj)
 		Beep(4)
   		Msg("Dokument "+pripr->(idfirma+"-"+idtipdok+"-"+brdok)+" vec postoji pod istim brojem!",4)
-  		if !lViseDok
-    			return
-  		endif
+    		return
 	endif
 endif
 
