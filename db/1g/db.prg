@@ -823,31 +823,38 @@ if (gProtu13=="D" .and. pripr->idtipdok=="13" .and. Pitanje(,"Napraviti protu-do
     	fProtu:=.t.
 endif
 
-select doks
-go top
-set order to 1
-
-cKontrolBroj:=pripr->(idfirma+idtipdok+brdok)
-
-seek cKontrolBroj
-
-lVecPostoji:=(Found() .and. (gMreznoNum=="N" .or. M1 <> "Z"))
-
-if !lVecPostoji
-	// nema ga u DOKS, ima li ga u FAKT ?
-   	select fakt
-	seek cKontrolBroj
-   	if Found()
-		lVecPostoji:=.t.
+// ako je vise dokumenata u pripremi provjeri duple stavke
+if lViseDok
+	if prov_duple_stavke() == 1
+		return
 	endif
-endif
+else
+	select doks
+	go top
+	set order to 1
 
-if lVecPostoji
-	Beep(4)
-  	Msg("Dokument "+pripr->(idfirma+"-"+idtipdok+"-"+brdok)+" vec postoji pod istim brojem!",4)
-  	if !lViseDok
-    		return
-  	endif
+	cKontrolBroj:=pripr->(idfirma+idtipdok+brdok)
+
+	seek cKontrolBroj
+
+	lVecPostoji:=(Found() .and. (gMreznoNum=="N" .or. M1 <> "Z"))
+
+	if !lVecPostoji
+		// nema ga u DOKS, ima li ga u FAKT ?
+   		select fakt
+		seek cKontrolBroj
+   		if Found()
+			lVecPostoji:=.t.
+		endif
+	endif
+
+	if lVecPostoji
+		Beep(4)
+  		Msg("Dokument "+pripr->(idfirma+"-"+idtipdok+"-"+brdok)+" vec postoji pod istim brojem!",4)
+  		if !lViseDok
+    			return
+  		endif
+	endif
 endif
 
 fRobaIDJ:=goModul:lId_J
@@ -1148,6 +1155,156 @@ BoxC()
 closeret
 return
 *}
+
+
+// provjeri duple stavke u pripremi za vise dokumenata
+function prov_duple_stavke() 
+local cSeekDok
+local lDocExist:=.f.
+
+select pripr
+go top
+
+// provjeri duple dokumente
+do while !EOF()
+	cSeekDok := pripr->(idfirma + idtipdok + brdok)
+	if dupli_dokument(cSeekDok)
+		lDocExist := .t.
+		exit
+	endif
+	select pripr
+	skip
+enddo
+
+// postoje dokumenti dupli
+if lDocExist
+	MsgBeep("U pripremi su se pojavili dupli dokumenti!")
+	if Pitanje(,"Pobrisati duple dokumente pripr-kum (D/N)?")=="N"
+		MsgBeep("Dupli dokumenti ostavljeni u tabeli pripreme!#Prekidam operaciju azuriranja!")
+		return 1
+	else
+		Box(,1,60)
+			cKumPripr := "P"
+			@ m_x+1, m_y+2 SAY "Zelite brisati stavke u KUM ili PRIPR (K/P)" GET cKumPripr VALID !Empty(cKumPripr) .or. cKumPripr $ "KP" PICT "@!"
+			read
+		BoxC()
+		if cKumPripr == "P"
+			return prip_brisi_duple()
+		else
+			return kum_brisi_duple()
+		endif
+	endif
+endif
+
+return 0
+*}
+
+
+// brisi stavke iz pripreme koje se vec nalaze u kumulativu
+function prip_brisi_duple()
+local cSeek
+select pripr
+go top
+
+do while !EOF()
+	cSeek := pripr->(idfirma + idtipdok + brdok)
+	
+	if dupli_dokument(cSeek)
+		// pobrisi stavku
+		select pripr
+		delete
+	endif
+	
+	select pripr
+	skip
+enddo
+
+return 0
+
+
+// brisi stavke iz kumulativa koje se vec nalaze u pripremi
+function kum_brisi_duple()
+local cSeek
+select pripr
+go top
+
+cKontrola := "XXX"
+
+do while !EOF()
+	
+	cSeek := pripr->(idfirma + idtipdok + brdok)
+	
+	if cSeek == cKontrola
+		skip
+		loop
+	endif
+	
+	if dupli_dokument(cSeek)
+		
+		// provjeri da li je tabela zakljucana
+		select doks
+		
+		if !FLock()
+			Msg("DOKS datoteka je zauzeta ", 3)
+			return 1
+		endif
+		
+		// brisi doks
+		set order to 1
+		go top
+		seek cSeek
+		if Found()
+			do while !eof() .and. doks->(idfirma+idtipdok+brdok) == cSeek
+      				skip 1
+				nRec:=RecNo()
+				skip -1
+      				DbDelete2()
+      				go nRec
+    			enddo
+    		endif
+		
+		// brisi iz fakt
+		select fakt
+		set order to 1
+		go top
+		seek cSeek
+		if Found()
+			do while !EOF() .and. fakt->(idfirma + idtipdok + brdok) == cSeek
+				
+				skip 1
+				nRec:=RecNo()
+				skip -1
+				DbDelete2()
+				go nRec
+			enddo
+		endif
+	endif
+	
+	cKontrola := cSeek
+	
+	select pripr
+	skip
+enddo
+
+return 0
+
+
+function dupli_dokument(cSeek)
+select doks
+set order to 1
+go top
+seek cSeek
+if Found()
+	return .t.
+endif
+select fakt
+set order to 1
+go top
+seek cSeek
+if Found()
+	return .t.
+endif
+return .f.
 
 
 /*! \fn OdrediNBroj(_idfirma,_idtipdok)
