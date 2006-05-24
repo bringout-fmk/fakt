@@ -1161,18 +1161,21 @@ enddo
 // postoje dokumenti dupli
 if lDocExist
 	MsgBeep("U pripremi su se pojavili dupli dokumenti!")
-	if Pitanje(,"Pobrisati duple dokumente pripr-kum (D/N)?")=="N"
+	if Pitanje(,"Pobrisati duple dokumente (D/N)?", "D")=="N"
 		MsgBeep("Dupli dokumenti ostavljeni u tabeli pripreme!#Prekidam operaciju azuriranja!")
 		return 1
 	else
 		Box(,1,60)
 			cKumPripr := "P"
-			@ m_x+1, m_y+2 SAY "Zelite brisati stavke u KUM ili PRIPR (K/P)" GET cKumPripr VALID !Empty(cKumPripr) .or. cKumPripr $ "KP" PICT "@!"
+			@ m_x+1, m_y+2 SAY "Zelite brisati stavke iz kumulativa ili pripreme (K/P)" GET cKumPripr VALID !Empty(cKumPripr) .or. cKumPripr $ "KP" PICT "@!"
 			read
 		BoxC()
+		
 		if cKumPripr == "P"
+			// brisi pripremu
 			return prip_brisi_duple()
 		else
+			// brisi kumulativ
 			return kum_brisi_duple()
 		endif
 	endif
