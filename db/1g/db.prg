@@ -1234,6 +1234,7 @@ do while !EOF()
 			return 1
 		endif
 		
+		MsgO("Brisem stavke iz kumulativa ... sacekajte trenutak!")
 		// brisi doks
 		set order to 1
 		go top
@@ -1263,6 +1264,7 @@ do while !EOF()
 				go nRec
 			enddo
 		endif
+		MsgC()
 	endif
 	
 	cKontrola := cSeek
