@@ -1666,10 +1666,11 @@ else
        			@ m_x+16+RKOR2,m_y+2 SAY "Kolicina " get _Kolicina pict pickol valid V_Kolicina()
      		endif
               */
-   	endif
+   	
+       		@ m_x+16+RKOR2,m_y+2 SAY "Kolicina " get _Kolicina pict pickol valid V_Kolicina()
+	
+	endif
 endif
-
-
 
 private trabat:="%"
 
