@@ -2,63 +2,8 @@
 
 /*
  * ----------------------------------------------------------------
- *                                     Copyright Sigma-com software 
+ *                          Copyright Sigma-com software 2000-2006 
  * ----------------------------------------------------------------
- * $Source: c:/cvsroot/cl/sigma/fmk/fakt/sif/1g/sifre.prg,v $
- * $Author: sasavranic $ 
- * $Revision: 1.15 $
- * $Log: sifre.prg,v $
- * Revision 1.15  2004/05/27 09:27:02  sasavranic
- * Koristenje zajednickog sifranika valuta
- *
- * Revision 1.14  2004/03/23 15:47:59  sasavranic
- * no message
- *
- * Revision 1.13  2003/07/24 15:58:38  sasa
- * stampa podataka o bankama na narudzbenici
- *
- * Revision 1.12  2003/05/27 15:34:13  mirsad
- * ukinuo f-ju za pregled normativa , prebacio je u modul roba/rpt_sast.prg
- *
- * Revision 1.11  2003/03/12 10:37:09  mirsad
- * parametrizirao poziv labeliranja
- *
- * Revision 1.10  2003/02/27 01:27:30  mirsad
- * male dorade za zips
- *
- * Revision 1.9  2002/09/13 08:44:54  mirsad
- * dokumentovanje INI parametara
- *
- * Revision 1.8  2002/09/13 08:43:12  mirsad
- * Dokumentovanje INI parametara
- *
- * Revision 1.7  2002/07/08 08:27:47  ernad
- *
- *
- * debug - uzimanje teksta na kraju fakture
- *
- * Revision 1.6  2002/07/04 19:04:08  ernad
- *
- *
- * ciscenje sifrarnik fakt
- *
- * Revision 1.5  2002/07/04 08:34:19  mirsad
- * dokumentovanje ini parametara
- *
- * Revision 1.4  2002/07/03 12:35:37  sasa
- * todo: iskoristiti iz f-je sifreold() sve one sifrarnike koji trenutno nisu implementirani u /fmk/svi i /fmk/roba.
- * Izbacena f-ja sifre()
- *
- * Revision 1.3  2002/06/24 08:15:02  sasa
- * no message
- *
- * Revision 1.2  2002/06/19 08:47:27  sasa
- * no message
- *
- * Revision 1.1.1.1  2002/06/17 18:30:18  ernad
- * no message
- *
- *
  */
  
 
@@ -219,16 +164,12 @@
 
 
 
-
-/*! \fn P_KalPos(cId,dx,dy)
- *  \brief Otvara sifranik kalendar posjeta ako se u uslovu zada ID koji ne postoji
- *  \param cId
- *  \param dx
- *  \param dy
- */
- 
+// ------------------------------------------------------------------------
+// P_KalPos(cId,dx,dy)
+// Otvara sifranik kalendar posjeta ako se u uslovu zada ID koji ne postoji
+// ------------------------------------------------------------------------
 function P_KalPos(cId,dx,dy)
-*{
+
 PRIVATE ImeKol,Kol:={}
 ImeKol:={ ;
           { "DATUM"         , {|| datum}   , "datum"    },;
@@ -240,20 +181,16 @@ ImeKol:={ ;
 FOR i:=1 TO LEN(ImeKol); AADD(Kol,i); NEXT
 Private gTBDir:="N"
 
-return PostojiSifra(F_KALPOS,1,10,75,"Kalendar posjeta",@cId,dx,dy)
-*}
+return PostojiSifra(F_KALPOS, 1, 10, 75, "Kalendar posjeta", @cId, dx, dy)
 
 
 
-/*! \fn P_Relac(cId,dx,dy)
- *  \brief Otvara sifranik relacija
- *  \param cId
- *  \param dx
- *  \param dy
- */
- 
+
+// ---------------------------------------------
+// P_Relac(cId,dx,dy)
+// Otvara sifranik relacija
+// ---------------------------------------------
 function P_Relac(cId,dx,dy)
-*{
 PRIVATE ImeKol,Kol:={}
 ImeKol:={ ;
           { "ID"                 , {|| id },       "id"  , {|| .t.}, {|| .t.}     },;
@@ -265,7 +202,6 @@ FOR i:=1 TO LEN(ImeKol); AADD(Kol,i); NEXT
 Private gTBDir:="N"
 
 return PostojiSifra(F_RELAC,1,10,75,"Lista: Relacije",@cId,dx,dy)
-*}
 
 
 
@@ -277,7 +213,7 @@ return PostojiSifra(F_RELAC,1,10,75,"Lista: Relacije",@cId,dx,dy)
  */
  
 function P_Vozila(cId,dx,dy)
-*{
+
 PRIVATE ImeKol,Kol:={}
 ImeKol:={ ;
           { "ID"     , {|| id },     "id"  , {|| .t.}, {|| vpsifra(wId)}     },;
@@ -288,7 +224,7 @@ FOR i:=1 TO LEN(ImeKol); AADD(Kol,i); NEXT
 Private gTBDir:="N"
 
 return PostojiSifra(F_VOZILA,1,10,75,"Lista: Vozila",@cId,dx,dy)
-*}
+
 
 
 
@@ -301,7 +237,7 @@ return PostojiSifra(F_VOZILA,1,10,75,"Lista: Vozila",@cId,dx,dy)
  */
 
 function P_Konto(cId,dx,dy)
-*{
+
 PRIVATE ImeKol,Kol
 ImeKol:={ ;
           { "ID  ",  {|| id },     "id"  , {|| .t.}, {|| vpsifra(wId)}     },;
@@ -311,7 +247,7 @@ Kol:={1,2}
 Private gTBDir:="N"
 
 return PostojiSifra(F_KONTO,1,10,60,"Lista: Konta",@cId,dx,dy)
-*}
+
 
 
 
@@ -325,7 +261,7 @@ return PostojiSifra(F_KONTO,1,10,60,"Lista: Konta",@cId,dx,dy)
  */
 
 function P_FaSast(cid,dx,dy)
-*{
+
 
 PRIVATE ImeKol,Kol
 ImeKol:={ }
@@ -370,7 +306,7 @@ go top
 Private gTBDir:="N"
 return PostojiSifra(F_ROBA,"IDUN_ROBAPRO",17,77,"Pregled gotovih proizvoda: <ENTER> Unos norme, <Ctrl-F4> Kopiraj normu",@cid,dx,dy,{|Ch| SastBlok(Ch)})
 #endif
-*}
+
 
 
 
@@ -380,7 +316,7 @@ return PostojiSifra(F_ROBA,"IDUN_ROBAPRO",17,77,"Pregled gotovih proizvoda: <ENT
  */
  
 function SastBlok(Ch)
-*{
+
 local nUl,nIzl,nRezerv,nRevers,fOtv:=.f.,nIOrd,nFRec, aStanje
 
 if Ch==K_CTRL_F9 // zabrani brisanje
@@ -541,7 +477,7 @@ elseif Ch=K_F10  // ostale opcije
 
 endif
 return DE_CONT
-*}
+
 
 
 
@@ -551,7 +487,7 @@ return DE_CONT
  */
  
 function EdSastBlok(Ch)
-*{
+
 if ch=K_CTRL_F9
    MsgBeep("Nedozvoljena opcija")
    return 7  // kao de_refresh, ali se zavrsava izvr{enje f-ja iz ELIB-a
@@ -561,7 +497,7 @@ endif
 #endif
 
 return DE_CONT
-*}
+
 
 
 
@@ -573,7 +509,7 @@ return DE_CONT
  */
  
 function FaPartnBlock(Ch)
-*{
+
 LOCAL cSif:=PARTN->id, cSif2:=""
 
 if Ch==K_F5
@@ -582,7 +518,7 @@ if Ch==K_F5
 endif
 
 return DE_CONT
-*}
+
 
 
 /*! \fn IzFUgovor()
@@ -591,7 +527,7 @@ return DE_CONT
  */
  
 function IzfUgovor()
-*{
+
 if IzFMkIni('FIN','VidiUgovor','N')=="D"
 
 Pushwa()
@@ -651,7 +587,7 @@ PopWa()
 endif // iz fmk.ini
 
 return .t.
-*}
+
 
 
 
@@ -661,7 +597,7 @@ return .t.
  */
  
 function FaRobaBlock(Ch)
-*{
+
 LOCAL cSif:=ROBA->id, cSif2:=""
 LOCAL nArr:=SELECT()
 
@@ -859,7 +795,7 @@ RETURN DE_CONT
  */
  
 function FaktStanje(cIdRoba)
-*{
+
 local nUl,nIzl,nRezerv,nRevers,fOtv:=.f.,nIOrd,nFRec, aStanje
 select roba
 select (F_FAKT)
@@ -908,7 +844,7 @@ endif
 select roba
 BoxStanje(aStanje, cIdRoba)      // nUl,nIzl,nRevers,nRezerv)
 return
-*}
+
 
 
 /*! \fn BoxStanje(aStanje,cIdRoba)
@@ -918,7 +854,7 @@ return
  */
  
 function BoxStanje(aStanje,cIdroba)
-*{
+
 local picdem:="9999999.999", nR, nC, nTSta := 0, nTRev := 0, nTRez := 0,;
       nTOst := 0, npd, cDiv := " ³ ", nLen
 
@@ -1019,7 +955,7 @@ local picdem:="9999999.999", nR, nC, nTSta := 0, nTRev := 0, nTRez := 0,;
  BoxC()
  
 return
-*}
+
 
 
 /*! \fn P_VrsteP(cId,dx,dy)
@@ -1030,14 +966,14 @@ return
  */
 
 function P_VrsteP(cId,dx,dy)
-*{
+
 PRIVATE ImeKol,Kol:={}
 ImeKol:={ { "ID ",  {|| id },       "id"  , {|| .t.}, {|| vpsifra(wId)}      },;
           { PADC("Naziv",20), {|| naz},      "naz"       };
         }
  FOR i:=1 TO LEN(ImeKol); AADD(Kol,i); NEXT
 return PostojiSifra(F_VRSTEP,1,10,55,"Sifrarnik vrsta placanja",@cid,dx,dy)
-*}
+
 
 
 /*! \fn P_Ops(cId,dx,dy)
@@ -1048,7 +984,7 @@ return PostojiSifra(F_VRSTEP,1,10,55,"Sifrarnik vrsta placanja",@cid,dx,dy)
  */
 
 function P_Ops(cId,dx,dy)
-*{
+
 private imekol,kol
 
 ImeKol:={ { padr("Id",2), {|| id}, "id", {|| .t.}, {|| vpsifra(wid)} },;
@@ -1061,7 +997,7 @@ ImeKol:={ { padr("Id",2), {|| id}, "id", {|| .t.}, {|| vpsifra(wid)} },;
 Kol:={}
 FOR i:=1 TO LEN(ImeKol); AADD(Kol,i); NEXT
 return PostojiSifra(F_OPS,1,10,65,"Lista opcina",@cId,dx,dy)
-*}
+
 
 
 /*! \fn P_FTxt(cId, dx, dy)
@@ -1072,7 +1008,7 @@ return PostojiSifra(F_OPS,1,10,65,"Lista opcina",@cId,dx,dy)
  */
 
 function P_FTxt(cId, dx, dy)
-*{
+
 local vrati
 local nArr:=SELECT()
 
@@ -1095,7 +1031,7 @@ vrati:=PostojiSifra(F_FTXT, 1, 7, 77, "Faktura - tekst na kraju fakture", @cId ,
 Prozor0()
 select (nArr)
 RETURN vrati
-*}
+
 
 
 /*! \fn PrikFTxt()
@@ -1103,7 +1039,7 @@ RETURN vrati
  */
  
 function PrikFTxt()
-*{
+
 LOCAL  i:=0, aTXT:={}
  @ 3,60 SAY "SIFRA:"+id
  aTXT := TXTuNIZ( naz , 78 )
@@ -1115,14 +1051,14 @@ LOCAL  i:=0, aTXT:={}
    ENDIF
  NEXT
 return -1
-*}
+
 
 /*! \fn fn ObSif()
  *  \brief
  */
  
 static function ObSif()
-*{
+
 IF glDistrib
    O_RELAC
    O_VOZILA
@@ -1154,7 +1090,7 @@ IF glDistrib
    O_OPS
  ENDIF
 RETURN
-*}
+
 
 
 /*! \fn TxtUNiz(cTxt,nKol)
@@ -1164,7 +1100,7 @@ RETURN
  */
  
 function TxtUNiz(cTxt,nKol)
-*{
+
 LOCAL aVrati:={}, nPoz:=0, lNastavi:=.t., cPom:="", aPom:={}, i:=0
   cTxt:=TRIM(cTxt)
   DO WHILE lNastavi
@@ -1196,7 +1132,7 @@ LOCAL aVrati:={}, nPoz:=0, lNastavi:=.t., cPom:="", aPom:={}, i:=0
     ENDIF
   ENDDO
 RETURN aVrati
-*}
+
 
 
 
@@ -1207,7 +1143,7 @@ RETURN aVrati
  */
  
 function ImaUKumul(cKljuc,cTag)
-*{
+
   LOCAL lVrati:=.f., lUsed:=.t., nArr:=SELECT()
   SELECT (F_FAKT)
   IF !USED()
@@ -1229,7 +1165,7 @@ function ImaUKumul(cKljuc,cTag)
   ENDIF
   select (nArr)
 RETURN lVrati
-*}
+
 
 
 
@@ -1242,7 +1178,7 @@ RETURN lVrati
  */
 
 function P_DefDok(cId,dx,dy)
-*{
+
 Private ImeKol:={}
 Private Kol:={}
 AADD (ImeKol,{ "Sifra/ID" , {|| id}       ,"id"       , {|| .t.},  {|| vpsifra(wid) }  } )
@@ -1252,7 +1188,7 @@ Kol:={}
 FOR i:=1 TO LEN(ImeKol); AADD(Kol,i); NEXT
 Private gTBDir:="N"
 return PostojiSifra(F_FADO,1,10,60,"Lista dokumenata u FAKT <F5> - definisi izgled dokumenta",@cId,dx,dy,{|Ch| DefDokBlok(Ch)})
-*}
+
 
 
 /*! \fn DefDokBlok(Ch)
@@ -1261,7 +1197,7 @@ return PostojiSifra(F_FADO,1,10,60,"Lista dokumenata u FAKT <F5> - definisi izgl
  */
  
 function DefDokBlok(Ch)
-*{
+
 if Ch==K_CTRL_T
  if Pitanje(,"Izbrisati dokument i definiciju izgleda dokumenta ?","N")=="D"
    if Pitanje(,"Jeste li sigurni?","N")=="D"
@@ -1308,7 +1244,7 @@ else
   return DE_CONT
 endif
 return DE_CONT
-*}
+
 
 
 /*! \fn V_DefDok()
@@ -1317,7 +1253,7 @@ return DE_CONT
  */
  
 function V_DefDok()
-*{
+
 parameters cId
 private GetList:={}
 private ImeKol:={}
@@ -1346,7 +1282,7 @@ BrowseKey(m_x+3,m_y+1,m_x+14,m_y+75,ImeKol,{|Ch| EdDefDok(Ch)},"id+brisano=='"+c
 select fado
 BoxC()
 return .t.
-*}
+
 
 
 /*! \fn EdDefDok(Ch)
@@ -1355,7 +1291,7 @@ return .t.
  */
  
 function EdDefDok(Ch)
-*{
+
 local  fK1:=.f.
 local GetList:={}
 
@@ -1440,7 +1376,7 @@ do case
 
 endcase
 return nRet
-*}
+
 
 
 
@@ -1449,7 +1385,7 @@ return nRet
  */
  
 function LabelU()
-*{
+
 PushWA()
 cIdRoba   := DFTidroba
 cPartneri := SPACE(80)
@@ -1591,15 +1527,15 @@ if Pitanje(,"Aktivirati modul za stampu ?"," ")=="D"
   run &cKomLin
 endif
 return
-*}
+
 
 
 /*! \fn BlokSLU()
  */
 function BlokSLU()
-*{
+
 RETURN
-*}
+
 
 
 /*! \fn ZipsTemp()
@@ -1607,7 +1543,7 @@ RETURN
  */
  
 function ZipsTemp()
-*{
+
 PRIVATE DFTkolicina:=1, DFTidroba:=PADR("ZIPS",10)
 PRIVATE DFTvrsta  :="1", DFTidtipdok :="20", DFTdindem   := gOznVal
 PRIVATE DFTidtxt  :="10", DFTzaokr    :=2, DFTiddodtxt :="  "
@@ -1684,7 +1620,7 @@ enddo
 
 MsgBeep("Kraj...")
 return
-*}
+
 
 
 
@@ -1693,7 +1629,7 @@ return
  */
  
 function StIdRoba()
-*{
+
 *static string
 static cPrikIdRoba:=""
 *;
@@ -1706,14 +1642,14 @@ if cPrikIdRoba="ID_J"
 else
   return IDROBA
 endif
-*}
+
 
 /*! \fn OsvjeziIdJ()
  *  \brief Osvjezavanje fakta javnim siframa
  */
  
 function OsvjeziIdJ()
-*{
+
 if Pitanje(,"Osvjeziti FAKT javnim siframa ....","N")=="D"
 O_FAKT
 O_ROBA ; set order to tag "ID"
@@ -1751,7 +1687,7 @@ endif
 endif
 
 return
-*}
+
 
 
 /*! \fn SifkFill(cSifk,cSifv,cSifrarnik,cIdSif)
@@ -1762,7 +1698,7 @@ return
  */
  
 function SifkFill(cSifk,cSifv,cSifrarnik,cIDSif)
-*{
+
 PushWa()
 
 use (cSifK) new   alias _SIFK
@@ -1799,7 +1735,7 @@ select _sifk ;use
 
 PopWa()
 return
-*}
+
 
 
 /*! \fn SifkOsv(cSifk,cSifv,cSifrarnik,cIdSif,cRepFajl)
@@ -1812,7 +1748,7 @@ return
  */
  
 function SifkOsv(cSifk,cSifv,cSifrarnik,cIdSif,cRepFajl)
-*{
+
 LOCAL cDiff:=""
 PushWa()
 
@@ -1870,7 +1806,7 @@ select _SIFV; use
 
 PopWa()
 return
-*}
+
 
 
 /*! \fn SMark(cNazPolja)
@@ -1878,7 +1814,7 @@ return
  *  \param cNazPolja - ime polja koje sadrzi internu sifru artikla koji se trazi */
  
 function SMark(cNazPolja)
-*{
+
 // izbor prodajnog mjesta
 FUNC P_IDPM(cId,cIdPartner)
  LOCAL lVrati:=.f., nArr:=SELECT(), aNaz:={}
@@ -1911,7 +1847,7 @@ FUNC P_IDPM(cId,cIdPartner)
   ENDIF
   SELECT (nArr)
 RETURN lVrati
-*}
+
 
 
 /*! \fn IzborRelacije(cIdRelac,cIdDist,cIdVozila,dDatum,cMarsuta)
@@ -1924,7 +1860,7 @@ RETURN lVrati
  */
  
 function IzborRelacije(cIdRelac,cIdDist,cIdVozila,dDatum,cMarsruta)
-*{
+
 LOCAL lVrati:=.t., aMogRel:={}, nArr:=SELECT(), aIzb:={}
  IF cIdRelac=="NN  "
    cIdDist   := SPACE(LEN(cIdDist  ))
@@ -1974,7 +1910,7 @@ LOCAL lVrati:=.t., aMogRel:={}, nArr:=SELECT(), aIzb:={}
  ENDIF
  SELECT (nArr)
 RETURN lVrati
-*}
+
 
 
 /*! \fn UpisiURF(cTekst,cFajl,lNoviRed,lNoviFajl)
@@ -1986,10 +1922,10 @@ RETURN lVrati
  */
  
 function UpisiURF(cTekst,cFajl,lNoviRed,lNoviFajl)
-*{
+
 STRFILE(IF(lNoviRed,CHR(13)+CHR(10),"")+cTekst,cFajl,!lNoviFajl)
 RETURN
-*}
+
 
 
 
@@ -2000,7 +1936,7 @@ RETURN
  */
  
 function DiffMFV(cZN,cDiff)
-*{
+
 LOCAL lVrati:=.f.
   LOCAL i,aStruct
 
@@ -2025,6 +1961,6 @@ LOCAL lVrati:=.f.
     ENDIF
   NEXT
 RETURN lVrati
-*}
+
 
 

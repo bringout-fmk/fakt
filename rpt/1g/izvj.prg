@@ -3,55 +3,7 @@
 /*
  * ----------------------------------------------------------------
  *                                     Copyright Sigma-com software 
- * ----------------------------------------------------------------
- * $Source: c:/cvsroot/cl/sigma/fmk/fakt/rpt/1g/izvj.prg,v $
- * $Author: ernad $ 
- * $Revision: 1.13 $
- * $Log: izvj.prg,v $
- * Revision 1.13  2003/09/12 09:35:12  ernad
- * omoguceno biranje i VPC po RJ
- *
- * Revision 1.12  2003/09/12 09:01:57  ernad
- * no message
- *
- * Revision 1.11  2003/05/20 07:29:01  mirsad
- * Formatirao duzinu naziva robe za izvjestaje na 40 znakova.
- *
- * Revision 1.10  2003/01/19 23:44:17  ernad
- * test network speed (sa), korekcija bl.lnk
- *
- * Revision 1.9  2003/01/11 14:34:41  mirsad
- * ukinuo f-ju SezRad()
- *
- * Revision 1.8  2002/09/12 12:33:46  mirsad
- * dokumentovanje INI parametara
- *
- * Revision 1.7  2002/07/05 14:36:40  sasa
- * no message
- *
- * Revision 1.6  2002/07/05 08:23:07  ernad
- *
- *
- * parametar ExePath/Fakt_specif/Fakt_Kalk -> KumPath/Fakt/FaktKalk
- *
- * Revision 1.5  2002/07/04 08:34:19  mirsad
- * dokumentovanje ini parametara
- *
- * Revision 1.4  2002/07/03 12:40:53  sasa
- * izbacena f-ja izvj()
- *
- * Revision 1.3  2002/06/28 20:19:36  ernad
- *
- *
- * debug GenDokInv
- *
- * Revision 1.2  2002/06/19 08:47:21  sasa
- * no message
- *
- * Revision 1.1.1.1  2002/06/17 18:30:18  ernad
- * no message
- *
- *
+ * ---------------------------------------------------------------- 
  */
 
 /*! \file fmk/fakt/rpt/1g/izvj.prg

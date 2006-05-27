@@ -1289,7 +1289,7 @@ if (fNovi .and. (nRbr==1 .and. VAL(_podbr)<1)) // prva stavka
    	_zaokr:=2
    	_dindem:=LEFT(VAlBazna(),3)
 else
-	nPom:=ASCAN(aPom,{|x|_IdTipdok==LEFT(x,2)})
+	nPom:=ASCAN(aPom,{|x| _IdTipdok==LEFT(x,2)})
 endif
 
 if (nRbr==1 .and. VAL(_podbr) < 1)
@@ -1308,7 +1308,7 @@ if (nRbr==1 .and. VAL(_podbr) < 1)
 		read
 	endif
     	
-	nPom:=Menu2(5,30,aPom,nPom)
+	nPom:= Menu2 (5, 30, aPom, nPom)
     	
 	ESC_Return 0
     	
