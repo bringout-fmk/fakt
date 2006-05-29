@@ -1,7 +1,6 @@
 VERZIJA=CDX
 MODUL=FAKT
 
-EOBJCOPY=echo nista za kopirati
 PRGS=e.prg
 CS=
 ASMS=
@@ -14,3 +13,10 @@ MODUL_LIBS=fa_1ma.lib fa_2ma.lib fa_2db.lib fa_1db.lib fa_1upl.lib fa_1ugo.lib f
 
 include $(SC_BUILD_HOME_DIR)/sclib/Makefile_clipper
 
+LIBEXE:=@echo pokrenute make exe  !
+CPLIB:=@echo pokrenuti make exe !
+RMLIB:=@echo pokrenuti make exe !
+e.obj : $(SC_BUILD_HOME_DIR)/sclib/sc.ch $(SC_BUILD_HOME_DIR)/sclib/std_cdx.ch ../fakt.ch
+
+
+lib: exe
