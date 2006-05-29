@@ -422,10 +422,11 @@ return
 /*! \fn ZaglSRobe()
  *  \brief Zaglavlje izvjestaja stanje robe
  */
- 
 function ZaglSRobe()
-*{
-if nstr>0; FF; endif
+if nstr > 0
+  FF
+endif
+?
 P_COND
 ? space(4), "FAKT: "
 ?? "Stanje"

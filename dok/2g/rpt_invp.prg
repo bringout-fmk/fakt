@@ -106,7 +106,7 @@ return
  */
  
 function ZInvp(cLinija)
-*{
+?
 P_10CPI
 ?? "OBRAZAC POPISA INVENTURE :"
 P_COND2

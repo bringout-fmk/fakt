@@ -303,7 +303,10 @@ Box(,2,30)
 BoxC()
 
 GO TOP
-if eof(); Msg("Ne postoje trazeni podaci...",6); closeret; endif
+if eof()
+	Msg("Ne postoje trazeni podaci...",6)
+	closeret
+endif
 
 START PRINT CRET
 
@@ -354,6 +357,8 @@ aKol:={ { "SIFRA"       , {|| cIdPartner             }, .f., "C", 6, 0, 1, 1},;
 
 ENDIF
 
+?
+P_12CPI
 
 ?? space(gnLMarg); ?? "FAKT: Izvjestaj na dan",date()
 ? space(gnLMarg); IspisFirme("")
@@ -556,6 +561,8 @@ aKol:={ { "DATUM"       ,   {|| dDatum                                        },
         { "CIJENA"      ,   {|| IF(nUkKol==0,0,ROUND(nUkIznos,gFZaok)/nUkKol) }, .f., "N",13, 2, 1, 5},;
         { "VRIJEDNOST"  ,   {|| ROUND(nUkIznos,gFZaok)                        }, .t., "N",14, 2, 1, 6} }
 
+?
+P_12CPI
 ?? space(gnLMarg); ?? "FAKT: Izvjestaj na dan",date()
 ? space(gnLMarg); IspisFirme("")
 ? space(gnLMarg); ?? "KUPAC: " + IF( EMPTY(cIdFirma) , "SVI" , cIdFirma+" "+Ocitaj(F_PARTN,cIdFirma,"naz") )
@@ -751,6 +758,8 @@ aKol:={ { "SIFRA"          , {|| cIdRj                   }, .f., "C", 6, 0, 1, 1
 
 ENDIF
 
+P_12CPI
+?
 ?? space(gnLMarg); ?? "FAKT: Izvjestaj na dan",date()
 ? space(gnLMarg); IspisFirme("")
 ? space(gnLMarg); ?? "KUPAC: " + IF( EMPTY(cIdFirma) , "SVI" , cIdFirma+" "+Ocitaj(F_PARTN,cIdFirma,"naz") )
@@ -902,6 +911,8 @@ aKol:={ { "DATUM"       ,   {|| DTOC(dDatum)            }, .f., "C",12, 0, 1, 1}
         { "BROJ DOKUMENTA", {|| cbrdok                  }, .f., "C",20, 0, 1, 3},;
         { "VRIJEDNOST"  ,   {|| ROUND(nUkIznos,gZaokP4) }, .t., "N",20, 2, 1, 4} }
 
+P_12CPI
+?
 ?? space(gnLMarg); ?? "FAKT: Izvjestaj na dan",date()
 ? space(gnLMarg); IspisFirme("")
 ? space(gnLMarg); ?? "KUPAC: " + IF( EMPTY(cIdFirma) , "SVI" , cIdFirma+" "+Ocitaj(F_PARTN,cIdFirma,"naz") )
@@ -1072,9 +1083,11 @@ ENDIF
 AADD(aKol,{ "UKUPNO POREZI", {|| nKUkPor }, .f., "N",13, 2, 1, ++i})
 AADD(aKol,{ "KUMULATIVNO" , {|| "#" }, .f., "N",13, 2, 2, i})
 
-
+?
+P_12CPI
 ?? space(gnLMarg); ?? "FAKT: Izvjestaj na dan",date()
-? space(gnLMarg); IspisFirme("")
+? space(gnLMarg)
+IspisFirme("")
 ? space(gnLMarg); ?? "KUPAC: " + IF( EMPTY(cIdFirma) , "SVI" , cIdFirma+" "+Ocitaj(F_PARTN,cIdFirma,"naz") )
 
 StampaTabele(aKol,{|| FSvaki5()},,gTabela,,;
@@ -1248,7 +1261,10 @@ aKol:={ { "SIFRA"        , {|| cIdPartner             }, .f., "C", 6, 0, 1, 1},;
         { "iznos"        , {|| "#"                    }, .f., "C",13, 0, 2, 4},;
         { "UKUPNO IZNOS" , {|| ROUND(nUkIznos,gFZaok) }, .t., "N",13, 2, 1, 5} }
 
-  ?? space(gnLMarg); ?? "FAKT: Izvjestaj na dan",date()
+  P_12CPI
+  ?
+  ?? space(gnLMarg)
+  ?? "FAKT: Izvjestaj na dan",date()
   ? space(gnLMarg); IspisFirme("")
   ? space(gnLMarg); ?? "RJ: " + IF( EMPTY(cIdFirma) , "SVE" , cIdFirma )
   IF !EMPTY(qqPartn)
@@ -1440,9 +1456,14 @@ aKol:={ { "SIFRA"        , {|| cIdRoba                }, .f., "C",10, 0, 1, 1},;
         { "iznos"        , {|| "#"                    }, .f., "C",13, 0, 2, 4},;
         { "UKUPNO IZNOS" , {|| ROUND(nUkIznos,gFZaok) }, .t., "N",13, 2, 1, 5} }
 
-  ?? space(gnLMarg); ?? "FAKT: Izvjestaj na dan",date()
-  ? space(gnLMarg); IspisFirme("")
-  ? space(gnLMarg); ?? "RJ: " + IF( EMPTY(cIdFirma) , "SVE" , cIdFirma )
+  ?
+  P_12CPI
+  ?? space(gnLMarg)
+  ?? "FAKT: Izvjestaj na dan",date()
+  ? space(gnLMarg)
+  IspisFirme("")
+  ? space(gnLMarg)
+  ?? "RJ: " + IF( EMPTY(cIdFirma) , "SVE" , cIdFirma )
 
   StampaTabele(aKol,{|| FSvaki7()},,gTabela,,;
        ,"Vrijednost isporuke robe po izdavacima za period od "+DTOC(ddatod)+" do "+DTOC(ddatdo),;
@@ -1715,9 +1736,14 @@ aKol:={ { "OPSTINA"      , {|| ops                 }, .f., "C",10, 0, 1, 1},;
         { "PP"           , {|| STR(pp ,13,2)       }, .f., "C",13, 0, 1, 5},;
         { "MPV"          , {|| STR(iznos,13,2)     }, .f., "C",13, 0, 1, 6} }
 
-  ?? space(gnLMarg); ?? "FAKT: Izvjestaj na dan",date()
-  ? space(gnLMarg); IspisFirme("")
-  ? space(gnLMarg); ?? "RJ: " + IF( EMPTY(cIdFirma) , "SVE" , cIdFirma )
+  ? 
+  P_12CPI
+  ?? space(gnLMarg)
+  ?? "FAKT: Izvjestaj na dan",date()
+  ? space(gnLMarg)
+  IspisFirme("")
+  ? space(gnLMarg)
+  ?? "RJ: " + IF( EMPTY(cIdFirma) , "SVE" , cIdFirma )
 
   SELECT POR
 
@@ -1944,8 +1970,10 @@ ELSE
 ENDIF
 
 START PRINT CRET
+?
 P_12CPI
-?? space(gnLMarg); ?? "FAKT: Kartica isporuke robe na dan",date(),"      za period od",dDatOd,"-",dDatDo
+?? space(gnLMarg)
+?? "FAKT: Kartica isporuke robe na dan",  date(),  "      za period od", dDatOd, "-" , dDatDo
 ? space(gnLMarg); IspisFirme(cidfirma)
 if !empty(qqRoba)
  ? space(gnLMarg)

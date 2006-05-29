@@ -1177,13 +1177,17 @@ LOCAL nArr:=SELECT(), i:=0
                                                       .t., 'N',15, 2, 1,++i } }
 
  START PRINT CRET
+ ? 
+ P_12CPI
 
    SELECT ROBA
    GO TOP
 
-   StampaTabele(aKol,{|| ZaOdgovarajuci()},,gTabela,,,;
-                "PREGLED UGOVORA ZA "+cFiltTrz,;
-                {|| OdgovaraLi()},IF(gOstr=="D",,-1),,lLin,,,)
+   StampaTabele(aKol,{|| ZaOdgovarajuci()},, gTabela,,,;
+                "PREGLED UGOVORA ZA " + cFiltTrz,;
+                {|| OdgovaraLi()} , ;
+		IIF(gOstr=="D",,-1) , , 
+		lLin,,,)
 
  END PRINT
 

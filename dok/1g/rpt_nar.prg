@@ -77,6 +77,7 @@ else
 endif
 
 START PRINT RET
+?
 gp12cpi()
 gRPL_Gusto()
 

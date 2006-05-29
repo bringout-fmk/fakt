@@ -280,7 +280,7 @@ static function StKartKup()
 local nRec:=0
 
 START PRINT CRET
-
+?
 nRec:=RECNO()
 go top
 
@@ -390,7 +390,7 @@ set order to tag "ID"
 go top
 
 START PRINT CRET
-
+?
 P_10CPI
 
 ? "SALDA KUPACA"

@@ -475,6 +475,9 @@ else
   enddo
 endif
 
+// --------------------------------------------------
+// pocetak ispisa
+?
 P_COND
 ?? space(gnLMarg); IspisFirme(cidfirma)
 if lFaktFakt

@@ -174,7 +174,7 @@ return
  */
  
 function ZaglInv(cLinija)
-*{
+?
 P_10CPI
 ?? "INVENTURA VP :"
 P_COND

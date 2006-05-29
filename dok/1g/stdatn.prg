@@ -1114,15 +1114,16 @@ return
 *}
 
 
-
-/*! \fn ZaglRPartn()
- *  \brief Zaglavlje izvjestaja realizacije partnera 
- *  \todo Prebaciti u /RPT
- */
- 
+// --------------------------------------------------------
+// ZaglRPartn()
+// Zaglavlje izvjestaja realizacije partnera 
+// --------------------------------------------------------
 function ZaglRPartn()
-*{
-? space(gnLMarg); IspisFirme(cidfirma)
+
+? 
+P_12CPI
+?? space(gnLMarg)
+IspisFirme(cidfirma)
 ?
 set century on
 P_12CPI

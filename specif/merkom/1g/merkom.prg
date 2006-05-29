@@ -362,10 +362,12 @@ return
  */
  
 function ZaglMerkom()
-*{
+?
+P_12CPI
 
-? SPACE(gnLMarg)
+?? SPACE(gnLMarg)
 IspisFirme(cIdFirma)
+
 ?
 
 set century on
@@ -422,6 +424,5 @@ endif
 ?? cLinija
 
 return
-*}
 
 

@@ -235,10 +235,14 @@ pickol:=InPicKol
 return
 *}
 
+// ----------------------------------
 // zaglavlje obracunskog lista 
+// ----------------------------------
 function ZOLPDV()
-*{
-LOCAL cNaslov:=StrKZN("OBRA^UNSKI LIST PDV-A","7",gKodnaS),cPom1,cPom2,c
+LOCAL cNaslov:=StrKZN("OBRA^UNSKI LIST PDV-A","7",gKodnaS)
+local cPom1
+local cPom2
+local c
 ZagFirma()
 @ prow()+1,35 SAY cNaslov
 ?
@@ -251,7 +255,7 @@ select pripr
 
 P_COND2
 
-? StrKZN("ÚÄÄÂÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÂÄÄÄÂÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿","7",gKodnaS)
+? StrKZN("ÚÄÄÂÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÂÄÄÄÂÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿","7", gKodnaS)
 
 ? StrKZN("³  ³                    ³   ³          ³   Prodajna cijena     ³         PDV          ³   Prodajna cijena    ³","7",gKodnaS)
 c:="³R.³       Naziv        ³jed³ koli~ina ³   bez PDV-a           ³                      ³   sa PDV-om          ³"
@@ -263,5 +267,4 @@ c:="³R.³       Naziv        ³jed³ koli~ina ³   bez PDV-a           ³            
 ? StrKZN("ÀÄÄÁÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÁÄÄÄÁÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÁÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÙ","7",gKodnaS)
 
 return
-*}
 

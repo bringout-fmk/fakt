@@ -2681,25 +2681,21 @@ return (nil)
 
 
 
-/*! \fn Zagfirma()
- *  \brief Ispis zaglavlja na izvjestajima
- *  \todo Ovo je varijanta za nekog korisnika, ali ne znam kojeg. Prebaciti u /RPT
- */
- 
+// Zagfirma()
+// Ispis zaglavlja na izvjestajima
 function ZagFirma()
-*{
+?
 P_12CPI
 U_OFF
 B_OFF
 I_OFF
-? "Subjekt:"; U_ON; ?? PADC(TRIM(gTS)+" "+TRIM(gNFirma),39); U_OFF
+?? "Subjekt:"; U_ON; ?? PADC(TRIM(gTS)+" "+TRIM(gNFirma),39); U_OFF
 ? "Prodajni objekat:"; U_ON; ?? PADC(ALLTRIM(NazProdObj()),30); U_OFF
 ? "(poslovnica-poslovna jedinica)"
 ? "Datum:"; U_ON; ?? PADC(SrediDat(DATDOK),18); U_OFF
 ?
 ?
 return
-*}
 
 
 /*! \fn NazProdObj()

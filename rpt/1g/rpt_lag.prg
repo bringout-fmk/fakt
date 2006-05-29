@@ -767,9 +767,10 @@ if nStr>0
 	FF
 endif
 
+?
 P_COND
 set century on
-? space(4),"   FAKT: Lager lista robe na dan", DATE(), "      za period od",dDatOd,"-",dDatDo, space(6), "Strana:",str(++nStr,3)
+? space(4), "   FAKT: Lager lista robe na dan", DATE(), "      za period od", dDatOd, "-", dDatDo, space(6), "Strana:",str(++nStr,3)
 set century off
 ?
 

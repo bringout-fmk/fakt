@@ -263,6 +263,7 @@ ELSE
 ENDIF
 
 START PRINT CRET
+?
 P_12CPI
 ?? space(gnLMarg); ?? "FAKT: Kartice artikala na dan",date(),"      za period od",dDatOd,"-",dDatDo
 ? space(gnLMarg); IspisFirme(cidfirma)
