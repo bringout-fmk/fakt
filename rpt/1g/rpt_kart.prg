@@ -4,37 +4,6 @@
  * ----------------------------------------------------------------
  *                                     Copyright Sigma-com software 
  * ----------------------------------------------------------------
- * $Source: c:/cvsroot/cl/sigma/fmk/fakt/rpt/1g/rpt_kart.prg,v $
- * $Author: sasavranic $ 
- * $Revision: 1.8 $
- * $Log: rpt_kart.prg,v $
- * Revision 1.8  2004/05/05 08:17:12  sasavranic
- * no message
- *
- * Revision 1.7  2004/03/18 09:18:07  sasavranic
- * Uslov za radni nalog na pregledu dokumenata te kartici artikla
- *
- * Revision 1.6  2003/10/29 10:24:10  sasavranic
- * na kartici dodat ispis jmj
- *
- * Revision 1.5  2003/05/20 07:29:01  mirsad
- * Formatirao duzinu naziva robe za izvjestaje na 40 znakova.
- *
- * Revision 1.4  2003/05/10 15:07:57  mirsad
- * dodatna polja za robne karakteristike u kumulativnoj bazi C1,C2,C3,N1,N2
- *
- * Revision 1.3  2002/09/12 12:37:59  mirsad
- * dokumentovanje INI parametara
- *
- * Revision 1.2  2002/07/04 08:34:19  mirsad
- * dokumentovanje ini parametara
- *
- * Revision 1.1  2002/06/28 20:59:39  ernad
- *
- *
- * razbijanje izvj.prg
- *
- *
  */
 
 
@@ -63,8 +32,8 @@
  
 function Kartica()
 *{
-local cIdfirma,nRezerv,nRevers
-local nul,nizl,nRbr,cRR,nCol1:=0,cKolona,cBrza:="D"
+local cIdfirma, nRezerv, nRevers
+local nul, nizl, nRbr, cRR, nCol1:=0, cKolona, cBrza:="D"
 local cPredh:="2"
 
 local lpickol:="@Z "+pickol
@@ -89,7 +58,7 @@ if fId_J
 else
   set order to 3 // idroba+dtos(datDok)
 endif
-altd()
+
 cIdfirma:=gFirma
 PRIVATE qqRoba:=""
 PRIVATE dDatOd:=ctod("")
@@ -103,7 +72,7 @@ endif
 _c1:=_c2:=_c3:=SPACE(20)
 _n1:=_n2:=0
 
-Box("#IZVJESTAJ:KARTICA",17+IF(lBenjo,3,0)+IF(lPoNarudzbi,2,0),63)
+Box("#IZVJESTAJ:KARTICA",17+IF(lPoNarudzbi,2,0),63)
 
 cPPC:="N"
 
@@ -118,7 +87,6 @@ RPar("d2",@dDatDo)
 RPar("cP",@cPPC)
 RPar("Cp",@cPPartn)
 
-//if gNW$"DR";cIdfirma:=gFirma; endif
 cRR:="N"
 
 private cTipVPC:="1"
@@ -126,16 +94,14 @@ private cTipVPC:="1"
 private ck1:=cK2:=space(4)   // atributi
 private qqPartn:=space(20)
 
-IF lBenjo
-  qqTarife:=qqNRobe:=""
-  cSort:="S"
-ENDIF
+qqTarife:=""
+qqNRobe:=""
+//cSort:="S"
 
 do while .t.
  @ m_x+1,m_y+2 SAY "Brza kartica (D/N)" GET cBrza pict "@!" valid cBrza $ "DN"
  read
- if gNW$"DR"
-   //@ m_x+2,m_y+2 SAY "Firma "; ?? gFirma,"-",gNFirma
+ if gNW $ "DR"
    @ m_x+2,m_y+2 SAY "RJ (prazno svi) " GET cIdFirma valid {|| empty(cIdFirma) .or. cidfirma==gFirma .or.P_RJ(@cIdFirma) }
  else
    @ m_x+2,m_y+2 SAY "Firma: " GET cIdFirma valid {|| P_Firma(@cIdFirma),cidfirma:=left(cidfirma,2),.t.}
@@ -185,14 +151,6 @@ if glRadNal
   	@ m_x+16,m_y+2 SAY "Uslov po radnom nalogu (prazno-svi)" get cRadniNalog valid EMPTY(cRadniNalog) .or. P_RNal(@cRadniNalog)
 endif
 
-IF lBenjo .and. cBrza=="N"
-  qqTarife := PADR( qqTarife , 80 )
-  qqNRobe  := PADR( qqNRobe  , 80 )
-  @ row()+1,m_y+2 SAY "Tarife      :" GET qqTarife PICT "@!S30"
-  @ row()+1,m_y+2 SAY "Roba (naziv):" GET qqNRobe  PICT "@!S30"
-  @ row()+1,m_y+2 SAY "Sortiranje (S-sifra robe/N-naziv robe/T-tarifa/J-jed.mjere)" GET cSort  PICT "@!" VALID cSort$"SNTJ"
-ENDIF
-
 IF lPoNarudzbi
   qqIdNar := SPACE(60)
   cPKN    := "N"
@@ -227,20 +185,15 @@ read;ESC_BCR
    aUsl2:=Parsiraj(qqPartn,"IdPartner")
  endif
 
- IF lBenjo
-   aUslT   := Parsiraj(qqTarife,"IdTarifa")
-   qqNRobe := TRIM(qqNRobe)
- ENDIF
-
  IF lPoNarudzbi
    aUslN := Parsiraj(qqIdNar,"idnar")
  ENDIF
 
- if IF(cBrza=="N",aUsl1<>NIL,.t.).and.IF(gNovine=="D",aUsl2<>NIL,.t.).and.;
-    (!lBenjo.or.aUslT<>NIL) .and.;
+ if IF(cBrza=="N", aUsl1<>NIL, .t.) .and. ;
     (!lPoNarudzbi.or.aUslN<>NIL)
    exit
  endif
+
 enddo
 m:="---- ------------------ -------- "
 if cPPArtn=="D"
@@ -255,8 +208,14 @@ m+="----------- ----------- -----------"
 if cPPC=="D"
  m+=" ----------- ----- -----------"
 endif
+
 Params2()
-WPar("c1",cIdFirma); WPar("d1",dDatOd); WPar("d2",dDatDo)  ; WPar("cP",cPPC); WPar("Cp",cPPartn)
+WPar("c1",cIdFirma)
+WPar("d1",dDatOd)
+WPar("d2",dDatDo)  
+WPar("cP",cPPC)
+WPar("Cp",cPPartn)
+
 IF cBrza=="D"
  WPar("c3",trim(qqRoba))
 ELSE
@@ -267,14 +226,16 @@ select params; use
 BoxC()
 
 if cPPArtn=="D"
-  O_DOKS  // otvori datoteku dokumenata
+  O_DOKS 
 endif
 
 select FAKT
 
 PRIVATE cFilt1:=""
 
-cFilt1 := IF(cBrza=="N",aUsl1,".t.")+IF(EMPTY(dDatOd),"",".and.DATDOK>="+cm2str(dDatOd))+IF(EMPTY(dDatDo),"",".and.DATDOK<="+cm2str(dDatDo))
+cFilt1 := IF(cBrza=="N",aUsl1,".t.")+ ;
+          IF(EMPTY(dDatOd),"",".and.DATDOK>="+cm2str(dDatOd))+;
+	  IF(EMPTY(dDatDo),"",".and.DATDOK<="+cm2str(dDatDo))
 
 if glRadNal .and. !EMPTY(cRadniNalog)
 	cFilt1+=".and. idrnal="+Cm2Str(cRadniNalog)
@@ -288,19 +249,11 @@ cFilt1 := STRTRAN(cFilt1,".t..and.","")
 
 cTMPFAKT:=""
 
-IF lBenjo .and. cSort<>"S" .and. cBrza=="N"
-  Box(,2,30)
-   nSlog:=0; nUkupno:=RECCOUNT2()
-   cSort1:="SortFakt(IDROBA,'"+cSort+"')"
-   INDEX ON &cSort1 TO (cTMPFAKT:=TMPFAKT()) FOR &cFilt1 EVAL(TekRec2()) EVERY 1
-  BoxC()
-ELSE
-  if cFilt1==".t."
+if cFilt1==".t."
    set filter to
   else
    set filter to &cFilt1
-  endif
-ENDIF
+endif
 
 IF cBrza=="N"
  go top
@@ -391,12 +344,6 @@ do while !eof()
    NSRNPIdRoba(cIdRoba, cSintetika=="D" )
   endif
   select FAKT
-
-  if lBenjo .and. cBrza=="N"
-    if !( ROBA->(&aUslT) .and. ROBA->naz=qqNRobe )
-      skip 1; loop
-    endif
-  endif
 
   if cTipVPC=="2" .and.  roba->(fieldpos("vpc2")<>0)
         _cijena:=roba->vpc2

@@ -1,15 +1,7 @@
 /*
  * ----------------------------------------------------------------
- *                                     Copyright Sigma-com software 
+ *                         Copyright Sigma-com software 1996-2006
  * ----------------------------------------------------------------
- * $Source: c:/cvsroot/cl/sigma/fmk/fakt/ostalo/1g/cjen.prg,v $
- * $Author: sasa $ 
- * $Revision: 1.2 $
- * $Log: cjen.prg,v $
- * Revision 1.2  2002/06/18 13:23:38  sasa
- * no message
- *
- *
  */
  
 

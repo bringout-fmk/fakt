@@ -392,10 +392,12 @@ if cTabela=="D"
 endif
 
 gaZagFix:={3,3}
-START PRINT CRET
-?? space(gnLMarg)
+START PRINT CRET DOCNAME "FAKT_stampa_dokumenata_na_dan_"+DTOC(date())
+?
 P_COND
-?? "FAKT: Stampa dokumenata na dan:",date(),space(10),"za period",dDatOd,"-",dDatDo
+?? space(gnLMarg)
+?? "FAKT: Stampa dokumenata na dan:", date(), space(10), "za period",dDatOd,"-",dDatDo
+?
 ? space(gnLMarg)
 IspisFirme(cidfirma)
 if !empty(qqTipDok)

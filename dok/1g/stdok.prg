@@ -114,8 +114,8 @@
  *  \param cBrDok
  */
 
-*function StDok(cIdFirma,cIdTipDok,cBrDok)
-*{
+// ------------------------------------------- 
+// ------------------------------------------- 
 function StDok
 parameters cIdFirma,cIdTipDok,cBrDok
 

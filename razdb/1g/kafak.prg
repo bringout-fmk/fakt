@@ -4,29 +4,6 @@
  * ----------------------------------------------------------------
  *                                     Copyright Sigma-com software 
  * ----------------------------------------------------------------
- * $Source: c:/cvsroot/cl/sigma/fmk/fakt/razdb/1g/kafak.prg,v $
- * $Author: ernad $ 
- * $Revision: 1.6 $
- * $Log: kafak.prg,v $
- * Revision 1.6  2003/01/21 13:28:23  ernad
- * korekcije direktorij
- *
- * Revision 1.5  2002/09/12 07:45:16  mirsad
- * dokumentovanje INI parametara
- *
- * Revision 1.4  2002/07/04 08:34:19  mirsad
- * dokumentovanje ini parametara
- *
- * Revision 1.3  2002/07/04 08:16:44  sasa
- * to do: izvrsiti korekciju nad ovim fajlom
- *
- * Revision 1.2  2002/06/18 13:39:48  sasa
- * no message
- *
- * Revision 1.1.1.1  2002/06/17 18:30:18  ernad
- * no message
- *
- *
  */
 
 /*! \file fmk/fakt/razdb/1g/kafak.prg

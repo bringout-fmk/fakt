@@ -184,7 +184,7 @@ IF "U" $ TYPE("glDistrib") .or. !VALTYPE(glDistrib)=="L"; glDistrib:=.f.; ENDIF
 DFTParUg(.t.)
 
 
-Private ImeKol:={}
+private ImeKol:={}
 Private Kol:={}
 AADD (ImeKol,{ "Ugovor" , {|| id}       ,"id"       , {|| .t.},  {|| vpsifra(wid) }  } )
 AADD (ImeKol,{ "Partner", {|| IdPartner},"Idpartner", {|| .t.},{|| P_Firma(@wIdPartner)}      } )
@@ -198,29 +198,31 @@ endif
 
 if IzFMkIni('Fakt_Ugovori',"Datumi",'D')=="D"
   // datumi bitni za obracun
-  AADD (ImeKol,{ "DatumOd", {|| DatOd},    "DatOd"                                     } )
-  AADD (ImeKol,{ "DatumDo", {|| DatDo},    "DatDo"                                     } )
+  AADD (ImeKol,{ "DatumOd", {|| DatOd},    "DatOd" } )
+  AADD (ImeKol,{ "DatumDo", {|| DatDo},    "DatDo" } )
 endif
 
 AADD (ImeKol,{ "Aktivan", {|| Aktivan},  "Aktivan" , {|| .t.}, {|| wAKtivan $ "DN"}   } )
-AADD (ImeKol,{ "TipDok" , {|| IdTipdok}, "IdTipDok"                                  } )
+AADD (ImeKol,{ "TipDok" , {|| IdTipdok}, "IdTipDok" } )
 if IzFMkIni('Fakt_Ugovori',"Vrsta",'D')=="D"
- AADD (ImeKol,{ "Vrsta"  , {|| Vrsta},    "Vrsta"                                     } )
+ AADD (ImeKol,{ "Vrsta"  , {|| Vrsta},    "Vrsta"   } )
 endif
 if IzFMkIni('Fakt_Ugovori',"TXT",'D')=="D"
  AADD (ImeKol,{ "TXT"    , {|| IdTxt},    "IdTxt" , {|| .t.} , {|| P_FTxt(@wIdTxt) }   } )
 endif
 if IzFMkIni('Fakt_Ugovori',"DINDEM",'D')=="D"
-  AADD (ImeKol,{ "DINDEM" , {|| DINDEM},    "DINDEM"                                   } )
+  AADD (ImeKol,{ "DINDEM" , {|| DINDEM},    "DINDEM" } )
 endif
 if IzFMkIni('Fakt_Ugovori',"Zaokruzenja",'D')=="D"
-  AADD (ImeKol,{ "ZAOKR"  , {|| ZAOKR},    "ZAOKR"                                   } )
+  AADD (ImeKol,{ "ZAOKR"  , {|| ZAOKR},    "ZAOKR"   } )
 endif
 if ugov->(fieldpos("IDDODTXT"))<>0
   AADD (ImeKol,{ "DodatniTXT", {|| IdDodTxt}, "IdDodTxt", {|| .t.}, {|| P_FTxt(@wIdDodTxt) } } )
 endif
-if glDistrib
-  AADD (ImeKol,{ "Rok pl.", {|| rokpl},    "rokpl"    } )
+
+
+if ugov->(fieldpos("rokpl"))<>0
+  AADD (ImeKol,{ "Rok pl.", {|| rokpl},    "rokpl"} )
 endif
 
 if ugov->(fieldpos("A1"))<>0
@@ -239,15 +241,24 @@ if ugov->(fieldpos("A1"))<>0
 endif
 
 Kol:={}
-FOR i:=1 TO LEN(ImeKol); AADD(Kol,i); NEXT
+FOR i:=1 TO LEN(ImeKol)
+	AADD(Kol,i)
+NEXT
 
 Private gTBDir:="N"
 IF IzFMkIni('Fakt_Ugovori',"Trznica",'N')=="D"
-  return PostojiSifra(F_UGOV,"NAZ2",10,77,"Lista Ugovora <F5> - definisi ugovor様様<F6> - izvjestaj/lista za K1='G'",@cId,dx,dy,{|Ch| UgovBlok(Ch)})
+  return PostojiSifra(F_UGOV,"NAZ2", 10, 77, ;
+         "Lista Ugovora <F5> - definisi ugovor様様<F6> - izvjestaj/lista za K1='G'", ;
+	 @cId, dx, dy, {|Ch| UgovBlok(Ch)})
+
 ELSEIF gVFU=="1"
-  return PostojiSifra(F_UGOV,"ID",10,77,"Lista Ugovora <F5> - definisi ugovor様様<F6> - izvjestaj/lista za K1='G'",@cId,dx,dy,{|Ch| UgovBlok(Ch)})
+  return PostojiSifra(F_UGOV, "ID", 10, 77, ;
+         "Lista Ugovora <F5> - definisi ugovor様様<F6> - izvjestaj/lista za K1='G'", ;
+	 @cId, dx, dy, {|Ch| UgovBlok(Ch)})
 ELSE
-  return PostojiSifra(F_UGOV,IF(cID==NIL,"ID","NAZ2"),10,77,"Lista Ugovora <F5> - definisi ugovor様様<F6> - izvjestaj/lista za K1='G'",@cId,dx,dy,{|Ch| UgovBlok(Ch)})
+  return PostojiSifra(F_UGOV, IIF(cID==NIL,"ID", "NAZ2"), 10,77, ;
+         "Lista Ugovora <F5> - definisi ugovor様様<F6> - izvjestaj/lista za K1='G'", ;
+	 @cId,dx,dy,{|Ch| UgovBlok(Ch)})
 ENDIF
 return
 

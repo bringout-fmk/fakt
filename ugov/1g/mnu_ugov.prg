@@ -23,7 +23,7 @@ private Izbor:=1
 
 AADD(opc,"1. ugovori                  ")
 AADD(opcexe,{|| P_Ugov()})
-AADD(opc,"2. ugovori - default podaci ")
+AADD(opc,"2. ugovori - tekuce postavke")
 AADD(opcexe,{|| DFTParUg()})
 
 Menu_SC("sugov")

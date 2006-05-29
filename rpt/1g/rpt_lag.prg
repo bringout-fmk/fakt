@@ -113,7 +113,7 @@ cSaldo0:="N"
 qqPartn:=space(20)
 private qqTipdok:="  "
 
-Box(,20+IIF(lBenjo,3,0)+IIF(lPoNarudzbi,2,0),66)
+Box(,20+IIF(lPoNarudzbi,2,0), 66)
 
 
 O_PARAMS
@@ -148,11 +148,6 @@ cUI:="S"
 private cTipVPC:="1"
 
 cK1:=cK2:=space(4)
-
-IF lBenjo
-  qqTarife:=qqNRobe:=""
-  cSort:="S"
-ENDIF
 
 do while .t.
  if gNW$"DR"
@@ -218,14 +213,6 @@ IF gNovine=="D"
   @ row()+1,m_y+2 SAY "Izdvojiti (O-oporezovane,N-neoporezovane,S-sve)" GET cvOpor VALID cvOpor$"ONS" PICT "@!"
 ENDIF
 
-IF lBenjo
-  qqTarife := PADR( qqTarife , 80 )
-  qqNRobe  := PADR( qqNRobe  , 80 )
-  @ row()+1,m_y+2 SAY "Tarife      :" GET qqTarife PICT "@!S30"
-  @ row()+1,m_y+2 SAY "Roba (naziv):" GET qqNRobe  PICT "@!S30"
-  @ row()+1,m_y+2 SAY "Sortiranje (S-sifra robe/N-naziv robe/T-tarifa/J-jed.mjere)" GET cSort  PICT "@!" VALID cSort$"SNTJ"
-ENDIF
-
 IF lPoNarudzbi
   qqIdNar := SPACE(60)
   cPKN    := "N"
@@ -248,20 +235,14 @@ read
    aUsl2:=Parsiraj(qqPartn,"IdPartner")
  ENDIF
 
- IF lBenjo
-   aUslT   := Parsiraj(qqTarife,"IdTarifa")
-   qqNRobe := TRIM(qqNRobe)
- ENDIF
-
  IF lPoNarudzbi
    aUslN := Parsiraj(qqIdNar,"idnar")
  ENDIF
 
- if aUsl1<>NIL .and. IF(gNovine=="D",aUsl2<>NIL,.t.) .and.;
-    (!lBenjo.or.aUslT<>NIL) .and.;
-    (!lPoNarudzbi.or.aUslN<>NIL)
+ if aUsl1<>NIL 
    exit
  endif
+
 enddo
 
 IF lBezUlaza
@@ -284,7 +265,6 @@ ELSE
 ENDIF
 
 
-//Params2()
 select params
 qqRoba:=trim(qqRoba)
 
@@ -333,19 +313,11 @@ if !empty(dDatOd) .or. !empty(dDatDo)
 endif
 
 cTMPFAKT:=""
-IF lBenjo .and. cSort<>"S"
-  Box(,2,30)
-   nSlog:=0; nUkupno:=RECCOUNT2()
-   cSort1:="SortFakt(IDROBA,'"+cSort+"')"
-   INDEX ON &cSort1 TO (cTMPFAKT:=TMPFAKT()) FOR &cFilt EVAL(TekRec2()) EVERY 1
-  BoxC()
-ELSE
-  if cFilt==".t."
+if cFilt==".t."
    set filter to
   else
    set filter to &cFilt
-  endif
-ENDIF
+endif
 
 if gAppSrv
   ? "Filter:", cFilt
@@ -390,11 +362,9 @@ do while !eof()
     cIdRoba:=IdRoba
   endif
 
-  IF lBenjo
-    NSRNPIdRoba(cIdRoba,(cSintetika=="D")); SELECT FAKT
-  ELSEIF cSintetika=="D"
+  if cSintetika=="D"
     NSRNPIdRoba(cIdRoba,.t.); SELECT FAKT
-  ENDIF
+  endif
 
   IF lPoNarudzbi .and. cPKN=="D"
     cIdNar:=idnar
@@ -426,13 +396,6 @@ do while !eof()
     if cvOpor=="N" .and. Oporezovana(ROBA->idtarifa) .or.;
        cvOpor=="O" .and. !Oporezovana(ROBA->idtarifa)
       skip 1; loop
-    endif
-  endif
-
-  if lBenjo
-    if !( ROBA->(&aUslT) .and. ROBA->naz=qqNRobe )
-      skip 1
-      loop
     endif
   endif
 

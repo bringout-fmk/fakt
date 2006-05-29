@@ -168,14 +168,9 @@
  */
  
 function TFaktModNew()
-*{
 local oObj
 
-#ifdef CLIP
-
-#else
-	oObj:=TFaktMod():new()
-#endif
+oObj:=TFaktMod():new()
 
 oObj:self:=oObj
 return oObj
@@ -395,7 +390,6 @@ return
 
 /*! \fn *void TFaktMod::setGVars()
  *  \brief opste funkcije FIN modula
- *  \todo izbaciti varijablu lBenjo
  */
 *void TFaktMod::setGVars()
 *{
@@ -417,7 +411,6 @@ public gVarNum:="1"
 public gProtu13:="N"
 //  protudokument 13-ke
 
-public lBenjo
 //public gFirma:="10", gTS:="Preduzece"
 public gFPzag:=0
 public gZnPrec:="="
@@ -496,10 +489,14 @@ public g27Str2T:="                                                              
 public g27Str2R:="\tab \tab \tab Direktor:"
 public gNazPotStr:=SPACE(69)
 
-public gDodPar:="2", gDatVal:="N"
+public gDodPar:="2"
+public gDatVal:="N"
 
 public gTipF:="2"
-public gVarF:="2", gVarRF:=" ", gKriz:=0, gKrizA5:=2
+public gVarF:="2"
+public gVarRF:=" "
+public gKriz:=0
+public gKrizA5:=2
 public gERedova:=9 // extra redova
 public gVlZagl:=space(12)   // naziv fajla vlastitog zaglavlja
 public gPratiK:="N"
@@ -514,17 +511,29 @@ public gTabela:=1
 public gZagl:="2"
 public gBold:="2"
 public gRekTar:="N"
-public gHLinija:="N", gRabProc:="D"
-public g13dcij:="1"  // default MP cijena za 13-ku
+public gHLinija:="N"
+public gRabProc:="D"
+
+// default MP cijena za 13-ku
+public g13dcij:="1"
 public gVar13:="1"
 public gFormatA5:="0"
 public gMreznoNum:="N"
-public gIMenu:="3", gOdvT2:=0, gV12Por:="N", gVFU:="1"
+public gIMenu:="3"
+public gOdvT2:=0
+public gV12Por:="N"
+
+public gVFU:="1"
 public gModemVeza:="N"
-public gFPZagA5:=0, gnTMarg2A5:=3, gnTMarg3A5:=-4, gnTMarg4A5:=0
+public gFPZagA5:=0
+public gnTMarg2A5:=3
+public gnTMarg3A5:=-4
+public gnTMarg4A5:=0
 public gVFRP0:="N"
+
 public gFNar:=PADR("NAR.TXT",12)
 public gFUgRab:=PADR("UGRAB.TXT",12)
+
 public gSamokol:="N"
 public gRokPl:=0
 
@@ -539,11 +548,14 @@ public gcRabIDef := "1"
 public gcRabDok := SPACE(30)
 
 O_PARAMS
-private cSection:="1",cHistory:=" "; aHistory:={}
+private cSection:="1"
+public cHistory:=" "
+public aHistory:={}
 
-
-RPar("50",@gVarC)       // varijanta cijene
-RPar("95",@gKomLin)       // prvenstveno za win 95
+// varijanta cijene
+RPar("50",@gVarC)      
+// prvenstveno za win 95
+RPar("95",@gKomLin)       
 
 if empty(gKomLin)
  gKomLin:="start "+trim(goModul:oDataBase:cDirPriv)+"\fakt.rtf"
@@ -555,7 +567,8 @@ RPar("d1",@gnTMarg2)
 RPar("d2",@gnTMarg3)
 RPar("d3",@gnTMarg4)
 RPar("dc",@g13dcij)
-RPar("dp",@gDodPar)   // dodatni parametri fakture broj otpremnice itd
+// dodatni parametri fakture broj otpremnice itd
+RPar("dp",@gDodPar)   
 RPar("dv",@gDatVal)
 RPar("er",@gERedova)
 RPar("fp",@gFPzag)
@@ -564,7 +577,8 @@ RPar("if",@gImeF)
 RPar("im",@gIMenu)
 RPar("k1",@gDK1)
 RPar("k2",@gDK2)
-RPar("mp",@gMP)       // varijanta maloprodajne cijene
+// varijanta maloprodajne cijene
+RPar("mp",@gMP)       
 RPar("mr",@gMjRJ)
 RPar("nd",@gNumdio)
 RPar("PR",@gDetPromRj)
@@ -642,7 +656,8 @@ RPar("xk",@g26Str2R)
 RPar("xo",@g27Str)
 RPar("xp",@g27Str2T)
 RPar("xr",@g27Str2R)
-RPar("za",@gZagl)   // dodatni parametri fakture broj otpremnice itd
+// dodatni parametri fakture broj otpremnice itd
+RPar("za",@gZagl)   
 RPar("zb",@gbold)
 RPar("RT",@gRekTar)
 RPar("HL",@gHLinija)
@@ -664,20 +679,34 @@ RPar("Fi",@gIspPart)
 RPar("Fr",@gResetRoba)
 
 // varijable PDV
-public gFNaziv:=SPACE(40) // firma naziv
-public gFAdresa:=SPACE(35) // firma adresa
-public gFIdBroj:=SPACE(13) // firma id broj
-public gFTelefon:=SPACE(72) // telefoni
-public gFEmailWeb:=SPACE(72) // web
-public gFBanka1:=SPACE(50) // banka 1
-public gFBanka2:=SPACE(50) // banka 2
-public gFBanka3:=SPACE(50) // banka 3
-public gFBanka4:=SPACE(50) // banka 4
-public gFBanka5:=SPACE(50) // banka 5
-public gFText1:=SPACE(72) // proizv.text 1
-public gFText2:=SPACE(72) // proizv.text 2
-public gFText3:=SPACE(72) // proizv.text 3
-public gStZagl:="D" // stampati zaglavlje
+// firma naziv
+public gFNaziv:=SPACE(40) 
+// firma adresa
+public gFAdresa:=SPACE(35) 
+// firma id broj
+public gFIdBroj:=SPACE(13)
+// telefoni
+public gFTelefon:=SPACE(72) 
+// web
+public gFEmailWeb:=SPACE(72)
+// banka 1
+public gFBanka1:=SPACE(50)
+// banka 2
+public gFBanka2:=SPACE(50)
+// banka 3
+public gFBanka3:=SPACE(50)
+// banka 4
+public gFBanka4:=SPACE(50)
+// banka 5
+public gFBanka5:=SPACE(50)
+// proizv.text 1
+public gFText1:=SPACE(72)
+// proizv.text 2
+public gFText2:=SPACE(72)
+// proizv.text 3
+public gFText3:=SPACE(72)
+// stampati zaglavlje
+public gStZagl:="D" 
 
 // DelphiRB - pdv faktura
 public gPdvDRb := "N"
@@ -761,20 +790,11 @@ lPoNarudzbi:= ( IzFMKINI("FAKT","10PoNarudzbi","N",KUMPATH)=="D" )
 public lSpecifZips
 lSpecifZips:= ( IzFmkIni("FAKT_Specif","ZIPS","N")=="D" )
 
-IF IzFmkIni('CROBA','GledajFakt','N',KUMPATH)=='D'
-   //PUBLIC gCENTPATH:=IzFmkIni('CROBA','CROBA_DIR','C:\SIGMA\FMK\',PRIVPATH)
-   PUBLIC gSQLKom:= IzFmkIni("SQL","cSQLKom","mysql -f -h 192.168.0.1 -B -N",KUMPATH)
-   gSQLKom+=" "
-  IzFmkIni('CROBA','CROBA_RJ','10#20',KUMPATH)
-ENDIF
-
 public gModul:="FAKT"
 gGlBaza:="FAKT.DBF"
 
 gRobaBlock:={|Ch| FaRobaBlock(Ch)}
 gPartnBlock:={|Ch| FaPartnBlock(Ch)}
-
-lBenjo:=IsTrgom()
 
 public glCij13Mpc:=(IzFmkIni("FAKT","Cijena13MPC","D", KUMPATH)=="D")
 
@@ -810,6 +830,5 @@ if !(goModul:oDatabase:lAdmin)
 endif
 
 return
-*}
 
 

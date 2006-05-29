@@ -1,7 +1,6 @@
 #include "\dev\fmk\fakt\fakt.ch"
 
 
-
 function Mnu_Narudzba()
 *{
 local cNarFirma:=gFirma

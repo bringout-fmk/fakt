@@ -1,27 +1,21 @@
 /*
  * ----------------------------------------------------------------
- *                                     Copyright Sigma-com software 
+ *                         Copyright Sigma-com software 1998-2006
  * ----------------------------------------------------------------
- *
  */
  
 #ifndef SC_DEFINED
 	#include "sc.ch"
 #endif
 
-#define D_FA_VERZIJA "02.51"
-#define D_FA_PERIOD  "11.94-23.05.06"
-
+#define D_FA_VERZIJA "02.52"
+#define D_FA_PERIOD  "11.94-29.05.06"
 
 #ifndef FMK_DEFINED
 	#include "\dev\fmk\AF\cl-AF\fmk.ch"
 #endif
 
-#ifdef CDX
-	#include "\dev\fmk\fakt\cdx\fakt.ch"
-#else
-	#include "\dev\fmk\fakt\ax\fakt.ch"
-#endif
+#include "\dev\fmk\fakt\cdx\fakt.ch"
 
 #define I_ID 1
 
@@ -35,4 +29,3 @@
 #define  ZAOKRUZENJE    2
 
 #define NL  chr(13)+chr(10)
-

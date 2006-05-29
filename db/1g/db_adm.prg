@@ -4,26 +4,9 @@
  * ----------------------------------------------------------------
  *                                     Copyright Sigma-com software 
  * ----------------------------------------------------------------
- * $Source: c:/cvsroot/cl/sigma/fmk/fakt/db/1g/db_adm.prg,v $
- * $Author: sasavranic $ 
- * $Revision: 1.3 $
- * $Log: db_adm.prg,v $
- * Revision 1.3  2003/10/13 12:36:23  sasavranic
- * no message
- *
- * Revision 1.2  2003/01/18 12:08:50  ernad
- * no message
- *
- * Revision 1.1  2002/06/28 21:45:39  ernad
- *
- *
- * db_adm.prg - admin db-a funkcije
- *
- *
  */
 
 function MnuAdmin()
-*{
 private opc
 private opcexe
 private Izbor
@@ -46,7 +29,6 @@ AADD(opcexe, {|| fa_rbr_regen()})
 Menu_SC("fain")
 
 return
-*}
 
 // regeneracija rednih brojeva u tabeli fakt
 function fa_rbr_regen()
@@ -97,8 +79,9 @@ BoxC()
 return
 
 
-
+// ---------------------------------------
 // regeneracija polja FAKT-TXT
+// ---------------------------------------
 function fa_memo_regen()
 local cRbr
 local cPartn
@@ -126,8 +109,6 @@ nCounter:=0
 
 Box(,3, 60)
 @ 1+m_x, 2+m_y SAY "regeneracija memo polja u toku..."
-
-altd()
 
 do while !EOF()
 	
@@ -160,15 +141,20 @@ do while !EOF()
 	
 	// odradi regeneraciju polja
 	Scatter()
-	
-	_txt := Chr(16) + Chr(17) // roba // ovo je za roba U
-	_txt += Chr(16) + Chr(17) // dodatni tekst fakture // nemamo ga
+
+	// roba // ovo je za roba U
+	_txt := Chr(16) + Chr(17)
+        // dodatni tekst fakture // nemamo ga
+	_txt += Chr(16) + Chr(17)
 	_txt += Chr(16) + ALLTRIM(partn->naz) + Chr(17)
 	_txt += Chr(16) + ALLTRIM(partn->adresa) + ", Tel:" + ALLTRIM(partn->telefon) + Chr(17) 
 	_txt += Chr(16) + ALLTRIM(partn->ptt) + " " + ALLTRIM(partn->mjesto) + Chr(17)
-	_txt += Chr(16) + Chr(17) // broj otpremnice - nemamo ga
-	_txt += Chr(16) + DToC(dDatDok) + Chr(17) // datum otpremnice
-	_txt += Chr(16) + Chr(17) // broj narudzbenice - nemamo ga
+        // broj otpremnice - nemamo ga
+	_txt += Chr(16) + Chr(17) 
+        // datum otpremnice
+	_txt += Chr(16) + DToC(dDatDok) + Chr(17)
+        // broj narudzbenice - nemamo ga
+	_txt += Chr(16) + Chr(17)
 	_txt += Chr(16) + DToC(dDatPl) + Chr(17)
 	_txt += Chr(16) + Chr(17)
 	_txt += Chr(16) + Chr(17)

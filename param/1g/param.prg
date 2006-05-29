@@ -793,7 +793,7 @@ return
 /*! \ingroup params
  *  \var Params_vu
  *  \brief Varijanta fakturisanja na osnovu ugovora
- *  \param 1 - ugovori se sortiraju po siframa, default varijanta
+ *  \param 1 - ugovori se sortiraju po siframa, tekuce postavke
  *  \param 2 - ugovori se sortiraju po nazivima izuzev kod pregleda sifrarnika kroz meni sifrarnika (tada je sortiranje po siframa)
  *  \note gVFU
  */
@@ -809,7 +809,7 @@ private  GetList:={}
 
 O_PARAMS
 
-Box(,23,76,.f.,"VARIJANTE OBRADE DOKUMENATA")
+Box(, 23, 76, .f., "VARIJANTE OBRADE DOKUMENATA")
 	@ m_x+1,m_y+2 SAY "Unos Dat.pl, otpr., narudzbe D/N (1/2) ?" GET gDoDPar VALID gDodPar $ "12" PICT "@!"
   	@ m_x+1,m_y+46 SAY "Dat.pl.u svim v.f.9 (D/N)?" GET gDatVal VALID gDatVal $ "DN" PICT "@!"
   	@ m_x+2,m_y+2 SAY "Generacija ulaza prilikom izlaza 13" GET gProtu13 VALID gProtu13 $ "DN" PICT "@!"

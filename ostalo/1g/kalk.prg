@@ -4,20 +4,6 @@
  * ----------------------------------------------------------------
  *                                     Copyright Sigma-com software 
  * ----------------------------------------------------------------
- * $Source: c:/cvsroot/cl/sigma/fmk/fakt/ostalo/1g/kalk.prg,v $
- * $Author: mirsad $ 
- * $Revision: 1.3 $
- * $Log: kalk.prg,v $
- * Revision 1.3  2002/09/12 07:31:58  mirsad
- * ispravka putanje u opisu fajla (otalo->ostalo)
- *
- * Revision 1.2  2002/06/18 13:23:38  sasa
- * no message
- *
- * Revision 1.1.1.1  2002/06/17 18:30:18  ernad
- * no message
- *
- *
  */
 
 

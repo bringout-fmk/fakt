@@ -4,14 +4,6 @@
  * ----------------------------------------------------------------
  *                                     Copyright Sigma-com software 
  * ----------------------------------------------------------------
- * $Source: c:/cvsroot/cl/sigma/fmk/fakt/stampa/1g/mnu_izvj.prg,v $
- * $Author: sasa $ 
- * $Revision: 1.1 $
- * $Log: mnu_izvj.prg,v $
- * Revision 1.1  2002/07/05 14:38:22  sasa
- * uveden novi prg
- *
- *
  */
 
 

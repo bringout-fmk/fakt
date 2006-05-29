@@ -244,7 +244,6 @@ next
 nDuzMemo:=nLtxt2
 if idtipdok $ "10#11"; nLTxt2+=7; endif
 
-
 POCNI STAMPU
 
 P_10CPI
@@ -629,13 +628,10 @@ RETURN .t.
 *}
 
 
-
 /*! \fn Krizaj2()
  *  \brief
  */
- 
 function Krizaj2()
-*{
 IF cidtipdok$"20#27"
   ?? "  PRED         "+REPLICATE(gZnPrec,13)
   ??  padl(cStr,37-28)
@@ -650,6 +646,5 @@ else
 ENDIF
 
 return
-*}
 
 

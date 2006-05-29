@@ -4,25 +4,6 @@
  * ----------------------------------------------------------------
  *                                     Copyright Sigma-com software 
  * ----------------------------------------------------------------
- * $Source: c:/cvsroot/cl/sigma/fmk/fakt/razoff/1g/modem.prg,v $
- * $Author: mirsad $ 
- * $Revision: 1.4 $
- * $Log: modem.prg,v $
- * Revision 1.4  2003/04/12 07:01:28  mirsad
- * omogucen prenos KALK10,11,81->FAKT poput KALK->TOPS za udaljene lokacije
- *
- * Revision 1.3  2002/07/14 06:40:41  ernad
- *
- *
- * ukloni ROBPR
- *
- * Revision 1.2  2002/06/18 13:54:27  sasa
- * no message
- *
- * Revision 1.1.1.1  2002/06/17 18:30:18  ernad
- * no message
- *
- *
  */
 
 /*! \file fmk/fakt/razoff/1g/modem.prg

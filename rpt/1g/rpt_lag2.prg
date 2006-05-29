@@ -59,7 +59,7 @@ cSaldo0:="N"
 qqPartn:=space(20)
 private qqTipdok:="  "
 
-Box (,12+IF(lBenjo,3,0)+IF(lPoNarudzbi,2,0),66)
+Box (,12+IIF(lPoNarudzbi,2,0),66)
 O_PARAMS
 private cSection:="5",cHistory:=" "; aHistory:={}
 Params1()
@@ -85,11 +85,6 @@ private cTipVPC:="1"
 cK1:=cK2:=space(4)
 
 private cMink:="N"
-
-if lBenjo
-  qqTarife:=qqNRobe:=""
-  cSort:="S"
-endif
 
 do while .t.
  if gNW$"DR"
@@ -120,14 +115,6 @@ if glDistrib
 endif
 @ m_x+xPos+7,m_y+2 SAY "Napraviti prored (D/N)    "  get cProred pict "@!" valid cProred $ "DN"
 
-if lBenjo
-  qqTarife := PADR( qqTarife , 80 )
-  qqNRobe  := PADR( qqNRobe  , 80 )
-  @ m_x+xPos+ 8,m_y+2 SAY "Tarife      :" GET qqTarife PICT "@!S30"
-  @ m_x+xPos+ 9,m_y+2 SAY "Roba (naziv):" GET qqNRobe  PICT "@!S30"
-  @ m_x+xPos+10,m_y+2 SAY "Sortiranje (S-sifra robe/N-naziv robe/T-tarifa/J-jed.mjere)" GET cSort  PICT "@!" VALID cSort$"SNTJ"
-endif
-
 if lPoNarudzbi
   qqIdNar := SPACE(60)
   cPKN    := "N"
@@ -140,22 +127,20 @@ read
  ESC_BCR
 
  aUsl1:=Parsiraj(qqRoba,"IdRoba")
- if lBenjo
-   aUslT   := Parsiraj(qqTarife,"IdTarifa")
-   qqNRobe := TRIM(qqNRobe)
- endif
-
+ 
  if lPoNarudzbi
    aUslN := Parsiraj(qqIdNar,"idnar")
  endif
 
- if aUsl1<>NIL .and. (!lBenjo.or.aUslT<>NIL) .and.;
-    (!lPoNarudzbi.or.aUslN<>NIL)
+ if aUsl1<>NIL 
    exit
  endif
+
 enddo
 
-if cMink=="O"; cSaldo0:="D"; endif
+if cMink=="O"
+   cSaldo0:="D" 
+endif
 
 if lBezUlaza
    m:="---- ---------- ----------------------------------------"+IF(lPoNarudzbi.and.cPKN=="D"," ------","")+" ----------- ---"
@@ -208,18 +193,11 @@ if lPoNarudzbi .and. aUslN<>".t."
 endif
 
 cTMPFAKT:=""
-if lBenjo .and. cSort<>"S"
-  Box(,2,30)
-   nSlog:=0; nUkupno:=RECCOUNT2()
-   cSort1:="SortFakt(IDROBA,'"+cSort+"')"
-   INDEX ON &cSort1 TO (cTMPFAKT:=TMPFAKT()) FOR &cFilt EVAL(TekRec2()) EVERY 1
-  BoxC()
-else
-  if cFilt==".t."
+
+if cFilt==".t."
    set filter to
-  else
+else
    set filter to &cFilt
-  endif
 endif
 
 go top
@@ -365,12 +343,6 @@ do while !eof()
 
      if cMink=="O" .and. nMink==0 .and. round(nUl-nIzl,4)==0
        loop
-     endif
-
-     if lBenjo
-       if !( ROBA->(&aUslT) .and. ROBA->naz=qqNRobe )
-         loop
-       endif
      endif
 
      if cProred=="D"

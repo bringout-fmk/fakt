@@ -1,9 +1,12 @@
 #include "\dev\fmk\fakt\fakt.ch"
 
-
+// ----------------------------------------------------
+// ----------------------------------------------------
 function stdokpdv(cIdFirma, cIdTipDok, cBrDok, lJFill)
-*{
-local lSamoKol:=.f. // samo kolicine
+local cFax
+
+// samo kolicine
+local lSamoKol:=.f. 
 
 if lJFill == nil
 	lJFill := .f.
@@ -47,9 +50,14 @@ cBrDok:=BrDok
 dDatDok:=DatDok
 cIdTipDok:=IdTipDok
 
+
+cDocumentName:=doc_name(cIdFirma, cIdTipDok, cBrDok, pripr->IdPartner)
+
+
 // prikaz samo kolicine
 if cIdTipDok $ "01#00#12#19#21#26"
-	if (gPSamoKol == "0" .and. Pitanje(,"Prikazati samo kolicine (D/N)", "N") == "D") .or. gPSamoKol == "D"
+	if ((gPSamoKol == "0" .and. Pitanje(,"Prikazati samo kolicine (D/N)", "N") == "D")) ;
+	    .or. gPSamoKol == "D"
 		lSamoKol:=.t.
 	endif
 endif
@@ -70,16 +78,15 @@ endif
 if cIdTipDok == "13"
 	omp_print()
 else
-	pf_a4_print()
+	pf_a4_print(nil, cDocumentName)
 endif
 
 return
-*}
 
-
-
+// ----------------------------------------------------------------------
+// puni  pomocne tabele rn drn
+// ----------------------------------------------------------------------
 function fill_porfakt_data(cIdFirma, cIdTipDok, cBrDok, lBarKod, lSamoKol)
-*{
 local cTxt1,cTxt2,cTxt3,cTxt4,cTxt5
 local cIdPartner
 local dDatDok
@@ -518,11 +525,10 @@ endcase
 add_drn(cBrDok, dDatDok, dDatVal, dDatIsp, cTime, nUkBPDV, nUkVPop, nUkBPDVPop, nUkPDV, nTotal, nCSum, nUkPopNaTeretProdavca, nDrnZaokr, nUkKol)
 
 return
-*}
 
-
+// ----------------------------------
+// ----------------------------------
 function fill_potpis(cIdVD)
-*{
 local cPom
 local cPotpis
 
@@ -777,3 +783,33 @@ endif
 
 return nLen - nPos
 
+
+// -------------------------------------------
+// cDocName
+// -------------------------------------------
+static function doc_name(cIdFirma, cIdTipDok, cBrDok, cIdPartner)
+local cFax
+local cPartner
+local cDocumentName
+
+// primjer cDocumentName = FAKT_DOK_10-10-00050_planika-flex-sarajevo_29.05.06_FAX:032440173
+cDocumentName := gModul + "_DOK_" + cIdFirma  + "-" + cIdTipDok + "-" + TRIM(cBrDok) + "-" + TRIM(cIdPartner) + "_" + DTOC(DatDok)
+
+cPartner := ALLTRIM(g_part_name(cIdPartner))
+
+cPartner := STRTRAN(cPartner, " ","-")
+cPartner := STRTRAN(cPartner, '"',"")
+cPartner := STRTRAN(cPartner, "'","")
+cPartner := STRTRAN(cPartner, '/',"-")
+
+cDocumentName += "_" + cPartner
+
+// 032/440-170 => 032440170
+cFax := STRTRAN(g_part_fax(cIdPartner), "-", "")
+cFax := STRTRAN(cFax, "/", "")
+cFax := STRTRAN(cFax, " ", "")
+
+cDocumentName += "_FAX-" + cFax
+
+cDocumentName := KonvZnWin(cDocumentName, "4")
+return cDocumentName

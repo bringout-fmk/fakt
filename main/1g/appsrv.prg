@@ -50,7 +50,6 @@ UcitajParams()
 
 public gldistrib:=.f.
 public fID_J:=.f.
-public lBenjo:=.f.
 public gDest:=.f.
 
 if !File(".\BROJAC")

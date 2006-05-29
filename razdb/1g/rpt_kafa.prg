@@ -4,32 +4,6 @@
  * ----------------------------------------------------------------
  *                                     Copyright Sigma-com software 
  * ----------------------------------------------------------------
- * $Source: c:/cvsroot/cl/sigma/fmk/fakt/razdb/1g/rpt_kafa.prg,v $
- * $Author: ernad $ 
- * $Revision: 1.5 $
- * $Log: rpt_kafa.prg,v $
- * Revision 1.5  2003/01/21 15:01:58  ernad
- * probelm excl fakt - kalk ?! direktorij kalk
- *
- * Revision 1.4  2003/01/21 13:28:23  ernad
- * korekcije direktorij
- *
- * Revision 1.3  2002/07/05 13:01:02  ernad
- *
- *
- * debug: varijanta za vise konta je "1N"
- *
- * Revision 1.2  2002/07/05 08:23:07  ernad
- *
- *
- * parametar ExePath/Fakt_specif/Fakt_Kalk -> KumPath/Fakt/FaktKalk
- *
- * Revision 1.1  2002/07/05 08:03:02  ernad
- *
- *
- * Izjestaj usporednog prikaza kalk <-> fakt prebacen u razdb iz izvj.prg
- *
- *
  */
  
 /*! \fn Fakt_Kalk(lFaktKalk)
