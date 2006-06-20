@@ -40,16 +40,17 @@
  */
  
 function Lager()
-*{
-parameters lPocStanje, cIdFirma,qqRoba,dDatOd,dDatDo
+
+parameters lPocStanje, cIdFirma, qqRoba, dDatOd, dDatDo
 
 local nKU,nKI, fSaberiKol
 local aPorezi:={}, cPoTar:="N"
 
 private nRezerv,nRevers
-private nul,nizl,nRbr,cRR,nCol1:=0
+private nUl, nIzl, nRbr, cRR, nCol1:=0
 private m:=""
-private nStr:=0  // tekuca strana
+// tekuca strana
+private nStr:=0 
 private cProred:="N"
 private nGrZn:=99
 private cLastIdRoba:=""
@@ -372,7 +373,9 @@ do while !eof()
 
   nUl:=nIzl:=0
   nRezerv:=nRevers:=0
-  nReal1:=0; nReal2:=0  // nReal1 realizacija , nReal2 - rabat
+  // nReal1 realizacija , nReal2 - rabat
+  nReal1:=0
+  nReal2:=0 
 
   if cSintetika=="D"
       bWhile1:= {|| !eof() .and.;
@@ -387,33 +390,20 @@ do while !eof()
                       IF(lPoNarudzbi.and.cPKN=="D",cIdNar==idnar,.t.)  }
       endif
   endif
-
-  if fSMark .and. SkLoNMark("ROBA",SiSiRo()) // skip & loop gdje je roba->_M1_ != "*"
+ 
+ // skip & loop gdje je roba->_M1_ != "*"
+  if fSMark .and. SkLoNMark("ROBA",SiSiRo())
       skip; loop
   endif
 
-  if gNovine=="D" .and. cvOpor<>"S"
-    if cvOpor=="N" .and. Oporezovana(ROBA->idtarifa) .or.;
-       cvOpor=="O" .and. !Oporezovana(ROBA->idtarifa)
-      skip 1; loop
-    endif
-  endif
 
   do while eval(bWhile1)
 
     
-    if fSMark .and. SkLoNMark("ROBA",SiSiRo()) 
     // skip & loop gdje je roba->_M1_ != "*"
+    if fSMark .and. SkLoNMark("ROBA",SiSiRo()) 
         skip
 	loop
-    endif
-
-    if gNovine=="D" .and. cvOpor<>"S"
-      if cvOpor=="N" .and. Oporezovana(ROBA->idtarifa) .or.;
-         cvOpor=="O" .and. !Oporezovana(ROBA->idtarifa)
-        skip 1
-	loop
-      endif
     endif
 
     if !empty(qqTipDok)
@@ -422,6 +412,7 @@ do while !eof()
 	 loop
        endif
     endif
+    
     if !empty(cidfirma)
      if idfirma<>cidfirma
      	skip
@@ -430,12 +421,6 @@ do while !eof()
     endif
 
     if !empty(qqPartn)
-      IF gNovine=="D"
-        if !(&aUsl2)
-          skip
-	  loop
-        endif
-      ELSE
         select doks
 	hseek fakt->(IdFirma+idtipdok+brdok)
         select fakt
@@ -445,21 +430,23 @@ do while !eof()
           skip
 	  loop
         endif
-      ENDIF
     endif
 
-    // atributi!!!!!!!!!!!!!
+    // atributi
     if !empty(cK1); if ck1<>K1; skip; loop; end; end
+
     if !empty(cK2); if ck2<>K2;  skip; loop; end; end
 
     if !empty(cIdRoba)
     if cRR<>"F"
-     if idtipdok="0"  // ulaz
+     // ulaz
+     if idtipdok="0" 
         nUl+=kolicina
         if fSaberikol .and. !( roba->K2 = 'X')
          nKU+=kolicina
         endif
-     elseif idtipdok="1"   // izlaz faktura
+     // izlaz faktura
+     elseif idtipdok="1"  
        if !(serbr="*" .and. idtipdok=="10") // za fakture na osnovu otpremnice ne racunaj izlaz
           nIzl+=kolicina
           nReal1+=round( kolicina*Cijena, ZAOKRUZENJE)
@@ -479,7 +466,8 @@ do while !eof()
         endif
      endif
     else
-     if (serbr="*" .and. idtipdok=="10") // za fakture na osnovu otpremince ne ra~unaj izlaz
+     // za fakture na osnovu otpremince ne racunaj izlaz
+     if (serbr="*" .and. idtipdok=="10") 
           nIzl+=kolicina
           // finansijski da !
           nReal1+=round( kolicina*Cijena , ZAOKRUZENJE)
@@ -498,7 +486,6 @@ do while !eof()
 	endif
 	OL_Yield()
 
-  // TODO !!!!!!!!! rijesiti ID_J za sinteticku robu
 
   if !empty(cIdRoba)
    if !(cSaldo0=="N" .and. (nUl-nIzl)==0)
@@ -508,9 +495,7 @@ do while !eof()
      else
          NSRNPIdRoba(cIdRoba, (cSintetika=="D") )
      endif
-     IF gNovine=="D" .and. cvOpor<>"S"
-     	Oporezovana(ROBA->idtarifa)  // ?nepotrebno?
-     ENDIF
+    
     IF nGrZn<>99 .and. ( EMPTY(cLastIdRoba) .or. LEFT(cLastIdRoba,nGrZn)<>LEFT(cIdRoba,nGrZn) )
       SELECT ROBA
       PushWA()
@@ -638,6 +623,7 @@ do while !eof()
          nIzn2 += nPomSt*_cijena2
        endif
     endif
+
    endif
   endif
 
@@ -760,7 +746,6 @@ return
  */
  
 function ZaglLager()
-*{
 local cPomZK
 
 if nStr>0
@@ -779,11 +764,6 @@ IF cUI=="U"
   ?
 ELSEIF cUI=="I"
   ? space(4),"         (prikaz samo izlaza)"
-  ?
-ENDIF
-
-IF gNovine=="D" .and. cvOpor<>"S"
-  ? space(4),"         (prikaz samo "+IF(cvOpor=="N","ne","")+"oporezovanih artikala)"
   ?
 ENDIF
 
@@ -865,4 +845,3 @@ ENDIF
 ShowKorner(nStr,1,16)
 
 return
-*}

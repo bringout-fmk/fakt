@@ -1,7 +1,7 @@
 #include "\dev\fmk\fakt\fakt.ch"
 /*
  * ----------------------------------------------------------------
- *                                     Copyright Sigma-com software 
+ *                          Copyright Sigma-com software 2000-2006
  * ----------------------------------------------------------------
  */
 
@@ -291,9 +291,9 @@ else  // ako je izabrano "2"
 			nKolicina+=kolicina
 			
 			if fakt->dindem==left(ValBazna(),3)
-				nIznos+=ROUND( kolicina*Cijena*(1-Rabat/100)*(1+Porez/100) ,ZAOKRUZENJE)
+				nIznos+=ROUND( kolicina * Cijena * (1-Rabat/100) * (1+Porez/100) ,ZAOKRUZENJE)
 			else
-				nIznos+=ROUND( kolicina*Cijena*1/UBaznuValutu(datdok)*(1-Rabat/100)*(1+Porez/100) ,ZAOKRUZENJE)
+				nIznos+=ROUND( kolicina * Cijena*1/ UBaznuValutu(datdok) * (1-Rabat/100)*(1+Porez/100) , ZAOKRUZENJE)
 			endif
 		
 			++nCounter
