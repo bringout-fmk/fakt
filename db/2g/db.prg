@@ -684,82 +684,6 @@ endif
 	dbt2fpt(PRIVPATH+'_FAKT')
 #endif
 
-
-if (nArea==-1 .or. nArea==(F_UGOV))
-	//UGOV.DBF
-	
-	aDBf:={}
-	AADD(aDBF, { "ID"        , "C" , 10,  0 })
-	AADD(aDBF, { "DatOd"     , "D" ,  8,  0 })
-	AADD(aDBF, { "IDPartner" , "C" ,  6,  0 })
-	AADD(aDBF, { "DatDo"     , "D" ,  8,  0 })
-	AADD(aDBF, { "Naz"       , "C" , 20,  0 })
-	AADD(aDBF, { "Vrsta"     , "C" ,  1,  0 })
-	AADD(aDBF, { "IdTipdok"  , "C" ,  2,  0 })
-	AADD(aDBF, { "Aktivan"   , "C" ,  1,  0 })
-	AADD(aDBf, { 'DINDEM'    , 'C' ,  3,  0 })
-	AADD(aDBf, { 'IdTXT'     , 'C' ,  2,  0 })
-	AADD(aDBf, { 'zaokr'     , 'N' ,  1,  0 })
-	AADD(aDBf, { 'IdDodTXT'  , 'C' ,  2,  0 })
-
-	if !FILE(KUMPATH+"UGOV.DBF")
-   		DBcreate2(KUMPATH+"UGOV.DBF",aDBF)
-	endif
-	
-	CREATE_INDEX("ID"      ,"Id+idpartner" ,KUMPATH+"UGOV")
-	CREATE_INDEX("NAZ"     ,"idpartner+Id" ,KUMPATH+"UGOV")
-	CREATE_INDEX("NAZ2"    ,"naz"          ,KUMPATH+"UGOV")
-	CREATE_INDEX("PARTNER" ,"IDPARTNER"    ,KUMPATH+"UGOV")
-	CREATE_INDEX("AKTIVAN" ,"AKTIVAN"      ,KUMPATH+"UGOV")
-	if glDistrib
-  		CREATE_INDEX("1","AKTIVAN+VRSTA+IDPARTNER",KUMPATH+"UGOV")
-	endif
-endif
-
-
-if (nArea==-1 .or. nArea==(F_RUGOV))
-	//RUGOV.DBF
-	
-	aDbf:={}
-	AADD(aDBF, { "ID"       , "C" ,  10,  0 })
-	AADD(aDBF, { "IDROBA"   , "C" ,  10,  0 })
-	AADD(aDBF, { "Kolicina" , "N" ,  15,  4 })
-	AADD(aDBf, { 'Rabat'    , 'N' ,   6,  3 })
-	AADD(aDBf, { 'Porez'    , 'N' ,   5,  2 })
-	AADD(aDBf, { 'DESTIN'   , 'C' ,   1,  0 })
-
-	if !FILE(KUMPATH+"RUGOV.DBF")
-   		DBcreate2(KUMPATH+"RUGOV.DBF",aDBF)
-	endif
-	
-	CREATE_INDEX("ID","id+IdRoba",KUMPATH+"RUGOV")
-	CREATE_INDEX("IDROBA","IdRoba",KUMPATH+"RUGOV")
-endif
-
-
-if (nArea==-1 .or. nArea==(F_DEST))
-	//DEST.DBF
-        
-	aDbf:={}
-        AADD(aDBf,{ 'ID'                  , 'C' ,   6 ,  0 })
-        AADD(aDBf,{ 'NAZ'                 , 'C' ,  25 ,  0 })
-        AADD(aDBf,{ 'NAZ2'                , 'C' ,  25 ,  0 })
-        AADD(aDBf,{ 'OZNAKA'              , 'C' ,   1 ,  0 })
-        AADD(aDBf,{ 'PTT'                 , 'C' ,   5 ,  0 })
-        AADD(aDBf,{ 'MJESTO'              , 'C' ,  16 ,  0 })
-        AADD(aDBf,{ 'ADRESA'              , 'C' ,  24 ,  0 })
-        AADD(aDBf,{ 'TELEFON'             , 'C' ,  12 ,  0 })
-        AADD(aDBf,{ 'FAX'                 , 'C' ,  12 ,  0 })
-        AADD(aDBf,{ 'MOBTEL'              , 'C' ,  20 ,  0 })
-        
-	if !FILE(KUMPATH+"DEST.dbf")
-		DBcreate2(KUMPATH+"DEST.DBF",aDbf)
-	endif
-	
-	// destinacije (veza: ID=PARTN->id)
-	CREATE_INDEX("1","ID+OZNAKA",KUMPATH+"DEST") 
-endif
-
 if (nArea==-1 .or. nArea==(F_DOKS))
 	//DOKS.DBF
 	
@@ -885,6 +809,9 @@ if glDistrib
   		CREATE_INDEX("2","IDRELAC+DTOS(datum)",KUMPATH+"KALPOS")
 	endif
 endif
+
+// kreiranje tabela ugovora
+db_cre_ugov()
 
 if IsRamaGlas()
 	SDimDB_Cre()

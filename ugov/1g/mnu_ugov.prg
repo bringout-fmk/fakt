@@ -16,7 +16,6 @@
  */
  
 function SifUgovori()
-*{
 private opc:={}
 private opcexe:={}
 private Izbor:=1
@@ -28,5 +27,4 @@ AADD(opcexe,{|| DFTParUg()})
 
 Menu_SC("sugov")
 return
-*}
 

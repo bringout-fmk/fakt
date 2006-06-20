@@ -5,7 +5,6 @@ liball:
 	make -C db/2g
 	make -C db/1g
 	make -C uplate/1g
-	make -C ugov/1g
 	make -C dok/1g
 	make -C sif/1g
 	make -C razoff/1g
@@ -28,7 +27,6 @@ cleanall:
 	make -C db/2g clean
 	make -C db/1g clean
 	make -C uplate/1g clean
-	make -C ugov/1g clean
 	make -C dok/1g clean
 	make -C sif/1g clean
 	make -C razoff/1g clean
