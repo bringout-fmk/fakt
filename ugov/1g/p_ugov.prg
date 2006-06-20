@@ -1180,19 +1180,21 @@ LOCAL nArr:=SELECT(), i:=0
  ? 
  P_12CPI
 
-   SELECT ROBA
-   GO TOP
+ SELECT ROBA
+ GO TOP
 
-   StampaTabele(aKol,{|| ZaOdgovarajuci()},, gTabela,,,;
+ StampaTabele(aKol,{|| ZaOdgovarajuci()},, gTabela,,,;
                 "PREGLED UGOVORA ZA " + cFiltTrz,;
                 {|| OdgovaraLi()} , ;
-		IIF(gOstr=="D",,-1) , , 
+		IIF(gOstr=="D",,-1) , , ; 
 		lLin,,,)
 
  END PRINT
 
- SELECT RUGOV; PopWA()
- SELECT UGOV; PopWA()
+ SELECT RUGOV
+ PopWA()
+ SELECT UGOV
+ PopWA()
  SELECT (nArr)
 
 RETURN
