@@ -290,11 +290,7 @@ else  // ako je izabrano "2"
      			
 			nKolicina+=kolicina
 			
-			if fakt->dindem==left(ValBazna(),3)
-				nIznos+=ROUND( kolicina * Cijena * (1-Rabat/100) * (1+Porez/100) ,ZAOKRUZENJE)
-			else
-				nIznos+=ROUND( kolicina * Cijena*1/ UBaznuValutu(datdok) * (1-Rabat/100)*(1+Porez/100) , ZAOKRUZENJE)
-			endif
+			nIznos+=ROUND( kolicina * Cijena * (1-Rabat/100) * (1+Porez/100) ,ZAOKRUZENJE)
 		
 			++nCounter
 			
