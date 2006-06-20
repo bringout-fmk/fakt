@@ -1,4 +1,5 @@
 #include "\dev\fmk\fakt\fakt.ch"
+
 /*
  * ----------------------------------------------------------------
  *                          Copyright Sigma-com software 2000-2006
@@ -20,7 +21,6 @@
  */
  
 function RealKol()
-*{
 private lOpcine:=(IzFmkIni("FAKT","Opcine","N",SIFPATH)=="D")
 private cPrikaz
 private cSection:="N"
@@ -177,7 +177,7 @@ endif
 
 cIdPartner:=idPartner
 
-ZaglMerkom()
+zagl_sp_prod()
 
 if cPrikaz=="1"
 	set order to tag "1"
@@ -204,7 +204,7 @@ if cPrikaz=="1"
 
 		if prow()>61	
 			FF
-			ZaglMerkom()
+			zagl_sp_prod()
 		endif
 
     		select partn
@@ -219,8 +219,8 @@ if cPrikaz=="1"
       			nTKolicina+=nKolicina
     		endif
   	enddo
-else  // ako je izabrano "2"
-
+else  
+	// ako je izabrano "2"
 	set order to tag "3"
 	go top
   	nC:=0
@@ -306,7 +306,7 @@ else  // ako je izabrano "2"
 		
     		if prow()>61
 			FF
-			ZaglMerkom()
+			zagl_sp_prod()
 		endif
     		
 		select roba
@@ -331,7 +331,7 @@ endif
 
 if prow()>59
 	FF
-	ZaglMerkom()
+	zagl_sp_prod()
 endif
 
 ? space(gnLMarg)
@@ -352,12 +352,10 @@ return
 *}
 
 
-
-/*! \fn ZaglMerkom()
- *  \brief Zaglavlje 
- */
- 
-function ZaglMerkom()
+// ---------------------------------------------
+// zaglavlje izvjestaja specifikacija prodaje 
+// ---------------------------------------------
+static function zagl_sp_prod()
 ?
 P_12CPI
 

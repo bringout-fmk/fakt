@@ -12,7 +12,6 @@ liball:
 	make -C razdb/1g
 	make -C ostalo/1g
 	make -C specif/vindija/1g
-	make -C specif/merkom/1g
 	make -C specif/ramag/1g
 	make -C rpt/1g
 	make -C param/1g
@@ -38,7 +37,6 @@ cleanall:
 	make -C specif/rudnik/1g clean
 	make -C specif/ramag/1g clean
 	make -C specif/vindija/1g clean
-	make -C specif/merkom/1g clean
 	make -C rpt/1g clean
 	make -C stampa/1g clean
 	make -C konsig/1g clean
