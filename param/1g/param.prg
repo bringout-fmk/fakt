@@ -558,12 +558,14 @@ Box(, 6, 60, .f.,"Podaci o maticnoj firmi")
   	@ m_x+3,m_y+2 SAY "Naziv: " GET gNFirma
   	@ m_x+3,col()+2 SAY "TIP SUBJ.: " GET gTS
   	@ m_x+4,m_y+2 SAY "Grad" GET gMjStr
-  	@ m_x+5,m_y+2 SAY "Bazna valuta (Domaca/Pomocna)" GET gBaznaV  VALID gBaznaV $ "DP"  PICT "!@"
+  	//@ m_x+5,m_y+2 SAY "Bazna valuta (Domaca/Pomocna)" GET gBaznaV  VALID gBaznaV $ "DP"  PICT "!@"
   	@ m_x+6,m_y+2 SAY "Koristiti modemsku vezu S-erver/K-orisnik/N" GET gModemVeza VALID gModemVeza $ "SKN"  PICT "!@"
   	READ
 BoxC()
 
 gMjStr:=TRIM(gMjStr)
+// bazna valuta uvijek domaca
+gBaznaV:="D"
 
 if (LASTKEY()<>K_ESC)
 	WPar("s7",gMjStr)
