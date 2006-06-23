@@ -510,7 +510,7 @@ PUBLIC gaDBFs := {;
 { F_UGOV   ,"UGOV"    , P_KUMPATH     },;
 { F_RUGOV  ,"RUGOV"   , P_KUMPATH     },;
 { F_GEN_UG ,"GEN_UG"  , P_KUMPATH     },;
-{ F_GEN_UG_P,"GEN_UG_P", P_KUMPATH    },;
+{ F_G_UG_P, "GEN_UG_P", P_KUMPATH     },;
 { F_DOKS   ,"DOKS"    , P_KUMPATH     },;
 { F_DOKS2  ,"DOKS2"   , P_KUMPATH     },;
 { F_VRSTEP ,"VRSTEP"  , P_SIFPATH     },;
@@ -854,7 +854,7 @@ if i==F_UGOV .or. i==F_RUGOV .or. i==F_DEST  .or. i==F_SECUR .or. i==F_ADRES
 	lIdiDalje:=.t.
 endif
 
-if i==F_GEN_UG .or. i==F_GEN_UG_P
+if i==F_GEN_UG .or. i==F_G_UG_P
 	lIdiDalje:=.t.
 endif
 

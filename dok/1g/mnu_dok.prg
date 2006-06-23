@@ -45,6 +45,11 @@ AADD(opcexe, {|| StDatn()})
 AADD(opc,"3. stampa dokumenata od broja do broja      ")
 AADD(opcexe, {|| StAzPeriod()})
 
+if IsUgovori()
+	AADD(opc,"4. stampa fakt.na osnovu ugovora od-do")
+	AADD(opcexe, {|| ug_st_od_do()})
+endif
+
 Menu_SC("stfak")
 CLOSERET
 return .f.

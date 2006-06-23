@@ -3031,6 +3031,7 @@ endif
 AADD(opc,"A. kompletiranje iznosa fakture pomocu usluga")
 AADD(opc,"-----------------------------------------------")
 AADD(opc, "C. import txt-a")
+AADD(opc, "U. stampa ugovora od do ")
 
 h[1]:=h[2]:=""
 close all
@@ -3134,6 +3135,8 @@ do while .t.
        KomIznosFakt()
     case izbor == 12
     	ImportTxt()
+    case izbor == 13
+    	ug_st_od_do()
   endcase
 enddo
 m_x:=am_x

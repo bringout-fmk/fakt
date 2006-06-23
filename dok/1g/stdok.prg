@@ -857,15 +857,21 @@ return
 
 
 // Stampa azuriranih faktura od broja do broja
-function StAzPeriod()
-private cIdFirma, cIdTipDok, cBrOd, cBrDo
+function StAzPeriod(cIdFirma, cIdTipDok, cBrOd, cBrDo)
+local lDirekt := .f.
 
-cIdFirma:=gFirma
-cIdTipDok:="10"
-cBrOd:=space(8)
-cBrDo:=space(8)
+if cIdFirma <> nil
+	lDirekt := .t.
+endif
 
-Box("", 4, 35)
+if !lDirekt
+	
+	cIdFirma:=gFirma
+	cIdTipDok:="10"
+	cBrOd:=space(8)
+	cBrDo:=space(8)
+
+	Box("", 4, 35)
         @ m_x+1, m_y+2 SAY "Dokument:"
         @ m_x+2, m_y+2 SAY " RJ-tip:" GET cIdFirma
         @ m_x+2, col()+1 SAY "-" GET cIdTipDok
@@ -873,10 +879,11 @@ Box("", 4, 35)
 	@ m_x+4, m_y+3 SAY "od" GET cBrOd VALID !EMPTY(cBrOd)
 	@ m_x+4, col()+1 SAY "do" GET cBrDo VALID !EMPTY(cBrDo)
         read
-BoxC()
+	BoxC()
 
-if LASTKEY()==K_ESC
-	return
+	if LASTKEY()==K_ESC
+		return
+	endif
 endif
 
 close all
@@ -900,7 +907,7 @@ else
 	MsgBeep("Trazeni tip dokumenta ne postoji!")
 endif
 
-SELECT PRIPR
+SELECT DOKS
 use
 return
 
