@@ -426,7 +426,8 @@ endif
 Skloni(KUMPATH,"RJ.DBF",cSezona,finverse,fda,fnul)
 Skloni(KUMPATH,"UGOV.DBF",cSezona,finverse,fda,fnul)
 Skloni(KUMPATH,"RUGOV.DBF",cSezona,finverse,fda,fnul)
-Skloni(KUMPATH,"DEST.DBF",cSezona,finverse,fda,fnul)
+Skloni(KUMPATH,"GEN_UG.DBF",cSezona,finverse,fda,fnul)
+Skloni(KUMPATH,"GEN_UG_P.DBF",cSezona,finverse,fda,fnul)
 Skloni(KUMPATH,"KALPOS.DBF",cSezona,finverse,fda,fnul)
 Skloni(KUMPATH,"FMK.INI",cSezona,finverse,fda,fnul)
 
@@ -507,8 +508,9 @@ PUBLIC gaDBFs := {;
 { F__FAKT  ,"_FAKT"   , P_PRIVPATH    },;
 { F_FAPRIPR,"PRIPR"   , P_PRIVPATH    },;
 { F_UGOV   ,"UGOV"    , P_KUMPATH     },;
-{ F_RUGOV  ,"RUGOV"   , P_KUMPATH    },;
-{ F_DEST   ,"DEST"    , P_KUMPATH     },;
+{ F_RUGOV  ,"RUGOV"   , P_KUMPATH     },;
+{ F_GEN_UG ,"GEN_UG"  , P_KUMPATH     },;
+{ F_GEN_UG_P,"GEN_UG_P", P_KUMPATH    },;
 { F_DOKS   ,"DOKS"    , P_KUMPATH     },;
 { F_DOKS2  ,"DOKS2"   , P_KUMPATH     },;
 { F_VRSTEP ,"VRSTEP"  , P_SIFPATH     },;
@@ -852,10 +854,8 @@ if i==F_UGOV .or. i==F_RUGOV .or. i==F_DEST  .or. i==F_SECUR .or. i==F_ADRES
 	lIdiDalje:=.t.
 endif
 
-if glDistrib
-  	if i==F_RELAC .or. i==F_VOZILA .or. i==F_KALPOS
-  		lIdiDalje:=.t.
-	endif
+if i==F_GEN_UG .or. i==F_GEN_UG_P
+	lIdiDalje:=.t.
 endif
 
 

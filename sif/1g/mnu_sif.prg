@@ -48,7 +48,7 @@ endif
 
 if IsUgovori()
 	AADD(opc,"U. ugovori")
-	AADD(opcexe,{|| OSifUgov(), SifUgovori()})
+	AADD(opcexe,{|| o_ugov(), SifUgovori()})
 endif
 
 Menu_SC("fsif")
