@@ -3013,14 +3013,8 @@ return
 
 
 function PopupKnjiz()
-*{
-
 private opc[8]
-if glDistrib
- opc[1]:="1. generacija faktura na osnovu narudzbi i ugovora "
-else
- opc[1]:="1. generacija faktura na osnovu ugovora            "
-endif
+opc[1]:="1. generacija faktura na osnovu ugovora            "
 opc[2]:="2. sredjivanje rednih br.stavki dokumenta"
 opc[3]:="3. ispravka teksta na kraju fakture"
 opc[4]:="4. svedi protustavkom vrijednost dokumenta na 0"
@@ -3048,7 +3042,7 @@ do while .t.
     case Izbor==0
 	exit
     case izbor == 1
-	GenUg()
+	m_gen_ug()
     case izbor == 2
 	SrediRbr()
     case izbor == 3
