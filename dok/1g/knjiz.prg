@@ -329,7 +329,7 @@ endif
 
 private ImeKol:={ ;
           {"Red.br",        {|| Rbr() } } ,;
-          {"Roba",          {|| Roba()  } } ,;
+          {"Partner/Roba",  {|| Part1Stavka() + Roba()  } } ,;
           {"Kolicina",      {|| kolicina } } ,;
           {"Cijena",        {|| Cijena } , "cijena" } ,;
           {"Rabat",         {|| Rabat  } ,"Rabat"} ,;
@@ -436,35 +436,40 @@ return padr(cRet,6)
 *}
 
 
-/*! \fn Roba()
- *  \brief 
- */
- 
-function Roba()
-*{
-local cRet
+// ---------------------------------
+// prikaz partnera u prvoj stavki
+// ---------------------------------
+static function Part1Stavka()
+local cRet:=""
 
-cRet:=trim(StIdROBA())+" "
-if EOF()
-  	cRet:=""
-elseif alltrim(podbr)=="."
-  	aMemo:=ParsMemo(txt)
-  	cRet:=aMemo[1]
-else
-	DbSelectArr(F_ROBA)
- 	if gNovine=="D"
-   		seek PADR(LEFT(PRIPR->idroba,gnDS),LEN(PRIPR->idroba))
-   		if !FOUND() .or. ROBA->tip!="S"
-     			seek PRIPR->IdRoba
-   		endif
- 	else
-   		seek PRIPR->IdRoba
- 	endif
- 	DbSelectArr(F_PRIPR)
- 	cRet+=ROBA->naz
+if alltrim(rbr) == "1"
+  cRet += trim(IdPartner) + ": " 
 endif
-return padr(cRet,30)
-*}
+
+return cRet
+
+// ------------------------------------------
+// Roba() - prikazi robu 
+// ------------------------------------------
+function Roba()
+local cRet := ""
+
+
+cRet += trim(StIdROBA())+" "
+do case
+   case EOF()
+  	cRet := ""
+   case  alltrim(podbr)=="."
+  	aMemo:=ParsMemo(txt)
+  	cRet += aMemo[1]
+   otherwise
+	DbSelectArr(F_ROBA)
+   	seek PRIPR->IdRoba
+ 	DbSelectArr(F_PRIPR)
+ 	cRet += ROBA->naz
+endcase
+
+return padr( cRet, 30)
 
 
 /*! \fn JedinaStavka()

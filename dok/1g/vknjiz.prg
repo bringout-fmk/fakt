@@ -99,7 +99,10 @@
  
 function IzSifre(fSilent)
 *{
-local nPos,cSif:=trim(_txt3a),cPom,fTel
+local nPos
+local cSif:=trim(_txt3a)
+local cPom
+local fTel
 
 if fSilent==NIL
   fSilent:=.f.
@@ -124,7 +127,7 @@ if right(cSif,1)="." .and. len(csif)<=7
    _txt3b:=trim(partn->adresa)
    cPom:=""
    if !empty(partn->telefon) .and. IzFmkIni('FAKT','NaslovPartnTelefon','D')=="D"
-      cPom:=_txt3b+", Tel:"+trim(partn->telefon)
+      cPom:=_txt3b + ", Tel:" + trim(partn->telefon)
    else
       fTel:=.t.
    endif
@@ -931,7 +934,7 @@ for i:=1 to len(cTxt)
      		fPoc:=.t.
    	elseif  substr(cTxt,i,1)==Chr(17)
      		fPoc:=.f.
-     		AADD(aMemo,cPom)
+     		AADD(aMemo, cPom)
      		cPom:=""
    	elseif fPoc
       		cPom:=cPom+substr(cTxt,i,1)

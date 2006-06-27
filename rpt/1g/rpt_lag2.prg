@@ -30,9 +30,9 @@
  */
  
 function StanjeRobe()
-*{
 local fSaberiKol, nKU, nKI
-private cidfirma,qqroba,ddatod,ddatdo,nRezerv,nRevers
+private cIdFirma
+private qqroba,ddatod,ddatdo,nRezerv,nRevers
 private nul,nizl,nRbr,cRR,nCol1:=0,nCol0:=50
 private m:=""
 private nStr:=0
@@ -109,18 +109,7 @@ if fakt->(fieldpos("K1"))<>0 .and. gDK1=="D"
 endif
 
 @ m_x+xPos+5,m_y+2 SAY "Prikaz samo kriticnih zaliha (D/N/O) ?" GET cMinK pict "@!" valid cMink$"DNO"
-if glDistrib
-  cIdDist:=SPACE(6)
-  @ m_x+xPos+6,m_y+2 SAY "Distributer (prazno-svi)  "  get cIdDist pict "@!" valid EMPTY(cIdDist).or.P_Firma(@cIdDist)
-endif
 @ m_x+xPos+7,m_y+2 SAY "Napraviti prored (D/N)    "  get cProred pict "@!" valid cProred $ "DN"
-
-if lPoNarudzbi
-  qqIdNar := SPACE(60)
-  cPKN    := "N"
-  @ row()+1,m_y+2 SAY "Uslov po sifri narucioca:" GET qqIdNar PICT "@!S30"
-  @ row()+1,m_y+2 SAY "Prikazati kolonu 'narucilac' ? (D/N)" GET cPKN VALID cPKN$"DN" pict "@!"
-endif
 
 read
 
@@ -176,9 +165,6 @@ endif
 
 private cFilt:=".t."
 
-if glDistrib .and. !EMPTY(cIdDist)
-  cFilt += ".and.IDDIST=="+cm2str(cIdDist)
-endif
 
 if aUsl1<>".t."
   cFilt+=".and."+aUsl1
@@ -225,7 +211,8 @@ nH:=0
 
 do while !eof()
 
-  if fSMark .and. SkLoNMark("ROBA",SiSiRo()) // skip & loop gdje je roba->_M1_ != "*"
+  // skip & loop gdje je roba->_M1_ != "*"
+  if fSMark .and. SkLoNMark("ROBA",SiSiRo()) 
     skip; loop
   endif
 
@@ -238,10 +225,10 @@ do while !eof()
   nStanjeCR := nUl := nIzl := 0
   nRezerv := nRevers := 0
 
-  do while !eof()  .and. cIdRoba==IdRoba .and.;
-           IF(lPoNarudzbi.and.cPKN=="D",cIdNar==idnar,.t.)
+  do while !eof()  .and. cIdRoba==IdRoba 
 
-    if fSMark .and. SkLoNMark("ROBA",SiSiRo()) // skip & loop gdje je roba->_M1_ != "*"
+    // skip & loop gdje je roba->_M1_ != "*"
+    if fSMark .and. SkLoNMark("ROBA",SiSiRo()) 
       skip; loop
     endif
 
@@ -280,43 +267,33 @@ do while !eof()
     if cRR<>"F"
      if idtipdok="0"  // ulaz
         nUl+=kolicina
-        if idfirma$cRJCR
-          nStanjeCR += kolicina
-        endif
         if fSaberikol .and. !( roba->K2 = 'X')
              nKU+=kolicina
         endif
      elseif idtipdok="1"   // izlaz faktura
-       if !(serbr="*" .and. idtipdok=="10") // za fakture na osnovu optpremince ne ra~unaj izlaz
-         if idfirma$cRJCR
-           nStanjeCR -= kolicina
-         endif
+       // za fakture na osnovu optpremince ne ra~unaj izlaz
+       if !(serbr="*" .and. idtipdok=="10") 
          nIzl+=kolicina
          if fSaberikol .and. !( roba->K2 = 'X')
            nKI+=kolicina
          endif
        endif
-     elseif idtipdok$"20#27"
+     elseif idtipdok $ "20#27"
         if serbr="*"
           nRezerv+=kolicina
-          if idfirma$cRJCR
-            nStanjeCR -= kolicina
-          endif
           if fSaberikol .and. !( roba->K2 = 'X')
              nKI+=kolicina
           endif
         endif
      elseif idtipdok=="21"
         nRevers+=kolicina
-        if idfirma$cRJCR
-          nStanjeCR -= kolicina
-        endif
         if fSaberikol .and. !( roba->K2 = 'X')
              nKI+=kolicina
         endif
      endif
     else
-     if (serbr="*" .and. idtipdok=="10") // za fakture na osnovu otpremince ne ra~unaj izlaz
+     // za fakture na osnovu otpremince ne ra~unaj izlaz
+     if (serbr="*" .and. idtipdok=="10") 
        nIzl+=kolicina
        if fSaberikol .and. !( roba->K2 = 'X')
          nKI+=kolicina
@@ -411,7 +388,8 @@ endif
 FF
 
 END PRINT
-CLOSE ALL; MyFERASE(cTMPFAKT)
+CLOSE ALL
+MyFERASE(cTMPFAKT)
 
 
 CLOSERET
