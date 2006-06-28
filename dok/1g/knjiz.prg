@@ -3141,7 +3141,7 @@ do while .t.
     case izbor == 12
     	ImportTxt()
     case izbor == 13
-    	ug_st_od_do()
+    	ug_za_period()
   endcase
 enddo
 m_x:=am_x

@@ -856,6 +856,27 @@ use
 return
 
 
+
+// stampa ugovora za period
+function ug_za_period()
+local dDatGen
+local cBrOd
+local cBrDo
+local cTipDok
+
+// parametri
+if ug_st_od_do(@cBrOd, @cBrDo) == 0
+	return
+endif
+
+// stampa....
+cTipDok := "10"
+StAzPeriod( gFirma, cTipDok, cBrOd, cBrDo )
+
+return
+
+
+
 // Stampa azuriranih faktura od broja do broja
 function StAzPeriod(cIdFirma, cIdTipDok, cBrOd, cBrDo)
 local lDirekt := .f.

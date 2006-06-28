@@ -47,7 +47,7 @@ AADD(opcexe, {|| StAzPeriod()})
 
 if IsUgovori()
 	AADD(opc,"4. stampa fakt.na osnovu ugovora od-do")
-	AADD(opcexe, {|| ug_st_od_do()})
+	AADD(opcexe, {|| ug_za_period()})
 endif
 
 Menu_SC("stfak")
