@@ -68,7 +68,7 @@ private Izbor:=1
 AADD(opc,"1. povrat dokumenta u pripremu       ")
 AADD(opcexe,{|| Povrat()})
 AADD(opc,"2. povrat dokumenata prema kriteriju ")
-AADD(opcexe,{|| if(SigmaSif(),PovSvi(),nil)})
+AADD(opcexe,{|| if(SigmaSif(), PovSvi(), nil)})
 AADD(opc,"3. prekid rezervacije")
 AADD(opcexe,{|| Povrat(.t.)})
 AADD(opc,"4. evidentiranje uplata")

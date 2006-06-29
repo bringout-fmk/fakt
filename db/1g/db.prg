@@ -163,12 +163,24 @@ return nil
  *  \brief Povrat dokumenta u pripremu sa zadanim kriterijem
  */
 
-function PovSvi()
-*{
+function PovSvi( qBrDok, qDatDok, qTipDok)
+
 local nRec
 private qqBrDok:=SPACE(80)
 private qqDatDok:=SPACE(80)
 private qqTipdok:=SPACE(80)
+
+if qBrDok <> nil
+	qqBrDok := PADR(qBrDok, 80)
+endif
+
+if qDatDok <> nil
+	qqDatDok := PADR(qDatDok, 80)
+endif
+
+if qTipDok <> nil
+	qqTipDok := PADR(qTipDok, 80)
+endif
 
 if (KLevel<>"0")
 	Beep(2)
@@ -208,6 +220,7 @@ Box(,4,60)
 		private aUsl1:=Parsiraj(qqBrDok,"BrDok","C")
   		private aUsl2:=Parsiraj(qqDatDok,"DatDok","D")
   		private aUsl3:=Parsiraj(qqTipdok,"IdTipdok","C")
+
   		if (aUsl1<>nil .and. aUsl2<>nil .and. aUsl3<>nil)
     			exit
   		endif
@@ -328,7 +341,6 @@ do while !eof()
 
 enddo // eof
 closeret
-*}
 
 
 /*! \fn Povrat(fR,cIdFirma,cIdTipDok,cBrDok,lTest)
@@ -339,9 +351,6 @@ closeret
  *  \param cBrDok
  *  \param lTest
  */
-
-*function Povrat(fR,cIdFirma,cIdTipDok,cBrDok,lTest)
-*{
 
 function Povrat
 parameters fR, cIdFirma, cIdTipDok, cBrDok, lTest
@@ -595,7 +604,6 @@ endif
 
 closeret
 return
-*}
 
 
 
@@ -604,7 +612,6 @@ return
  */
 
 function SpojiDuple()
-*{
 local cIdRoba
 local nCnt 
 local nKolicina
@@ -672,7 +679,6 @@ select pripr
 set order to tag "1"
 go top
 return
-*}
 
 
 
@@ -680,9 +686,7 @@ return
 /*! \fn SrediRbr()
  *  \brief Sredi redni broj
  */
- 
 function SrediRbr()
-*{
 local nRbr:=0
 local nRbrStari:=0
 local cPom:=0
@@ -716,7 +720,6 @@ enddo
 
 closeret
 return
-*}
 
 
 /*! \fn Azur(lTest)
@@ -725,8 +728,6 @@ return
  */
  
 function Azur(lTest)
-*{
-
 local fRobaIDJ:=.f.
 local cKontrolBroj:=""
 local nPom1
@@ -736,7 +737,7 @@ local nHPid
 local cType
 
 cType:=TYPE("lVrsteP")
-altd()
+
 if (cType<>"L")
 	lVrsteP:=.f.
 endif
@@ -762,7 +763,7 @@ cPom:=idfirma+idtipdok+brdok
 
 go top
 
-lViseDok:=!(cPom==idfirma+idtipdok+brdok)
+lViseDok :=! (cPom==idfirma+idtipdok+brdok)
 
 aOstaju:={}
 
@@ -1276,6 +1277,8 @@ enddo
 return 0
 
 
+// ------------------------------------------
+// ------------------------------------------
 function dupli_dokument(cSeek)
 select doks
 set order to 1
@@ -1293,21 +1296,16 @@ if Found()
 endif
 return .f.
 
-
-/*! \fn OdrediNBroj(_idfirma,_idtipdok)
- *  \brief 
- *  \param _idfirma
- *  \param _idtipdok
- */
- 
+// --------------------------------------
+// OdrediNBroj(_idfirma,_idtipdok)
+// ---------------------------------------- 
 function OdrediNbroj(_idfirma, _idtipdok)
-*{
-local lBrdok:=""
+local cNBrDok:=""
 
 select DOKS
 set order to 1
 go top
-altd()
+
 if (gVarNum=="2".and._idtipdok=="13")
 	seek _idfirma+_idtipdok+PADL(ALLTRIM(STR(VAL(ALLTRIM(SUBSTR(_idpartner,4))))),2,"0")+CHR(238)
  	skip -1
@@ -1326,38 +1324,28 @@ endif
 
 if (_idtipdok<>idtipdok .or. _idfirma<>idfirma .or. LEFT(_idpartner,6)<>LEFT(idpartner,6) .and. (gVarNum=="2" .and. _idtipdok=="13"))
 	if (gVarNum=="2".and._idtipdok=="13")
-    		lBrDok:=PADL(ALLTRIM(STR(VAL(ALLTRIM(SUBSTR(_idpartner,4))))),2,"0")+"01/"+PADL(ALLTRIM(STR(MONTH(_datdok))),2,"0")
+    		cNBrDok:=PADL(ALLTRIM(STR(VAL(ALLTRIM(SUBSTR(_idpartner,4))))),2,"0")+"01/"+PADL(ALLTRIM(STR(MONTH(_datdok))),2,"0")
   	else
-    		lBrDok:=UBrojDok(1,gNumDio,"")
+    		cNBrDok:=UBrojDok(1, gNumDio,"")
   	endif
 else
 	if (gVarNum=="2".and._idtipdok=="13")
-    		lBrDok:=SljBrDok13(brdok,MONTH(_datdok),_idpartner)
+    		cNBrDok:=SljBrDok13(brdok,MONTH(_datdok),_idpartner)
   	else
-    		lBrDok:=UBrojDok( val(left(brdok,gNumDio))+1, gNumDio, right(brdok,len(brdok)-gNumDio))
+    		cNBrDok:=UBrojDok( val(left(brdok,gNumDio))+1, gNumDio, right(brdok,len(brdok)-gNumDio))
   	endif
 endif
 
-if (glDistrib .and. _idtipdok=="10" .and. UPPER(RIGHT(TRIM(lBrDok),1))=="S")
-  	lBrDok:=padr(left(lBrdok,gNumDio),8)
-else
-  	lBrDok:=padr(lBrdok,8)
-endif
+cNBrDok:=padr(cNBrDok, 8)
 
-return lBrDok
-*}
+return cNBrDok
 
-
-/*! \fn FaNoviBroj(cIdFirma, cIdTiDdok)
- *  \brief Odredi novi broj Fakt-dokumenta 
- *  \param cIdFirma
- *  \param cIdTipDok
- *
- *  \note Ne pokriva specif. slucajeve "a-la" Nijagara ...
- */
- 
+// -------------------------------------------------------
+//  FaNoviBroj(cIdFirma, cIdTiDdok)
+//  Odredi novi broj Fakt-dokumenta 
+//  Ne pokriva specif. slucajeve "a-la" Nijagara ...
+// ------------------------------------------------------- 
 function FaNovibroj(cIdFirma, cIdTipDok)
-*{
 local cBrdok
 local cPom
 local cDesniDio
@@ -1381,17 +1369,16 @@ endif
 cPom:=LEFT(field->brDok,gNumDio)
 nPom:=VAL(cPom)+1
 nDesniDio:=LEN(field->brDok)-gNumDio
-cDesniDio:=RIGHT(field->brDok,nDesniDio)
+cDesniDio:=RIGHT(field->brDok, nDesniDio)
 cBrDok:= UBrojDok( nPom, gNumDio, cDesniDio)
 
 return cBrDok
-*}
 
 
 
-
+// ------------------------------------------------
+// ------------------------------------------------
 function BrisiPripr()
-*{
 
 cSecur:=SecurR(KLevel,"BRISIGENDOK")
 
@@ -1401,7 +1388,7 @@ if (m1="X" .and. ImaSlovo("X",cSecur))   // pripr->m1
   	return DE_CONT
 endif
 
-if Pitanje(,"Zelite li izbrisati pripremu !!????","N")=="D"
+if Pitanje(, "Zelite li izbrisati pripremu !!????","N")=="D"
 	select pripr
    	go top
    	do while !eof()
@@ -1426,7 +1413,6 @@ if Pitanje(,"Zelite li izbrisati pripremu !!????","N")=="D"
 endif
 
 return
-*}
 
 
 /*! \fn KomIznosFakt()
@@ -1492,129 +1478,6 @@ MsgBeep("Formirana je dodatna stavka. Vratite se tipkom <Esc> u pripremu"+"#i pr
 CLOSERET
 
 return
-*}
 
 
 
-function FaStanje(cIdRj, cIdroba, nUl, nIzl, nRezerv, nRevers, lSilent)
-*{
-
-if (lSilent==nil)
-	lSilent:=.f.
-endif
-
-select fakt
-
-//"3","idroba+dtos(datDok)","FAKT"
-
-set order to tag "3"
-
-if (!lSilent)
-	lBezMinusa:=(IzFMKIni("FAKT","NemaIzlazaBezUlaza","N",KUMPATH) == "D" )
-endif
-
-if (roba->tip=="U")
-	return 0
-endif
-
-if (!lSilent)
-	MsgO("Izracunavam trenutno stanje ...")
-endif
-
-seek cIdRoba
-
-nUl:=0
-nIzl:=0
-nRezerv:=0
-nRevers:=0
-
-do while (!EOF() .and. cIdRoba==field->idRoba)
-	if (fakt->idFirma<>cIdRj)
-		SKIP
-		loop
-	endif
-	if (LEFT(field->idTipDok,1)=="0")
-		// ulaz
-		nUl+=kolicina
-	elseif (LEFT(field->idTipDok,1)=="1")   
-		// izlaz faktura
-		if !(left(field->serBr,1)=="*" .and. field->idTipDok=="10")  
-			nIzl += field->kolicina
-		endif
-	elseif (field->idTipDok $ "20#27")
-		if (LEFT(field->serBr,1)=="*")
-			nRezerv += field->kolicina
-		endif
-	elseif (field->idTipDok=="21")
-			nRevers += field->kolicina
-	endif
-	skip
-enddo
-
-if (!lSilent)
-	MsgC()
-endif
-
-return
-*}
-
-function IsDocExists(cIdFirma, cIdTipDok, cBrDok)
-*{
-local nArea
-local lRet
-
-lRet:=.f.
-
-nArea:=SELECT()
-select DOKS
-set order to tag "1"
-HSEEK cIdFirma+cIdTipDok+cBrDok
-if FOUND()
-	lRet:=.t.
-endif
-SELECT(nArea)
-return lRet
-
-*}
-
-
-function SpeedSkip()
-
-nSeconds:=SECONDS()
-
-nKrugova:=1
-Box(,3,50)
-	@ m_x+1,m_y+2 SAY "Krugova:" GET nKrugova
-	read
-BoxC()
-
-
-O_FAKT
-set order to tag "1"
-
-i:=0
-for j:=1 to nKrugova
-go top
-
-? "krug broj", j
-do while !eof()
-	i=i+1
-	if i % 150 = 0
-		? j, i, recno(), idFirma, idTipDok, brDok, "SEC:", SECONDS()-nSeconds
-	endif	
-
-	OL_Yield()
-	nKey:=INKEY()
-	
-	if (nKey==K_ESC)
-		CLOSE ALL 
-		RETURN
-	endif
-
-	SKIP
-enddo
-next
-
-MsgBeep("Vrijeme izvrsenja:" + STR( SECONDS()-nSeconds ) )
-
-return
