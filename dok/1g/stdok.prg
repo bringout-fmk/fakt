@@ -878,6 +878,8 @@ cTipDok := "10"
 StAzPeriod( gFirma, cTipDok, cBrOd, cBrDo )
 
 gcDirekt := cDirPom
+close all
+
 return
 
 
