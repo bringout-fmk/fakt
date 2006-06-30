@@ -944,7 +944,6 @@ do while !eof()
 	endif
 	
   	aMemo:=ParsMemo(txt)
-  	altd()	
 	if (LEN(aMemo)>=5)
     		cTxt:=TRIM(aMemo[3])+" "+TRIM(aMemo[4])+","+TRIM(aMemo[5])
   	else

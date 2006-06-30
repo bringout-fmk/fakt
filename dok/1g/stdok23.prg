@@ -297,7 +297,6 @@ else
 	O_Edit()
 endif
 
-altd()
 
 lDoks2:=(IzFMKINI("FAKT","Doks2","N",KUMPATH)=="D")
 
@@ -976,7 +975,6 @@ do while idfirma==cidfirma .and. idtipdok==cidtipdok .and. brdok==cbrdok .and. !
 		
 		nUk+=round(PrerCij()*kolicina()*cijena*nKurs,nZaokr)
     		//nRab+=round(PrerCij()*kolicina()*cijena*nKurs*rabat/100,nZaokr)
-    		altd()
     
     		if IsVindija()
    			// rabat racunaju po mpcbezporeza*rabat
@@ -984,7 +982,6 @@ do while idfirma==cidfirma .and. idtipdok==cidtipdok .and. brdok==cbrdok .and. !
     		else
 			nRab+=round( Cijena*kolicina()*PrerCij()*Rabat/100 , nZaokr)
     			if IsRabati() .and. lShowSk
-				altd()
 				nSkto += round(((round(PrerCij()*kolicina()*cijena*nKurs,nZaokr)) - (round(Cijena*Kolicina()*PrerCij()*Rabat/100,nZaokr))) * Skonto/100, nZaokr)
 			endif
 		endif
@@ -1386,7 +1383,6 @@ else
    		ENDIF
     		? space(5+38),gPB_ON+"읕컴컴컴컴컴컴컴컴컴컴컴컴컴컴켸"+gPB_OFF
   	ELSE
-    		altd()
 		if !(cidtipdok$"10#06#16") .and. (!lPharmaMAC .or. !(cidtipdok$"20#19"))
       			//@ prow(),36 SAY padl(Mjesto(cIdFirma)+", "+dtoc(ddatdok)+" godine",36)
 			@ prow(),36 SAY padl(Mjesto(cIdFirma)+", "+dtoc(ddatdok)+" godine",36)
@@ -1483,8 +1479,6 @@ if cidtipdok=="10"
     if !fDelphiRB
       P_COND;? space(gnLMarg); P_10CPI
     endif
-
-    altd()
 
 
     if !empty(_brOtp)

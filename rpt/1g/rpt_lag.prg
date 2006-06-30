@@ -424,7 +424,6 @@ do while !eof()
         select doks
 	hseek fakt->(IdFirma+idtipdok+brdok)
         select fakt
-        altd()
 
 	if !(doks->partner=qqPartn)
           skip

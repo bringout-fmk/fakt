@@ -213,7 +213,6 @@ do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==c
 	hseek roba->idtarifa
 	select pripr
 
-	altd()	
      	aMemo:=ParsMemo(txt)
 	cIdRoba := field->idroba
 	
@@ -770,7 +769,6 @@ static function ZAO_CIJENA()
 local nPos
 local nLen
 
-altd()
 // 999.99
 nPos := AT(".", PicCDem)
 // = 4

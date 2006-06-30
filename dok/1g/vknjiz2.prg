@@ -80,7 +80,6 @@ private fNovi:=.f.
 
    nPom:=Menu2(5,30,aPom,nPom)
    set escape off // ne moze se izaci sa escape
-   altd()
    if npom<>0
     _IdTipdok:=LEFT(aPom[nPom],2)
    else
@@ -158,7 +157,6 @@ private fNovi:=.f.
      endif
 
      if gDodPar=="1" .or. gDatVal=="D"
-      altd()
       if fTBNoviRed; nRokPl:=gRokPl; endif
       @  m_x+8,m_y+45 SAY "Rok plac.(dana):" GET nRokPl PICT "99" ;
             WHEN FRokPl("0",fTbNoviRed)   VALID FRokPl("1",fTBNoviRed)

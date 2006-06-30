@@ -246,7 +246,6 @@ do while .t.
  endif
 enddo
 
-altd()
 
 qqTipDok:=trim(qqTipDok)
 qqPartn:=trim(qqPartn)

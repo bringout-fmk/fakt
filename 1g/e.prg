@@ -1,24 +1,15 @@
 #include "\dev\fmk\fakt\fakt.ch"
 
-/*
- * ----------------------------------------------------------------
- *                        Copyright Sigma-com software 1998-2006 
- * ----------------------------------------------------------------
- */
-
-/*! \file fmk/fakt/main/1g/e.prg
- *  \brief
- */
-
+// ----------------------------------------------------------------
+//                        Copyright Sigma-com software 1998-2006 
+// ----------------------------------------------------------------
 
 EXTERNAL RIGHT,LEFT,FIELDPOS
 
 #ifdef LIB
 function Main(cKorisn, cSifra, p3,p4,p5,p6,p7)
-*{
 	MainFakt(cKorisn, cSifra, p3,p4,p5,p6,p7)
 return
-*}
 #endif
 
 

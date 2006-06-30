@@ -505,7 +505,6 @@ Box(,5,60)
 	read
 BoxC()
 
-altd()
 
 if LastKey()==K_ESC
 	return .t.
@@ -565,7 +564,6 @@ else
 			skip
 		else
 			@ m_x+2, m_y+2 SAY "Status: Dodajem novu stavku"
-			altd()
 			append blank
 			replace idfirma with cPFirma
 			replace idtipdok with cPVDok

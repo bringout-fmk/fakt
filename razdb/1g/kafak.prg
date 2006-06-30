@@ -33,7 +33,6 @@ O_PARAMS
 
 
 cOdradjeno:="D"
-altd()
 if file(EXEPATH+'scshell.ini')
         //cBrojLok:=R_IniRead ( 'TekucaLokacija','Broj',  "",EXEPATH+'scshell.INI' )
         cOdradjeno:=R_IniRead ( 'ShemePromjena',alltrim(strtran(strtran(goModul:oDataBase:cDirPriv,"\","_"),":","_")),  "N" ,EXEPATH+'scshell.INI' )
@@ -329,8 +328,6 @@ local cDir:=space(25)
     IF !EMPTY(qqIdVd); cFilter+=".and."+aUsl1; ENDIF
     SET FILTER TO &cFilter
     GO TOP
-
-    altd()
 
     IF EOF()
       Beep(4)

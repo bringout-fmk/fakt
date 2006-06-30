@@ -302,7 +302,6 @@ NSRNPIdRoba()   // Nastimaj (hseek) Sifr.Robe Na Pripr->IdRoba
            endif
     endif
     nUk+=round(PrerCij()*kolicina*cijena*Koef(cDinDem),nZaokr)
-    altd()
     nRab+=round( Cijena*kolicina*PrerCij()*Rabat/100 , nZaokr)
    endif
 return .t.

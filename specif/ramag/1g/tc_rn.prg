@@ -4,7 +4,6 @@
 function RunRnTC()
 *{
 
-altd()
 nVal:=26
 nRet:=FindZK(nVal)
 ? "ZK - " + STR(nRet)

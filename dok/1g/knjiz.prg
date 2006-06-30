@@ -1096,7 +1096,6 @@ Box("#PARAMETRI DOKUMENTA:",10,75)
    if dNajnoviji<>NIL
    	@  m_x+4,m_y+35 SAY "Datum posljednje otpremnice:" GET dNajnoviji WHEN .f. COLOR "GR+/B"
    endif
-   altd()
    @ m_x+5,m_y+2 SAY "Rok plac.(dana):" GET nRokPl PICT "99" WHEN FRokPl("0",.t.) VALID FRokPl("1",.t.)
    @ m_x+6,m_y+2 SAY "Datum placanja :" GET _DatPl VALID FRokPl("2",.t.)
    read
@@ -1323,7 +1322,6 @@ if (nRbr==1 .and. VAL(_podbr) < 1)
 		MsgBeep(cZabrana)
 		return 0
 	endif
-	altd()
 	// varijanta rabatnih skala
 	if IsRabati() .and. (_idtipdok $ gcRabDok)
 		
@@ -2884,7 +2882,6 @@ if cSE==nil
 	  cSE := "." 
 endif
 
-altd()
 aNiz:={}
 do while .t.
 	//    AT( #13#10, prvi_red#13#10drugired)
@@ -2904,18 +2901,17 @@ return aNiz
 *}
 
 
-
+// ----------------------------------
+// ----------------------------------
 function IspisBankeNar(cBanke)
 *{
 local aOpc
 O_BANKE
-altd()
 aOpc:=TokToNiz(cBanke,",")
 cVrati:=""
 
 select banke
 set order to tag "ID"
-altd()
 for i:=1 to LEN(aOpc)
 	hseek SUBSTR(aOpc[i],1,3)
 	if Found()

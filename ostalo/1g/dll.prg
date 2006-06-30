@@ -2,7 +2,6 @@
 dllname:="t:\sigma\ncom.dll"
 funname:="MANAGER"
 funres:=0
-altd()
 libhan = BLILIBLOD (dllname)            // Dynamically load the DLL
 
 if libhan > 32                         // If it loaded successfully

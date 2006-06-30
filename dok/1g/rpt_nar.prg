@@ -200,7 +200,6 @@ else
       		ELSE
         		?
         		DO WHILE .t.
-				altd()
           			nPom:=AT("#",cLin)
           			IF nPom>0
             				cPom:=SUBSTR(cLin,nPom,4)

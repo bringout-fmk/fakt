@@ -515,7 +515,6 @@ for i:=1 to len(cStr)
      if nAsc>165
        nAsc:=77
      endif
-     altd()
 
      nWWidth+=aFw[FontTip,nASC-31,FontPT]*KOEFIC*Fontsize/10000
    endif
