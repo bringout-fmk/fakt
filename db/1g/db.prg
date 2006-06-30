@@ -163,7 +163,7 @@ return nil
  *  \brief Povrat dokumenta u pripremu sa zadanim kriterijem
  */
 
-function PovSvi( qBrDok, qDatDok, qTipDok)
+function PovSvi(qBrDok, qDatDok, qTipDok)
 
 local nRec
 private qqBrDok:=SPACE(80)
@@ -721,13 +721,12 @@ enddo
 closeret
 return
 
-
-/*! \fn Azur(lTest)
- *  \brief Azuriranje knjizenja
- *  \param lTest
- */
+// -----------------------------------
+// Azur(lSilent)
+// Azuriranje stavki u pripremi
+// lSilent
  
-function Azur(lTest)
+function Azur(lSilent)
 local fRobaIDJ:=.f.
 local cKontrolBroj:=""
 local nPom1
@@ -742,11 +741,11 @@ if (cType<>"L")
 	lVrsteP:=.f.
 endif
 
-if (lTest==nil)
-	lTest:=.f.
+if (lSilent==nil)
+	lSilent:=.f.
 endif
 
-if (!lTest .and. Pitanje( ,"Sigurno zelite izvrsiti azuriranje (D/N)?","N")=="N")
+if (!lSilent .and. Pitanje( ,"Sigurno zelite izvrsiti azuriranje (D/N)?","N")=="N")
 	return
 endif
 
@@ -870,8 +869,9 @@ Box("#Proces azuriranja u toku",3,60)
   	Scatter()
 
   	select fakt
-  	
-	AppBlank2(.f.,.f.)   // nemoj brisati i nemoj otkljucavati
+
+  	// nemoj brisati i nemoj otkljucavati
+	AppBlank2(.f.,.f.)   
   	
 	if fRobaIDJ  
 		// nafiluj polje IDROBA_J u prometu
@@ -880,12 +880,12 @@ Box("#Proces azuriranja u toku",3,60)
    		_idroba_j:=roba->id_j
    		select fakt
   	endif
-  	
-	Gather2() // opet nemoj otkljucavati
+       
+        // opet nemoj otkljucavati
+	Gather2()
 
   	if (fProtu .and. idtipdok=="13")
-     		// appblank2(.f.,.t.)
-     		AppBlank2(.f.,.f.)  // opet nemoj otkljucavati
+     		AppBlank2(.f.,.f.) 
      		_idfirma:=cPRJ
      		_idtipdok:="01"
      		_brdok:=TRIM(_brdok)+"/13"
@@ -894,11 +894,6 @@ Box("#Proces azuriranja u toku",3,60)
   	endif
   	select pripr
   	
-	if goModul:lOpresaStampa .and. pripr->idtipdok=="13" .and. pripr->idfirma=="99"
-		nDana:=VAL(IzFmkIni("Opresa", "PlusMinusDana", "0", KUMPATH))
-		InsertIntoPOMGN(pripr->datdok, pripr->idroba, pripr->idpartner, pripr->kolicina, nDana)
-	endif
-	
 	skip
 enddo
 
@@ -918,7 +913,6 @@ do while !eof()
 	hseek pripr->idfirma+pripr->idtipdok+pripr->brdok
   	
 	if !Found()
-     		// append blank
      		AppBlank2(.f.,.f.)
   	endif
   	
@@ -927,7 +921,6 @@ do while !eof()
     		set order to 1
     		hseek pripr->idfirma+pripr->idtipdok+pripr->brdok
     		if !Found()
-       			// append blank
        			AppBlank2(.f.,.f.)
     		endif
   	endif
@@ -1042,23 +1035,21 @@ do while !eof()
   	select doks
   	
 	if (cDinDem==LEFT(ValBazna(),3))
-   		_field->Iznos:=nDug  //-nRab   
+   		_field->Iznos:=nDug 
 		// iznos sadrzi umanjenje za rabat
    		_field->Rabat:=nRab
   	else
-   		_field->Iznos := nDugD      //-nRab
+   		_field->Iznos := nDugD 
    		_field->Rabat := nRabD
  	endif
-  	
-	// replace DINDEM with cDinDEM -- ovo je vec uradjeno ranije linija 1241
-  	if (idtipdok=="13" .and. fProtu)  // protu dokument
+
+	// protu dokument
+  	if (idtipdok=="13" .and. fProtu)
     		Scatter()
-    		// appblank2(.f.,.t.)       kljuccanje, kljuccanje
     		AppBlank2(.f.,.f.)
     		_idtipdok:="01"
     		_idfirma:=cPRJ
     		_BrDok:=TRIM(_brdok)+"/13"
-    		// gather()    isto, isto ...
     		Gather2()
     		Beep(1)
     		Msg("Izgenerisan je dokument pod brojem "+_idfirma+"-01-"+_brdok,4)
@@ -1071,7 +1062,6 @@ do while !eof()
       			_brdok:=TRIM(_brdok)+"/13"
       			Gather2()
     		endif
-    		// protu dokument
   	endif
 	if Logirati(goModul:oDataBase:cName,"DOK","UNOSDOK")
 		EventLog(nUser,goModul:oDataBase:cName,"DOK","UNOSDOK",nil,nil,nil,nil,"","",cIdFirma+"-"+cIdTipDok+"-"+cBrDok,dDatDok,Date(),"","Azuriranje dokumenta")
@@ -1136,7 +1126,6 @@ BoxC()
 
 closeret
 return
-*}
 
 
 // provjeri duple stavke u pripremi za vise dokumenata
@@ -1381,13 +1370,18 @@ function BrisiPripr()
 
 cSecur:=SecurR(KLevel,"BRISIGENDOK")
 
-if (m1="X" .and. ImaSlovo("X",cSecur))   // pripr->m1
+// pripr->m1
+if (m1="X" .and. ImaSlovo("X",cSecur))   
 	Beep(1)
   	Msg("Dokument izgenerisan, ne smije se brisati !!",0)
   	return DE_CONT
 endif
 
 if Pitanje(, "Zelite li izbrisati pripremu !!????","N")=="D"
+	SELECT F_DOKS
+	if !used()
+		O_DOKS
+	endif
 	select pripr
    	go top
    	do while !eof()

@@ -556,7 +556,6 @@ endif
  */
  
 function V_Roba(lPrikTar)
-*{
 local cPom , nArr
 private cVarIDROBA
 if fID_J
@@ -612,11 +611,9 @@ IF lPrikTar
   	endif
 ENDIF
 
-Odredi_IDROBA()
 
 SELECT PRIPR
 return .t.
-*}
 
 
 
@@ -915,15 +912,14 @@ next
 return left(cTxt,i)
 *}
 
-
-/*! \fn ParsMemo(cTxt)
- *  \brief Struktura cTxt-a je: Chr(16) txt1 Chr(17) Chr(16) txt2 Chr(17)...
- *  \param cTxt
- *  \return aMemo
- */
+// -----------------------------------------------------------------------
+// ParsMemo(cTxt)
+// brief Struktura cTxt-a je: Chr(16) txt1 Chr(17) Chr(16) txt2 Chr(17)...
+// param cTxt
+// return aMemo
+// -----------------------------------------------------------------------
  
 function ParsMemo(cTxt)
-*{
 local aMemo:={}
 local i, cPom, fPoc
 
@@ -942,19 +938,6 @@ for i:=1 to len(cTxt)
 next
 
 return aMemo
-*}
-
-
-// u ovoj funkciji se nalazi metoda utvrdjivanja narednog izdanja novina
-/*! \fn Odredi_IdRoba()
- *  \brief U ovoj funkciji se nalazi metoda utvrdjivanja narednog izdanja novina *  \todo Prebaciti u OPRESA
- */
- 
-function Odredi_IdRoba()
-*{
-RETURN
-*}
-
 
 
 /*! \fn Prepak(cIdRoba,cPako,nPak,nKom,nKol,lKolUPak)

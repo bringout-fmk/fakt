@@ -856,14 +856,18 @@ use
 return
 
 
-
+// ------------------------------------
 // stampa ugovora za period
+// ------------------------------------
 function ug_za_period()
 local dDatGen
 local cBrOd
 local cBrDo
 local cTipDok
+local cDirPom
 
+cDirPom := gcDirekt
+gcDirekt := "B"
 // parametri
 if ug_st_od_do(@cBrOd, @cBrDo) == 0
 	return
@@ -873,6 +877,7 @@ endif
 cTipDok := "10"
 StAzPeriod( gFirma, cTipDok, cBrOd, cBrDo )
 
+gcDirekt := cDirPom
 return
 
 

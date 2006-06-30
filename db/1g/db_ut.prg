@@ -70,6 +70,7 @@ local lRet
 
 lRet:=.f.
 
+PushWa()
 nArea:=SELECT()
 select DOKS
 set order to tag "1"
@@ -78,6 +79,7 @@ if FOUND()
 	lRet:=.t.
 endif
 SELECT(nArea)
+PopWa()
 return lRet
 
 // -------------------------------------------------

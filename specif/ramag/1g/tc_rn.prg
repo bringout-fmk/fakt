@@ -1,8 +1,8 @@
 #include "\dev\fmk\fakt\fakt.ch"
 
-
+// ------------------------------------------
+// ------------------------------------------
 function RunRnTC()
-*{
 
 nVal:=26
 nRet:=FindZK(nVal)
@@ -45,6 +45,5 @@ Sleep(4)
 
 
 return
-*}
 
 

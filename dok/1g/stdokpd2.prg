@@ -65,7 +65,8 @@ return
 *}
 
 
-
+// ----------------------------------------------------------------------
+// ----------------------------------------------------------------------
 function fill_porfakt_data(cIdFirma, cIdTipDok, cBrDok, lBarKod, lSamoKol)
 *{
 local cTxt1,cTxt2,cTxt3,cTxt4,cTxt5
