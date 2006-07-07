@@ -47,7 +47,7 @@ replace field_name with "MPC3" , field_type with "N", ;
         field_len with 12, field_dec with 3
 dbappend()
 replace field_name with "ROBNAZ" , field_type with "C", ;
-        field_len with 30, field_dec with 0
+        field_len with 250, field_dec with 0
 dbappend()
 replace field_name with "IDTARIFA" , field_type with "C", ;
         field_len with 6, field_dec with 0

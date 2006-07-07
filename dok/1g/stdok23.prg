@@ -808,7 +808,7 @@ do while idfirma==cidfirma .and. idtipdok==cidtipdok .and. brdok==cbrdok .and. !
        				cK1:=cK2:=""
        				select pom
        				append blank // prvo se stavlja naziv!!
-       				replace naziv with pripr->(trim(roba->naz)+iif(!empty(ck1+ck2)," "+ck1+" "+ck2,"")+Katbr()+IspisiPoNar())
+       				replace naziv with pripr->(trim(LEFT(roba->naz,40))+iif(!empty(ck1+ck2)," "+ck1+" "+ck2,"")+Katbr()+IspisiPoNar())
        				replace serbr with pripr->serbr
        				select pripr
       			endif

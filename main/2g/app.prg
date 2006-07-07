@@ -373,18 +373,8 @@ if (MPar37("/KONVERT", goModul))
 	goModul:oDataBase:KonvZN()
 	goModul:quit(.f.)
 endif
-// RN TC
-if (MPar37("/TC", goModul))
-	if LEFT(self:cP5,3)=="/RN"
-		? "RN TC..."
-		RunRnTC()
-		goModul:quit()
-	endif
-endif
-
 
 return
-*}
 
 
 

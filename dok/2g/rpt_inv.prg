@@ -90,7 +90,7 @@ do while !eof()
 	@ PROW()+1,0 SAY field->rbr PICTURE "XXX"
 	@ PROW(),4 SAY ""
 	
-	?? PADR(field->idRoba+" "+TRIM(roba->naz)+" ("+roba->jmj+")",36)
+	?? PADR(field->idRoba+" "+TRIM(LEFT(roba->naz,40))+" ("+roba->jmj+")",36)
 	
 	// popisana kolicina    	
 	@ PROW(),PCOL()+1 SAY field->kolicina PICTURE PicKol

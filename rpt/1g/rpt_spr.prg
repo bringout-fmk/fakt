@@ -172,7 +172,7 @@ START PRINT CRET
 if cPrikaz=="1"
 	cLinija:="---- ------ -------------------------- ------------"
 else
-	cLinija:="---- ----------- "+REPL("-",LEN(roba->naz))+" ------------ ------------"
+	cLinija:="---- ----------- "+REPL("-",40)+" ------------ ------------"
 endif
 
 cIdPartner:=idPartner
@@ -315,7 +315,7 @@ else
     		
 		if ROUND(nKolicina,4)<>0
       			? SPACE(gnLMarg)
-			?? STR(++nC,4)+".", cIdRoba, roba->naz
+			?? STR(++nC,4)+".", cIdRoba, LEFT(roba->naz,40)
       			nCol1:=PCol()+1
       			@ prow(),PCol()+1 SAY STR(nKolicina,12,2)
       			@ prow(),PCol()+1 SAY STR(nIznos,12,2)
@@ -409,7 +409,7 @@ if cPrikaz=="1"
 	?? " Rbr  Sifra     Partner                  Kolicina                           "
 else
 	? SPACE(gnLMarg)
-	?? " Rbr  Sifra      " + PADC("Naziv",Len(ROBA->naz)) + "   Kolicina       Iznos   "
+	?? " Rbr  Sifra      " + PADC("Naziv", 40) + "   Kolicina       Iznos   "
 endif
 
 ? SPACE(gnLMarg)

@@ -466,7 +466,7 @@ do case
 	DbSelectArr(F_ROBA)
    	seek PRIPR->IdRoba
  	DbSelectArr(F_PRIPR)
- 	cRet += ROBA->naz
+ 	cRet += LEFT(ROBA->naz,40)
 endcase
 
 return padr( cRet, 30)
@@ -922,7 +922,7 @@ do while !EOF()
       nKol += kolicina
       SKIP 1
     enddo
-    ? cIdRoba, ROBA->naz, STR(nKol,10,0)
+    ? cIdRoba, LEFT(ROBA->naz,40), STR(nKol,10,0)
   enddo
   ? "---------- ---------------------------------------- ----------"
   ?

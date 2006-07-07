@@ -815,10 +815,6 @@ endif
 // kreiranje tabela ugovora
 db_cre_ugov()
 
-if IsRamaGlas()
-	SDimDB_Cre()
-endif
-
 return
 *}
 

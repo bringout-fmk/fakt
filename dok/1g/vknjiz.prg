@@ -233,7 +233,7 @@ if alltrim(_podbr)=="."
      SetujCijenu()
 
      if roba->tip=="U"
-       _txt1:=trim(roba->naz)
+       _txt1:=trim(LEFT(roba->naz, 40))
      else
        _txt1:=""
      endif
@@ -817,7 +817,7 @@ if !(roba->tip="U")
  ?? space(40)
  devpos(m_x+13,m_y+25)
 
- ?? trim(roba->naz),"("+roba->jmj+")"
+ ?? trim(LEFT(roba->naz,40)),"("+roba->jmj+")"
 endif
 endif
 
@@ -826,7 +826,7 @@ if roba->tip $ "UT" .and. fnovi
 endif
 
 if roba->tip=="U"
-  _txt1 := PADR( IF( fNovi , ROBA->naz , _txt1 ) , 320 )
+  _txt1 := PADR( IF( fNovi , LEFT(ROBA->naz,40) , _txt1 ) , 320 )
   IF fNovi
     _cijena := ROBA->vpc
     if !_idtipdok$"11#15#27"

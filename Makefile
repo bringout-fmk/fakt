@@ -2,8 +2,8 @@
 liball: 	
 	make -C main/1g
 	make -C main/2g
-	make -C db/2g
 	make -C db/1g
+	make -C db/2g
 	make -C uplate/1g
 	make -C dok/1g
 	make -C sif/1g
@@ -11,7 +11,6 @@ liball:
 	make -C razdb/1g
 	make -C ostalo/1g
 	make -C specif/vindija/1g
-	make -C specif/ramag/1g
 	make -C rpt/1g
 	make -C param/1g
 	make -C specif/rudnik/1g
@@ -24,8 +23,8 @@ liball:
 cleanall:		
 	make -C main/1g clean
 	make -C main/2g clean
-	make -C db/2g clean
 	make -C db/1g clean
+	make -C db/2g clean
 	make -C uplate/1g clean
 	make -C dok/1g clean
 	make -C sif/1g clean
@@ -33,7 +32,6 @@ cleanall:
 	make -C razdb/1g clean
 	make -C ostalo/1g clean
 	make -C specif/rudnik/1g clean
-	make -C specif/ramag/1g clean
 	make -C specif/vindija/1g clean
 	make -C rpt/1g clean
 	make -C stampa/1g clean

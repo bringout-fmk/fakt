@@ -367,7 +367,7 @@ elseif Ch==K_ALT_M
       BoxC()
 
       Box(,6,70)
-        @ m_X+1, m_y+2 SAY trim(roba->id)+"-"+trim(roba->naz)
+        @ m_X+1, m_y+2 SAY trim(roba->id)+"-"+trim(LEFT(roba->naz,40))
         @ m_X+2, m_y+2 SAY "TARIFA"
         @ m_X+2, col()+2 SAY _idtarifa
         @ m_X+3, m_y+2 SAY "VPC"+cVPC
@@ -414,7 +414,7 @@ elseif Ch==K_ALT_M
       BoxC()
 
       Box(,6,70)
-        @ m_X+1, m_y+2 SAY trim(roba->id)+"-"+trim(roba->naz)
+        @ m_X+1, m_y+2 SAY trim(roba->id)+"-"+trim(LEFT(roba->naz,40))
         @ m_X+2, m_y+2 SAY "TARIFA"
         @ m_X+2, col()+2 SAY _idtarifa
         @ m_X+3, m_y+2 SAY "MPC"+cMPC
@@ -569,7 +569,7 @@ local picdem:="9999999.999", nR, nC, nTSta := 0, nTRev := 0, nTRez := 0,;
  Box(,6+nLen+INT((nLenDP)/2),75)
   Beep(1)
   @ m_x+1,m_y+2 SAY "ARTIKAL: "
-  @ m_x+1,col() SAY PADR(AllTrim (cidroba)+" - "+roba->naz,51) COLOR "GR+/B"
+  @ m_x+1,col() SAY PADR(AllTrim(cIdRoba) + " - " + LEFT(roba->naz,40), 51) COLOR "GR+/B"
   @ m_x+3,m_y+2 SAY cDiv + "RJ" + cDiv + PADC ("Stanje", npd) + cDiv+ ;
                     PADC ("Na reversu", npd) + cDiv + ;
                     PADC ("Rezervisano", npd) + cDiv + PADC ("Ostalo", npd) ;

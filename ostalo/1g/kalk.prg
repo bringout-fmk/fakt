@@ -163,13 +163,13 @@ NSRNPIdRoba(cIdRoba)
 select kalk
 if empty(cPkonto)
  select koncij; seek trim(cmkonto); select kalk
- @ m_x+2,m_y+1 SAY "Kartica magacin: "; ?? trim(cMkonto), "-", trim(cidroba) ,"-",roba->naz
+ @ m_x+2,m_y+1 SAY "Kartica magacin: "; ?? trim(cMkonto), "-", trim(cidroba) ,"-",LEFT(roba->naz,40)
  BrowseKey(m_x+4,m_y+1,m_x+15,m_y+77,ImeKol,{|Ch| EdKart(Ch)},;
           "idFirma+mkonto+idroba=cidFirma+cmkonto+cidroba",;
            cidFirma+cmkonto+cidroba,2,,,{|| OznaciMag(.t.)})
 else
  select koncij; seek trim(cpkonto) ; select kalk
- @ m_x+2,m_y+1 SAY "Kartica prodavnica: "; ?? cPkonto, "-", cidroba,"-",roba->naz
+ @ m_x+2,m_y+1 SAY "Kartica prodavnica: "; ?? cPkonto, "-", cidroba,"-",LEFT(roba->naz,40)
  BrowseKey(m_x+4,m_y+1,m_x+15,m_y+77,ImeKol,{|Ch| EdKart(Ch)},;
          "idFirma+pkonto+idroba=cidFirma+cpkonto+cidroba",;
          cidFirma+cpkonto+cidroba,2,,,{|| OznaciPro(.t.)})

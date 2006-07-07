@@ -544,7 +544,7 @@ return nVrati
 function Rob13Naz()
 *{
 if fPBarkod
-  return PADR(trim(roba->naz)+" ("+TRIM(roba->barkod)+")",49)
+  return PADR(trim(LEFT(roba->naz,40))+" ("+TRIM(roba->barkod)+")",49)
 else
   return PADR(roba->naz,49)
 endif
