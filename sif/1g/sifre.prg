@@ -218,30 +218,6 @@ Private gTBDir:="N"
 return PostojiSifra(F_VOZILA,1,10,75,"Lista: Vozila",@cId,dx,dy)
 
 
-
-
-
-/*! \fn P_Konto(cId,dx,dy)
- *  \brief Otvara sifrarnik konta
- *  \param cId
- *  \param dx
- *  \param dy
- */
-
-function P_Konto(cId,dx,dy)
-
-PRIVATE ImeKol,Kol
-ImeKol:={ ;
-          { "ID  ",  {|| id },     "id"  , {|| .t.}, {|| vpsifra(wId)}     },;
-          { "Naziv", {|| naz},     "naz"      };
-        }
-Kol:={1,2}
-Private gTBDir:="N"
-
-return PostojiSifra(F_KONTO,1,10,60,"Lista: Konta",@cId,dx,dy)
-
-
-
 /*! \fn FaPartnBlock(Ch)
  *  \brief
  *  \param 
@@ -665,59 +641,32 @@ return PostojiSifra(F_VRSTEP,1,10,55,"Sifrarnik vrsta placanja",@cid,dx,dy)
 
 
 
-/*! \fn P_Ops(cId,dx,dy)
- *  \brief Otvara sifranik opstina 
- *  \param cId
- *  \param dx
- *  \param dy
- */
-
-function P_Ops(cId,dx,dy)
-
-private imekol,kol
-
-ImeKol:={ { padr("Id",2), {|| id}, "id", {|| .t.}, {|| vpsifra(wid)} },;
-          { padr("IDJ",3), {||  idj}, "idj" }                       ,;
-          { padr("Kan",3), {||  idKan}, "idKan" }                       ,;
-          { padr("N0",3), {||  idN0}, "IdN0" }                       ,;
-          { padr("Naziv",20), {||  naz}, "naz" }                       ;
-       }
-
-Kol:={}
-FOR i:=1 TO LEN(ImeKol); AADD(Kol,i); NEXT
-return PostojiSifra(F_OPS,1,10,65,"Lista opcina",@cId,dx,dy)
-
-
-
-/*! \fn P_FTxt(cId, dx, dy)
- *  \brief Otvara sifranik fakt-txt 
- *  \param cId
- *  \param dx
- *  \param dy
- */
-
 function P_FTxt(cId, dx, dy)
-
 local vrati
 local nArr:=SELECT()
+private ImeKol
+private Kol
 
-private ImeKol,Kol
-
-SELECT (F_FTXT)
-if !USED()
-	O_FTXT
-endif
+O_FTXT
 
 ImeKol:={}
+Kol := {}
+
 AADD(ImeKol, { PADR("ID",2),   {|| id },     "id"   , {|| .t.}, {|| vpsifra(wid)}    } )
+add_mcode(@ImeKol)
 AADD(ImeKol,{ "Naziv",  {|| naz},  "naz" , { || UsTipke(), .t. }, { || wnaz:=strtran(wnaz,"##", chr(13)+chr(10)), BosTipke(), .t.}, NIL, "@S50" } )
 
-Kol:={1,2}
+for i:=1 to LEN(ImeKol)
+	AADD(Kol, i)
+next
+
 Prozor1(3,0,11,79,"PREGLED TEKSTA")
 @ 12,0 SAY ""
+
 Private gTBDir:="N"
 vrati:=PostojiSifra(F_FTXT, 1, 7, 77, "Faktura - tekst na kraju fakture", @cId , , , {|| PrikFTXT()})
 Prozor0()
+
 select (nArr)
 RETURN vrati
 
