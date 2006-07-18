@@ -1147,6 +1147,7 @@ local aMemo
 local cPretvori := "N"
 local nPom:=IF(VAL(gIMenu)<1,ASC(gIMenu)-55,VAL(gIMenu))
 local lTxtNaKraju := .f.
+local cAvRacun
 
 lKonsignacija := IzFmkIni("FAKT","Konsignacija","N",KUMPATH) == "D"
 lDoks2:=(IzFmkIni("FAKT","Doks2","D", KUMPATH)=="D")
@@ -1472,6 +1473,17 @@ if (nRbr==1 .and. VAL(_podbr) < 1)
 		      @ m_x+10, m_y+1 SAY " "
 		endif
 		
+		if _idTipDok $ "10"
+		
+			cAvRacun := "N"
+			if _idvrstep == "AV"
+				cAvRacun := "D"
+			endif
+			
+			@ m_x+10, col()+4 SAY "Avansni racun (D/N)?:" GET cAvRacun PICT "@!" VALID cAvRacun $ "DN"
+		
+		endif
+		
 		_Dest:=PADR(_Dest, 80)
    		if (gDest .and. !glDistrib)
      		      @  m_x+10, col()+2  SAY "Destinacija:" get _Dest PICT "@S46"
@@ -1576,12 +1588,7 @@ endif
 
 cDSFINI:=IzFMKINI('SifRoba','DuzSifra','10', SIFPATH)
 
-
-//if fID_J
-//	@ m_x+13,m_y+2 SAY "Artikal  " GET _IdRoba_J PICT "@!S10" WHEN {|| _idroba_J:=padr(_Idroba_J,VAL(cDSFINI)),W_Roba()} valid {|| _Idroba_J:=iif(len(trim(_Idroba_J))<10,left(_Idroba_J,10),_Idroba_J), V_Roba(),GetUsl(fnovi), NijeDupla(fNovi)}
-//else
-	// normalan prikaz
-	@ m_x+13,m_y+2  SAY "Artikal: " get _IdRoba ;
+@ m_x+13,m_y+2  SAY "Artikal: " get _IdRoba ;
 	    pict "@!S10" ;
 	    when {|| _idroba:=padr(_idroba, VAL(cDSFINI)), W_Roba()} ;
 	    valid {|| _idroba:= iif(len(trim(_idroba))<10, left(_idroba,10), _idroba), V_Roba(), GetUsl(fnovi), NijeDupla(fNovi) }
@@ -1732,6 +1739,11 @@ endif //gSamokol=="D"  // samo kolicine
 
 read
 
+_idvrstep := SPACE(2)
+
+if cAvRacun == "D"
+	_idvrstep := "AV"
+endif
 
 ESC_return 0
 

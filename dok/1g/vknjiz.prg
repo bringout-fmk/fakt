@@ -116,7 +116,7 @@ if right(cSif,1)="." .and. len(csif)<=7
      P_Firma(padr(cSif,6))
    endif
    if lSpecifZips
-     _Txt3a:=TRIM(partn->id)+"- "+TRIM(partn->naz)+" "+trim(partn->naz2)
+     _Txt3a:=TRIM(partn->id)+"- "+TRIM(LEFT(partn->naz,25))+" "+trim(partn->naz2)
    else
      IF IzFMKINI("PoljeZaNazivPartneraUDokumentu","Prosiriti","N",KUMPATH)=="D"
        _Txt3a:=padr(partn->naz,60)
