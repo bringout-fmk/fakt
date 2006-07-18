@@ -968,9 +968,9 @@ do while !eof()
   		endif
 	endif
 	
-	if lVrsteP
+	//if lVrsteP
    		_field->IdVrsteP:=pripr->idvrstep
-  	endif
+  	//endif
   	
 	if (FieldPos("DATPL")>0)
    		_field->DatPl:=if(LEN(aMemo)>=9,CToD(aMemo[9]),CToD(""))
@@ -1273,6 +1273,11 @@ set order to 1
 go top
 seek cSeek
 if Found()
+	if gMreznoNum == "D"
+		if m1 == "Z"
+			return .f.
+		endif
+	endif
 	return .t.
 endif
 select fakt

@@ -122,7 +122,7 @@ fill_part_data(idpartner, @lPdvObveznik)
 select pripr
 
 // vrati naziv dokumenta
-get_dok_naz(@cDokNaz, idtipdok, lSamoKol)
+get_dok_naz(@cDokNaz, idtipdok, idvrstep, lSamoKol)
 
 select pripr
 
@@ -327,35 +327,6 @@ endif
 
 // potpis 
 add_drntext("F10", cPotpis)
-
-return
-*}
-
-
-// daj naziv dokumenta iz parametara
-function get_dok_naz(cNaz, cIdVd, lSamoKol)
-*{
-local cPom
-local cSamoKol
-
-if (cIdVd == "01")
-	cNaz := "Prijem robe u magacin br. "
-elseif (cIdVd == "00")
-	cNaz := "Pocetno stanje br. "
-elseif (cIdVD == "19")
-	cNaz := "Izlaz po ostalim osnovama br. "
-else
- 	cPom:="G" + cIdVd + "STR"
- 	cNaz := &cPom
-endif
-
-// ako je lSamoKol := .t. onda je prikaz samo kolicina
-cSamoKol := "N"
-if lSamoKol
-	cSamoKol := "D"
-endif
-
-add_drntext("P03", cSamoKol)
 
 return
 *}

@@ -551,7 +551,7 @@ return
 
 
 // daj naziv dokumenta iz parametara
-function get_dok_naz(cNaz, cIdVd, cVrstaP, lSamoKol)
+function get_dok_naz(cNaz, cIdVd, cVP, lSamoKol)
 *{
 local cPom
 local cSamoKol
@@ -562,7 +562,7 @@ elseif (cIdVd == "00")
 	cNaz := "Pocetno stanje br."
 elseif (cIdVD == "19")
 	cNaz := "Izlaz po ostalim osnovama br."
-elseif (cIdVD == "10") .and. (cVrstaP == "AV")
+elseif (cIdVD == "10" .and. cVP == "AV")
 	cNaz := "Avansna faktura br."
 else
  	cPom:="G" + cIdVd + "STR"
