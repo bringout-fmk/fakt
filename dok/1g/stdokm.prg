@@ -319,7 +319,7 @@ LOCAL i:=0
  P_10CPI
  if gBold=="1"; B_ON; endif
  FOR i:=1 TO LEN(aZagl)
-   //StZaglav2(aZagl[i],PRIVPATH)
+   StZaglavlje(aZagl[i],PRIVPATH)
  NEXT
  xKA:=prow()
  FOR i:=1 TO LEN(aZagl2)

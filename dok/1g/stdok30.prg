@@ -124,7 +124,7 @@ return .t.
 function StFD1() 
 *{
 P_10CPI
- StZaglav2(gVlZagl,PRIVPATH)
+StZaglavlje(gVlZagl,PRIVPATH)
 return
 *}
 

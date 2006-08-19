@@ -526,7 +526,7 @@ if fDelphiRB
 else
  POCNI STAMPU
  P_10CPI
- //StZaglav2(gVlZagl,PRIVPATH)
+ StZaglavlje(gVlZagl,PRIVPATH)
 endif
 
 cIdTipdok:=idtipdok
@@ -1328,7 +1328,7 @@ FF
 if gZagl=="1"  // zaglavlje na svakoj stranici
  P_10CPI
  if gBold=="1";B_ON;endif
- //StZaglav2(gVlZagl,PRIVPATH)
+ StZaglavlje(gVlZagl,PRIVPATH)
  StKupac()
 endif
 if fprenos

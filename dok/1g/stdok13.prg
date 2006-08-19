@@ -248,7 +248,7 @@ for i:=1 to len(cTxt2)
 next
 if idtipdok $ "10#11"; nLTxt2+=7; endif
  P_10CPI
- //StZaglav2(gVlZagl,PRIVPATH)
+ StZaglavlje(gVlZagl,PRIVPATH)
 
 
 if gVarF=="3"
@@ -639,7 +639,7 @@ if idtipdok $ "10#11"
 endif
 
 P_10CPI
-//StZaglav2(gVlZagl,PRIVPATH)
+StZaglavlje(gVlZagl,PRIVPATH)
 
 cStr:=idtipdok+" "+trim(brdok)
 cIdTipDok:=IdTipDok

@@ -142,7 +142,7 @@ if idtipdok $ "10#11"; nLTxt2+=7; endif
 POCNI STAMPU
 
 P_10CPI
-//StZaglav2(gVlZagl,PRIVPATH)
+StZaglavlje(gVlZagl,PRIVPATH)
 
 
 // ---------------- MS 07.04.01
