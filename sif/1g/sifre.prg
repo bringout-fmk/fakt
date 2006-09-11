@@ -328,6 +328,17 @@ elseif upper(Chr(Ch))=="S"
   PopWa()
   return 6  // DE_CONT2
 
+elseif upper(Chr(Ch))=="O"
+  if roba->(fieldpos("strings")) == 0
+  	return 6
+  endif
+  TB:Stabilize()
+  PushWa()
+  m_strings(roba->strings, roba->id)
+  select roba
+  PopWa()
+  return 7
+
 elseif Ch==K_ALT_M
   if pitanje(,"Formirati MPC na osnovu VPC ? (D/N)","N")=="D"
       private GetList:={}, nZaokNa:=1, cMPC:=" ", cVPC:=" "

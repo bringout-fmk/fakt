@@ -552,7 +552,7 @@ do case
         	return DE_REFRESH
 	case Ch==K_ALT_L
         	close all
-         	FaLabelBKod()
+         	label_bkod()
          	O_edit()
 	case Ch==K_ALT_P
         	if !CijeneOK("Stampanje")
