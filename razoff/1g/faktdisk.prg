@@ -431,50 +431,58 @@ if cDn1=="D"
 		UpisiURF("IZVJESTAJ O PROMJENAMA NA SIFRARNIKU ROBE:",cRFajl,.t.,.t.)
 		UpisiURF("------------------------------------------",cRFajl,.t.,.f.)
 		do while !eof()
-  			@ m_x+1,m_y+2 SAY id; ?? "-",naz
-  			select roba
+  			
+			@ m_x+1,m_y+2 SAY id
+			?? "-",naz
+  			
+			select roba
 			scatter()
-  			select _roba
+  			
+			select _roba
   			scatter()
-  			select roba; hseek _id
-  			if !found()
-    			UpisiURF("ROBA: dodajem "+_id+"-"+_naz,cRFajl,.t.,.f.)
-    			append blank
-    			gather()
-      			SifKOsv(PRIVPATH+"_SIFK",PRIVPATH+"_SIFV","ROBA",_id)
-  		else
-    			if cDn2=="D"  // zamjeniti postojece sifre
-      				cDiff:=""
-      				IF DiffMFV(,@cDiff)
-        				UpisiURF("ROBA: osvjezavam "+_id+"-"+_naz+cDiff,cRFajl,.t.,.f.)
-      				ENDIF
-      				gather()
-        			SifKOsv(PRIVPATH+"_SIFK",PRIVPATH+"_SIFV","ROBA",_id)
-    			else
-      				if cdn3=="D"
-        				Scatter()
-        				IF _barkod <>_roba->barkod
-          					UpisiURF("ROBA: osvjezavam "+_id+"-"+_naz,cRFajl,.t.,.f.)
-          					UpisiURF("     BARKOD: bilo="+TRANS(_barkod,"")+", sada="+TRANS(_ROBA->barkod,""),cRFajl,.t.,.f.)
-        				ENDIF
-        				_barkod := _ROBA->barkod
-        				Gather()
-      				endif
-      				if lOsvNazRobe
-        				Scatter()
-        				IF _naz <> _roba->naz
-          					UpisiURF("ROBA: osvjezavam "+_id+"-"+_naz,cRFajl,.t.,.f.)
-          					UpisiURF("     NAZIV: bilo="+TRANS(_naz,"")+", sada="+TRANS(_ROBA->naz,""),cRFajl,.t.,.f.)
-        				ENDIF
-        				_naz := _ROBA->naz
-        				Gather()
-      				endif
-    			endif
-  		endif
-  		select _roba
-  		skip
-	enddo
-Boxc()
+  			
+			select roba
+			hseek _id
+  			
+			if !Found()
+    				
+				UpisiURF("ROBA: dodajem "+_id+"-"+_naz,cRFajl,.t.,.f.)
+    				append blank
+    				gather()
+      				SifKOsv(PRIVPATH+"_SIFK",PRIVPATH+"_SIFV","ROBA",_id)
+  			else
+    				if cDn2=="D"  // zamjeniti postojece sifre
+      					cDiff:=""
+      					IF DiffMFV(,@cDiff)
+        					UpisiURF("ROBA: osvjezavam "+_id+"-"+_naz+cDiff,cRFajl,.t.,.f.)
+      					ENDIF
+      					gather()
+        				SifKOsv(PRIVPATH+"_SIFK",PRIVPATH+"_SIFV","ROBA",_id)
+    				else
+      					if cDn3=="D"
+        					Scatter()
+        					IF _barkod <>_roba->barkod
+          						UpisiURF("ROBA: osvjezavam "+_id+"-"+_naz,cRFajl,.t.,.f.)
+          						UpisiURF("     BARKOD: bilo="+TRANS(_barkod,"")+", sada="+TRANS(_ROBA->barkod,""),cRFajl,.t.,.f.)
+        					ENDIF
+        					_barkod := _ROBA->barkod
+        					Gather()
+      					endif
+      					if lOsvNazRobe
+        					Scatter()
+        					IF _naz <> _roba->naz
+          						UpisiURF("ROBA: osvjezavam "+_id+"-"+_naz,cRFajl,.t.,.f.)
+          						UpisiURF("     NAZIV: bilo="+TRANS(_naz,"")+", sada="+TRANS(_ROBA->naz,""),cRFajl,.t.,.f.)
+        					ENDIF
+        					_naz := _ROBA->naz
+        					Gather()
+      					endif
+    				endif
+  			endif
+  			select _roba
+  			skip
+		enddo
+	BoxC()
 endif // cnd1
 
 save screen to cs
