@@ -720,7 +720,7 @@ local cId
 
 
 cId:="  "
-if IsPdv() .and. _IdTipDok == "10" .and. IsIno(_IdPartner)
+if IsPdv() .and. _IdTipDok $ "10#20" .and. IsIno(_IdPartner)
  InoKlauzula()
  if EMPTY(alltrim(_txt2))
 	 cId:="IN"
