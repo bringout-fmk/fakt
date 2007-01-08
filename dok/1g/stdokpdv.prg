@@ -1,5 +1,16 @@
 #include "\dev\fmk\fakt\fakt.ch"
 
+
+// konto duguje
+static __KTO_DUG
+// konto potrazuje
+static __KTO_POT
+// fin kumpath
+static __FIN_KUM
+// show saldo varijanta
+static __SH_SLD_VAR
+
+
 // ----------------------------------------------------
 // ----------------------------------------------------
 function stdokpdv(cIdFirma, cIdTipDok, cBrDok, lJFill)
@@ -68,6 +79,8 @@ else
   	Msg("Prva stavka mora biti  '1.'  ili '1 ' !",4)
   	return
 endif
+
+__FIN_KUM := STRTRAN( KUMPATH, "FAKT", "FIN" )
 
 fill_porfakt_data(cIdFirma, cIdTipDok, cBrDok, lPBarKod, lSamoKol)
 
@@ -448,7 +461,7 @@ add_drntext("D09", cIdTipDok)
 add_drntext("D10", cIdFirma)
 
 // tekst na kraju fakture F04, F05, F06
-fill_dod_text(aMemo[2])
+fill_dod_text( aMemo[2], pripr->idpartner )
 
 // potpis na kraju
 fill_potpis(cIdTipDok)
@@ -578,18 +591,24 @@ endif
 add_drntext("P03", cSamoKol)
 
 return
-*}
 
 
+
+
+// -----------------------------------------------
 // filovanje dodatnog teksta
-function fill_dod_text(cTxt)
-*{
+// cTxt - dodatni tekst
+// cPartn - id partner
+// -----------------------------------------------
+function fill_dod_text( cTxt, cPartn )
 local aLines // matrica sa linijama teksta
 local nFId // polje Fnn counter od 20 pa nadalje
 local nCnt // counter upisa u DRNTEXT
 
-// slobodni tekst se upisuje u DRNTEXT od F20 -- F50
+// obradi djokere...
+_txt_djokeri( @cTxt, cPartn )
 
+// slobodni tekst se upisuje u DRNTEXT od F20 -- F50
 cTxt := STRTRAN(cTxt, "ç" + Chr(10), "")
 // daj mi matricu sa tekstom line1, line2 itd...
 aLines := TokToNiz(cTxt, Chr(13) + Chr(10)) 
@@ -609,6 +628,158 @@ return
 *}
 
 
+
+// ----------------------------------------
+// obradi djokere
+// cTxt - txt polje
+// cPartn - id partner
+// ----------------------------------------
+function _txt_djokeri( cTxt, cPartn )
+local cPom
+local cPom2
+local nSaldoKup
+local nSaldoDob
+local dPUplKup
+local dPPromKup
+local dPPromDob
+
+// strings
+local cStrDugKup := "#SALDO_KUP_DOB#"
+local cStrDUpKup := "#D_P_UPLATA_KUP#"
+local cStrDPrKup := "#D_P_PROMJENA_KUP#"
+local cStrDPrDob := "#D_P_PROMJENA_DOB#"
+
+private gFinKPath
+
+gFinKPath := __FIN_KUM
+
+if gFinKtoDug <> nil
+
+	__KTO_DUG := gFinKtoDug
+	__KTO_POT := gFinKtoPot
+
+endif
+
+// varijanta prikaza salda... 1 ili 2
+__SH_SLD_VAR := gShSldVar
+
+// -------------------------------------------------------
+// SALDO KUPCA/DOBAVLJACA
+// -------------------------------------------------------
+if AT( cStrDugKup, cTxt ) <> 0
+		
+	if gShSld == "D"
+		// saldo kupca
+		nSaldoKup := g_p_saldo( cPartn, __KTO_DUG )
+		// saldo dobavljaca
+		nSaldoDob := g_p_saldo( cPartn, __KTO_POT )
+
+		cPom := ALLTRIM(STR(nSaldoKup)) + " KM" 
+		cPom2 := ""
+		
+		if __SH_SLD_VAR == 2
+			cPom2 := "Vaö posljednji saldo iznosi: "
+		endif
+	else
+	
+		cPom := ""
+		cPom2 := ""
+	
+	endif
+	
+	cTxt := STRTRAN(cTxt, cStrDugKup, cPom2 + " " + cPom )
+endif
+
+// -------------------------------------------------------
+// DATUM POSLJEDNJE UPLATE KUPCA/DOBAVLJACA
+// -------------------------------------------------------
+if AT( cStrDUpKup, cTxt ) <> 0
+	
+	if gShSld == "D"
+		
+		// datum zadnje uplate kupca
+		dPUplKup := g_dpupl_part( cPartn, __KTO_DUG )
+
+		// datum posljednje uplate kupca
+		cPom := DToC(dPUplKup)
+		cPom2 := ""
+		if __SH_SLD_VAR == 2
+			cPom2 := "Datum posljednje uplate: "
+		endif
+	else
+
+		cPom := ""
+		cPom2 := ""
+	
+	endif
+	
+	cTxt := STRTRAN(cTxt, cStrDUpKup, cPom2 + " " + cPom)
+
+endif	
+
+// -------------------------------------------------------
+// DATUM POSLJEDNJE PROMJENE NA KONTU KUPCA
+// -------------------------------------------------------
+if AT( cStrDPrKup, cTxt ) <> 0
+	
+	if gShSld == "D"
+		
+		// datum zadnje promjene kupac
+		dPPromKup := g_dpprom_part( cPartn, __KTO_DUG )
+
+		// datum posljednje promjene kupac
+		cPom := DToC(dPPromKup)
+		cPom2 := ""
+		if __SH_SLD_VAR == 2
+			cPom2 := "Datum posljednje promjene na kontu kupca: "
+		endif
+	
+	else
+	
+		cPom := ""
+		cPom2 := ""
+
+	endif
+	
+	cTxt := STRTRAN(cTxt, cStrDPrKup, cPom2 + " " + cPom)
+
+endif	
+
+// -------------------------------------------------------
+// DATUM POSLJEDNJE PROMJENE NA KONTU DOBAVLJACA
+// -------------------------------------------------------
+if AT( cStrDPrDob, cTxt ) <> 0
+	
+	if gShSld == "D"
+	
+		// datum zadnje promjene dobavljac
+		dPPromDob := g_dpprom_part( cPartn, __KTO_POT )
+	
+		// datum posljednje promjene dobavljac
+		cPom := DToC(dPPromDob)
+		cPom2 := ""
+		if __SH_SLD_VAR == 2
+			cPom2 := "Datum posljednje promjene na kontu dobavljaca: "
+		endif
+
+	else
+	
+		cPom := ""
+		cPom2 := ""
+	
+	endif
+	
+	cTxt := STRTRAN(cTxt, cStrDPrDob, cPom2 + " " + cPom)
+
+endif
+
+return
+
+
+
+// -------------------------------------------
+// filovanje podataka partnera
+// -------------------------------------------
 function fill_part_data(cId, lPdvObveznik)
 *{
 local cIdBroj:=""

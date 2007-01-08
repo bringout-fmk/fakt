@@ -1,32 +1,5 @@
 #include "\dev\fmk\fakt\fakt.ch"
 
-/*
- * ----------------------------------------------------------------
- *                                     Copyright Sigma-com software 
- * ----------------------------------------------------------------
- */
-
-/*! \file fmk/fakt/param/1g/param.prg
- *  \brief Parametri
- */
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_ExePath_Fakt_NazRTM
-  * \brief Naziv rtm-fajla koji definise izgled fakture
-  * \param  - prazno (nema ga), default vrijednost
-  * \param fakt1 - koristi se fakt1.rtm
-  */
-*string FmkIni_ExePath_Fakt_NazRTM;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_ExePath_Fakt_NazRTMFax
-  * \brief Naziv rtm-fajla koji definise izgled fakture koja se salje faksom
-  * \param  - prazno (nema ga), default vrijednost
-  * \param fax1 - koristi se fax1.rtm
-  */
-*string FmkIni_ExePath_Fakt_NazRTMFax;
 
 
 // ------------------------------------------
@@ -42,12 +15,12 @@ fill_part()
 
 return
 
+
+
 /*! \fn Mnu_Params()
  *  \brief Otvara glavni menij sa parametrima
  */
- 
 function Mnu_Params()
-*{
 private cSection:="1"
 private cHistory:=" "
 private aHistory:={}
@@ -101,181 +74,13 @@ endif
 Menu_SC("parf")
 
 return nil 
-*}
-
-*string Params_ff;
-/*! \ingroup params
- *  \var Params_ff
- *  \brief Omoguciti poredjenje FAKT sa FAKT druge firme?
- *  \param D - da
- *  \param N - ne
- *  \note gFaktFakt
- */
-
-
-*string Params_nw;
-/*! \ingroup params
- *  \var Params_nw
- *  \brief Novi korisnicki interfejs?
- *  \param D - da
- *  \param N - ne
- *  \param R - za Rudnik
- *  \param T - testni
- *  \note gNW
- */
-
-
-*string Params_NF;
-/*! \ingroup params
- *  \var Params_NF
- *  \brief Naziv fajla-obrasca narudzbenice
- *  \param nar.txt - koristi se fajl nar.txt u PRIVPATH-u
- *  \note gFNar
- */
-
-
-*string Params_UF;
-/*! \ingroup params
- *  \var Params_UF
- *  \brief Naziv fajla teksta ugovora o rabatu
- *  \param ugrab.txt - koristi se fajl ugrab.txt u PRIVPATH-u
- *  \note gFUgRab
- */
-
-
-*string Params_DE;
-/*! \ingroup params
- *  \var Params_DE
- *  \brief Da li je ukljucen mod direktnog edita browse-tabela
- *  \param D - da
- *  \param N - ne
- */
-
-
-*string Params_sk;
-/*! \ingroup params
- *  \var Params_sk
- *  \brief Voditi samo kolicine?
- *  \param D - da
- *  \param N - ne
- *  \note gSamoKol
- */
-
-
-*string Params_rP;
-/*! \ingroup params
- *  \var Params_rP
- *  \brief Tekuca vrijednost za rok placanja
- *  \param 0 - 0 dana tj. rok placanja je odmah
- *  \note gRokPl
- */
-
-
-*string Params_no;
-/*! \ingroup params
- *  \var Params_no
- *  \brief Koriste li se artikli koji se vode po sintetickoj sifri (roba tipa "S") ?
- *  \param D - da
- *  \param N - ne
- *  \note gNovine
- */
-
-
-*string Params_ds;
-/*! \ingroup params
- *  \var Params_ds
- *  \brief Sinteticka duzina sifre artikla 
- *  \param 3 - duzina sinteticke sifre artikla je 3 znaka
- *  \note gnDS
- */
-
-
-*string Params_vz;
-/*! \ingroup params
- *  \var Params_vz
- *  \brief Naziv fajla koji definise zaglavlje dokumenata
- *  \param zagl.txt - koristi se fajl zagl.txt u PRIVPATH-u
- *  \note gVlZagl
- */
-
-
-*string Params_fz;
-/*! \ingroup params
- *  \var Params_fz
- *  \brief Redni broj decimale na kojoj se vrsi zaokruzenje krajnjeg iznosa fakture
- *  \param 2 - zaokruzenje izvrsiti na drugoj decimali
- *  \note gFZaok
- */
-
-
-*string Params_if;
-/*! \ingroup params
- *  \var Params_if
- *  \brief Svaki izlazni fajl ima posebno ime?
- *  \param D - da
- *  \param N - ne
- *  \note gImeF
- */
-
-
-*string Params_95;
-/*! \ingroup params
- *  \var Params_95
- *  \brief Komandna linija za RTF fajl
- *  \param c:\sigma\fakt\11\fakt.rtf
- *  \note gKomLin
- */
-
-
-*string Params_k1;
-/*! \ingroup params
- *  \var Params_k1
- *  \brief Prikaz polja K1 pri unosu dokumenata?
- *  \param D - da
- *  \param N - ne
- *  \note gDk1
- */
-
-
-*string Params_k2;
-/*! \ingroup params
- *  \var Params_k2
- *  \brief Prikaz polja K2 pri unosu dokumenata?
- *  \param D - da
- *  \param N - ne
- *  \note gDk2
- */
-
-
-*string Params_im;
-/*! \ingroup params
- *  \var Params_im
- *  \brief Inicijalna meni-opcija
- *  \param 1 - 1.opcija
- *  \param 9 - 9.opcija
- *  \param A - 10.opcija
- *  \param G - 16.opcija
- *  \note gIMenu
- */
-
-
-*string Params_mr;
-/*! \ingroup params
- *  \var Params_mr
- *  \brief Mjesto uzimeti iz RJ?
- *  \param D - da
- *  \param N - ne
- *  \note gMjRJ
- */
 
 
 
 /*! \fn SetRazno()
  *  \brief Podesenja parametri-razno
  */
- 
 function SetRazno()
-*{
 private cSection:="1"
 private cHistory:=" "
 private aHistory:={}
@@ -367,13 +172,11 @@ if (LASTKEY()<>K_ESC)
 endif
 
 return 
-*}
 
 
 // ---------------------------------------------
 // ---------------------------------------------
 function ZaglParams()
-*{
 local nSay := 17
 local sPict := "@S55"
 local nX := 1
@@ -1292,6 +1095,23 @@ Box(,22,76,.f.,"Izgled dokumenata")
 	 @ m_x+nX, col()+2 SAY "SW-7 :" GET nSw7 ;
 	         PICT "9" 
 	
+	 nX += 3
+
+	 // parametri fin.stanje na dod.txt...
+	 @ m_x+nX, m_y+2 SAY "Prikaz fin.salda kupca/dobavljaca na dodatnom tekstu (D/N)" GET gShSld PICT "@!" VALID gShSld $ "DN"
+
+	 nX += 1
+	 
+	 @ m_x+nX, m_y+2 SAY PADL("Konto duguje:", 20) GET gFinKtoDug VALID !EMPTY(gFinKtoDug) .and. P_Konto(@gFinKtoDug) WHEN gShSld == "D"
+
+	 nX += 1
+	
+	 @ m_x+nX, m_y+2 SAY PADL("Konto potrazuje:", 20) GET gFinKtoPot VALID !EMPTY(gFinKtoPot) .and. P_Konto(@gFinKtoPot) WHEN gShSld == "D"
+	 
+	 nX += 1
+	 
+	 @ m_x+nX, m_y+2 SAY "Varijanta prikaza podataka (1/2)" GET gShSldVar PICT "9" VALID gShSldVar > 0 .and. gShSldVar < 3 WHEN gShSld == "D"
+	
 	endif
 
   	read
@@ -1325,10 +1145,15 @@ if (LASTKEY()<>K_ESC)
    	WPar("RT", gRekTar)
    	WPar("HL", gHLinija)
    	WPar("rp", gRabProc)
-
-   	WPar("H1",gPDVDrb)
+	WPar("H1",gPDVDrb)
    	WPar("H2",gPDVDokVar)
    	
+	cSection := "2"
+	WPar("s1", gShSld)
+   	WPar("s2", gFinKtoDug)
+   	WPar("s3", gFinKtoPot)
+   	WPar("s4", gShSldVar)
+
 	cSection := "F"
 	WPar("x1", nDx1)
 	WPar("x2", nDx2)
@@ -1346,7 +1171,7 @@ if (LASTKEY()<>K_ESC)
 endif
 
 return 
-*}
+
 
 
 *string Params_r3;

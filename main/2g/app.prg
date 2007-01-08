@@ -537,6 +537,11 @@ public gcRabDef := SPACE(10)
 public gcRabIDef := "1"
 public gcRabDok := SPACE(30)
 
+public gShSld := "N"
+public gFinKtoDug := PADR("2120", 7)
+public gFinKtoPot := PADR("5430", 7)
+public gShSldVar := 1
+
 O_PARAMS
 private cSection:="1"
 public cHistory:=" "
@@ -668,6 +673,13 @@ RPar("id",@gcRabDok)
 RPar("Fi",@gIspPart)
 RPar("Fr",@gResetRoba)
 
+cSection := "2"
+RPar("s1", @gShSld)
+RPar("s2", @gFinKtoDug)
+RPar("s3", @gFinKtoPot)
+RPar("s4", @gShSldVar)
+
+cSection := "1"
 // varijable PDV
 // firma naziv
 public gFNaziv:=SPACE(40) 
