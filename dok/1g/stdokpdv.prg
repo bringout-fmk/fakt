@@ -674,7 +674,7 @@ if AT( cStrDugKup, cTxt ) <> 0
 		// saldo dobavljaca
 		nSaldoDob := g_p_saldo( cPartn, __KTO_POT )
 
-		cPom := ALLTRIM(STR(nSaldoKup)) + " KM" 
+		cPom := ALLTRIM(STR( ROUND(nSaldoKup, 2) )) + " KM" 
 		cPom2 := ""
 		
 		if __SH_SLD_VAR == 2
