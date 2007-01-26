@@ -104,6 +104,8 @@ local cSif:=trim(_txt3a)
 local cPom
 local fTel
 
+altd()
+
 if fSilent==NIL
   fSilent:=.f.
 endif
