@@ -163,7 +163,7 @@ return nil
  *  \brief Povrat dokumenta u pripremu sa zadanim kriterijem
  */
 
-function PovSvi(qBrDok, qDatDok, qTipDok)
+function PovSvi(qBrDok, qDatDok, qTipDok, cFirma )
 
 local nRec
 private qqBrDok:=SPACE(80)
@@ -180,6 +180,10 @@ endif
 
 if qTipDok <> nil
 	qqTipDok := PADR(qTipDok, 80)
+endif
+
+if cFirma == nil
+	cFirma := gFirma
 endif
 
 if (KLevel<>"0")
@@ -204,10 +208,10 @@ endif
 SELECT fakt
 set order to 1
 
-cIdFirma:=gFirma
-cIdTipDok:=SPACE(2)
-cBrDok:=SPACE(8)
-cIdF:=cIdFirma
+cIdFirma := cFirma
+cIdTipDok := SPACE(2)
+cBrDok := SPACE(8)
+cIdF := cIdFirma
 
 Box(,4,60)
 	do while .t.
@@ -272,7 +276,7 @@ endif
 go top
 
 do while !eof()
-	cIdFirma:=idfirma
+	cIdFirma := idfirma
 	cIdTipDok:=idtipdok
 	cBrDok:=brdok
 	select fakt
@@ -1354,7 +1358,7 @@ go top
 seek cIdFirma+cIdTipDok+CHR(254)
 skip -1
 
-if ((field->idtipdok)<>cIdTipDok)
+if ( (field->idtipdok) <> cIdTipDok ) .or. ((field->idfirma) <> cIdFirma )
 	cBrDok:=UBrojDok(1,gNumDio,"")
 	return cBrDok
 endif

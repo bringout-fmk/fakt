@@ -838,6 +838,7 @@ lIdiDalje:=.f.
 if i==F_KORISN .or. i==F_PARAMS .or.  i==F_GPARAMS .or. i==F_GPARAMSP .or. i==F_MPARAMS .or. i==F_PRIPR 
 	lIdiDalje:=.t.
 endif
+
 if i==F_FAKT  .or. i==F_DOKS .or. i==F_DOKS2 .or. i==F_RJ .or. i==F_UPL
 	lIdiDalje:=.t.
 endif

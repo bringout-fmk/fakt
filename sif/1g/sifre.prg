@@ -1065,7 +1065,6 @@ DO WHILE .t.
 ENDDO
 BoxC()
 
-
 aDbf := {}
 AADD (aDbf, {"IDROBA", "C",  10, 0})
 AADD (aDbf, {"IdPartner", "C",  7, 0})
@@ -1073,16 +1072,16 @@ AADD (aDbf, {"Destin"  , "C", 1, 0})
 AADD (aDbf, {"Kolicina", "N",  12, 2})
 AADD (aDbf, {"Naz" , "C", 25, 0})
 AADD (aDbf, {"Naz2", "C", 25, 0})
-AADD (aDBf,{ 'PTT'                 , 'C' ,   5 ,  0 })
-AADD (aDBf,{ 'MJESTO'              , 'C' ,  16 ,  0 })
-AADD (aDBf,{ 'ADRESA'              , 'C' ,  24 ,  0 })
-AADD (aDBf,{ 'TELEFON'             , 'C' ,  12 ,  0 })
-AADD (aDBf,{ 'FAX'                 , 'C' ,  12 ,  0 })
+AADD (aDBf, {"PTT" , 'C' ,   5 ,  0 })
+AADD (aDBf, {"MJESTO" , 'C' ,  16 ,  0 })
+AADD (aDBf, {"ADRESA" , 'C' ,  24 ,  0 })
+AADD (aDBf, {"TELEFON", 'C' ,  12 ,  0 })
+AADD (aDBf, {"FAX", 'C' ,  12 ,  0 })
 
 Dbcreate2(PRIVPATH+"LABELU.DBF",aDbf)
 
-
-select (F_LABELU); usex (PRIVPATH+"labelu")
+select (F_LABELU)
+usex (PRIVPATH+"labelu")
 
 index ON BRISANO TAG "BRISAN"    //TO (PRIVPATH+"ZAKSM")
 index on str(kolicina,12,2)+mjesto+naz     tag "1"
@@ -1090,46 +1089,66 @@ index on mjesto+naz+str(kolicina,12,2)     tag "2"
 index on ptt+mjesto+naz+str(kolicina,12,2) tag "3"
 index on str(kolicina,12,2)+ptt+mjesto+naz tag "4"
 
-select rugov; set filter to
-set filter to idroba==cIdRoba
+select rugov
+set filter to
+set filter to idroba == cIdRoba
 go top
 
 MsgO("Kreiram LABELU")
 
 do while !eof()
 
-  select ugov; seek rugov->id
-  if aktivan!="D" .or. !(&aUPart)
-    select rugov; skip 1; loop
-  endif
-  select partn; seek ugov->idpartner
-  if !(&aUMjes) .or. !(&aUPTT)
-    select rugov; skip 1; loop
-  endif
+	select ugov
+	seek rugov->id
+  	if field->aktivan != "D" .or. !(&aUPart)
+    		select rugov
+		skip 1
+		loop
+  	endif
+  	select partn
+	seek ugov->idpartner
+  	if !(&aUMjes) .or. !(&aUPTT)
+    		select rugov
+		skip 1
+		loop
+  	endif
 
-  select labelu
-  append blank
-  replace idpartner with ugov->idpartner,;
-          kolicina  with rugov->kolicina, ;
-          idroba    with rugov->idroba
+  	select labelu
+  	append blank
+	
+  	replace idpartner with ugov->idpartner
+	replace kolicina  with rugov->kolicina
+	replace idroba    with rugov->idroba
 
-  if !empty(rugov->destin)
-     select dest; seek ugov->idpartner+rugov->destin
+  	if FILE(SIFPATH + "DEST.DBF") .and. ;
+		rugov->(FIELDPOS("DESTIN")) <> 0 .and. ;
+		!EMPTY( rugov->destin )
+     		
+		select dest
+		seek ugov->idpartner + rugov->destin
 
-     select labelu
-     replace naz with dest->naz, naz2 with dest->naz2, ;
-     ptt with dest->ptt, mjesto with dest->mjesto, telefon with dest->telefon, fax with dest->fax,;
-     adresa with dest->adresa
+     		select labelu
+     		replace naz with dest->naz
+		replace naz2 with dest->naz2
+		replace ptt with dest->ptt
+		replace mjesto with dest->mjesto
+		replace telefon with dest->telefon
+		replace fax with dest->fax
+     		replace adresa with dest->adresa
+	else  
+		// nije naznacena destinacija
+     		select labelu
+     		replace naz with partn->naz
+		replace naz2 with partn->naz2
+		replace ptt with partn->ptt
+		replace mjesto with partn->mjesto
+		replace telefon with partn->telefon
+		replace fax with partn->fax
+		replace adresa with partn->adresa
+  	endif
 
-  else  // nije naznaŸena destinacija
-     select labelu
-     replace naz with partn->naz, naz2 with partn->naz2 ,;
-     ptt with partn->ptt, mjesto with partn->mjesto, telefon with partn->telefon, fax with partn->fax,;
-     adresa with partn->adresa
-  endif
-
-  select rugov
-  skip
+  	select rugov
+  	skip
 
 enddo
 
@@ -1140,10 +1159,11 @@ SET ORDER TO TAG (cNSort)
 GO TOP
 
 aKol:={}
+
 if lSpecifZips
- AADD( aKol, { "Sifra izdanja", {|| IDROBA       }, .f., "C", 13, 0, 1, 1} )
+	AADD( aKol, { "Sifra izdanja", {|| IDROBA       }, .f., "C", 13, 0, 1, 1} )
 else
- AADD( aKol, { "Roba"         , {|| IDROBA       }, .f., "C", 10, 0, 1, 1} )
+ 	AADD( aKol, { "Roba"         , {|| IDROBA       }, .f., "C", 10, 0, 1, 1} )
 endif
 
 AADD( aKol, { "Partner"      , {|| IdPartner    }, .f., "C",  7, 0, 1, 2} )
@@ -1154,15 +1174,12 @@ AADD( aKol, { "Naziv2"       , {|| Naz2         }, .f., "C", 25, 0, 1, 6} )
 AADD( aKol, { "PTT"          , {|| PTT          }, .f., "C",  5, 0, 1, 7} )
 AADD( aKol, { "Mjesto"       , {|| MJESTO       }, .f., "C", 16, 0, 1, 8} )
 AADD( aKol, { "Adresa"       , {|| ADRESA       }, .f., "C", 24, 0, 1, 9} )
-
-if !lSpecifZips
- AADD( aKol, { "Telefon"      , {|| TELEFON      }, .f., "C", 12, 0, 1,10} )
- AADD( aKol, { "Fax"          , {|| FAX          }, .f., "C", 12, 0, 1,11} )
-endif
+AADD( aKol, { "Telefon"      , {|| TELEFON      }, .f., "C", 12, 0, 1,10} )
+AADD( aKol, { "Fax"          , {|| FAX          }, .f., "C", 12, 0, 1,11} )
 
 StartPrint()
 
- StampaTabele(aKol,{|| BlokSLU()},,gTabela,,;
+StampaTabele(aKol,{|| BlokSLU()},,gTabela,,;
               ,"PREGLED BAZE PRIPREMLJENIH LABELA",,,,,)
 
 EndPrint()
@@ -1171,10 +1188,11 @@ use
 
 PopWA()
 
-if Pitanje(,"Aktivirati modul za stampu ?"," ")=="D"
-  private cKomLin:=gcLabKomLin+" "+PRIVPATH+"  labelu "+cNSort
-  run &cKomLin
+if Pitanje(, "Aktivirati modul za stampu ?"," ") == "D"
+	private cKomLin := gcLabKomLin + " " + PRIVPATH + "  labelu " + cNSort
+ 	run &cKomLin
 endif
+
 return
 
 

@@ -19,3 +19,5 @@ A CIJENA N 15 3
 
 *GEN_UG.DBF
 A DAT_VAL D 8 0
+
+
