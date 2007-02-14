@@ -569,7 +569,7 @@ do while !eof()
                  datdok with dDatDo+1,;
                  idtipdok with "00", brdok with cBRPST ,;
                  cijena with _cijena,;
-                 dindem with "DEM",;
+                 dindem with "KM ",;
                  Rbr with Rednibroj(++nRbrPst),;
                  kolicina with nPrenesi
 

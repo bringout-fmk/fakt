@@ -1067,8 +1067,8 @@ BoxC()
 
 aDbf := {}
 AADD (aDbf, {"IDROBA", "C",  10, 0})
-AADD (aDbf, {"IdPartner", "C",  7, 0})
-AADD (aDbf, {"Destin"  , "C", 1, 0})
+AADD (aDbf, {"IdPartner", "C",  6, 0})
+AADD (aDbf, {"Destin"  , "C", 6, 0})
 AADD (aDbf, {"Kolicina", "N",  12, 2})
 AADD (aDbf, {"Naz" , "C", 25, 0})
 AADD (aDbf, {"Naz2", "C", 25, 0})
@@ -1099,15 +1099,20 @@ MsgO("Kreiram LABELU")
 do while !eof()
 
 	select ugov
+	set order to tag "ID"
+	go top
 	seek rugov->id
-  	if field->aktivan != "D" .or. !(&aUPart)
+  	
+	if field->aktivan != "D" .or. !(&aUPart)
     		select rugov
 		skip 1
 		loop
   	endif
+	
   	select partn
 	seek ugov->idpartner
-  	if !(&aUMjes) .or. !(&aUPTT)
+  	
+	if !(&aUMjes) .or. !(&aUPTT)
     		select rugov
 		skip 1
 		loop
@@ -1166,8 +1171,8 @@ else
  	AADD( aKol, { "Roba"         , {|| IDROBA       }, .f., "C", 10, 0, 1, 1} )
 endif
 
-AADD( aKol, { "Partner"      , {|| IdPartner    }, .f., "C",  7, 0, 1, 2} )
-AADD( aKol, { "Dest."        , {|| Destin       }, .f., "C",  5, 0, 1, 3} )
+AADD( aKol, { "Partner"      , {|| IdPartner    }, .f., "C",  6, 0, 1, 2} )
+AADD( aKol, { "Dest."        , {|| Destin       }, .f., "C",  6, 0, 1, 3} )
 AADD( aKol, { "Kolicina"     , {|| Kolicina     }, .t., "N", 12, 2, 1, 4} )
 AADD( aKol, { "Naziv"        , {|| Naz          }, .f., "C", 25, 0, 1, 5} )
 AADD( aKol, { "Naziv2"       , {|| Naz2         }, .f., "C", 25, 0, 1, 6} )
