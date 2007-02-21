@@ -1073,7 +1073,7 @@ BoxC()
 aDbf := {}
 AADD (aDbf, {"IDROBA", "C",  10, 0})
 AADD (aDbf, {"IdPartner", "C",  6, 0})
-AADD (aDbf, {"Destin"  , "C", 3, 0})
+AADD (aDbf, {"Destin"  , "C", 6, 0})
 AADD (aDbf, {"Kolicina", "N",  12, 2})
 AADD (aDbf, {"Naz" , "C", 25, 0})
 AADD (aDbf, {"Naz2", "C", 25, 0})
@@ -1094,8 +1094,17 @@ index on mjesto+naz+str(kolicina,12,2)     tag "2"
 index on ptt+mjesto+naz+str(kolicina,12,2) tag "3"
 index on str(kolicina,12,2)+ptt+mjesto+naz tag "4"
 
+if is_dest()
+	select dest
+	set filter to
+endif
+
+select ugov
+set filter to
+
 select rugov
 set filter to
+
 set filter to idroba == cIdRoba
 go top
 
@@ -1130,12 +1139,11 @@ do while !eof()
 	replace kolicina  with rugov->kolicina
 	replace idroba    with rugov->idroba
 
-  	if FILE(SIFPATH + "DEST.DBF") .and. ;
-		rugov->(FIELDPOS("DEST")) <> 0 .and. ;
-		!EMPTY( rugov->dest )
+  	if is_dest() .and. !EMPTY( rugov->dest )
      		
 		select dest
 		set order to tag "ID"
+		go top
 		seek ugov->idpartner + rugov->dest
 
      		select labelu
@@ -1182,7 +1190,7 @@ else
 endif
 
 AADD( aKol, { "Partner"      , {|| IdPartner    }, .f., "C",  6, 0, 1, 2} )
-AADD( aKol, { "Dest."        , {|| Destin       }, .f., "C",  3, 0, 1, 3} )
+AADD( aKol, { "Dest."        , {|| Destin       }, .f., "C",  6, 0, 1, 3} )
 AADD( aKol, { "Kolicina"     , {|| Kolicina     }, .t., "N", 12, 2, 1, 4} )
 AADD( aKol, { "Naziv"        , {|| Naz          }, .f., "C", 25, 0, 1, 5} )
 AADD( aKol, { "Naziv2"       , {|| Naz2         }, .f., "C", 25, 0, 1, 6} )
