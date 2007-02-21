@@ -24,7 +24,6 @@
 #xcommand O_KONTO    => select(F_KONTO);  use  (SIFPATH+"KONTO"); set order to tag "ID"
 #xcommand O_UGOV     => select(F_UGOV);  use  (KUMPATH+"UGOV")     ; set order to tag "ID"
 #xcommand O_RUGOV    => select(F_RUGOV);  use  (KUMPATH+"RUGOV")   ; set order to tag "ID"
-#xcommand O_DEST     => select(F_DEST);  use  (KUMPATH+"DEST")     ; set order to tag "1"
 #xcommand O_POR      => select 95; cmxAutoOpen(.f.); usex (PRIVPATH+"por")  ; cmxAutoOpen(.t.)
 
 #xcommand O_FADO     => select (F_FADO); use  (SIFPATH+"FADO")    ; set order to tag "ID"

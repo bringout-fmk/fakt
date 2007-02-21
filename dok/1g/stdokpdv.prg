@@ -428,6 +428,7 @@ else
 	cBrNar  := aMemo[8]
 endif
 
+// destinacija na fakturi
 if LEN(aMemo) >= 18
 	cDestinacija := aMemo[18]
 else
@@ -796,17 +797,22 @@ local aMemo:={}
 local lFromMemo:=.f.
 
 if Empty(ALLTRIM(cID))
+	
 	// ako je prazan partner uzmi iz memo polja
 	aMemo:=ParsMemo(txt)
 	lFromMemo := .t.
+	
 else
+	
 	O_PARTN
 	select partn
 	set order to tag "ID"
 	hseek cId
+	
 endif
 
 if !lFromMemo .and. partn->id == cId
+	
 	// uzmi podatke iz SIFK
 	cIdBroj := IzSifK("PARTN", "REGB", cId, .f.)
 	cPorBroj := IzSifK("PARTN", "PORB", cId, .f.)
@@ -818,6 +824,7 @@ if !lFromMemo .and. partn->id == cId
 	cPartPtt := partn->ptt
 	cPartTel := partn->telefon
 	cPartFax := partn->fax
+	
 else
 	if LEN(aMemo) == 0
 		cPartNaziv := ""

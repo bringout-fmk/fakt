@@ -712,32 +712,37 @@ IF glDistrib
    O_RELAC
    O_VOZILA
    O_KALPOS
- ENDIF
- O_SIFK
- O_SIFV
- O_KONTO
- O_PARTN
- O_ROBA
- O_FTXT
- O_TARIFA
- O_VALUTE
- O_RJ
- O_SAST
- O_UGOV
- O_RUGOV
- IF RUGOV->(FIELDPOS("DESTIN"))<>0
-   O_DEST
- ENDIF
- IF gNW=="T"
-   O_FADO
-   O_FADE
- ENDIF
- IF IzFMKIni("FAKT","VrstePlacanja","N",SIFPATH)=="D"
-   O_VRSTEP
- ENDIF
- IF IzFmkIni("FAKT","Opcine","N",SIFPATH)=="D"
-   O_OPS
- ENDIF
+ENDIF
+
+O_SIFK
+O_SIFV
+O_KONTO
+O_PARTN
+O_ROBA
+O_FTXT
+O_TARIFA
+O_VALUTE
+O_RJ
+O_SAST
+O_UGOV
+O_RUGOV
+
+IF RUGOV->(FIELDPOS("DEST"))<>0
+	O_DEST
+ENDIF
+
+IF gNW=="T"
+	O_FADO
+   	O_FADE
+ENDIF
+
+IF IzFMKIni("FAKT","VrstePlacanja","N",SIFPATH)=="D"
+	O_VRSTEP
+ENDIF
+
+IF IzFmkIni("FAKT","Opcine","N",SIFPATH)=="D"
+	O_OPS
+ENDIF
 RETURN
 
 
@@ -1068,7 +1073,7 @@ BoxC()
 aDbf := {}
 AADD (aDbf, {"IDROBA", "C",  10, 0})
 AADD (aDbf, {"IdPartner", "C",  6, 0})
-AADD (aDbf, {"Destin"  , "C", 6, 0})
+AADD (aDbf, {"Destin"  , "C", 3, 0})
 AADD (aDbf, {"Kolicina", "N",  12, 2})
 AADD (aDbf, {"Naz" , "C", 25, 0})
 AADD (aDbf, {"Naz2", "C", 25, 0})
@@ -1076,9 +1081,9 @@ AADD (aDBf, {"PTT" , 'C' ,   5 ,  0 })
 AADD (aDBf, {"MJESTO" , 'C' ,  16 ,  0 })
 AADD (aDBf, {"ADRESA" , 'C' ,  24 ,  0 })
 AADD (aDBf, {"TELEFON", 'C' ,  12 ,  0 })
-AADD (aDBf, {"FAX", 'C' ,  12 ,  0 })
+AADD (aDBf, {"FAX"    , 'C' ,  12 ,  0 })
 
-Dbcreate2(PRIVPATH+"LABELU.DBF",aDbf)
+Dbcreate2(PRIVPATH + "LABELU.DBF",aDbf)
 
 select (F_LABELU)
 usex (PRIVPATH+"labelu")
@@ -1126,30 +1131,35 @@ do while !eof()
 	replace idroba    with rugov->idroba
 
   	if FILE(SIFPATH + "DEST.DBF") .and. ;
-		rugov->(FIELDPOS("DESTIN")) <> 0 .and. ;
-		!EMPTY( rugov->destin )
+		rugov->(FIELDPOS("DEST")) <> 0 .and. ;
+		!EMPTY( rugov->dest )
      		
 		select dest
-		seek ugov->idpartner + rugov->destin
+		set order to tag "ID"
+		seek ugov->idpartner + rugov->dest
 
      		select labelu
-     		replace naz with dest->naz
-		replace naz2 with dest->naz2
+		replace destin with dest->id
+		replace naz with dest->naziv
+		replace naz2 with dest->naziv2
 		replace ptt with dest->ptt
 		replace mjesto with dest->mjesto
 		replace telefon with dest->telefon
 		replace fax with dest->fax
      		replace adresa with dest->adresa
+		
 	else  
+		
 		// nije naznacena destinacija
      		select labelu
-     		replace naz with partn->naz
+		replace naz with partn->naz
 		replace naz2 with partn->naz2
 		replace ptt with partn->ptt
 		replace mjesto with partn->mjesto
 		replace telefon with partn->telefon
 		replace fax with partn->fax
 		replace adresa with partn->adresa
+		
   	endif
 
   	select rugov
@@ -1172,7 +1182,7 @@ else
 endif
 
 AADD( aKol, { "Partner"      , {|| IdPartner    }, .f., "C",  6, 0, 1, 2} )
-AADD( aKol, { "Dest."        , {|| Destin       }, .f., "C",  6, 0, 1, 3} )
+AADD( aKol, { "Dest."        , {|| Destin       }, .f., "C",  3, 0, 1, 3} )
 AADD( aKol, { "Kolicina"     , {|| Kolicina     }, .t., "N", 12, 2, 1, 4} )
 AADD( aKol, { "Naziv"        , {|| Naz          }, .f., "C", 25, 0, 1, 5} )
 AADD( aKol, { "Naziv2"       , {|| Naz2         }, .f., "C", 25, 0, 1, 6} )
