@@ -645,7 +645,9 @@ local dPPromKup
 local dPPromDob
 
 // strings
-local cStrDugKup := "#SALDO_KUP_DOB#"
+local cStrSlKup := "#SALDO_KUP#"
+local cStrSlDob := "#SALDO_DOB#"
+local cStrSlKD := "#SALDO_KUP_DOB#"
 local cStrDUpKup := "#D_P_UPLATA_KUP#"
 local cStrDPrKup := "#D_P_PROMJENA_KUP#"
 local cStrDPrDob := "#D_P_PROMJENA_DOB#"
@@ -664,18 +666,30 @@ endif
 // varijanta prikaza salda... 1 ili 2
 __SH_SLD_VAR := gShSldVar
 
+// saldo kupca
+nSaldoKup := g_p_saldo( cPartn, __KTO_DUG )
+		
+// saldo dobavljaca
+nSaldoDob := g_p_saldo( cPartn, __KTO_POT )
+
+// datum zadnje uplate kupca
+dPUplKup := g_dpupl_part( cPartn, __KTO_DUG )
+
+// datum zadnje promjene kupac
+dPPromKup := g_dpprom_part( cPartn, __KTO_DUG )
+
+// datum zadnje promjene dobavljac
+dPPromDob := g_dpprom_part( cPartn, __KTO_POT )
+
+
 // -------------------------------------------------------
-// SALDO KUPCA/DOBAVLJACA
+// SALDO KUPCA
 // -------------------------------------------------------
-if AT( cStrDugKup, cTxt ) <> 0
+if AT( cStrSlKup, cTxt ) <> 0
 		
 	if gShSld == "D"
-		// saldo kupca
-		nSaldoKup := g_p_saldo( cPartn, __KTO_DUG )
-		// saldo dobavljaca
-		nSaldoDob := g_p_saldo( cPartn, __KTO_POT )
 
-		cPom := ALLTRIM(STR( ROUND(nSaldoKup, 2) )) + " KM" 
+		cPom := ALLTRIM(STR( ROUND( nSaldoKup, 2 ) )) + " KM" 
 		cPom2 := ""
 		
 		if __SH_SLD_VAR == 2
@@ -688,8 +702,56 @@ if AT( cStrDugKup, cTxt ) <> 0
 	
 	endif
 	
-	cTxt := STRTRAN(cTxt, cStrDugKup, cPom2 + " " + cPom )
+	cTxt := STRTRAN(cTxt, cStrSlKup, cPom2 + " " + cPom )
 endif
+
+
+// -------------------------------------------------------
+// SALDO DOBAVLJACA
+// -------------------------------------------------------
+if AT( cStrSlDob, cTxt ) <> 0
+		
+	if gShSld == "D"
+
+		cPom := ALLTRIM(STR( ROUND( nSaldoDob, 2 ) )) + " KM" 
+		cPom2 := ""
+		
+		if __SH_SLD_VAR == 2
+			cPom2 := "Naš posljednji saldo iznosi: "
+		endif
+	else
+	
+		cPom := ""
+		cPom2 := ""
+	
+	endif
+	
+	cTxt := STRTRAN(cTxt, cStrSlDob, cPom2 + " " + cPom )
+endif
+
+// -------------------------------------------------------
+// SALDO KUPCA/DOBAVLJACA prebijeno
+// -------------------------------------------------------
+if AT( cStrSlKD, cTxt ) <> 0
+		
+	if gShSld == "D"
+
+		cPom := ALLTRIM(STR( ROUND( nSaldoKup, 2 ) - ROUND( nSaldoDob, 2) )) + " KM" 
+		cPom2 := ""
+		
+		if __SH_SLD_VAR == 2
+			cPom2 := "Prebijeno stanje kupac/dobavljac : "
+		endif
+	else
+	
+		cPom := ""
+		cPom2 := ""
+	
+	endif
+	
+	cTxt := STRTRAN(cTxt, cStrSlKD, cPom2 + " " + cPom )
+endif
+
 
 // -------------------------------------------------------
 // DATUM POSLJEDNJE UPLATE KUPCA/DOBAVLJACA
@@ -698,8 +760,6 @@ if AT( cStrDUpKup, cTxt ) <> 0
 	
 	if gShSld == "D"
 		
-		// datum zadnje uplate kupca
-		dPUplKup := g_dpupl_part( cPartn, __KTO_DUG )
 
 		// datum posljednje uplate kupca
 		cPom := DToC(dPUplKup)
@@ -724,10 +784,7 @@ endif
 if AT( cStrDPrKup, cTxt ) <> 0
 	
 	if gShSld == "D"
-		
-		// datum zadnje promjene kupac
-		dPPromKup := g_dpprom_part( cPartn, __KTO_DUG )
-
+	
 		// datum posljednje promjene kupac
 		cPom := DToC(dPPromKup)
 		cPom2 := ""
@@ -753,8 +810,6 @@ if AT( cStrDPrDob, cTxt ) <> 0
 	
 	if gShSld == "D"
 	
-		// datum zadnje promjene dobavljac
-		dPPromDob := g_dpprom_part( cPartn, __KTO_POT )
 	
 		// datum posljednje promjene dobavljac
 		cPom := DToC(dPPromDob)
