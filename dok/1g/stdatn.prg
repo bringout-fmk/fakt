@@ -696,6 +696,64 @@ do case
   case chr(Ch) $ "nN"
      nRet:=pr_nar()
   
+  case chr(Ch) $ "vV"
+     // ispravka valutiranja
+     
+     
+     if ( PADR(dindem, 3) <> PADR(ValDomaca(), 3) ) 
+       
+       if !SigmaSif("PRVAL")
+     		MsgBeep("!!! Opcija nedostupna !!!")
+     		return DE_CONT
+       endif
+      
+       if Pitanje(,"Izvrsiti ispravku valutiranja na dokumentu (D/N)?","N") == "N"
+     	  return DE_CONT
+	  
+       endif
+       
+       O_FAKT 
+       seek  doks->idfirma + doks->idtipdok + doks->brdok
+       
+       nPom1 := 0
+       nPom2 := 0
+       nPom3 := 0
+       nDugD := 0
+       nRabD := 0
+       
+       do while !EOF() .and. fakt->(idfirma+idtipdok+brdok)==doks->(idfirma+idtipdok+brdok)
+         
+	  nPrCij := fakt->cijena
+	  
+       	  v_pretvori("D", fakt->DinDem, fakt->DatDok, @nPrCij ) 
+	  
+	  replace cijena with nPrCij 
+          
+	  nPom1 := round( kolicina*Cijena*PrerCij() / UBaznuValutu(datdok) * (1-Rabat/100), ZAOKRUZENJE)
+          nPom2 := ROUND( kolicina*Cijena*PrerCij()/UBaznuValutu(datdok)*Rabat/100 , ZAOKRUZENJE)
+          nPom3 := ROUND( nPom1 * Porez/100, ZAOKRUZENJE)
+          nDugD += nPom1 + nPom3
+          nRabD += nPom2 
+	  
+	  skip
+       
+       enddo
+       
+       select doks
+       
+       replace iznos with nDugD
+       replace rabat with nRabD
+	  
+       nRet := DE_REFRESH
+     
+     else
+       
+       MsgBeep("Opcija onemogucena !!! faktura je u domacoj valuti " + ValDomaca() )
+       select doks
+       nRet := DE_CONT
+     
+     endif
+  
   case chr(Ch) $ "pP" .and. gTBDir=="N"  // povrat
      select doks
      nTrec:=recno()

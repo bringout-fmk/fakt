@@ -1139,7 +1139,6 @@ return
  */
  
 function EditPripr(fNovi)
-*{
 local nXpom
 local nYpom
 local nRec
@@ -1270,6 +1269,9 @@ if !fnovi
 		public _DEST := aMemo[18]
 	endif
 else
+	
+	cPretvori := "D"
+	
 	_serbr:=SPACE(LEN(serbr))
 	public _DEST := ""
    	if glDistrib
@@ -1386,7 +1388,8 @@ if (nRbr==1 .and. VAL(_podbr) < 1)
         		_BrDok := SPACE (LEN (_BrDok))
      		endif
    	endif
-  	do while .t.
+  	
+	do while .t.
 		
 		
 		@  m_x+3,m_y+40 SAY "Datum:" GET _datDok
@@ -1684,7 +1687,8 @@ endif
 
 private trabat:="%"
 
-if (gSamokol != "D")  // samo kolicine
+if (gSamokol != "D")  
+	// samo kolicine
 	if (_idtipdok=="19" .and. IzFMKIni("FAKT","19KaoRacunParticipacije","N",KUMPATH)=="D")
     		_trabat:="I"
     		_rabat:=_kolicina*_cijena*(1-_rabat/100)

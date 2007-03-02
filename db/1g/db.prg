@@ -1029,7 +1029,6 @@ do while !eof()
         		nPom2:=ROUND( kolicina*Cijena*PrerCij()/UBaznuValutu(datdok)*Rabat/100 , ZAOKRUZENJE)
         		// rabat za stavku
         		nPom3:=ROUND(nPom1*Porez/100, ZAOKRUZENJE)
-        		nPom3:=ROUND(nPom1*Porez/100, ZAOKRUZENJE)
         		nDugD+= nPom1 + nPom3
         		nRabD+= nPom2
     		endif
