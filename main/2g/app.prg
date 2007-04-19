@@ -710,6 +710,10 @@ public gFText3:=SPACE(72)
 // stampati zaglavlje
 public gStZagl:="D" 
 
+// picture header rows
+public gFPicHRow:=0
+public gFPicFRow:=0
+
 // DelphiRB - pdv faktura
 public gPdvDRb := "N"
 public gPdvDokVar := "1"
@@ -733,6 +737,8 @@ Rpar("H1",@gPdvDrb)
 Rpar("H2",@gPdvDokVar)
 
 Rpar("Z1",@gStZagl)
+Rpar("Z2",@gFPicHRow)
+Rpar("Z3",@gFPicFRow)
 
 if valtype(gtabela)<>"N"
 	gTabela:=1

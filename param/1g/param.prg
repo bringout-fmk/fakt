@@ -256,14 +256,19 @@ Box( , 20, 77, .f., "Izgleda dokumenata - zaglavlje")
 		PICT sPict
 	nX += 2
 
-	@ m_x+ nX, m_y+2 SAY "Koristiti automatsko zaglavlje (D/N)?" GET gStZagl ;
+	@ m_x+ nX, m_y+2 SAY "Koristiti tekstualno zaglavlje (D/N)?" GET gStZagl ;
 		VALID gStZagl $ "DN" PICT "@!"
 
-		 
+	nX += 2
+	
+	@ m_x + nX, m_y+2 SAY PADL("Slika na vrhu fakture (redova):", nSay + 15) GET gFPicHRow PICT "99"
+	
+	nX += 1
+	
+	@ m_x + nX, m_y+2 SAY PADL("Slika na dnu fakture (redova):", nSay + 15) GET gFPicFRow PICT "99"
   	read
 	
 BoxC()
-
 
 if (LASTKEY() <> K_ESC)
 	Wpar("F1",gFNaziv)
@@ -280,10 +285,12 @@ if (LASTKEY() <> K_ESC)
 	Wpar("G8",gFText2)
 	Wpar("G9",gFText3)
 	Wpar("Z1",gStZagl)
+	Wpar("Z2",gFPicHRow)
+	Wpar("Z3",gFPicFRow)
 endif
 
 return 
-*}
+
 
 
 

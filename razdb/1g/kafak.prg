@@ -543,8 +543,13 @@ DO WHILE .T.
      		
 		// nasteli partnera
 		select partn
-		hseek cIdPartner
-
+		
+		if lToRacun == .t.
+			hseek cFaktPartn
+		else
+			hseek cIdPartner
+		endif
+		
 		nRokPl := 0
 
 		if lToRacun == .t.
@@ -601,14 +606,22 @@ DO WHILE .T.
           			
 				nRBr:=1
           			select PARTN
-				hseek KALK->idpartner
-          			_Txt3a:=padr(KALK->idpartner+".",30)
+				
+				if lToRacun == .t.
+					hseek cFaktPartn
+				else
+					hseek cIdPartner
+				endif
+				
+          			_Txt3a:=padr(cIdPartner+".",30)
 				_txt3b:=_txt3c:=""
 				IzSifre(.t.)
-          			cTxta:=_txt3a
+          			
+				cTxta:=_txt3a
           			cTxtb:=_txt3b
           			cTxtc:=_txt3c
-          			@ m_x+10,m_Y+2 SAY "Partner " GET cTxta
+          			
+				@ m_x+10,m_Y+2 SAY "Partner " GET cTxta
           			@ m_x+11,m_Y+2 SAY "        " GET cTxtb
           			@ m_x+12,m_Y+2 SAY "Mjesto  " GET cTxtc
           		
@@ -660,7 +673,11 @@ DO WHILE .T.
                 	replace idtipdok with cTipFakt
                 	replace brdok with cBrFakt
                 	replace datdok with dDo
-                	replace idpartner with cIdPartner
+			if lToRacun == .t.
+                		replace idpartner with cFaktPartn
+			else
+                		replace idpartner with cIdPartner
+			endif
                 	replace kolicina with nKolicina
                 	replace	idroba with KALK->idroba
                 	replace cijena with nKalkCijena
