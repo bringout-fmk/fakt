@@ -1,104 +1,8 @@
 #include "\dev\fmk\fakt\fakt.ch"
 
-/*
- * ----------------------------------------------------------------
- *                                     Copyright Sigma-com software 
- * ----------------------------------------------------------------
- */
-
-/*! \file fmk/fakt/dok/1g/vknjiz.prg
- *  \brief
- */
- 
-
-/*! \ingroup ini
-  * \var *string FmkIni_KumPath_PoljeZaNazivPartneraUDokumentu_Prosiriti
-  * \brief Odredjuje da li ce se prosiriti polje za unos naziva partnera u dokumentu sa 30 na 60 znakova
-  * \param N - ne, default vrijednost
-  * \param D - da, prosiri na 60 znakova
-  */
-*string FmkIni_KumPath_PoljeZaNazivPartneraUDokumentu_Prosiriti;
 
 
-/*! \ingroup ini
-  * \var *string FmkIni_ExePath_FAKT_NaslovPartnTelefon
-  * \brief Odredjuje da li ce se u naziv partnera u dokumentu ubacivati telefon partnera ukoliko se partner unosi preko sifre
-  * \param D - da, default vrijednost
-  * \param N - ne ubacuj telefon partnera
-  */
-*string FmkIni_ExePath_FAKT_NaslovPartnTelefon;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_ExePath_FAKT_NaslovPartnPTT
-  * \brief Odredjuje da li ce se u naziv partnera u dokumentu ubacivati ptt broj i mjesto partnera ukoliko se partner unosi preko sifre
-  * \param D - da, default vrijednost
-  * \param N - ne ubacuj ptt i mjesto partnera
-  */
-*string FmkIni_ExePath_FAKT_NaslovPartnPTT;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_KumPath_FAKT_19KaoRacunParticipacije
-  * \brief Odredjuje da li ce se dokument 19 koristiti kao racun participacije
-  * \param N - ne, default vrijednost
-  * \param D - da, 19-ka se koristi kao racun participacije
-  */
-*string FmkIni_KumPath_FAKT_19KaoRacunParticipacije;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_KumPath_FAKT_Cijena13MPC
-  * \brief Odredjuje da li ce se u 13-ki pohranjivati MPC bez obzira na sve ostale parametre
-  * \param N - ne, default vrijednost
-  * \param D - da, u 13-ki se pohranjuju MPC cijene
-  */
-*string FmkIni_KumPath_FAKT_Cijena13MPC;
-
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_KumPath_FAKT_ZaokruzenjeMPCuDiskontu
-  * \brief Odredjuje na koju ce decimalu biti zaokruzena cijena u diskontnoj prodaji
-  * \param 1 - na prvu decimalu, default vrijednost
-  */
-*string FmkIni_KumPath_FAKT_ZaokruzenjeMPCuDiskontu;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_KumPath_FAKT_NemaIzlazaBezUlaza
-  * \brief Omogucava zabranu pravljenja dokumenata koji bi stanje robe doveli u minus
-  * \param N - default vrijednost
-  * \param D - zabrani pravljenje dokumenta koji "tjera robu u minus"
-  */
-*string FmkIni_KumPath_FAKT_NemaIzlazaBezUlaza;
-
-
-/*! \ingroup Vindija
-  * \var *string FmkIni_KumPath_FAKT_TXTIzjaveZaObracunPoreza
-  * \brief Predvidjeno za navodjenje sifara FAKT txt-ova koje znace da se obracunava porez na promet proizvoda
-  * \param ; - nijedna ne znaci da se obracunava porez, default vrijednost
-  * \param 01,02 - sifre izjava 01 i 02 znace da se obracunava porez
-  */
-*string FmkIni_KumPath_FAKT_TXTIzjaveZaObracunPoreza;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_SifPath_Barkod_ENTERXY
-  * \brief Broj entera koji se automatski ukucaju nakon ocitanja bar koda u editu dokumenta tipa XY
-  * \param 0 - nijedan enter, default vrijednost
-  */
-*string FmkIni_SifPath_Barkod_ENTERXY;
-
-
-
-/*! \fn IzSifre(fSilent)
- *  \brief 
- *  \param fSilent
- */
- 
 function IzSifre(fSilent)
-*{
 local nPos
 local cSif:=trim(_txt3a)
 local cPom
@@ -156,30 +60,19 @@ if right(cSif,1)="." .and. len(csif)<=7
    _IdPartner:=partn->id
 endif
 return  .t.
-*}
 
 
 
-/*! \fn V_Rj()
- *  \brief 
- */
- 
+
 function V_Rj ()
-*{
 IF gDetPromRj == "D" .and. gFirma <> _IdFirma
     Beep (3)
     Msg ("Mijenjate radnu jedinicu!!!#")
   EndIF
 return .t.
-*}
 
 
-/*! \fn V_PodBr()
- *  \brief
- */
- 
 function V_Podbr()
-*{
 local fRet:=.f.,nTRec,nPrec,nPkolicina:=1,nPRabat:=0
 private GetList:={}
 if (left(_podbr,1) $ " .0123456789") .and. (right(_podbr,1) $ " .0123456789")
@@ -269,20 +162,19 @@ if alltrim(_podbr)=="."
   _SerBr:=""
 endif
 return fRet
-*}
 
-/*! \fn SetujCijenu()
- *  \brief postavi _cijena
- */
- 
+
+
+// -----------------------------------------
+// setovanje cijene
+// -----------------------------------------
 function SetujCijenu()
-*{
-LOCAL lRJ:=.f.
+local lRJ:=.f.
 
 select (F_RJ)
 IF USED()
-  lRJ:=.t.
-  hseek _idfirma
+	lRJ:=.t.
+  	hseek _idfirma
 ENDIF
 select  roba
 
@@ -339,16 +231,10 @@ endif
 
 select pripr
 return
-*}
 
 
 
-/*! \fn V_Kolicina()
- *  \brief
- */
- 
 function V_Kolicina()
-*{
 local cRjTip
 local nUl:=nIzl:=0
 local nRezerv:=nRevers:=0
@@ -447,10 +333,6 @@ if !(roba->tip="U")  // usluge ne diraj
 endif
 
 
-//if _DINDEM <> LEFT(ValBazna(),3)   // preracunaj u sekundarnu valutu
-//      	_Cijena:=_Cijena * OmjerVal(ValBazna(), _DINDEM, _datdok)
-//endif
-
 endif
 
 IF lPoNarudzbi
@@ -459,7 +341,6 @@ IF lPoNarudzbi
 ENDIF
 
 select fakt; set order to 3
-//"FAKTi3","idroba+dtos(datDok)","FAKT"
 
 lBezMinusa := ( IzFMKIni("FAKT","NemaIzlazaBezUlaza","N",KUMPATH) == "D" )
 
@@ -529,16 +410,10 @@ if IsRabati() .and. (_idtipdok $ gcRabDok)
 endif
 
 return .t.
-*}
 
 
 
-/*! \fn W_Roba()
- *  \brief
- */
- 
 function W_Roba()
-*{
 private Getlist:={}
 
 if _podbr==" ."
@@ -548,15 +423,9 @@ if _podbr==" ."
 else
      return .t.
 endif
-*}
 
 
 
-/*! \fn V_Roba(lPrikTar)
- *  \brief
- *  \param lPrikTar
- */
- 
 function V_Roba(lPrikTar)
 local cPom , nArr
 private cVarIDROBA
