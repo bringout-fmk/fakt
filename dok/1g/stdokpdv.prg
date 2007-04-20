@@ -520,6 +520,16 @@ add_drntext("X08", STR( nSw5, 2, 0) )
 add_drntext("X09", STR( nSw6, 1, 0) )
 add_drntext("X10", STR( nSw7, 1, 0) )
 
+// header i footer - broj redova
+if gPDFPrint == "D"
+	add_drntext("X11", STR( gFPicHRow, 2, 0) )
+	add_drntext("X12", STR( gFPicFRow, 1, 0) )
+else
+	// ako nije pdf stampa - nema parametara....
+	add_drntext("X11", STR(0) )
+	add_drntext("X12", STR(0) )
+endif
+
 // fakturu stampaj u ne-compatibility modu
 gPtxtC50 := .f.
 do case
@@ -544,8 +554,6 @@ return
 function fill_potpis(cIdVD)
 local cPom
 local cPotpis
-
-
 
 if (cIdVd $ "01#00") 
 	cPotpis := REPLICATE(" ", 12) + "Odobrio" + REPLICATE(" ", 25) + "Primio"
