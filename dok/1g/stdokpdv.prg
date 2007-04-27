@@ -662,6 +662,10 @@ local cStrDPrDob := "#D_P_PROMJENA_DOB#"
 
 private gFinKPath
 
+if gShSld == "N"
+	return
+endif
+
 gFinKPath := __FIN_KUM
 
 if gFinKtoDug <> nil
