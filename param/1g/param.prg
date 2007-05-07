@@ -1102,7 +1102,12 @@ Box(,22,76,.f.,"Izgled dokumenata")
 	 @ m_x+nX, col()+2 SAY "SW-7 :" GET nSw7 ;
 	         PICT "9" 
 	
-	 nX += 3
+	 nX += 2
+
+	 // parametri fin.stanje na dod.txt...
+	 @ m_x+nX, m_y+2 SAY "Ispis grupacije robe poslije naziva (D/N)" GET glRGrPrn PICT "@!" VALID glRGrPrn $ "DN"
+	 
+	 nX += 2
 
 	 // parametri fin.stanje na dod.txt...
 	 @ m_x+nX, m_y+2 SAY "Prikaz fin.salda kupca/dobavljaca na dodatnom tekstu (D/N)" GET gShSld PICT "@!" VALID gShSld $ "DN"
@@ -1152,8 +1157,9 @@ if (LASTKEY()<>K_ESC)
    	WPar("RT", gRekTar)
    	WPar("HL", gHLinija)
    	WPar("rp", gRabProc)
-	WPar("H1",gPDVDrb)
-   	WPar("H2",gPDVDokVar)
+	WPar("H1", gPDVDrb)
+   	WPar("H2", gPDVDokVar)
+   	WPar("F5", glRGrPrn)
    	
 	cSection := "2"
 	WPar("s1", gShSld)

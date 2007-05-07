@@ -541,6 +541,8 @@ public gShSld := "N"
 public gFinKtoDug := PADR("2120", 7)
 public gFinKtoPot := PADR("5430", 7)
 public gShSldVar := 1
+// roba group na fakturi
+public glRGrPrn := "N"
 
 O_PARAMS
 private cSection:="1"
@@ -672,6 +674,7 @@ RPar("ir",@gcRabIDef)
 RPar("id",@gcRabDok)
 RPar("Fi",@gIspPart)
 RPar("Fr",@gResetRoba)
+RPar("F5",@glRGrPrn)
 
 cSection := "2"
 RPar("s1", @gShSld)

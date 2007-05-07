@@ -220,7 +220,7 @@ lIno:=.f.
 do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==cBrDok
 	// Nastimaj (hseek) Sifr.Robe Na Pripr->IdRoba
 	NSRNPIdRoba()   
-	
+
 	// nastimaj i tarifu
 	select tarifa
 	hseek roba->idtarifa
@@ -236,6 +236,17 @@ do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==c
 		if lBarKod
 			cRobaNaz:=cRobaNaz + " (BK: " + roba->barkod + ")"
 		endif
+	endif
+
+	// ako je roba grupa:
+	if glRGrPrn == "D" .and. isrobagroup()
+		
+		cPom := _op_gr(roba->id, "GR1") + ": " + _val_gr(roba->id, "GR1") + ;
+			", " + _op_gr(roba->id, "GR2") + ": " + _val_gr(roba->id, "GR2")
+		
+		cRobaNaz += " "
+		cRobaNaz += cPom
+		
 	endif
 
 	// dodaj i vrijednost iz polja SERBR
@@ -548,6 +559,39 @@ endcase
 add_drn(cBrDok, dDatDok, dDatVal, dDatIsp, cTime, nUkBPDV, nUkVPop, nUkBPDVPop, nUkPDV, nTotal, nCSum, nUkPopNaTeretProdavca, nDrnZaokr, nUkKol)
 
 return
+
+// -------------------------------------
+// vraca opis grupe iz sifK
+// -------------------------------------
+static function _op_gr( cId, cSifK )
+local nTArea := SELECT()
+local cRet := ""
+
+O_SIFK
+select sifk
+set order to tag "ID2"
+go top
+seek PADR("ROBA", 8) + PADR( cSifK, 4 )
+
+if FOUND()
+	cRet := ALLTRIM( field->naz )
+endif
+
+select (nTArea)
+return cRet
+
+
+// -------------------------------------
+// vraca vrijednost grupe iz sifK
+// -------------------------------------
+static function _val_gr( cId, cSifK )
+local cRet := ""
+cRet := IzSifK( "ROBA", cSifK, cId, .f. )
+if cRet == nil
+	cRet := ""
+endif
+return ALLTRIM( cRet )
+
 
 // ----------------------------------
 // ----------------------------------
