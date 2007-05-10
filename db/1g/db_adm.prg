@@ -25,6 +25,8 @@ AADD(opc, "4. regeneracija fakt memo polja")
 AADD(opcexe, {|| fa_memo_regen()})
 AADD(opc, "5. regeneracija polja fakt->rbr")
 AADD(opcexe, {|| fa_rbr_regen()})
+AADD(opc, "6. regeneracija polja idpartner")
+AADD(opcexe, {|| fa_part_regen()})
 
 Menu_SC("fain")
 
@@ -179,5 +181,101 @@ enddo
 BoxC()
 
 return
+
+
+// ------------------------------------------------------------
+// regeneracija / popunjavanje polja idpartner u tabeli fakt
+// ------------------------------------------------------------
+function fa_part_regen()
+local nCount
+local cIdFirma
+local cIdTipDok
+local cBrDok
+local cPartn
+local cMsg
+
+if !SigmaSif("PARREG")
+	return
+endif
+
+cMsg := "Prije pokretanja ove opcije#!!! OBAVEZNO !!! napraviti backup podataka"
+
+msgbeep(cMsg)
+
+if Pitanje(,"Izvrsiti popunjavanje partnera u dokumentima (D/N)","N") == "N"
+	return
+endif
+
+O_DOKS
+O_FAKT
+
+select fakt
+set order to tag "1"
+go top
+
+Box(,3,60)
+
+@ m_x+1, m_y+2 SAY "Vrsim popunjavanje partnera..."
+
+nCount := 0
+
+do while !EOF()
+	
+	cIdFirma := field->idfirma
+	cIdTipDok := field->idtipdok
+	cBrDok := field->brdok
+	cPartn := field->idpartner
+
+	if EMPTY( cPartn )
+		
+		// pokusaj naci u DOKS
+		select doks
+		set order to tag "1"
+		seek cIdFirma + cIdTipDok + cBrDok
+
+		if FOUND()
+			if !EMPTY( field->idpartner )
+				
+				cPartn := field->idpartner
+			
+				@ m_x+2, m_y+2 SAY "*** uzeo iz DOKS -> " + cPartn
+	
+			endif
+		endif
+			
+		select fakt
+			
+	endif
+
+	do while !EOF() .and. field->idfirma == cIdFirma ;
+			.and. field->idtipdok == cIdTipDok ;
+			.and. field->brdok == cBrDok
+	
+		
+		if EMPTY( field->idpartner ) .and. !EMPTY( cPartn )
+		
+			++ nCount
+			
+			// upisi partnera
+			replace idpartner with cPartn
+
+			@ m_x+3, m_y+2 SAY "dok-> " + cIdFirma + "-" + ;
+				cIdTipDok + "-" + ALLTRIM(cBrDok)
+	
+		endif
+		
+		skip
+	enddo
+	
+enddo
+
+BoxC()
+
+if nCount > 0
+	msgbeep("Odradjeno " + ALLTRIM(STR(nCount)) + " zapisa !")
+endif
+
+return
+
 
 
