@@ -312,11 +312,11 @@ do while .t.
 		replace cijena with kalk->fcj
 		replace	rabat with kalk->rabat
                	replace	dindem with "KM"
-       
-		altd()
-       
+       		replace idpartner with kalk->idpartner
+      		 
 		if lToRacun == .t.
 			replace cijena with _g_fakt_cijena()
+			replace idpartner with cFaktPartn
 		endif
 		
 		select KALK
