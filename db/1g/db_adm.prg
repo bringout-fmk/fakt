@@ -193,6 +193,7 @@ local cIdTipDok
 local cBrDok
 local cPartn
 local cMsg
+local lFaktOverwrite := .f.
 
 if !SigmaSif("PARREG")
 	return
@@ -204,6 +205,11 @@ msgbeep(cMsg)
 
 if Pitanje(,"Izvrsiti popunjavanje partnera u dokumentima (D/N)","N") == "N"
 	return
+endif
+
+
+if Pitanje(,"Prepisati vrijednosti u tabeli FAKT (D/N)", "N") == "D"
+	lFaktOverwrite := .t.
 endif
 
 O_DOKS
@@ -226,7 +232,7 @@ do while !EOF()
 	cBrDok := field->brdok
 	cPartn := field->idpartner
 
-	if EMPTY( cPartn )
+	if lFaktOverwrite == .t. .or. EMPTY( cPartn )
 		
 		// pokusaj naci u DOKS
 		select doks
@@ -252,7 +258,7 @@ do while !EOF()
 			.and. field->brdok == cBrDok
 	
 		
-		if EMPTY( field->idpartner ) .and. !EMPTY( cPartn )
+		if (lFaktOverwrite == .t. .or. EMPTY( field->idpartner )) .and. !EMPTY( cPartn )
 		
 			++ nCount
 			
