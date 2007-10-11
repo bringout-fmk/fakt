@@ -1,26 +1,61 @@
 #include "\dev\fmk\fakt\fakt.ch"
 
-/*
- * ----------------------------------------------------------------
- *                          Copyright Sigma-com software 2000-2006
- * ----------------------------------------------------------------
- */
+
+// ---------------------------------
+// otvara potrebne tabele
+// ---------------------------------
+static function _o_tables()
+O_FAKT
+O_PARTN
+O_VALUTE
+O_RJ
+O_SIFK
+O_SIFV
+O_ROBA
+return
 
 
-/*! \ingroup ini
-  * \var *string FmkIni_SifPath_FAKT_Opcine
-  * \brief Da li se koristi sifrarnik opcina i sifra opcine u sifrarniku partnera?
-  * \param N - ne, default vrijednost
-  * \param D - da
-  */
-*string FmkIni_SifPath_FAKT_Opcine;
+// --------------------------------------------------
+// vraca matricu sa definicijom polja exp.tabele
+// --------------------------------------------------
+static function get_rpt_fields()
+local aFields := {}
+
+AADD(aFields, {"sifra", "C", 7, 0 })
+AADD(aFields, {"naziv", "C", 40, 0 })
+AADD(aFields, {"kolicina", "N", 15, 5 })
+AADD(aFields, {"iznos", "N", 15, 5 })
+
+return aFields
 
 
-/*! \fn RealKol()
- *  \brief Specifikacija roba ili kolicina za kupca ili obrnuto
- */
- 
+// -------------------------------------------
+// filuje export tabelu sa podacima
+// -------------------------------------------
+static function fill_exp_tbl( cIdSif, cNazSif, nKol, nIzn )
+local nArr
+nArr := SELECT()
+
+O_R_EXP
+append blank
+replace field->sifra with cIdSif
+replace field->naziv with cNazSif
+replace field->kolicina with nKol
+replace field->iznos with nIzn
+
+select (nArr)
+
+return
+
+
+
+// ---------------------------------------
+// specifikacija prodaje
+// ---------------------------------------
 function RealKol()
+local nX := 1
+local cExport := "N"
+local lExpRpt := .f.
 private lOpcine:=(IzFmkIni("FAKT","Opcine","N",SIFPATH)=="D")
 private cPrikaz
 private cSection:="N"
@@ -31,13 +66,9 @@ private nStrana:=0
 private cLinija
 private lGroup:=.f.
 
-O_FAKT
-O_PARTN
-O_VALUTE
-O_RJ
-O_SIFK
-O_SIFV
-O_ROBA
+
+_o_tables()
+
 
 if lOpcine
 	O_OPS
@@ -74,29 +105,71 @@ Box("#SPECIFIKACIJA PRODAJE PO ARTIKLIMA",12,77)
 	qqIdRoba := PADR(qqIdRoba, 20)
 	qqTipDok := PADR(qqTipDok, 40)
 
+	nX := 2
+
 	do while .t.
- 		cIdFirma:=PADR(cIdFirma,2)
- 		@ m_x+2,m_y+2 SAY "RJ            " GET cIdFirma valid {|| empty(cIdFirma) .or. cIdFirma==gFirma .or. P_RJ(@cIdFirma) }
- 		@ m_x+3,m_y+2 SAY "Tip dokumenta " GET qqTipDok pict "@!S20"
- 		@ m_x+4,m_y+2 SAY "Od datuma "  get dDatOd
- 		@ m_x+4,col()+1 SAY "do"  get dDatDo
-		@ m_x+7,m_y+2 SAY "Uslov po sifri partnera (prazno svi) "  get qqPartn pict "@!" valid {|| empty(qqPartn).or.P_Firma(@qqPartn)}
- 		@ m_x+8,m_y+2 SAY "Uslov po artiklu (prazno svi) "  get qqIdRoba pict "@!"
- 		if lOpcine
-   			@ m_x+9,m_y+2 SAY "Uslov po opcini (prazno sve) "  get cOpcina pict "@!"
- 		endif
- 		if IsPlanika()
-			@ m_x+10,m_y+2 SAY "Ne prikazuj robu K2=X "  get cK2X pict "@!" VALID cK2X$"DN"
-			@ m_x+11,m_y+2 SAY "Filter po ROBA->JMJ=PAR "  get cJmjPar pict "@!" VALID cJmjPar$"DN"
- 		endif
+ 		
+		cIdFirma:=PADR(cIdFirma,2)
+ 		
+		@ m_x + nX, m_y+2 SAY "RJ            " GET cIdFirma valid {|| empty(cIdFirma) .or. cIdFirma==gFirma .or. P_RJ(@cIdFirma) }
+ 		
+		++nX
 		
-		if lGroup
-   			private cPGroup := SPACE(3)
-			@ m_x+12,m_y+2 SAY "Grupa partnera (prazno sve):" GET cPGroup VALID EMPTY(cPGroup) .or. cPGroup $ "VP #AMB#SIS#OST"
+		@ m_x + nX, m_y+2 SAY "Tip dokumenta " GET qqTipDok pict "@!S20"
+ 		
+		++nX
+		
+		@ m_x + nX, m_y+2 SAY "Od datuma "  get dDatOd
+ 		
+		++nX
+		
+		@ m_x + nX,col()+1 SAY "do"  get dDatDo
+		
+		nX := nX + 3
+		
+		@ m_x + nX, m_y+2 SAY "Uslov po sifri partnera (prazno svi) "  get qqPartn pict "@!" valid {|| empty(qqPartn).or.P_Firma(@qqPartn)}
+ 		
+		++nX
+		
+		@ m_x + nX, m_y+2 SAY "Uslov po artiklu (prazno svi) "  get qqIdRoba pict "@!"
+ 		if lOpcine
+   			
+			++nX
+			
+			@ m_x + nX, m_y+2 SAY "Uslov po opcini (prazno sve) "  get cOpcina pict "@!"
+ 		
+		endif
+ 		
+		if IsPlanika()
+			
+			++nX
+			
+			@ m_x + nX, m_y+2 SAY "Ne prikazuj robu K2=X "  get cK2X pict "@!" VALID cK2X$"DN"
+			
+			++nX
+			
+			@ m_x + nX, m_y+2 SAY "Filter po ROBA->JMJ=PAR "  get cJmjPar pict "@!" VALID cJmjPar$"DN"
+ 		
 		endif
 		
+		if lGroup
+   			
+			private cPGroup := SPACE(3)
+			
+			++nX
+			
+			@ m_x + nX, m_y+2 SAY "Grupa partnera (prazno sve):" GET cPGroup VALID EMPTY(cPGroup) .or. cPGroup $ "VP #AMB#SIS#OST"
+		
+		endif
+		
+		nX := nX + 2
+		
+		@ m_x + nX, m_y+2 SAY "Export izvjestaja u DBF?" GET cExport VALID cExport $ "DN" PICT "@!"
+		
+		
 		read
- 		ESC_BCR
+ 		
+		ESC_BCR
 
  		aUslRB:=Parsiraj(qqIdRoba,"IDROBA","C")
 
@@ -105,9 +178,12 @@ Box("#SPECIFIKACIJA PRODAJE PO ARTIKLIMA",12,77)
  		endif
 
  		aUslTD:=Parsiraj(qqTipdok,"IdTipdok","C")
- 		if (aUslTD<>NIL)
+ 		
+		if (aUslTD<>NIL)
 			exit
 		endif
+		
+		
 	enddo
 
 	qqTipDok:=TRIM(qqTipDok)
@@ -129,6 +205,20 @@ Box("#SPECIFIKACIJA PRODAJE PO ARTIKLIMA",12,77)
 	select params
 	use
 BoxC()
+
+// ako je export izabran
+if cExport == "D"		
+	lExpRpt := .t.
+endif
+
+// export dokumenta
+if lExpRpt == .t.
+	aExpFields := get_rpt_fields()
+	t_exp_create(aExpFields)
+	cLaunch := exp_report()
+endif
+
+_o_tables()
 
 select fakt
 
@@ -180,15 +270,19 @@ cIdPartner:=idPartner
 zagl_sp_prod()
 
 if cPrikaz=="1"
+	
 	set order to tag "1"
 	seek cIdFirma
 	nC:=0
   	nCol1:=10
 	nTKolicina:=0
-  	do while !eof() .and. IdFirma=cIdFirma
-    		nKolicina:=0
+  	
+	do while !eof() .and. IdFirma=cIdFirma
+    		
+		nKolicina:=0
     		cIdPartner:=IdPartner
-    		do while !eof() .and. IdFirma=cIdFirma .and. idpartner==cIdpartner
+    		
+		do while !eof() .and. IdFirma=cIdFirma .and. idpartner==cIdpartner
       			if lOpcine
         			SELECT partn
 				HSEEK fakt->idPartner
@@ -198,8 +292,10 @@ if cPrikaz=="1"
 					loop
         			endif
       			endif
-      			nKolicina+=kolicina
+      			
+			nKolicina+=kolicina
       			skip 1
+			
 		enddo
 
 		if prow()>61	
@@ -218,6 +314,10 @@ if cPrikaz=="1"
       			@ prow(),pcol()+1 SAY STR(nKolicina,12,2)
       			nTKolicina+=nKolicina
     		endif
+
+		if lExpRpt
+			fill_exp_tbl( cIdPartner, partn->naz, nKolicina, 0 )
+		endif
   	enddo
 else  
 	// ako je izabrano "2"
@@ -240,6 +340,7 @@ else
 	set device to printer
 	
 	do while !eof()
+	
     		nKolicina:=0
 		nIznos:=0
    		cIdRoba:=IdRoba
@@ -323,6 +424,11 @@ else
 			nTIznos+=nIznos
     		endif
 		
+		if lExpRpt
+			fill_exp_tbl( cIdRoba, LEFT(roba->naz, 40), ;
+					nKolicina, nIznos )
+		endif
+		
   	enddo
 
 	BoxC()
@@ -343,13 +449,22 @@ endif
 ? space(gnLMarg)
 ?? cLinija
 
-set filter to  // ukini filter
+// ukini filter
+set filter to  
+
+if lExpRpt
+	fill_exp_tbl( "UKUPNO", "", nTKolicina, nTIznos )
+endif
 
 FF
 END PRINT
 
+// lansiraj export....
+if lExpRpt
+	tbl_export( cLaunch )
+endif
+
 return
-*}
 
 
 // ---------------------------------------------
