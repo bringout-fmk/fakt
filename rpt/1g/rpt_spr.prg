@@ -56,6 +56,7 @@ function RealKol()
 local nX := 1
 local cExport := "N"
 local lExpRpt := .f.
+local lRelations := .f.
 private lOpcine:=(IzFmkIni("FAKT","Opcine","N",SIFPATH)=="D")
 private cPrikaz
 private cSection:="N"
@@ -65,7 +66,15 @@ private cIdPartner
 private nStrana:=0
 private cLinija
 private lGroup:=.f.
+private cRelation := SPACE(4)
 
+// da li se koriste relacije
+O_FAKT
+select fakt
+
+if fakt->(fieldpos("idrelac")) <> 0
+	lRelations := .t.
+endif
 
 _o_tables()
 
@@ -121,9 +130,7 @@ Box("#SPECIFIKACIJA PRODAJE PO ARTIKLIMA",12,77)
 		
 		@ m_x + nX, m_y+2 SAY "Od datuma "  get dDatOd
  		
-		++nX
-		
-		@ m_x + nX,col()+1 SAY "do"  get dDatDo
+		@ m_x + nX, col()+1 SAY "do"  get dDatDo
 		
 		nX := nX + 3
 		
@@ -136,10 +143,16 @@ Box("#SPECIFIKACIJA PRODAJE PO ARTIKLIMA",12,77)
    			
 			++nX
 			
-			@ m_x + nX, m_y+2 SAY "Uslov po opcini (prazno sve) "  get cOpcina pict "@!"
+			@ m_x + nX, m_y + 2 SAY "Uslov po opcini (prazno sve) "  get cOpcina pict "@!"
  		
 		endif
  		
+		if lRelations == .t.
+			
+			++ nX 
+			@ m_x + nX, m_y + 2 SAY "Relacija (prazno sve):" GET cRelation
+		endif
+		
 		if IsPlanika()
 			
 			++nX
@@ -242,6 +255,10 @@ endif
 
 if (!empty(qqTipDok))
 	cFilter+=" .and. " + aUslTD
+endif
+
+if (!empty(cRelation))
+	cFilter+=" .and. idrelac == " + Cm2Str(cRelation)
 endif
 
 if (cFilter=" .t. .and. ")
@@ -496,6 +513,11 @@ endif
 
 ? SPACE(gnLMarg)
 ?? "Izvjestaj za tipove dokumenata : ",TRIM(qqTipDok)
+
+if !EMPTY(cRelation)
+	? SPACE(gnLMarg)
+	?? "Relacija : " + cRelation
+endif
 
 if cPrikaz=="2" .and. !EMPTY(qqPartn)
 	? SPACE(gnLMarg)

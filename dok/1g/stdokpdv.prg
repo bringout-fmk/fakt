@@ -271,7 +271,7 @@ do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==c
 	cIdPartner = pripr->IdPartner
 	
 	// rn Veleprodaje
-	if cIdTipDok $ "10#20"
+	if cIdTipDok $ "10#20#22"
 		// ino faktura
 		if IsIno(cIdPartner)
 			nPPDV:=0

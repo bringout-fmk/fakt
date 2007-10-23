@@ -315,6 +315,7 @@ function FaRobaBlock(Ch)
 LOCAL cSif:=ROBA->id, cSif2:=""
 LOCAL nArr:=SELECT()
 
+
 if UPPER(Chr(Ch))=="K"
  PushWa()
  BrowseKart(roba->id)

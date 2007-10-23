@@ -455,7 +455,7 @@ if right(trim(&cVarIdRoba),2)="--"
   endif
 endif
 
-P_Roba(@ _Idroba)
+P_Roba(@ _Idroba , nil, nil, gArtCDX )
 
 select roba
 select pripr

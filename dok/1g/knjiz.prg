@@ -299,8 +299,6 @@ static lDirty := .t.
  */
  
 function Knjiz()
-*{
-
 // da li je ocitan barkod
 private gOcitBarkod:=.f.
 private fID_J:=.f.
@@ -314,6 +312,7 @@ if IsRabati()
 endif
 
 O_Edit()
+
 select pripr
 
 if idTipDok=="IM"
@@ -351,13 +350,12 @@ if pripr->(fieldpos("k1"))<>0 .and. gDK1=="D"
   AADD(ImeKol,{ "K2",{|| k2}, "k2" })
 endif
 
-if glDistrib
-  AADD( ImeKol , { "Prod.mj." , {|| idpm     }, "IDPM"     } )
-  AADD( ImeKol , { "ID distr.", {|| iddist   }, "IDDIST"   } )
-  AADD( ImeKol , { "ID relac.", {|| idrelac  }, "IDRELAC"  } )
-  AADD( ImeKol , { "ID vozila", {|| idvozila }, "IDVOZILA" } )
-  AADD( ImeKol , { "Marsruta" , {|| marsruta }, "MARSRUTA" } )
+if pripr->(fieldpos("idrelac")) <> 0
+	
+	AADD( ImeKol , { "ID relac.", {|| idrelac  }, "IDRELAC"  } )
+
 endif
+
 
 Kol:={}
 for i:=1 to len(ImeKol)
@@ -381,7 +379,7 @@ ObjDbedit("PNal",21,77,{|| EdPripr()},"","Priprema..."+"ออออ<a-N> narudzb.kupca"
 BoxC()
 
 closeret
-*}
+return
 
 
 
@@ -1439,35 +1437,42 @@ if (nRbr==1 .and. VAL(_podbr) < 1)
      			endif
 
      			if (gDodPar=="1" .or. gDatVal=="D")
-      				if fNovi
+      				
+				if fNovi
 					// ako se koriste rabati izvuci broj dana iz tabele rabatnih skala
 					if !IsRabati()
 						nRokPl:=gRokPl
 					endif
 				endif
-      				@  m_x+8,m_y+45 SAY "Rok plac.(dana):" GET nRokPl PICT "99" WHEN FRokPl("0",fnovi)   VALID FRokPl("1",fnovi)
+      				
+				@  m_x+8,m_y+45 SAY "Rok plac.(dana):" GET nRokPl PICT "99" WHEN FRokPl("0",fnovi)   VALID FRokPl("1",fnovi)
 				@  m_x+9,m_y+45 SAY "Datum placanja :" GET _DatPl VALID FRokPl("2",fnovi)
      			endif
+			
      			if lVrsteP
       				@ m_x+10,m_y+38  SAY "Nacin placanja" get _idvrstep  picture "@!" valid P_VRSTEP(@_idvrstep,10,56)
      			endif
-   		elseif (_idtipdok=="06")
-      			if IzFmkIni('FAKT','ProsiriPoljeOtpremniceNa50','N',KUMPATH)=='D'
+   		
+		elseif (_idtipdok=="06")
+      			
+			if IzFmkIni('FAKT','ProsiriPoljeOtpremniceNa50','N',KUMPATH)=='D'
         			@ m_x+5,m_y+45 SAY "Po ul.fakt.broj:" GET _brotp PICT "@S8" when  W_BrOtp(fnovi)
       			else
         			@ m_x+5,m_y+45 SAY "Po ul.fakt.broj:" GET _brotp when  W_BrOtp(fnovi)
       			endif
       			@  m_x+7,m_y+45 SAY "       i UCD-u :" GET _brNar
    		else
+			
 			// dodaj i za ostale dokumente
 			if IsPDV()
 				_DatOtp := _datdok
       				@  m_x+6,m_y+45 SAY " datum isporuke:" GET _Datotp
 			endif
+		
 		endif
    		
-		if (glDistrib .and. _idtipdok $ "10#12#13#26#21#22")
-     			@ m_x+11,m_y+31  SAY "Relacija   :" get _idrelac  picture "@!" valid {|| _idtipdok$"21#22".or.JeStorno10().and.PuniDVRiz10().or.IzborRelacije(@_IdRelac,@_IdDist,@_IdVozila,@_datdok,@_marsruta)}
+		if (pripr->(FIELDPOS("idrelac")) <> 0 .and. _idtipdok $ "#11#")
+     			@ m_x + 9, m_y + 2  SAY "Relacija   :" get _idrelac
    		endif
 
 		if _idTipDok $ "10#11#19#20#27"
@@ -1641,17 +1646,19 @@ else
      		read
      		ESC_return 0
    	endif
-   	cPako:="(PAKET)"  // naziv jedinice mjere veceg pakovanja
-   	if (glDistrib .and. Prepak(_idroba,@cPako,@_ambp,@_ambk,_kolicina))
+   	
+	cPako:="(PAKET)"  // naziv jedinice mjere veceg pakovanja
+   	
+	//if (glDistrib .and. Prepak(_idroba,@cPako,@_ambp,@_ambk,_kolicina))
      		// --- unos kolicine veceg pakovanja - "pretvornik"
-     		@ m_x+16+RKOR2,m_y+2   SAY "AMBALAZA:" get _ambp pict pickol VALID {|| Prepak(_idroba,cPako,_ambp,_ambk,@_kolicina,.f.),ShowGets()}
-     		@ m_x+16+RKOR2,col()+1 SAY cPako
-     		@ m_x+16+RKOR2,col()+2 SAY "+" get _ambk pict pickol VALID {|| Prepak(_idroba,cPako,_ambp,_ambk,@_kolicina,.f.),ShowGets()}
-     		@ m_x+16+RKOR2,col()+1 SAY "("+TRIM(ROBA->JMJ)+")"
-     		// ---
-     		@ m_x+18+RKOR2,m_y+2  SAY "Kolicina " get _Kolicina   pict pickol valid {|| Prepak(_idroba,cPako,@_ambp,@_ambk,_kolicina),ShowGets(),V_Kolicina()}
-     		RKOR:=2
-   	else
+     	//	@ m_x+16+RKOR2,m_y+2   SAY "AMBALAZA:" get _ambp pict pickol VALID {|| Prepak(_idroba,cPako,_ambp,_ambk,@_kolicina,.f.),ShowGets()}
+     	//	@ m_x+16+RKOR2,col()+1 SAY cPako
+     	//	@ m_x+16+RKOR2,col()+2 SAY "+" get _ambk pict pickol VALID {|| Prepak(_idroba,cPako,_ambp,_ambk,@_kolicina,.f.),ShowGets()}
+     	//	@ m_x+16+RKOR2,col()+1 SAY "("+TRIM(ROBA->JMJ)+")"
+     	//	// ---
+     	//	@ m_x+18+RKOR2,m_y+2  SAY "Kolicina " get _Kolicina   pict pickol valid {|| Prepak(_idroba,cPako,@_ambp,@_ambk,_kolicina),ShowGets(),V_Kolicina()}
+     	//	RKOR:=2
+   	//else
              /*
      		if (lPoNarudzbi .and. !_idtipdok="0")
        			aNabavke:={}
@@ -1682,7 +1689,7 @@ else
    	
        		@ m_x+16+RKOR2,m_y+2 SAY "Kolicina " get _Kolicina pict pickol valid V_Kolicina()
 	
-	endif
+	//endif
 endif
 
 private trabat:="%"

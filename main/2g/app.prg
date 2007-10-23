@@ -482,6 +482,9 @@ public gNazPotStr:=SPACE(69)
 public gDodPar:="2"
 public gDatVal:="N"
 
+// artikal sort - cdx
+public gArtCDX := SPACE(20)
+
 public gTipF:="2"
 public gVarF:="2"
 public gVarRF:=" "
@@ -669,6 +672,7 @@ RPar("g3",@gKarC3)
 RPar("g4",@gKarN1)
 RPar("g5",@gKarN2)
 RPar("g6",@gPSamoKol)
+RPar("gC",@gArtCDX)
 RPar("rs",@gcRabDef)
 RPar("ir",@gcRabIDef)
 RPar("id",@gcRabDok)
