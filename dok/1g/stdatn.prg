@@ -1,49 +1,10 @@
 #include "\dev\fmk\fakt\fakt.ch"
 
-/*
- * ----------------------------------------------------------------
- *                                     Copyright Sigma-com software 
- * ----------------------------------------------------------------
- */
 
-/*! \file fmk/fakt/dok/1g/stdatn.prg
- *  \brief 
- */
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_SifPath_FAKT_VrstePlacanja
-  * \brief Da li koriste sifre vrsta placanja ?
-  * \param N - ne, default vrijednost
-  * \param D - da
-  */
-*string FmkIni_SifPath_FAKT_VrstePlacanja;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_SifPath_FAKT_Opcine
-  * \brief Da li se koriste sifre opcina?
-  * \param N - ne, default vrijednost
-  * \param D - da
-  */
-*string FmkIni_SifPath_FAKT_Opcine;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_KumPath_FAKT_Cijena13MPC
-  * \brief Da li je MPC cijena koja se pamti u dokumentima tipa 13?
-  * \param N - ne, default vrijednost
-  * \param D - da
-  */
-*string FmkIni_KumPath_FAKT_Cijena13MPC;
-
-
-/*! \fn StDatN()
- *  \brief Stampa azuriranih dokumenta
- */
- 
+// -----------------------------------------------
+// pregled / stampa azuriranih dokumenata 
+// -----------------------------------------------
 function StDatN()
-*{
 local nCol1:=0
 local nul,nizl,nRbr
 local m
@@ -642,7 +603,126 @@ endif
 go nTrec
     
 return DE_CONT
-*}
+
+
+// --------------------------
+// generisi fakturu
+// --------------------------
+function gen_fakt()
+local cTipDok
+local cFirma
+local cBrFakt
+local cPart
+
+if pitanje(,"Generisati fakturu na osnovu ponude ?", "D") == "N"
+	return DE_CONT
+endif
+
+select doks
+nTrec:=recno()
+
+cTipDok := idtipdok
+cFirma := idfirma
+cBrFakt := brdok
+cPart := idpartner
+
+cNBrFakt := cBrFakt
+
+set filter to
+go top
+seek cFirma + "10" + cBrFakt
+
+if FOUND()
+	
+	msgbeep("dokument vec postoji !!!!")
+	
+	if pitanje(, "Naci sljedeci broj dokumenta ?", "D") == "N"
+		return DE_CONT
+	endif
+
+	cNBrFakt := PADR( FaNoviBroj( cFirma, "10" ) , 8 )
+	
+endif
+
+select doks
+go top
+seek cFirma + cTipDok + cBrFakt
+
+// ubaci doks
+Scatter()
+
+append blank
+
+// tip dok je "10"
+_idtipdok := "10"
+_brdok := cNBrFakt
+
+Gather()
+
+O_FAKT
+select fakt
+set order to tag "1"
+go top
+
+seek cFirma + cTipDok + cBrFakt
+
+do while !EOF() .and. field->idfirma + field->idtipdok + field->brdok == ;
+		cFirma + cTipDok + cBrFakt
+
+	nFRec := RECNO()
+
+	Scatter()
+
+	append blank
+	
+	_idtipdok := "10"
+	_brdok := cNBrFakt
+	Gather()
+
+	go ( nFRec )
+	
+	skip
+
+enddo
+
+if isugovori()
+
+	if pitanje(,"Setovati datum uplate za partnera ?", "N") == "D"
+		
+		O_UGOV
+		select ugov
+		set order to tag "PARTNER"
+		go top
+		seek cPart
+
+		if FOUND() .and. field->idpartner == cPart
+			replace field->dat_l_fakt with DATE()
+		endif
+		
+	endif
+
+endif
+
+select doks
+
+if lOpcine
+	O_PARTN
+       	select DOKS
+       	set relation to idpartner into PARTN
+endif
+
+if cFilter==".t."
+	set Filter to
+else
+	set Filter to &cFilter
+endif
+
+go nTrec
+    
+return DE_REFRESH
+
+
+
 
 
 function pr_choice()
@@ -663,7 +743,6 @@ Izbor := 1
 Menu_SC("pch")
 
 return nSelected
-*}
 
 
 /*! \fn EdDatN()
@@ -671,10 +750,11 @@ return nSelected
  */
  
 function EdDatn()
-*{
 local nRet:=DE_CONT
+
 do case
-  case Ch==K_ALT_E
+ 
+   case Ch==K_ALT_E
      IF gTBDir=="D"
         gTBDir:="N"
         NeTBDirektni()  // ELIB, vrati stari tbrowse
@@ -696,6 +776,11 @@ do case
   case chr(Ch) $ "nN"
      nRet:=pr_nar()
   
+  case chr(Ch) $ "fF"
+     if idtipdok $ "20"
+       nRet:=gen_fakt()
+     endif
+     
   case chr(Ch) $ "vV"
      // ispravka valutiranja
      

@@ -887,6 +887,7 @@ return
 // Stampa azuriranih faktura od broja do broja
 function StAzPeriod(cIdFirma, cIdTipDok, cBrOd, cBrDo)
 local lDirekt := .f.
+local cBatch := "N"
 
 if cIdFirma <> nil
 	lDirekt := .t.
@@ -898,15 +899,19 @@ if !lDirekt
 	cIdTipDok:="10"
 	cBrOd:=space(8)
 	cBrDo:=space(8)
+	cBatch := "D"
 
-	Box("", 4, 35)
+	Box("", 5, 35)
         @ m_x+1, m_y+2 SAY "Dokument:"
         @ m_x+2, m_y+2 SAY " RJ-tip:" GET cIdFirma
         @ m_x+2, col()+1 SAY "-" GET cIdTipDok
         @ m_x+3, m_y+2 SAY "Brojevi:" 
 	@ m_x+4, m_y+3 SAY "od" GET cBrOd VALID !EMPTY(cBrOd)
 	@ m_x+4, col()+1 SAY "do" GET cBrDo VALID !EMPTY(cBrDo)
-        read
+	@ m_x+5, m_y+2 SAY "batch rezim ?" GET cBatch VALID cBatch $ "DN" ;
+						PICT "@!"
+        
+	read
 	BoxC()
 
 	if LASTKEY()==K_ESC
@@ -924,7 +929,19 @@ if Found()
 		nTRec := RecNo()
 		
 		if ALLTRIM(doks->brdok) >= ALLTRIM(cBrOd) .and. ALLTRIM(doks->brdok) <= ALLTRIM(cBrDo) 
+			
+			if cBatch == "D"
+				cDirPom := gcDirekt
+				gcDirekt := "B"
+				// prebaci na direkt stampu
+			endif
+			
 			StampTXT(doks->idfirma,doks->idtipdok,doks->brdok)
+			
+			if cBatch == "D"
+				gcDirekt := cDirPom
+			endif
+			
 		endif
 		
 		select doks
