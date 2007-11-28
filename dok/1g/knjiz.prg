@@ -1475,7 +1475,7 @@ if (nRbr==1 .and. VAL(_podbr) < 1)
      			@ m_x + 9, m_y + 2  SAY "Relacija   :" get _idrelac
    		endif
 
-		if _idTipDok $ "10#11#19#20#27"
+		if _idTipDok $ "10#11#19#20#25#26#27"
 		      @ m_x+10, m_y+2 SAY "Valuta ?" GET _DINDEM PICT "@!" 
 		else
 		      @ m_x+10, m_y+1 SAY " "
