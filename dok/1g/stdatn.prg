@@ -612,6 +612,7 @@ function gen_fakt()
 local cTipDok
 local cFirma
 local cBrFakt
+local dDatFakt
 local cPart
 
 if pitanje(,"Generisati fakturu na osnovu ponude ?", "D") == "N"
@@ -625,8 +626,23 @@ cTipDok := idtipdok
 cFirma := idfirma
 cBrFakt := brdok
 cPart := idpartner
+dDatFakt := datdok
 
 cNBrFakt := cBrFakt
+
+// uslovi generisanja...
+Box(, 3, 50)
+	
+	@ m_x + 1, m_y + 2 SAY "Datum fakture: " GET dDatFakt VALID !EMPTY(dDatFakt) 
+	
+	read
+
+	@ m_x + 2, m_y + 2 SAY "Broj fakture: " GET cBrFakt VALID !EMPTY(cBrFakt)
+
+	read
+
+BoxC()
+
 
 set filter to
 go top
@@ -656,6 +672,7 @@ append blank
 // tip dok je "10"
 _idtipdok := "10"
 _brdok := cNBrFakt
+_datdok := dDatFakt
 
 Gather()
 
@@ -677,6 +694,8 @@ do while !EOF() .and. field->idfirma + field->idtipdok + field->brdok == ;
 	
 	_idtipdok := "10"
 	_brdok := cNBrFakt
+	_datdok := dDatFakt
+	
 	Gather()
 
 	go ( nFRec )
