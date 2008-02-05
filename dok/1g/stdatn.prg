@@ -612,8 +612,13 @@ function gen_fakt()
 local cTipDok
 local cFirma
 local cBrFakt
+local nCnt := 0
 local dDatFakt
+local dDatVal
+local dDatIsp
+local i
 local cPart
+local aMemo := {}
 
 if pitanje(,"Generisati fakturu na osnovu ponude ?", "D") == "N"
 	return DE_CONT
@@ -627,17 +632,23 @@ cFirma := idfirma
 cBrFakt := brdok
 cPart := idpartner
 dDatFakt := datdok
+dDatVal := datdok
+dDatIsp := datdok
 
 cNBrFakt := cBrFakt
 
 // uslovi generisanja...
-Box(, 3, 50)
+Box(, 7, 55)
 	
-	@ m_x + 1, m_y + 2 SAY "Datum fakture: " GET dDatFakt VALID !EMPTY(dDatFakt) 
+	@ m_x + 1, m_y + 2 SAY "*** Parametri fakture "  
 	
-	read
+	@ m_x + 3, m_y + 2 SAY "  Datum fakture: " GET dDatFakt VALID !EMPTY(dDatFakt) 
+	
+	@ m_x + 4, m_y + 2 SAY "   Datum valute: " GET dDatVal VALID !EMPTY(dDatVal) 
+	@ m_x + 5, m_y + 2 SAY " Datum isporuke: " GET dDatIsp VALID !EMPTY(dDatIsp) 
+	
 
-	@ m_x + 2, m_y + 2 SAY "Broj fakture: " GET cBrFakt VALID !EMPTY(cBrFakt)
+	@ m_x + 7, m_y + 2 SAY "   Broj fakture: " GET cBrFakt VALID !EMPTY(cBrFakt)
 
 	read
 
@@ -683,18 +694,51 @@ go top
 
 seek cFirma + cTipDok + cBrFakt
 
+
 do while !EOF() .and. field->idfirma + field->idtipdok + field->brdok == ;
 		cFirma + cTipDok + cBrFakt
 
+	++ nCnt
+	
 	nFRec := RECNO()
 
 	Scatter()
+
+	aMemo := ParsMemo(_txt)
 
 	append blank
 	
 	_idtipdok := "10"
 	_brdok := cNBrFakt
 	_datdok := dDatFakt
+	
+	// dodaj memo polje, samo prva stavka
+	if nCnt = 1
+	
+		_txt := ""
+		_txt += CHR(16) + aMemo[1] + CHR(17)
+		_txt += CHR(16) + aMemo[2] + CHR(17)
+		_txt += CHR(16) + aMemo[3] + CHR(17)
+		_txt += CHR(16) + aMemo[4] + CHR(17)
+		_txt += CHR(16) + aMemo[5] + CHR(17)
+		_txt += CHR(16) + aMemo[6] + CHR(17)
+		// datum otpremnice
+		_txt += CHR(16) + DTOC(dDatIsp) + CHR(17)
+		_txt += CHR(16) + aMemo[8] + CHR(17)
+		// datum narudzbe / amemo[9]
+		_txt += CHR(16) + DTOC(dDatVal) + CHR(17)
+		// datum valute / amemo[10]
+		_txt += CHR(16) + DTOC(dDatVal) + CHR(17)
+
+		// dodaj i ostala polja
+
+		if LEN(aMemo) > 10
+			for i:=11 to LEN(aMemo)
+				_txt += CHR(16) + aMemo[i] + CHR(17)
+			next
+		endif
+
+	endif
 	
 	Gather()
 
