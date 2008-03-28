@@ -269,24 +269,24 @@ return
 
 
 
-
-/*! \fn Iz20u10()
- *  \brief
- */
- 
+// ----------------------------------------------
+// pretvaranje otpremnice u fakturu
+// ----------------------------------------------
 function Iz20u10()
-*{
-local nOrder,cBrDok:="",cIdTipDok:=""
+local nOrder
+local cBrDok := ""
+local cIdTipDok := ""
 
 select pripr
 use
 O_PRIPR
 go top
 
-if reccount2()==0
+if reccount2() == 0
 
    select doks
-   set order to 2  // idfirma+idtipdok+partner
+   set order to 2  
+   // idfirma+idtipdok+partner
 
    ImeKol:={}
    // browsuj tip dokumenta

@@ -1099,7 +1099,7 @@ Box("#PARAMETRI DOKUMENTA:",10,75)
    read
   endif
 
-  @ m_x+8, m_y+2 SAY "Obracunati PPP ?" GET cSetPor pict "@!" valid cSetPor $ "DN"
+  @ m_x+8, m_y+2 SAY "Obracunati PDV ?" GET cSetPor pict "@!" valid cSetPor $ "DN"
   read
 
 BoxC()
