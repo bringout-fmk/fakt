@@ -66,7 +66,7 @@ cDocumentName:=doc_name(cIdFirma, cIdTipDok, cBrDok, pripr->IdPartner)
 
 
 // prikaz samo kolicine
-if cIdTipDok $ "01#00#12#19#21#26"
+if cIdTipDok $ "01#00#12#13#19#21#22#26"
 	if ((gPSamoKol == "0" .and. Pitanje(,"Prikazati samo kolicine (D/N)", "N") == "D")) ;
 	    .or. gPSamoKol == "D"
 		lSamoKol:=.t.
