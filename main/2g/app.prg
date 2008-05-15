@@ -529,6 +529,7 @@ public gFUgRab:=PADR("UGRAB.TXT",12)
 
 public gSamokol:="N"
 public gRokPl:=0
+public gRabIzRobe := "N"
 
 public gKarC1:="N"
 public gKarC2:="N"
@@ -588,6 +589,7 @@ Rpar("NF",@gFNar)
 Rpar("UF",@gFUgRab)
 Rpar("sk",@gSamoKol)
 Rpar("rP",@gRokPl)
+Rpar("rR",@gRabIzRobe)
 Rpar("no",@gNovine)
 Rpar("ds",@gnDS)
 Rpar("ot",@gOdvT2)

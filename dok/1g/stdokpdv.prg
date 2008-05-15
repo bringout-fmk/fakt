@@ -27,8 +27,10 @@ drn_create()
 drn_open()
 drn_empty()
 
+altd()
+
 // otvori tabele
-if PCount()==4
+if PCount() == 4 .and. ( cIdtipdok <> nil )
 	O_Edit(.t.)
 else
  	O_Edit()
@@ -43,7 +45,7 @@ if cPombk $ "12"  // pitanje, default "N"
 	lPBarkod := ( Pitanje(,"Zelite li ispis barkodova ?",iif(cPombk=="1","N","D"))=="D")
 endif
 
-if PCount()==0
+if PCount() == 0 .or. ( cIdTipDok == nil .and. lJFill == .t. )
  	cIdTipdok:=idtipdok
 	cIdFirma:=IdFirma
 	cBrDok:=BrDok
@@ -52,7 +54,7 @@ endif
 seek cIdFirma+cIdTipDok+cBrDok
 NFOUND CRET
 
-if PCount() <= 1
+if PCount() <= 1 .or. ( cIdTipDok == nil .and. lJFill == .t.)
 	select pripr
 endif
 
@@ -215,6 +217,8 @@ nUkKol := 0
 
 DEC_CIJENA(ZAO_CIJENA())
 DEC_VRIJEDNOST(ZAO_VRIJEDNOST())
+
+altd()
 
 lIno:=.f.
 do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==cBrDok

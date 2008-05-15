@@ -482,6 +482,11 @@ IF lPrikTar
   	endif
 ENDIF
 
+// uzmi rabat za ovu robu.... iz polja roba->n1
+if gRabIzRobe == "D"
+	_rabat := roba->n1
+endif
+
 
 SELECT PRIPR
 return .t.

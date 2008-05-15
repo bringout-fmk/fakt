@@ -649,6 +649,8 @@ Box(, 23, 76, .f., "VARIJANTE OBRADE DOKUMENATA")
   	@ m_x+19,col()+2 SAY "N2 (D/N)?" GET gKarN2 PICT "@!" VALID gKarN2$"DN"
   	@ m_x+20,m_y+2 SAY "Prikaz samo kolicina na dokumentima (0/D/N)" GET gPSamoKol PICT "@!" VALID gPSamoKol $ "0DN"
 	@ m_x+21,m_y+2 SAY "Pretraga artikla po indexu:" GET gArtCdx PICT "@!"
+	@ m_x+22,m_y+2 SAY "Koristiti rabat iz sif.robe (polje N1) ?" GET gRabIzRobe PICT "@!" VALID gRabIzRobe $ "DN"
+	
 	read
 BoxC()
 
@@ -675,6 +677,7 @@ if (LASTKEY()<>K_ESC)
    	WPar("g5",gKarN2)
    	WPar("g6",gPSamoKol)
 	WPar("gC",gArtCDX)
+	WPar("rR",gRabIzRobe)
   	
 endif
 

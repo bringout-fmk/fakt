@@ -4,300 +4,11 @@ static lKonsignacija := .f.
 static lDoks2 := .t.
 static lDirty := .t.
 
-/*
- * ----------------------------------------------------------------
- *                          Copyright Sigma-com software 1996-2006 
- * ----------------------------------------------------------------
- */
 
-/*! \file fmk/fakt/dok/1g/knjiz.prg
- *  \brief
- */
 
-/*! \ingroup ini
-  * \var *string FmkIni_KumPath_Doks2_ZK1
-  * \brief Opis podatka koji se unosi u polje k1 tabele doks2
-  * \param K1 - default vrijednost
-  */
-*string FmkIni_KumPath_Doks2_ZK1;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_KumPath_Doks2_ZK2
-  * \brief Opis podatka koji se unosi u polje k2 tabele doks2
-  * \param K2 - default vrijednost
-  */
-*string FmkIni_KumPath_Doks2_ZK2;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_KumPath_Doks2_ZK3
-  * \brief Opis podatka koji se unosi u polje k3 tabele doks2
-  * \param K3 - default vrijednost
-  */
-*string FmkIni_KumPath_Doks2_ZK3;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_KumPath_Doks2_ZK4
-  * \brief Opis podatka koji se unosi u polje k4 tabele doks2
-  * \param K4 - default vrijednost
-  */
-*string FmkIni_KumPath_Doks2_ZK4;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_KumPath_Doks2_ZK5
-  * \brief Opis podatka koji se unosi u polje k5 tabele doks2
-  * \param K5 - default vrijednost
-  */
-*string FmkIni_KumPath_Doks2_ZK5;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_KumPath_Doks2_ZN1
-  * \brief Opis podatka koji se unosi u polje n1 tabele doks2
-  * \param N1 - default vrijednost
-  */
-*string FmkIni_KumPath_Doks2_ZN1;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_KumPath_Doks2_ZN2
-  * \brief Opis podatka koji se unosi u polje n2 tabele doks2
-  * \param N2 - default vrijednost
-  */
-*string FmkIni_KumPath_Doks2_ZN2;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_KumPath_FAKT_19KaoRacunParticipacije
-  * \brief Odredjuje da li ce se dokument 19 koristiti kao racun participacije
-  * \param N - ne, default vrijednost
-  * \param D - da, 19-ka se koristi kao racun participacije
-  */
-*string FmkIni_KumPath_FAKT_19KaoRacunParticipacije;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_KumPath_FAKT_Cijena13MPC
-  * \brief Odredjuje da li ce se u 13-ki pohranjivati MPC bez obzira na sve ostale parametre
-  * \param N - ne, default vrijednost
-  * \param D - da, u 13-ki se pohranjuju MPC cijene
-  */
-*string FmkIni_KumPath_FAKT_Cijena13MPC;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_KumPath_FAKT_Doks2
-  * \brief Odredjuje da li ce se koristiti tabela doks2 koja inace predstavlja dodatak tabeli doks
-  * \param N - default vrijednost
-  * \param D - koristi se i tabela doks2
-  */
-*string FmkIni_KumPath_FAKT_Doks2;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_KumPath_FAKT_Doks2opis
-  * \brief Generalni opis za prozor unosa podataka koji se vode u tabeli doks2
-  * \param dodatnih podataka - default vrijednost
-  */
-*string FmkIni_KumPath_FAKT_Doks2opis;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_KumPath_FAKT_Konsignacija
-  * \brief Da li se vodi konsignaciona evidencija
-  * \param N - ne, default vrijednost
-  * \param D - da, omogucene opcije za konsignaciju
-  */
-*string FmkIni_KumPath_FAKT_Konsignacija;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_KumPath_FAKT_KupacMalaSlova
-  * \brief Odredjuje da li se mogu za unos naziva kupca koristiti i mala slova
-  * \param N - ne, default vrijednost
-  * \param D - da, mogu i mala slova
-  */
-*string FmkIni_KumPath_FAKT_KupacMalaSlova;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_SifPath_FAKT_Opcine
-  * \brief Odredjuje da li se pojavljuje opcina pri unosu partnera. Postoji i sifrarnik opcina.
-  * \param N - default vrijednost
-  * \param D - omogucava unos opcine u tabelu partnera
-  */
-*string FmkIni_SifPath_FAKT_Opcine;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_KumPath_FAKT_PPPNuditi
-  * \brief Odredjuje da li ce se nuditi poreza na promet proizvoda pri unosu 10-ke tj.fakture
-  * \param N - ne, default vrijednost
-  * \param D - da, uvijek pri unosu 10-ke nuditi porez na promet proizvoda
-  */
-*string FmkIni_KumPath_FAKT_PPPNuditi;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_PrivPath_FAKT_PredracuniUvijekSaIznosima
-  * \brief Da li ce se uvijek prikazivati iznosi na predracunima ili ce se to moci pri svakom izboru stampanja predracuna birati odgovorom na postavljeni upit
-  * \param N - ne, default vrijednost
-  * \param D - da, uvijek prikazuj iznose na predracunima
-  */
-*string FmkIni_PrivPath_FAKT_PredracuniUvijekSaIznosima;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_PrivPath_FAKT_StampajSveIzPripreme
-  * \brief Odredjuje da li se pri izboru opcije stampanja dokumenta iz pripreme stampaju svi ili samo jedan dokument iz pripreme
-  * \param N - ne stampaj sve odjednom, default vrijednost
-  * \param D - da, odjednom odstampaj sve dokumente iz pripreme
-  */
-*string FmkIni_PrivPath_FAKT_StampajSveIzPripreme;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_SifPath_FAKT_TekVPC
-  * \brief Odredjuje default VPC (ona koja se nudi)
-  * \param 1 - VPC, default vrijednost
-  * \param 2 - VPC2
-  * \param 3 - VPC3
-  */
-*string FmkIni_SifPath_FAKT_TekVPC;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_KumPath_FAKT_TipDokXY_OmoguciUzimanjeFCJizKALK
-  * \brief Moze uciniti dostupnom opciju uzimanja fakturne cijene na osnovu KALK-dokumenata za unos svih FAKT-dokumenata
-  * \param N - moze samo u FAKT 25, default vrijednost
-  * \param D - moze u svim FAKT-dokumentima
-  */
-*string FmkIni_KumPath_FAKT_TipDokXY_OmoguciUzimanjeFCJizKALK;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_KumPath_FAKT_UnosPartneraObaveznoPoSifri
-  * \brief Omogucava varijantu unosa partnera na dokumentu iskljucivo pomocu sifre
-  * \param N - ne mora preko sifre, default vrijednost
-  * \param D - mora se unijeti sifra partnera
-  */
-*string FmkIni_KumPath_FAKT_UnosPartneraObaveznoPoSifri;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_SifPath_FAKT_VrstePlacanja
-  * \brief Odredjuje da li se pojavljuje vrsta placanja pri unosu. Postoji i sifrarnik vrsta placanja.
-  * \param N - default vrijednost
-  * \param D - omogucava unos vrste placanja
-  */
-*string FmkIni_SifPath_FAKT_VrstePlacanja;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_ExePath_FAKT_DatumRokPlacanja
-  * \brief Odredjuje od kojeg polaznog datuma se racuna rok placanja
-  * \param F - racunaj na osnovu datuma fakture, default vrijednost
-  * \param O - racunaj na osnovu datuma otpremnice
-  */
-*string FmkIni_ExePath_FAKT_DatumRokPlacanja;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_ExePath_FAKT_DelphiRB
-  * \brief Da li se stampaju fakture preko delphija
-  * \param N - ne, default vrijednost
-  * \param D - da
-  */
-*string FmkIni_ExePath_FAKT_DelphiRB;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_KumPath_FAKT_ProsiriPoljeOtpremniceNa50
-  * \brief Prosirenje polja za unos broja otpremnice na 50 znakova
-  * \param N - ne prosiruj, default vrijednost
-  * \param D - prosiri na 50 znakova
-  */
-*string FmkIni_KumPath_FAKT_ProsiriPoljeOtpremniceNa50;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_ExePath_FAKT_StampaViseDokumenata
-  * \brief Ako je vise dokumenata u pripremi, kako se stampaju
-  * \param N - samo se prvi moze odstampati, default vrijednost
-  * \param D - ponudi meni dokumenata u pripremi
-  */
-*string FmkIni_ExePath_FAKT_StampaViseDokumenata;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_ExePath_Fakt_DelphiRB
-  * \brief Da li se stampaju fakture preko delphija
-  * \param N - ne, default vrijednost
-  * \param D - da
-  */
-*string FmkIni_ExePath_Fakt_DelphiRB;
-
-
-/*! \ingroup Stampa
-  * \var *string FmkIni_PrivPath_OPRESA_Povrati
-  * \brief Odredjuje da li se koriste specificnosti obrade povrata stampe
-  * \param N - ne, default vrijednost
-  * \param D - da, FAKT se koristi za unos povrata stampe
-  */
-*string FmkIni_PrivPath_OPRESA_Povrati;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_KumPath_PoljeZaNazivPartneraUDokumentu_Prosiriti
-  * \brief Odredjuje da li ce se prosiriti polje za unos naziva partnera u dokumentu sa 30 na 60 znakova
-  * \param N - ne, default vrijednost
-  * \param D - da, prosiri na 60 znakova
-  */
-*string FmkIni_KumPath_PoljeZaNazivPartneraUDokumentu_Prosiriti;
-
-
-/*! \ingroup Stampa
-  * \var *string FmkIni_KumPath_STAMPA_Opresa
-  * \brief Odredjuje da li se koriste specificnosti obrade stampe
-  * \param N - ne, default vrijednost
-  * \param D - da, radi se o evidenciji stampe
-  */
-*string FmkIni_KumPath_STAMPA_Opresa;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_SifPath_SifRoba_DuzSifra
-  * \brief Odredjuje sirinu polja za unos sifre robe
-  * \param 10 - default vrijednost
-  */
-*string FmkIni_SifPath_SifRoba_DuzSifra;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_SifPath_SifRoba_ID_J
-  * \brief Omogucava koristenje dodatnih skrivenih sifara robe
-  * \param N - default vrijednost
-  * \param D - koriste se dodatne skrivene sifre robe
-  */
-*string FmkIni_SifPath_SifRoba_ID_J;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_PrivPath_UpitFax_PitatiZaFax
-  * \brief Odredjuje da li ce se prilikom stampanja dokumenta pojavljivati upit "Zelite li dokument za slanje faksom?"
-  * \param N - ne, default vrijednost
-  * \param D - da, pojavljivace se upit za slanje faksom
-  */
-*string FmkIni_PrivPath_UpitFax_PitatiZaFax;
-
-
-/*! \fn Knjiz()
- *  \brief Knjizenje naloga
- */
- 
+// -----------------------------------------------------------------
+// Glavna funkcija za poziv pripreme i knjizenje fakture
+// -----------------------------------------------------------------
 function Knjiz()
 // da li je ocitan barkod
 private gOcitBarkod:=.f.
@@ -701,14 +412,33 @@ do case
        		SELECT PRIPR
        		GO (nRec)
        		return DE_CONT
+
+	case Ch==K_ALT_E
+		
+		if Pitanje(,"Exportovati dokument u xls ?", "D" ) == "D"
+			
+			// export fakture u dbf
+			exp_dok2dbf()
+			
+			o_edit()	
+			select pripr
+			go top
+
+		endif
+		
+		return DE_CONT
+
 endcase
 
 return DE_CONT
-*}
 
 
+
+
+// -------------------------------------------
+// brisanje stavke
+// -------------------------------------------
 function BrisiStavku()
-*{
 cSecur:=SecurR(KLevel,"BRISIGENDOK")
 if m1="X" .and. ImaSlovo ("X", cSecur)   // pripr->m1
        Beep(1)
@@ -729,11 +459,11 @@ if Pitanje(,"Zelite izbrisati ovu stavku ?","D")=="D"
         return 1
 endif
 return 0
-*}
+
 
 
 function ProdjiKrozStavke()
-*{	
+	
 PushWA()
 
 select PRIPR
@@ -764,11 +494,10 @@ PopWA()
 BoxC()
 
 return
-*}
+
 
 
 function NoveStavke()
-*{
 
 nDug:=0
 nPrvi:=0
@@ -819,7 +548,6 @@ return
 
 
 function PrintDok()
-*{
 
 SpojiDuple()  // odradi ovo prije stampanja !
 SrediRbr()
@@ -934,13 +662,14 @@ CLOSE ALL
 return     
 *}
 
+
+
 /*! \fn CijeneOK(cStr)
  *  \brief
  *  \param cStr
  */
  
 function CijeneOK(cStr)
-*{
 local fMyFlag := .F., lRetFlag := .T., nTekRec
   SELECT PRIPR
   nTekRec := RECNO ()
@@ -1128,14 +857,11 @@ if lSetujDatum .or. cSetPor=="D"    // obracunaj porez na promet proizvoda na sv
    ObracunajPP(cSetPor,dDatDok)
 endif
 return
-*}
 
 
-/*! \fn EditPripr(fNovi)
- *  \brief Unos/ispravka stavki u pripremi
- *  \param fNovi
- */
- 
+// --------------------------------------------------------
+// hendliranje unosa novih stavki u pripremi
+// --------------------------------------------------------
 function EditPripr(fNovi)
 local nXpom
 local nYpom
@@ -1635,71 +1361,40 @@ RKOR:=0
 lGenStavke:=.f.
 
 if ( _m1=="X" .and.  !fnovi )
+	
 	// ako je racun, onda ne moze biti cijena 0 !
-   	@ m_x+16+RKOR2,m_y+2  SAY "Kolicina "
+   	
+	@ m_x+16+RKOR2,m_y+2  SAY "Kolicina "
 	@ row(),col()+1 SAY _kolicina pict pickol
-   	if _Cijena=0
+   	
+	if _Cijena=0
      		V_Kolicina()
    	endif
 else
+	
 	if (glDistrib .or. lPoNarudzbi)
      		read
      		ESC_return 0
    	endif
    	
-	cPako:="(PAKET)"  // naziv jedinice mjere veceg pakovanja
+	cPako:="(PAKET)"  
+	// naziv jedinice mjere veceg pakovanja
    	
-	//if (glDistrib .and. Prepak(_idroba,@cPako,@_ambp,@_ambk,_kolicina))
-     		// --- unos kolicine veceg pakovanja - "pretvornik"
-     	//	@ m_x+16+RKOR2,m_y+2   SAY "AMBALAZA:" get _ambp pict pickol VALID {|| Prepak(_idroba,cPako,_ambp,_ambk,@_kolicina,.f.),ShowGets()}
-     	//	@ m_x+16+RKOR2,col()+1 SAY cPako
-     	//	@ m_x+16+RKOR2,col()+2 SAY "+" get _ambk pict pickol VALID {|| Prepak(_idroba,cPako,_ambp,_ambk,@_kolicina,.f.),ShowGets()}
-     	//	@ m_x+16+RKOR2,col()+1 SAY "("+TRIM(ROBA->JMJ)+")"
-     	//	// ---
-     	//	@ m_x+18+RKOR2,m_y+2  SAY "Kolicina " get _Kolicina   pict pickol valid {|| Prepak(_idroba,cPako,@_ambp,@_ambk,_kolicina),ShowGets(),V_Kolicina()}
-     	//	RKOR:=2
-   	//else
-             /*
-     		if (lPoNarudzbi .and. !_idtipdok="0")
-       			aNabavke:={}
-       			if !fNovi
-         			AADD(aNabavke,{0,_cijena,_kolicina,_idnar,_brojnar})
-       			endif
-       			KalkNab3m(_idfirma,_idroba, aNabavke)
-       			if (LEN(aNabavke)>1)
-				lGenStavke:=.t.
-			endif
-       			if (LEN(aNabavke)>0)
-         			// - tekuca -
-         			i:=LEN(aNabavke)
-         			_kolicina := aNabavke[i,3]
-         			_idnar:=if(_kolicina<>0,aNabavke[i,4],SPACE(LEN(_idnar)))
-         			_brojnar:=if(_kolicina<>0,aNabavke[i,5],SPACE(LEN(_brojnar)))
-         			// ----------
-       			else
-         			_idnar:=SPACE(LEN(_idnar))
-         			_brojnar:=SPACE(LEN(_brojnar))
-       			endif
-       			@ m_x+15+RKOR2,m_y+2 SAY "Kolicina " GET _Kolicina PICT PicKol when LEN(aNabavke)<1 valid V_Kolicina()
-       			@ row(),col()+2 SAY IspisPoNar(,,.t.)
-     		else
-       			@ m_x+16+RKOR2,m_y+2 SAY "Kolicina " get _Kolicina pict pickol valid V_Kolicina()
-     		endif
-              */
-   	
-       		@ m_x+16+RKOR2,m_y+2 SAY "Kolicina " get _Kolicina pict pickol valid V_Kolicina()
+	@ m_x+16+RKOR2,m_y+2 SAY "Kolicina " get _Kolicina pict pickol valid V_Kolicina()
 	
-	//endif
 endif
 
 private trabat:="%"
 
-if (gSamokol != "D")  
+if (gSamokol != "D")
+
 	// samo kolicine
 	if (_idtipdok=="19" .and. IzFMKIni("FAKT","19KaoRacunParticipacije","N",KUMPATH)=="D")
-    		_trabat:="I"
+    		
+		_trabat:="I"
     		_rabat:=_kolicina*_cijena*(1-_rabat/100)
-    		@ m_x+16+RKOR+RKOR2,25  SAY "Cij." GET _Cijena PICT piccdem WHEN _podbr<>" ." .and. KLevel<="1" VALID _cijena>0
+    		
+		@ m_x+16+RKOR+RKOR2,25  SAY "Cij." GET _Cijena PICT piccdem WHEN _podbr<>" ." .and. KLevel<="1" VALID _cijena>0
 
     		@ m_x+16+RKOR+RKOR2,col()+2 SAY "Participacija" GET _Rabat PICT "9999.999" when _podbr<>" ."
 
@@ -1736,6 +1431,7 @@ if (gSamokol != "D")
 		endif
 		
    		endif
+		
 		// SKONTO
 		if IsRabati()
 			if (_idtipdok $ "10")
