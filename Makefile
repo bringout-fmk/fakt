@@ -1,4 +1,3 @@
-
 liball: 	
 	make -C main/1g
 	make -C main/2g
