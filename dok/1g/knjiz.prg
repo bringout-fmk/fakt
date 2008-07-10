@@ -1,4 +1,4 @@
-#include "\dev\fmk\fakt\fakt.ch"
+#include "fakt.ch"
 
 static lKonsignacija := .f.
 static lDoks2 := .t.
