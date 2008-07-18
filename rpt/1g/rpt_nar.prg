@@ -1,4 +1,4 @@
-#include "\dev\fmk\fakt\fakt.ch"
+#include "fakt.ch"
 
 
 function Mnu_Narudzba()

@@ -1,11 +1,11 @@
 VERZIJA=CDX
 MODUL=fa_1ma
 
-SRCDOSROOT=c:\\dev\\fmk\\fakt\\main\\1g\\
+SRCDOSROOT=$(BASEDOS)\\fmk\\fakt\\main\\1g\\
 
 PRGS=appsrv.prg
 CS=
 ASMS=
 
-include $(SC_BUILD_HOME_DIR)/sclib/Makefile_clipper
+include ../../../fmk_lib/Makefile_clipper
 

@@ -1,4 +1,4 @@
-#include "\dev\fmk\fakt\fakt.ch"
+#include "fakt.ch"
 
 // ----------------------------------------------------------------
 //                        Copyright Sigma-com software 1998-2006 

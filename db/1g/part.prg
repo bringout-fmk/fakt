@@ -1,4 +1,4 @@
-#include "\dev\fmk\fakt\fakt.ch"
+#include "fakt.ch"
 
 // ----------------------------------------------
 // napuni sifrarnik sifk  sa poljem za unos 

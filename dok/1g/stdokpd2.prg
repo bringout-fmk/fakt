@@ -1,4 +1,4 @@
-#include "\dev\fmk\fakt\fakt.ch"
+#include "fakt.ch"
 
 
 function stdokpd2(cIdFirma, cIdTipDok, cBrDok)

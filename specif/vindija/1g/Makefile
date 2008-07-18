@@ -1,12 +1,11 @@
 VERZIJA=CDX
 MODUL=fa_1svi
-MMODUL=fakt
 
-SRCDOSROOT=c:\\dev\\fmk\\$(MMODUL)\\specif\\vindija\\1g\\
+SRCDOSROOT=$(BASEDOS)\\fmk\\fakt\\specif\\vindija\\1g\\
 
 PRGS=vindija.prg mnu_sif.prg
 
 CS=
 ASMS=
 
-include $(SC_BUILD_HOME_DIR)/sclib/Makefile_clipper
+include ../../../../fmk_lib/Makefile_clipper
