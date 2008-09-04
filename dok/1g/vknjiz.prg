@@ -59,6 +59,13 @@ if right(cSif,1)="." .and. len(csif)<=7
    _txt3c:=padr(_txt3c,30)
    _IdPartner:=partn->id
 endif
+
+if gShSld == "D"
+	private gFinKPath := STRTRAN( KUMPATH, "FAKT", "FIN" )
+	// ako je prikaz salda na fakturi = D prikazi box sa podacima fin
+	g_box_stanje( _idpartner, gFinKtoDug, gFinKtoPot )
+endif
+
 return  .t.
 
 
