@@ -148,7 +148,6 @@ local nPom2
 local nPom3
 local nPom4
 local nPom5
-local cOperater
 
 // ako je kupac pdv obveznik, ova varijable je .t.
 local lPdvObveznik := .f.
@@ -189,12 +188,6 @@ RPar("x8", @nSw5)
 RPar("x9", @nSw6)
 RPar("y1", @nSw7)
 
-// operater - security
-if gSecurity == "D"
-	nTArea := SELECT()
-	cOperater := GetFullUserName( GetUserID() )  
-	select (nTArea)
-endif
 
 // napuni firmine podatke
 fill_firm_data()
@@ -484,9 +477,6 @@ add_drntext("D09", cIdTipDok)
 // radna jedinica
 add_drntext("D10", cIdFirma)
 
-// operater
-add_drntext("D11", cOperater)
-
 // tekst na kraju fakture F04, F05, F06
 fill_dod_text( aMemo[2], pripr->idpartner )
 
@@ -751,6 +741,7 @@ dPPromKup := g_dpprom_part( cPartn, __KTO_DUG )
 
 // datum zadnje promjene dobavljac
 dPPromDob := g_dpprom_part( cPartn, __KTO_POT )
+
 
 
 // -------------------------------------------------------

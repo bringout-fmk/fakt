@@ -601,7 +601,6 @@ function UzorTxt()
 *{
 local cId
 
-
 cId:="  "
 if IsPdv() .and. _IdTipDok $ "10#20" .and. IsIno(_IdPartner)
  InoKlauzula()
@@ -629,6 +628,11 @@ if (nRbr==1 .and. val(_podbr)<1)
    SEEK cId
    SELECT pripr
    _txt2 := trim(ftxt->naz)
+
+   if gSecurity == "D"
+	_txt2 += "Dokument izradio: " + GetFullUserName( GetUserID() ) 
+   endif
+  
   select PRIPR
   IF glDistrib .and. _IdTipdok=="26"
     IF cId $ IzFMKIni("FAKT","TXTIzjaveZaObracunPoreza",";",KUMPATH)
