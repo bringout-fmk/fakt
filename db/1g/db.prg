@@ -574,9 +574,7 @@ if !fR
       			DbDelete2()
       			go nRec
     		enddo
-    		if Logirati(goModul:oDataBase:cName,"DOK","POVRATDOK")
-			EventLog(nUser,goModul:oDataBase:cName,"DOK","POVRATDOK",nil,nil,nil,nil,"","",cIdFirma+"-"+cIdTipDok+"-"+cBrDok,Date(),Date(),"","Povrat dokumenta u pripremu")
-		endif
+	
 		select fakt
     		seek cIdFirma+cIdTipDok+cBrDok
 
@@ -606,6 +604,13 @@ if (cBrisiKum=="N")
   	enddo
 endif
 
+
+if Logirati(goModul:oDataBase:cName,"DOK","POVRATDOK")
+	
+	EventLog(nUser,goModul:oDataBase:cName,"DOK","POVRATDOK",nil,nil,nil,nil,"","",cIdFirma+"-"+cIdTipDok+"-"+cBrDok,Date(),Date(),"","Povrat dokumenta u pripremu")
+
+endif
+		
 closeret
 return
 

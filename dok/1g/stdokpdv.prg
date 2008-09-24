@@ -27,8 +27,6 @@ drn_create()
 drn_open()
 drn_empty()
 
-altd()
-
 // otvori tabele
 if PCount() == 4 .and. ( cIdtipdok <> nil )
 	O_Edit(.t.)
@@ -84,10 +82,21 @@ endif
 
 __FIN_KUM := STRTRAN( KUMPATH, "FAKT", "FIN" )
 
+//napuni podatke za stampu
 fill_porfakt_data(cIdFirma, cIdTipDok, cBrDok, lPBarKod, lSamoKol)
 
 if lJFill
 	return
+endif
+
+// logiraj ako se koristi event-loging
+if Logirati(goModul:oDataBase:cName, "DOK", "PRINT")
+	EventLog(nUser, goModul:oDataBase:cName, "DOK", "PRINT", ;
+		nil, nil, nil, nil, ;
+		"", "", ;
+		cIdFirma + "-" + cIdTipDok + "-" + ALLTRIM( cBrDok ), ;
+		DATE(), DATE(), "", ;
+		if(PCount()=0,"Stampanje fakture iz pripreme","Stampanje fakture iz kumulativa") )
 endif
 
 if cIdTipDok == "13"
