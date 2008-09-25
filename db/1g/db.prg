@@ -1,85 +1,7 @@
 #include "fakt.ch"
 
-/*
- * ----------------------------------------------------------------
- *                                     Copyright Sigma-com software 
- * ----------------------------------------------------------------
- */
-
-/*! \file fmk/fakt/db/1g/db.prg
- *  \brief Database operacije
- */
-
-/*! \ingroup ini
-  * \var *string FmkIni_SifPath_FAKT_VrstePlacanja
-  * \brief Odredjuje da li se pojavljuje vrsta placanja pri unosu. Postoji i sifrarnik vrsta placanja.
-  * \param N - default vrijednost
-  * \param D - omogucava unos vrste placanja
-  */
-*string FmkIni_SifPath_FAKT_VrstePlacanja;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_SifPath_FAKT_Opcine
-  * \brief Odredjuje da li se pojavljuje opcina pri unosu partnera. Postoji i sifrarnik opcina.
-  * \param N - default vrijednost
-  * \param D - omogucava unos opcine u tabelu partnera
-  */
-*string FmkIni_SifPath_FAKT_Opcine;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_KumPath_FAKT_Doks2
-  * \brief Odredjuje da li ce se koristiti tabela doks2 koja inace predstavlja dodatak tabeli doks
-  * \param N - default vrijednost
-  * \param D - koristi se i tabela doks2
-  */
-*string FmkIni_KumPath_FAKT_Doks2;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_SifPath_SifRoba_ID_J
-  * \brief Omogucava koristenje dodatnih skrivenih sifara robe
-  * \param N - default vrijednost
-  * \param D - koriste se dodatne skrivene sifre robe
-  */
-*string FmkIni_SifPath_SifRoba_ID_J;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_KumPath_FAKT_ProtuDokument13kiIdeNaRJ
-  * \brief Odredjuje sifru radne jedinice na kojoj se formira zaduzenje prodavnice kao automatski generisan dokument na osnovu dokumenta tipa 13
-  * \param P1 - default vrijednost
-  */
-*string FmkIni_KumPath_FAKT_ProtuDokument13kiIdeNaRJ;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_KumPath_FAKT_Brojac11BezEkstenzije
-  * \brief Ako su brojevi 11-ki koje se prave na tekucoj instalaciji bez ekstenzije a brojevi 11-ki koje se preuzimaju sa drugog prodajnog mjesta sa ekstenzijom onda se moze desiti da tekuci brojac ne daje zeljeni broj nove 11-ke pa se parametrom D rjesava ovaj problem
-  * \param N - default vrijednost
-  * \param D - pri odredjivanju sljedeceg broja dokumenta tipa 11 uzmi u obzir da su brojevi 11-ki koje se prave na tekucoj instalaciji bez ekstenzije
-  */
-*string FmkIni_KumPath_FAKT_Brojac11BezEkstenzije;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_KumPath_FAKT_NemaIzlazaBezUlaza
-  * \brief Omogucava zabranu pravljenja dokumenata koji bi stanje robe doveli u minus
-  * \param N - default vrijednost
-  * \param D - zabrani pravljenje dokumenta koji "tjera robu u minus"
-  */
-*string FmkIni_KumPath_FAKT_NemaIzlazaBezUlaza;
-
-
-
-/*! \fn O_Edit(cVar2)
- *  \brief Otvaranje tabela za editovanje podataka
- *  \param cVar2 := .t. - otvara se fakt kao priprema, za stampu stare fakture
- */
  
 function O_Edit(cVar2)
-*{
 if glRadNal
 	O_RNAL
 endif
@@ -124,7 +46,6 @@ endif
 
 if (PCount()==0)
 
-	
 	SELECT F_PRIPR
 	if !used()
 		O_S_PRIPR
@@ -156,7 +77,6 @@ select pripr
 set order to 1
 go top
 return nil
-*}
 
 
 /*! \fn PovSvi()
@@ -1483,7 +1403,7 @@ MsgBeep("Formirana je dodatna stavka. Vratite se tipkom <Esc> u pripremu"+"#i pr
 
 CLOSERET
 
-return
+
 
 
 

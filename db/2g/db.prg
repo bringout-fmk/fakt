@@ -1,252 +1,16 @@
 #include "fakt.ch"
 
-/*
- * ----------------------------------------------------------------
- *                                     Copyright Sigma-com software 
- * ----------------------------------------------------------------
- *
- */
- 
-
-/*! \defgroup db_fakt  Baza podataka fakt
- * @{
- * @}
- *
- */
-
-
-*tbl tbl_fakt; 
-
-/*! \var tbl_fakt
- *  \brief Glavna datoteka prometa (kumulativa), modul FAKT
- *
- *  \ingroup db_fakt
- *
- *  \code
- *
- *  Create Table "FAKT" ( 
- *	IDFIRMA Char( 2 ), 
- *	IDTIPDOK Char( 2 ), 
- *	BRDOK Char( 8 ), 
- *	DATDOK Date, 
- *	IDPARTNER Char( 6 ), 
- *	DINDEM Char( 3 ), 
- *	ZAOKR Numeric( 1 ,0 ), 
- *	RBR Char( 3 ), 
- *	PODBR Char( 2 ), 
- *	IDROBA Char( 10 ), 
- *	SERBR Char( 15 ), 
- *	KOLICINA Numeric( 14 ,5 ), 
- *	CIJENA Numeric( 14 ,5 ), 
- *	RABAT Numeric( 8 ,5 ), 
- *	POREZ Numeric( 9 ,5 ), 
- *	TXT Memo, 
- *	K1 Char( 4 ), 
- *	K2 Char( 4 ), 
- *	M1 Char( 1 ), 
- *	BRISANO Char( 1 ), 
- *	IDVRSTEP Char( 2 )
- * );
- *
- * Create Index "BRISAN" on FAKT( BRISANO );
- * Create Index "OID" on FAKT( OID );
- * Create Index "1" on FAKT( IDFIRMA, IDTIPDOK, BRDOK, RBR, PODBR );
- * Create Index "2" on FAKT( IDFIRMA, DATDOK, IDTIPDOK, BRDOK, RBR );
- * Create Index "3" on FAKT( IDROBA, DATDOK );
- * Create Index "HOST" on FAKT( HOST );
- * Create Index "USER" on FAKT( USER );
- *
- * \endcode
- */
- 
-*tbl tbl_fa_doks;
-
-/*! \var tbl_fa_doks
- *  \brief Tabela dokumenata u fakt-u 
- *
- * \ingroup db_fakt
- *
- * \code
- *
- * Create Table "DOKS" ( 
- *	IDFIRMA Char( 2 ), 
- *	IDTIPDOK Char( 2 ), 
- *	BRDOK Char( 8 ), 
- *	PARTNER Char( 30 ), 
- *	DATDOK Date, 
- *	DINDEM Char( 3 ), 
- *	IZNOS Numeric( 12 ,3 ), 
- *	RABAT Numeric( 12 ,3 ), 
- *	REZERV Char( 1 ), 
- *	M1 Char( 1 ), 
- *	IDPARTNER Char( 6 ), 
- *	SIFRA Char( 6 ), 
- *	BRISANO Char( 1 ), 
- *	IDVRSTEP Char( 2 ), 
- *	DATPL Date
- * );
- *  
- *
- * Create Index "BRISAN" on DOKS( BRISANO );
- * Create Index "OID" on DOKS( OID );
- * Create Index "1" on DOKS( IDFIRMA, IDTIPDOK, BRDOK );
- * Create Index "2" on DOKS( IDFIRMA, IDTIPDOK, PARTNER );
- * Create Index "3" on DOKS( PARTNER );
- * Create Index "4" on DOKS( IDTIPDOK );
- * Create Index "5" on DOKS( DATDOK );
- * Create Index "6" on DOKS( IDFIRMA, IDPARTNER, IDTIPDOK );
- *
- * \endcode
- *
- */
- 
-
-*tbl tbl_dest;
-
-/*! \var tbl_dest 
- *  \brief Tabela destinacije
- *
- * \ingroup db_fakt
- *
- * \code
- *
- * Create Table "DEST" ( 
- *	ID Char( 6 )
- *	NAZ Char( 25 ), 
- *	NAZ2 Char( 25 ), 
- *	OZNAKA Char( 1 ), 
- *	PTT Char( 5 ), 
- *	MJESTO Char( 16 ), 
- *	ADRESA Char( 24 ), 
- *	TELEFON Char( 12 ),  
- *	FAX Char( 12 ), 
- *	MOBTEL Char( 20 )
- * );
- *
- *
- * Create Index "BRISAN" on DEST( BRISANO );
- * Create Index "1" on DEST( ID, OZNAKA );
- *
- * \endcode
- *
- */
-
-*tbl tbl_fa_doks2;
-
-/*! \var tbl_fa_doks2
- *  \brief Tabele doks2 - dodatni atributi dokumenata, db fakt
- *
- * \ingroup db_fakt
- * 
- * \code
- *
- * Create Table "DOKS2" ( 
- *	IDFIRMA Char( 2 ), 
- *	IDTIPDOK Char( 2 ), 
- *	BRDOK Char( 8 ), 
- *	K1 Char( 15 ), 
- *	K2 Char( 15 ), 
- *	K3 Char( 15 ), 
- *	K4 Char( 20 ), 
- *	K5 Char( 20 ),  
- *	N1 Numeric( 15 ,2 ), 
- *	N2 Numeric( 15 ,2 ), 
- *	BRISANO Char( 1 )
- * );
- *
- * Create Index "BRISAN" on DOKS2( BRISANO );
- * Create Index "1" on DOKS2( IDFIRMA, IDTIPDOK, BRDOK );
- *
- * \endcode
- *
- */
- 
-
-
-
-*tbl tbl_Ugov;
-
-/*! \var tbl_ugov
- *  \brief Tabela ugovora, baza podataka fakt
- *  \ingroup db_fakt
- *
- * \code
- *
- * Create Table "UGOV" ( 
- *	ID Char( 10 ), 
- *	DATOD Date, 
- *	IDPARTNER Char( 6 ), 
- *	DATDO Date, 
- *	VRSTA Char( 1 ), 
- *	IDTIPDOK Char( 2 ), 
- *	NAZ Char( 20 ), 
- *	AKTIVAN Char( 1 ), 
- *	DINDEM Char( 3 ), 
- *	IDTXT Char( 2 ),  
- *	ZAOKR Numeric( 1 ,0 ), 
- *	BRISANO Char( 1 ) 
- * );
- * Create Index "BRISAN" on UGOV( BRISANO );
- * Create Index "ID" on UGOV( ID, IDPARTNER );
- * Create Index "NAZ" on UGOV( IDPARTNER, ID );
- * Create Index "NAZ2" on UGOV( NAZ );
- * Create Index "PARTNER" on UGOV( IDPARTNER );
- * Create Index "AKTIVAN" on UGOV( AKTIVAN );
- *
- * \endcode
- *
- */
-
-*tbl tbl_upl;
-
-/*! \var Fmk_tbl_upl
- *  \brief Tabela uplata kupaca
- *  \ingroup db_fakt
- *
- * \code
- *
- * Create Table "UPL" ( 
- *	DATUPL Date
- *	IDPARTNER Char( 6 ),
- *	OPIS Char( 30 ), 
- *	IZNOS Numeric( 12 ,2 ), 
- *	BRISANO Char( 1 ) 
- * );
- *
- * 
- * Create Index "BRISAN" on UPL( BRISANO );
- * Create Index "1" on UPL( IDPARTNER, DATUPL );
- * Create Index "2" on UPL( IDPARTNER );
- *
- * \endcode
- *
- */
-
-*string FmkIni_ExePath_SifRoba_ID_J;
-
-/*! \ingroup ini
-  * \var *string FmkIni_ExePath_SifRoba_ID_J
-  * \brief Omogucava koristenje dodatnih skrivenih sifara robe
-  * \param N - default vrijednost
-  * \param D - koriste se dodatne skrivene sifre robe
-  */
-*string FmkIni_ExePath_SifRoba_ID_J;
-
-
-
 
 /*! \fn TDBFaktNew()
  *  \brief
  */
 function TDBFaktNew()
-*{
 local oObj
 oObj:=TDBFakt():new()
 oObj:self:=oObj
 oObj:cName:="FAKT"
 oObj:lAdmin:=.f.
 return oObj
-*}
 
 
 /*! \file fmk/fakt/db/2g/db.prg
@@ -374,6 +138,8 @@ MsgBeep("Sklanjam privatne direktorije!!!")
 
 Skloni(PRIVPATH,"PRIPR.DBF",cSezona,finverse,fda,fnul)
 Skloni(PRIVPATH,"PRIPR.FPT",cSezona,finverse,fda,fnul)
+Skloni(PRIVPATH,"PRIPR9.DBF",cSezona,finverse,fda,fnul)
+Skloni(PRIVPATH,"PRIPR9.FPT",cSezona,finverse,fda,fnul)
 Skloni(PRIVPATH,"_FAKT.DBF",cSezona,finverse,fda,fnul)
 Skloni(PRIVPATH,"_FAKT.FPT",cSezona,finverse,fda,fnul)
 Skloni(PRIVPATH,"_ROBA.DBF",cSezona,finverse,fda,fnul)
@@ -667,6 +433,26 @@ if (nArea==-1 .or. nArea==(F_PRIPR))
 	CREATE_INDEX("3","IdFirma+idroba+rbr",PRIVPATH+"PRIPR")
 	if IsRabati()
 		CREATE_INDEX("4","IdFirma+idtipdok+rbr",PRIVPATH+"PRIPR")
+	endif
+endif
+
+// opcija smece
+if (nArea==-1 .or. nArea==(F_PRIPR9))
+	//PRIPR9.DBF
+
+	if IsRabati()
+		AADD(aDBf,{ 'TIPRABAT'    , 'C' ,  10 ,  0 })
+	endif
+	
+	if !FILE(PRIVPATH+'PRIPR9.DBF')
+        	DBcreate2(PRIVPATH+'PRIPR9.DBF',aDbf)
+	endif
+	
+	CREATE_INDEX("1","IdFirma+idtipdok+brdok+rbr+podbr",PRIVPATH+"PRIPR9")
+	CREATE_INDEX("2","IdFirma+dtos(datdok)",PRIVPATH+"PRIPR9")
+	CREATE_INDEX("3","IdFirma+idroba+rbr",PRIVPATH+"PRIPR9")
+	if IsRabati()
+		CREATE_INDEX("4","IdFirma+idtipdok+rbr",PRIVPATH+"PRIPR9")
 	endif
 endif
 

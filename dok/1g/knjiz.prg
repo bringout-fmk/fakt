@@ -366,7 +366,16 @@ do case
        		PopupKnjiz()
        		SETLASTKEY(K_CTRL_PGDN)
        		return DE_REFRESH
+	
+	case Ch==K_F11
+		// pregled smeca
+		Pripr9View()
 		
+		select pripr
+		go top
+		
+		return DE_REFRESH
+
 	case Ch=K_ALT_I
        		RekZadMpO()
        		O_Edit()
@@ -2738,8 +2747,8 @@ opc[1]:="1. generacija faktura na osnovu ugovora            "
 opc[2]:="2. sredjivanje rednih br.stavki dokumenta"
 opc[3]:="3. ispravka teksta na kraju fakture"
 opc[4]:="4. svedi protustavkom vrijednost dokumenta na 0"
-opc[5]:="5. obracunaj porez na sve stavke"
-opc[6]:="-----------------------------------------------"
+opc[5]:="5. priprema => smece"
+opc[6]:="6. smece    => priprema"
 opc[7]:="7. FAKT  <->  diskete"
 opc[8]:="8. brisanje dokumenta iz pripreme"
 lKonsig := ( IzFMKINI("FAKT","Konsignacija","N",KUMPATH)=="D" )
@@ -2823,7 +2832,16 @@ do while .t.
 	  Gather()
        BoxC()
     case izbor == 5
-       ObracunajPP()
+    	// stara funkcija
+       	// ObracunajPP()
+
+	// priprema -> smece
+	azur_smece()
+
+    case izbor == 6
+    	// smece -> priprema
+	povrat_smece()
+
     case izbor == 7
        PrenosDiskete()
     case izbor == 8
