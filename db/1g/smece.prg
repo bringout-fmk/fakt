@@ -156,6 +156,18 @@ do while !eof() .and. cIdF==IdFirma .and. cIdTipDok==Idtipdok .and. cBrDok==BrDo
    	go nRec
 enddo
 
+nTArea := SELECT()
+
+if Logirati(goModul:oDataBase:cName,"DOK","SMECE")
+	cOpis := "dokument: " + cIdF + "-" + cIdTipDok + "-" + cBrDok
+	EventLog(nUser, goModul:oDataBase:cName, "DOK", "SMECE", ;
+		nil, nil, nil, nil, ;
+		"","", cOpis, DATE(), DATE(), "", ;
+		"Brisanje dokumenta iz tabele smeca")
+endif
+
+select (nTArea)
+
 return
 
 // -------------------------------------------
@@ -170,6 +182,17 @@ endif
 select PRIPR9
 go top
 zap
+
+nTArea := SELECT()
+
+if Logirati(goModul:oDataBase:cName,"DOK","SMECE")
+	EventLog(nUser, goModul:oDataBase:cName, "DOK", "SMECE", ;
+		nil, nil, nil, nil, ;
+		"","", "", DATE(), DATE(), "", ;
+		"Brisanje kompletne tabele smeca")
+endif
+
+select (nTArea)
 
 return
 
@@ -218,6 +241,17 @@ append from pripr
 
 select pripr
 zap
+
+nTArea := SELECT()
+if Logirati(goModul:oDataBase:cName,"DOK","SMECE")
+	cOpis := "dokument: "+ cIdFirma + "-" + cIdTipDok + "-" + cBrDok
+	EventLog(nUser, goModul:oDataBase:cName, "DOK", "SMECE", ;
+		nil, nil, nil, nil, ;
+		"","", cOpis, DATE(), DATE(), "", ;
+		"Prebacivanje dokumenta iz pripreme u smece")
+endif
+
+select (nTArea)
 
 closeret
 return
@@ -298,6 +332,17 @@ enddo
 use
 
 MsgC()
+
+nTArea := SELECT()
+if Logirati(goModul:oDataBase:cName,"DOK","SMECE")
+	cOpis := "dokument: " + cIdFirma + "-" + cIdTipDok + "-" + cBrDok
+	EventLog(nUser, goModul:oDataBase:cName, "DOK", "SMECE", ;
+		nil, nil, nil, nil, ;
+		"","", cOpis, DATE(), DATE(), "", ;
+		"Prebacivanje dokumenta smeca u pripremu")
+endif
+
+select (nTArea)
 
 if !lSilent
 	closeret

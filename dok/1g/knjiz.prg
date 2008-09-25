@@ -464,7 +464,30 @@ if Pitanje(,"Zelite izbrisati ovu stavku ?","D")=="D"
            	endif
            	SELECT PRIPR
         endif
+	
+	// uzmi opis dokumenta za logiranje
+	cOpis := "dokument: " + field->idfirma + "-" + field->idtipdok + "-" + field->brdok
+	cStavka := field->rbr
+	cArtikal := "artikal: " + field->idroba
+	nKolicina := field->kolicina
+	nCijena := field->cijena
+	dDatumDok := field->datdok
+
 	delete
+
+	nTArea := SELECT()
+
+	// logiraj promjenu brisanja stavke !
+
+	if Logirati(goModul:oDataBase:cName,"DOK","BRISANJE")
+		EventLog(nUser, goModul:oDataBase:cName, "DOK", "BRISANJE", ;
+			nKolicina, nCijena, nil, nil, ;
+			cArtikal,"", cOpis, dDatumDok, DATE(), "", ;
+			"Brisanje stavke " + cStavka + " iz pripreme")
+	endif
+
+	select (nTArea)
+
         return 1
 endif
 return 0
@@ -1481,6 +1504,19 @@ if (_IdTipDok == "12")
 		lTxtNaKraju := .f.
 	endif
 endif
+
+nTArea := SELECT()
+
+if Logirati(goModul:oDataBase:cName,"DOK","UNOS")
+	EventLog(nUser, goModul:oDataBase:cName, "DOK", "UNOS", ;
+		_kolicina, _cijena, nil, nil, ;
+		"artikal: " + _idroba,"", "dokument: " + _idfirma + "-" + _idtipdok + "-" + _brdok, ;
+		_datdok, DATE(), "", ;
+		"Unos stavke " + _rbr + " novog dokumenta")
+endif
+
+select (nTArea)
+
 
 if lTxtNaKraju
 	UzorTxt()

@@ -94,7 +94,7 @@ if Logirati(goModul:oDataBase:cName, "DOK", "PRINT")
 	EventLog(nUser, goModul:oDataBase:cName, "DOK", "PRINT", ;
 		nil, nil, nil, nil, ;
 		"", "", ;
-		cIdFirma + "-" + cIdTipDok + "-" + ALLTRIM( cBrDok ), ;
+		"dokument: " + cIdFirma + "-" + cIdTipDok + "-" + ALLTRIM( cBrDok ), ;
 		DATE(), DATE(), "", ;
 		if(PCount()=0,"Stampanje fakture iz pripreme","Stampanje fakture iz kumulativa") )
 endif

@@ -525,9 +525,9 @@ if (cBrisiKum=="N")
 endif
 
 
-if Logirati(goModul:oDataBase:cName,"DOK","POVRATDOK")
+if Logirati(goModul:oDataBase:cName,"DOK","POVRAT")
 	
-	EventLog(nUser,goModul:oDataBase:cName,"DOK","POVRATDOK",nil,nil,nil,nil,"","",cIdFirma+"-"+cIdTipDok+"-"+cBrDok,Date(),Date(),"","Povrat dokumenta u pripremu")
+	EventLog(nUser,goModul:oDataBase:cName,"DOK","POVRAT",nil,nil,nil,nil,"","","dokument: " + cIdFirma+"-"+cIdTipDok+"-"+cBrDok,Date(),Date(),"","Povrat dokumenta u pripremu")
 
 endif
 		
@@ -991,8 +991,8 @@ do while !eof()
       			Gather2()
     		endif
   	endif
-	if Logirati(goModul:oDataBase:cName,"DOK","UNOSDOK")
-		EventLog(nUser,goModul:oDataBase:cName,"DOK","UNOSDOK",nil,nil,nil,nil,"","",cIdFirma+"-"+cIdTipDok+"-"+cBrDok,dDatDok,Date(),"","Azuriranje dokumenta")
+	if Logirati(goModul:oDataBase:cName,"DOK","AZUR")
+		EventLog(nUser,goModul:oDataBase:cName,"DOK","AZUR",nil,nil,nil,nil,"","","dokument: " + cIdFirma+"-"+cIdTipDok+"-"+cBrDok,dDatDok,Date(),"","Azuriranje dokumenta")
 	endif
   	select pripr
 enddo
@@ -1336,6 +1336,17 @@ if Pitanje(, "Zelite li izbrisati pripremu !!????","N")=="D"
 
    	select pripr
    	zap
+endif
+
+// logiraj ako je potrebno brisanje dokumenta iz pripreme !
+if Logirati(goModul:oDataBase:cName,"DOK","BRISANJE")
+	
+	cOpis := "dokument: " + cIdFirma + "-" + cIdTipDok + "-" + ALLTRIM(cBrDok)
+
+	EventLog(nUser, goModul:oDataBase:cName, "DOK", "BRISANJE", ;
+		nil, nil, nil, nil, ;
+		"","", cOpis, DATE(), DATE(), "", ;
+		"Brisanje kompletnog dokumenta iz pripreme")
 endif
 
 return
