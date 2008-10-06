@@ -1311,6 +1311,27 @@ if (m1="X" .and. ImaSlovo("X",cSecur))
 endif
 
 if Pitanje(, "Zelite li izbrisati pripremu !!????","N")=="D"
+	
+   if gcF9usmece == "D"
+
+  	select pripr
+	go top
+	
+	cIdFirma:=IdFirma
+	cIdTipDok:=IdTipDok
+	cBrDok:=BrDok
+      
+	// baci dokument u smece umjesto da ga 
+	// trajno izbrises
+	// lSilent = .t.
+
+	azur_smece( .t. )
+	
+	select pripr
+
+   else
+	
+	
 	SELECT F_DOKS
 	if !used()
 		O_DOKS
@@ -1336,6 +1357,9 @@ if Pitanje(, "Zelite li izbrisati pripremu !!????","N")=="D"
 
    	select pripr
    	zap
+
+   endif
+
 endif
 
 // logiraj ako je potrebno brisanje dokumenta iz pripreme !

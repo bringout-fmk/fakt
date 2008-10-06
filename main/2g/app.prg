@@ -547,6 +547,10 @@ public gFinKtoPot := PADR("5430", 7)
 public gShSldVar := 1
 // roba group na fakturi
 public glRGrPrn := "N"
+// brisanje dokumenta -> ide u smece
+public gcF9USmece := "N"
+// time-out kod azuriranja
+public gAzurTimeOut := 150
 
 O_PARAMS
 private cSection:="1"
@@ -680,6 +684,8 @@ RPar("ir",@gcRabIDef)
 RPar("id",@gcRabDok)
 RPar("Fi",@gIspPart)
 RPar("Fr",@gResetRoba)
+RPar("Fx",@gcF9usmece)
+RPar("Fz",@gAzurTimeOut)
 RPar("F5",@glRGrPrn)
 
 cSection := "2"

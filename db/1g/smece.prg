@@ -199,9 +199,13 @@ return
 // -------------------------------------------------------
 // opcija azuriranja dokumenta u smece
 // -------------------------------------------------------
-function azur_smece()
+function azur_smece( lSilent )
 
-if Pitanje("p1", "Zelice li dokument prebaciti u smece (D/N) ?", "D" ) == "N"
+if lSilent == nil
+	lSilent := .f.
+endif
+
+if lSilent == .f. .and. Pitanje("p1", "Zelice li dokument prebaciti u smece (D/N) ?", "D" ) == "N"
 	return
 endif
 
@@ -253,7 +257,10 @@ endif
 
 select (nTArea)
 
-closeret
+if lSilent == .f.
+	closeret
+endif
+
 return
 
 
