@@ -212,7 +212,14 @@ endif
 O_PRIPR9
 O_PRIPR
 
+lFound := .f.
+nCount := 0
+
 do while !EOF()
+
+	++ nCount 
+	lFound := .f.
+	nRecNo := RECNO()
 
 	cIdfirma := idfirma
 	cIdTipDok := idtipdok
@@ -228,17 +235,39 @@ do while !EOF()
 	seek cIdFirma+cIdtipdok+cBrDok
 
 	if found()
-		beep(1)
-		msg("U smecu se vec nalazi dokument " + ;
-			cIdFirma + "-" + cIdtipdok + "-" + ALLTRIM(cBrDok) )
-		closeret
+		// ima vec u smecu !
+		lFound := .t.
+		
+		if lSilent == .f.
+			msgbeep("U smecu vec postoji isti dokument !")
+			closeret
+		endif
+
 	endif
 
 	select pripr
+	
+	if lFound == .t.
+		
+		go (nRecNO)
+		// zamjeni brdok sa 00001-1
+		do while !EOF() .and. idfirma == cIdFirma ;
+				.and. idtipdok == cIdTipDok ;
+				.and. brdok == cBrDok
+
+			replace brdok with PADR(brdok, 5)+"-"+ALLTRIM(STR(nCount)) 
+			skip
+		enddo
+
+		go (nRecNo)
+
+	endif
+
 enddo
 
 select pripr
 go top
+
 
 select pripr9
 append from pripr
