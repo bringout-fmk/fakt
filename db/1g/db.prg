@@ -1310,6 +1310,12 @@ if (m1="X" .and. ImaSlovo("X",cSecur))
   	return DE_CONT
 endif
 
+if !(ImaPravoPristupa(goModul:oDataBase:cName,"DOK","BRISANJE" ))
+	MsgBeep(cZabrana)
+	return DE_CONT
+endif
+
+
 if Pitanje(, "Zelite li izbrisati pripremu !!????","N")=="D"
 	
    if gcF9usmece == "D"
@@ -1360,10 +1366,9 @@ if Pitanje(, "Zelite li izbrisati pripremu !!????","N")=="D"
 
    endif
 
-endif
 
-// logiraj ako je potrebno brisanje dokumenta iz pripreme !
-if Logirati(goModul:oDataBase:cName,"DOK","BRISANJE")
+   // logiraj ako je potrebno brisanje dokumenta iz pripreme !
+   if Logirati(goModul:oDataBase:cName,"DOK","BRISANJE")
 	
 	cOpis := "dokument: " + cIdFirma + "-" + cIdTipDok + "-" + ALLTRIM(cBrDok)
 
@@ -1371,6 +1376,8 @@ if Logirati(goModul:oDataBase:cName,"DOK","BRISANJE")
 		nil, nil, nil, nil, ;
 		"","", cOpis, DATE(), DATE(), "", ;
 		"Brisanje kompletnog dokumenta iz pripreme")
+   endif
+
 endif
 
 return

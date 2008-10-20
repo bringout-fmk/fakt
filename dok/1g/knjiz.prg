@@ -454,6 +454,12 @@ if m1="X" .and. ImaSlovo ("X", cSecur)   // pripr->m1
        Msg("Dokument izgenerisan, ne smije se brisati !!",0)
        return 0
 endif
+
+if !(ImaPravoPristupa(goModul:oDataBase:cName,"DOK","BRISANJE" ))
+	MsgBeep(cZabrana)
+	return 0
+endif
+	
 if Pitanje(,"Zelite izbrisati ovu stavku ?","D")=="D"
 	if (RecCount2 () == 1) .OR. JedinaStavka ()
         	SELECT DOKS
