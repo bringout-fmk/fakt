@@ -412,8 +412,11 @@ if (nArea==-1 .or. nArea==(F_FAKT))
 	if glDistrib
 		CREATE_INDEX("4","idfirma+idtipdok+dtos(datdok)+idrelac+marsruta+brdok+rbr",KUMPATH+"FAKT")
   		CREATE_INDEX("5","idfirma+idtipdok+dtos(datdok)+idrelac+iddist+idvozila+idroba",KUMPATH+"FAKT")
-  		CREATE_INDEX("6","idfirma+idpartner+idroba+idtipdok+dtos(datdok)",KUMPATH+"FAKT")
 	endif
+
+  	CREATE_INDEX("6","idfirma+idpartner+idroba+idtipdok+dtos(datdok)",KUMPATH+"FAKT")
+  	CREATE_INDEX("7","idfirma+idpartner+idroba+dtos(datdok)",KUMPATH+"FAKT")
+
 endif
 
 

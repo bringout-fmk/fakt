@@ -37,6 +37,8 @@ AADD(opc,"6. realizacija kumulativno po partnerima")
 AADD(opcexe,{|| RealPartn()})
 AADD(opc,"7. specifikacija prodaje")
 AADD(opcexe,{|| RealKol()})
+AADD(opc,"8. specifikacija prodaje po parternima ")
+AADD(opcexe,{|| spec_kol_partn()})
 
 if IsRudnik() 
 	AADD(opc,"R. rudnik")
