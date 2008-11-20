@@ -67,6 +67,7 @@ private nStrana:=0
 private cLinija
 private lGroup:=.f.
 private cRelation := SPACE(4)
+private cSvediJmj := "N"
 
 // da li se koriste relacije
 O_FAKT
@@ -175,6 +176,10 @@ Box("#SPECIFIKACIJA PRODAJE PO ARTIKLIMA",12,77)
 		
 		endif
 		
+		++nX
+
+		@ m_x + nX, m_y + 2 SAY "Svedi na jedinicu mjere ?" GET cSvediJmj VALID cSvediJmj $ "DN" PICT "@!"
+
 		nX := nX + 2
 		
 		@ m_x + nX, m_y+2 SAY "Export izvjestaja u DBF?" GET cExport VALID cExport $ "DN" PICT "@!"
@@ -282,6 +287,10 @@ else
 	cLinija:="---- ----------- "+REPL("-",40)+" ------------ ------------"
 endif
 
+if cSvediJmj == "D"
+	cLinija += " ------------"
+endif
+
 cIdPartner:=idPartner
 
 zagl_sp_prod()
@@ -297,7 +306,7 @@ if cPrikaz=="1"
 	do while !eof() .and. IdFirma=cIdFirma
     		
 		nKolicina:=0
-    		cIdPartner:=IdPartner
+		cIdPartner:=IdPartner
     		
 		do while !eof() .and. IdFirma=cIdFirma .and. idpartner==cIdpartner
       			if lOpcine
@@ -310,8 +319,10 @@ if cPrikaz=="1"
         			endif
       			endif
       			
-			nKolicina+=kolicina
-      			skip 1
+			nKolicina += kolicina
+      			
+			
+			skip 1
 			
 		enddo
 
@@ -343,6 +354,7 @@ else
   	nC:=0
   	nCol1:=10
 	nTKolicina:=0
+	nTKolJmj := 0
 	nTIznos:=0
 	nCounter:=0
 	nMX:=0
@@ -358,9 +370,10 @@ else
 	
 	do while !eof()
 	
-    		nKolicina:=0
-		nIznos:=0
-   		cIdRoba:=IdRoba
+    		nKolicina := 0
+		nKolJmj := 0
+		nIznos := 0
+   		cIdRoba := IdRoba
 		
 		if IsPlanika()
 			select roba
@@ -406,11 +419,18 @@ else
 				endif
 			endif
      			
-			nKolicina+=kolicina
+			nKolicina += kolicina
 			
-			nIznos+=ROUND( kolicina * Cijena * (1-Rabat/100) * (1+Porez/100) ,ZAOKRUZENJE)
+			if cSvediJmj == "D"
+				
+				cJmj := ""
+				nKolJmj += SJMJ(kolicina, idroba, @cJmj )
+			
+			endif
+			
+			nIznos += ROUND( kolicina * Cijena * (1-Rabat/100) * (1+Porez/100) ,ZAOKRUZENJE)
 		
-			++nCounter
+			++ nCounter
 			
 			// ispisi progres u box-u
 			if nCounter % 50 == 0
@@ -436,9 +456,14 @@ else
 			?? STR(++nC,4)+".", cIdRoba, LEFT(roba->naz,40)
       			nCol1:=PCol()+1
       			@ prow(),PCol()+1 SAY STR(nKolicina,12,2)
-      			@ prow(),PCol()+1 SAY STR(nIznos,12,2)
+      			if cSvediJmj == "D"
+      				@ prow(),PCol()+1 SAY STR(nKolJmj,12,2)
+				nTKolJmj += nKolJmj
+			endif
+			@ prow(),PCol()+1 SAY STR(nIznos,12,2)
       			nTKolicina+=nKolicina
 			nTIznos+=nIznos
+			
     		endif
 		
 		if lExpRpt
@@ -462,6 +487,9 @@ endif
 ? space(gnLMarg)
 ?? " Ukupno"
 @ prow(),nCol1 SAY STR(nTKolicina,12,2)
+if cSvediJmj == "D"
+	@ prow(),pcol()+1 SAY STR(nTKolJmj,12,2)
+endif
 @ prow(),pcol()+1 SAY STR(nTIznos,12,2)
 ? space(gnLMarg)
 ?? cLinija
@@ -546,7 +574,11 @@ if cPrikaz=="1"
 	?? " Rbr  Sifra     Partner                  Kolicina                           "
 else
 	? SPACE(gnLMarg)
-	?? " Rbr  Sifra      " + PADC("Naziv", 40) + "   Kolicina       Iznos   "
+	?? " Rbr  Sifra      " + ;
+		PADC("Naziv", 40) + ;
+		"   Kolicina   " + ;
+		if(cSvediJmj == "D", "  Kol.po jmj ", "" )+ ;
+		"    Iznos   "
 endif
 
 ? SPACE(gnLMarg)
