@@ -157,6 +157,10 @@ local nPom2
 local nPom3
 local nPom4
 local nPom5
+local cC1 := "" 
+local cC2 := ""
+local cC3 := ""
+local cOpis := ""
 
 // ako je kupac pdv obveznik, ova varijable je .t.
 local lPdvObveznik := .f.
@@ -228,8 +232,6 @@ nUkKol := 0
 DEC_CIJENA(ZAO_CIJENA())
 DEC_VRIJEDNOST(ZAO_VRIJEDNOST())
 
-altd()
-
 lIno:=.f.
 do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==cBrDok
 	// Nastimaj (hseek) Sifr.Robe Na Pripr->IdRoba
@@ -284,6 +286,13 @@ do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==c
 	
 	cIdPartner = pripr->IdPartner
 	
+	if pripr->(FIELDPOS("C1")) <> 0
+		cC1 := pripr->c1
+		cC2 := pripr->c2
+		cC3 := pripr->c3
+		cOpis := pripr->opis
+	endif
+
 	// rn Veleprodaje
 	if cIdTipDok $ "10#20#22"
 		// ino faktura
@@ -411,7 +420,7 @@ do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==c
 	endif
 	
 	
-	add_rn(cBrDok, cRbr, cPodBr, cIdRoba, cRobaNaz, cJmj, nKol, nCjPDV, nCjBPDV, nCj2PDV, nCj2BPDV, nPopust, nPPDV, nVPDV, nUkStavka, nPopNaTeretProdavca, nVPopNaTeretProdavca )
+	add_rn(cBrDok, cRbr, cPodBr, cIdRoba, cRobaNaz, cJmj, nKol, nCjPDV, nCjBPDV, nCj2PDV, nCj2BPDV, nPopust, nPPDV, nVPDV, nUkStavka, nPopNaTeretProdavca, nVPopNaTeretProdavca, cC1, cC2, cC3, cOpis )
 
 	select pripr
 	skip
