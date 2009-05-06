@@ -1118,11 +1118,21 @@ do while !eof()
 	go top
 	seek rugov->id
   	
-	if field->aktivan != "D" .or. !(&aUPart)
-    		select rugov
-		skip 1
-		loop
-  	endif
+
+	// stampati samo ugovore kod kojih je LAB_PRN <> "N"
+	if ugov->(FIELDPOS("LAB_PRN")) <> 0
+		if field->lab_prn == "N" .or. !(&aUPart) 
+			select rugov
+			skip 1
+			loop
+		endif
+	else
+		if field->aktivan != "D" .or. !(&aUPart)
+    			select rugov
+			skip 1
+			loop
+  		endif
+	endif
 	
   	select partn
 	seek ugov->idpartner
