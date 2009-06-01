@@ -552,6 +552,12 @@ public gcF9USmece := "N"
 // time-out kod azuriranja
 public gAzurTimeOut := 150
 
+// fiskalni stampac
+public gFiscal := "N"
+public gFD_path := PADR("c:\fiscal\out\", 150)
+public gFFPitanje := "D"
+public gF_timeo := 2
+
 O_PARAMS
 private cSection:="1"
 public cHistory:=" "
@@ -693,6 +699,13 @@ RPar("s1", @gShSld)
 RPar("s2", @gFinKtoDug)
 RPar("s3", @gFinKtoPot)
 RPar("s4", @gShSldVar)
+
+cSection := "F"
+RPar("f1", @gFiscal)
+RPar("f2", @gFD_path)
+RPar("f3", @gFFpitanje)
+RPar("f4", @gF_timeo)
+
 
 cSection := "1"
 // varijable PDV

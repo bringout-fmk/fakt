@@ -79,6 +79,10 @@ if gVarC $ "123"
 	cTipVPC:=IzFmkIni("FAKT","TekVPC","1", SIFPATH)
 endif
 
+lFisMark := .f.
+cFFirma := field->idfirma
+cFTipDok := field->idtipdok
+cFBrDok := field->brdok
 
 Box(,21,77)
 TekDokument()
@@ -218,6 +222,7 @@ local nTr2
 local cPom
 local cENTER:=chr(K_ENTER)+chr(K_ENTER)+chr(K_ENTER)
 
+	
 if (Ch==K_ENTER  .and. Empty(BrDok) .and. EMPTY(rbr))
 	return DE_CONT
 endif
@@ -226,6 +231,30 @@ TekDokument()
 
 select pripr
 do case
+	case lFisMark == .t.
+	
+		lFisMark := .f.
+
+		if gFFPitanje == "D" .and. ;
+			Pitanje(,"Odstampati racun na fiskalni printer ?", "D") == "N"
+			return DE_CONT
+		endif
+
+		msgo("stampa na fiskalni printer u toku...")
+
+		altd()
+
+		// send nivel to fiscal printer
+		ni_to_fiscal( cFFirma, cFTipDok, cFBrDok )
+		
+		// time out
+		sleep( gF_timeo )
+
+		// send invoice to fiscal printer
+        	rn_to_fiscal( cFFirma, cFTipDok, cFBrDok )
+		
+		msgc()
+	
 	case (Ch==K_CTRL_T .or. (Ch=K_DEL .and. gTBDir=="D"))
      		if BrisiStavku()==1
      			return DE_REFRESH
@@ -281,14 +310,26 @@ do case
         	O_Edit()
         	return DE_REFRESH
 	case Ch=K_ALT_A
-        	if !CijeneOK("Azuriranje")
+
+		// setuj podatke za fiskalni racun
+		cFFirma := field->idfirma
+		cFTipDok := field->idtipdok
+		cFBrDok := field->brdok
+
+		if !CijeneOK("Azuriranje")
            		return DE_REFRESH
         	endif
         	CLOSE ALL
         	Azur()
 		lDirty:=.t.
         	O_Edit()
-        	return DE_REFRESH
+	
+		if gFiscal == "D"
+			lFisMark := .t.			
+		endif
+		
+		return DE_REFRESH
+
 	case Ch==K_CTRL_F9
 		BrisiPripr()
 		lDirty:=.t.
@@ -440,6 +481,220 @@ do case
 endcase
 
 return DE_CONT
+
+
+
+// ------------------------------------------------
+// vraca sifru dobavljaca
+// ------------------------------------------------
+static function _g_sdob( cIdRoba )
+local nRet := 0
+local nTArea := SELECT()
+select roba
+seek cIdRoba
+
+if FOUND()
+	nRet := VAL( ALLTRIM( field->sifradob ) )
+endif
+
+select (nTArea)
+return nRet
+
+
+// ------------------------------------------------------
+// posalji nivelaciju na fiskalni stampac
+// ------------------------------------------------------
+static function ni_to_fiscal( cFirma, cTipDok, cBrDok )
+local aItems := {}
+local aSem_data := {}
+
+// ako se ne koristi opcija fiscal, izadji !
+if gFiscal == "N"
+	return
+endif
+
+select doks
+seek cFirma+cTipDok+cBrDok
+
+nBrDok := VAL(ALLTRIM(field->brdok))
+nSemCmd := 3
+
+select fakt
+seek cFirma+cTipDok+cBrDok
+
+// upisi u [items] stavke
+do while !EOF() .and. field->idfirma == cFirma ;
+	.and. field->idtipdok == cTipDok ;
+	.and. field->brdok == cBrDok
+
+	// nastimaj se na robu ...
+	select roba
+	seek fakt->idroba
+	
+	select fakt
+
+	nSifRoba := _g_sdob( field->idroba )
+	cNazRoba := ALLTRIM( roba->naz )
+	cBarKod := ALLTRIM( roba->barkod )
+	nGrRoba := 1
+	nPorStopa := 0
+	nR_cijena := ABS( field->cijena )
+
+	AADD( aItems, { nBrDok , ;
+			nSifRoba, ;
+			cNazRoba, ;
+			cBarKod, ;
+			nGrRoba, ;
+			nPorStopa, ;
+			nR_cijena } )
+
+	skip
+enddo
+
+// broj reklamnog racuna
+nRekl_rn := 0
+// print memo od - do
+nPrMemoOd := 0
+nPrMemoDo := 0
+nPartnId := 0
+
+// upisi stavke za [semafor]
+AADD( aSem_data, { nBrDok, ;
+		nSemCmd, ;
+		nPrMemoOd, ;
+		nPrMemoDo, ;
+		nPartnId, ;
+		nRekl_rn })
+
+// nivelacija
+// posalji na fiskalni stampac...
+	
+fisc_nivel( gFD_path, aItems, aSem_data )
+
+return
+
+
+
+
+// ------------------------------------------------------
+// posalji racun na fiskalni stampac
+// ------------------------------------------------------
+static function rn_to_fiscal( cFirma, cTipDok, cBrDok )
+local aItems := {}
+local aTxt := {}
+local aPla_data := {}
+local aSem_data := {}
+
+// ako se ne koristi opcija fiscal, izadji !
+if gFiscal == "N"
+	return
+endif
+
+select doks
+seek cFirma+cTipDok+cBrDok
+
+nBrDok := VAL(ALLTRIM(field->brdok))
+nTotal := field->iznos
+nPartnId := 0
+nSemCmd := 0
+
+// 1 - maloprodaja
+// 2 - veleprodaja
+
+if cTipDok $ "10#"
+	nTipRac := 2
+	nPartnId := VAL( ALLTRIM( doks->idpartner) )
+	nSemCmd := 20
+elseif cTipDok $ "11#"
+	nTipRac := 1
+endif
+
+select fakt
+seek cFirma+cTipDok+cBrDok
+
+// upisi u [items] stavke
+do while !EOF() .and. field->idfirma == cFirma ;
+	.and. field->idtipdok == cTipDok ;
+	.and. field->brdok == cBrDok
+
+	// nastimaj se na robu ...
+	select roba
+	seek fakt->idroba
+	
+	select fakt
+
+	nSt_Id := 0
+	if field->kolicina < 0
+		nSt_id := 1
+	endif
+	
+	nSifRoba := _g_sdob( field->idroba )
+	cNazRoba := ALLTRIM( roba->naz )
+	cBarKod := ALLTRIM( roba->barkod )
+	nGrRoba := 1
+	nPorStopa := 0
+	nR_cijena := ABS( field->cijena )
+	nR_kolicina := ABS( field->kolicina )
+
+	AADD( aItems, { nBrDok , ;
+			nTipRac, ;
+			nSt_id, ;
+			nSifRoba, ;
+			cNazRoba, ;
+			cBarKod, ;
+			nGrRoba, ;
+			nPorStopa, ;
+			nR_cijena, ;
+			nR_kolicina } )
+
+	skip
+enddo
+
+// tip placanja
+// 0 - gotovina
+// 1 - cek
+// 2 - kartica
+// 3 - virman
+
+// upisi u [pla_data] stavke
+AADD( aPla_data, { nBrDok, ;
+		nTipRac, ;
+		0, ;
+		nTotal, ;
+		nTotal, ;
+		0 })
+
+// broj reklamnog racuna
+nRekl_rn := 0
+// print memo od - do
+nPrMemoOd := 0
+nPrMemoDo := 0
+
+// upisi stavke za [semafor]
+AADD( aSem_data, { nBrDok, ;
+		nSemCmd, ;
+		nPrMemoOd, ;
+		nPrMemoDo, ;
+		nPartnId, ;
+		nRekl_rn })
+
+
+if nTipRac = 2
+	
+	// veleprodaja
+	// posalji na fiskalni stampac...
+	
+	fisc_v_rn( gFD_path, aItems, aTxt, aPla_data, aSem_data )
+
+elseif nTipRac == 1
+	
+	// maloprodaja
+	// posalji na fiskalni stampac
+	fisc_m_rn( gFD_path, aItems, aTxt, aPla_data, aSem_data )
+
+endif
+
+return
 
 
 

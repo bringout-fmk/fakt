@@ -66,15 +66,72 @@ endif
 AADD(opc,"8. parametri stampaca                          ")
 AADD(opcexe,{|| PushWa(), PPrint(), PopWa() })
 
+
 if IsRabati()
 	AADD(opc,"9. rabatne skale            ")
 	AADD(opcexe,{|| PRabat()})
 endif
 
+AADD(opc,"F. parametri fiskalnog stampaca  ")
+AADD(opcexe,{|| fisc_param() })
+
+
 Menu_SC("parf")
 
 return nil 
 
+// ---------------------------------------------
+// parametri fiskalnog stampaca
+// ---------------------------------------------
+
+function fisc_param()
+private cSection:="F"
+private cHistory:=" "
+private aHistory:={}
+private GetList:={}
+
+O_PARAMS
+
+Box(,10,77,.f.,"PARAMETRI FISKALNOG STMPACA")
+
+	nX := 1
+
+	@ m_x+nX, m_y+2 SAY "Ispis racuna na fiskalni stampac ?" GET gFiscal ;
+		VALID gFiscal $ "DN" PICT "@!"
+
+	read
+
+	if gFiscal == "D"
+	
+		nX += 2
+
+		@ m_x+nX, m_y+2 SAY "Direktorij txt fajlova:" GET gFD_path ;
+			VALID !EMPTY(gFD_path)
+		
+		++ nX
+
+		@ m_x+nX, m_y+2 SAY "Timeout izmedju fiskalnih operacija:" GET gF_timeo ;
+			PICT "9999.99"
+	
+		++ nX
+
+		@ m_x+nX, m_y+2 SAY "Pitanje prije stampe ?" GET gFFPitanje ;
+			VALID gFFpitanje $ "DN" PICT "@!"
+	
+	
+  		read
+	endif
+
+BoxC()
+
+if (LASTKEY() <> K_ESC)
+	Wpar("f1",gFiscal)
+   	Wpar("f2",gFD_path)
+   	Wpar("f3",gFFpitanje)
+   	Wpar("f4",gF_timeo)
+endif
+
+return 
 
 
 /*! \fn SetRazno()

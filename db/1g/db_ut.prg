@@ -126,3 +126,160 @@ MsgBeep("Vrijeme izvrsenja:" + STR( SECONDS()-nSeconds ) )
 return
 
 
+// --------------------------------------------------
+// inicijalizacija fiskalnih tabela - sifrarnika
+// --------------------------------------------------
+function ffisc_init()
+local aRoba := {}
+local aRobaGr := {}
+local aPartn := {}
+local aPor := {}
+local aObj := {}
+local aOper := {}
+
+msgo("inicijalizacija u toku...")
+
+// init - porez
+aPor := _f_por_init()
+
+// init - roba grupe
+aRobaGr := _f_rg_init()
+
+// init - roba
+aRoba := _f_ro_init( .t. )
+
+// init - partneri
+aPartn := _f_pa_init()
+
+// init - objekti
+aObj := _f_ob_init()
+
+// init - operater
+aOper := _f_op_init()
+
+// napravi inicijalizaciju u txt fajlove
+fisc_init( gFD_path, aPor, aRoba, aRobaGr, aPartn, aObj, aOper )
+
+msgc()
+
+return
+
+
+
+// -------------------------------------------
+// operateri, inicijalizacija
+// -------------------------------------------
+function _f_op_init()
+local aRet := {}
+
+AADD( aRet, { 0, "operater", "" })
+
+return aRet 
+
+
+
+// -------------------------------------------
+// objekti, inicijalizacija
+// -------------------------------------------
+function _f_ob_init()
+local aRet := {}
+
+AADD( aRet, { 0, "", "", "", "", "" })
+
+return aRet 
+
+
+// -------------------------------------------
+// grupe robe, inicijalizacija
+// -------------------------------------------
+function _f_rg_init()
+local aRet := {}
+
+AADD( aRet, { 0, "grupa 0" })
+
+return aRet 
+
+
+// -------------------------------------------
+// poreske stope inicijalizacija
+// -------------------------------------------
+function _f_por_init()
+local aRet := {}
+
+AADD( aRet, { 0, "A", 17.00 })
+
+return aRet 
+
+
+// -----------------------------------------
+// roba - inicijalizacija
+// -----------------------------------------
+function _f_ro_init( lSifDob )
+local aRet := {}
+local nTArea := SELECT()
+local nRobaGr := 0
+local nPorSt := 0
+
+if lSifDob == nil
+	lSifDob := .t.
+endif
+
+O_ROBA
+select roba
+go top
+do while !EOF()
+	
+	if lSifDob == .t. .and. EMPTY(field->sifradob) 
+		skip
+		loop
+	endif
+	
+	nRobaGr := 0
+	nPorSt := 0
+
+	AADD( aRet, { ;
+		VAL(ALLTRIM(field->sifradob)), ;
+		ALLTRIM(field->naz), ;
+		ALLTRIM(field->barkod), ;
+		nRobaGr, ;
+		nPorSt, ;
+		field->vpc } )
+
+	skip
+
+enddo
+
+select (nTArea)
+return aRet 
+
+
+// -----------------------------------------
+// partn - inicijalizacija
+// -----------------------------------------
+function _f_pa_init()
+local aRet := {}
+local nTArea := SELECT()
+
+O_PARTN
+select partn
+go top
+
+do while !EOF()
+	
+	AADD( aRet, { ;
+		VAL(ALLTRIM(field->id)), ;
+		ALLTRIM(field->naz), ;
+		ALLTRIM(field->adresa), ;
+		"", ;
+		"", ;
+		IzSifK( "PARTN", "REGB", field->id ) } )
+
+	skip
+
+enddo
+
+select (nTArea)
+return aRet 
+
+
+

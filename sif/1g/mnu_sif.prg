@@ -51,6 +51,12 @@ if IsUgovori()
 	AADD(opcexe,{|| o_ugov(), SifUgovori()})
 endif
 
+if gFiscal == "D"
+	AADD(opc,"I. fiscal : inicijalizacija")
+	AADD(opcexe,{|| ffisc_init() })
+endif
+
+
 Menu_SC("fsif")
 return
 *}
