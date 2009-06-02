@@ -315,7 +315,7 @@ if cTabela=="D"
    Box(,21,72)
    @ m_x+19,m_y+2 SAY " <ENTER> Stampa dokumenta        ³ <P> Povrat dokumenta u pripremu    ³"
    @ m_x+20,m_y+2 SAY " <N>     Stampa narudzbenice     ³ <B> Stampa radnog naloga           ³ "
-   @ m_x+21,m_y+2 SAY " <R>     Rezervacija/Realizacija ³"
+   @ m_x+21,m_y+2 SAY " <S>     Storno dokument         ³ <R> Rezervacija/Realizacija        ³"
    fUPripremu:=.f.
 
    adImeKol:={}
@@ -343,7 +343,7 @@ if cTabela=="D"
                    {|| .t.}, {|| P_Firma(@widpartner)}, "V" }
    adKol:={}; for i:=1 to len(adImeKol); AADD(adKol,i); next
 
-   ObjDbedit("",20,72,{|| EdDatn()},"",SPACE(35) + "Lista dokumenata...", , , , ,2)
+   ObjDbedit("",20,72,{|| EdDatn()},"","", , , , ,2)
    BoxC()
    if fupripremu
      close all
@@ -832,7 +832,19 @@ do case
      
   case Ch==K_ENTER .and. gTBDir=="N"
      nRet:=pr_pf()
+    
+  case chr(Ch) $ "sS"
+
+     // generisi storno dokument
+     storno_dok( field->idfirma, field->idtipdok, field->brdok )
      
+     if Pitanje(,"Preci u tabelu pripreme ?","D")=="D"
+          fUPripremu:=.t.
+          nRet:=DE_ABORT
+     else
+     	  nRet := DE_CONT
+     endif
+
   case chr(Ch) $ "bB"
      nRet:=pr_rn()  
      

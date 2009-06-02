@@ -205,7 +205,7 @@ if lSilent == nil
 	lSilent := .f.
 endif
 
-if lSilent == .f. .and. Pitanje("p1", "Zelice li dokument prebaciti u smece (D/N) ?", "D" ) == "N"
+if lSilent == .f. .and. Pitanje("p1", "Zelite li dokument prebaciti u smece (D/N) ?", "D" ) == "N"
 	return
 endif
 

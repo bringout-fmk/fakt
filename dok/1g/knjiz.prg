@@ -501,6 +501,19 @@ select (nTArea)
 return nRet
 
 
+// ------------------------------------------------
+// vraca sifru partnera
+// ------------------------------------------------
+static function _g_spart( cIdPartn )
+local nRet := 0
+local cTmp
+
+cTmp := RIGHT( ALLTRIM( cIdPartn ), 5 )
+nRet := VAL( cTmp )
+
+return nRet
+
+
 // ------------------------------------------------------
 // posalji nivelaciju na fiskalni stampac
 // ------------------------------------------------------
@@ -584,6 +597,8 @@ local aItems := {}
 local aTxt := {}
 local aPla_data := {}
 local aSem_data := {}
+local lStorno := .f.
+local aMemo := {}
 
 // ako se ne koristi opcija fiscal, izadji !
 if gFiscal == "N"
@@ -595,22 +610,79 @@ seek cFirma+cTipDok+cBrDok
 
 nBrDok := VAL(ALLTRIM(field->brdok))
 nTotal := field->iznos
-nPartnId := 0
-nSemCmd := 0
-
-// 1 - maloprodaja
-// 2 - veleprodaja
-
-if cTipDok $ "10#"
-	nTipRac := 2
-	nPartnId := VAL( ALLTRIM( doks->idpartner) )
-	nSemCmd := 20
-elseif cTipDok $ "11#"
-	nTipRac := 1
-endif
 
 select fakt
 seek cFirma+cTipDok+cBrDok
+
+nTRec := RECNO()
+
+// da li se radi o storno racunu ?
+do while !EOF() .and. field->idfirma == cFirma ;
+	.and. field->idtipdok == cTipDok ;
+	.and. field->brdok == cBrDok
+
+	if field->kolicina < 0
+		lStorno := .t.
+		exit
+	endif
+	
+	skip
+
+enddo
+
+// nTipRac = 1 - maloprodaja
+// nTipRac = 2 - veleprodaja
+
+// nSemCmd = semafor komanda
+//           0 - stampa mp racuna
+//           1 - stampa storno mp racuna
+//           20 - stampa vp racuna
+//           21 - stampa storno vp racuna
+
+nSemCmd := 0
+nPartnId := 0
+
+if cTipDok $ "10#"
+
+	// veleprodajni racun
+
+	nTipRac := 2
+	
+	// daj mi partnera za ovu fakturu
+	nPartnId := _g_spart( doks->idpartner )
+	
+	// stampa vp racuna
+	nSemCmd := 20
+
+	if lStorno == .t.
+		// stampa storno vp racuna
+		nSemCmd := 21
+	endif
+
+elseif cTipDok $ "11#"
+	
+	// maloprodajni racun
+
+	nTipRac := 1
+
+	// nema parnera
+	nPartnId := 0
+
+	// stampa mp racuna
+	nSemCmd := 0
+
+	if lStorno == .t.
+		// stampa storno mp racuna
+		nSemCmd := 1
+	endif
+
+endif
+
+// vrati se opet na pocetak
+go (nTRec)
+
+// memo za footer racuna
+aMemo := ParsMemo( field->txt )
 
 // upisi u [items] stavke
 do while !EOF() .and. field->idfirma == cFirma ;
@@ -623,7 +695,9 @@ do while !EOF() .and. field->idfirma == cFirma ;
 	
 	select fakt
 
+	// storno identifikator
 	nSt_Id := 0
+
 	if field->kolicina < 0
 		nSt_id := 1
 	endif
@@ -651,18 +725,39 @@ do while !EOF() .and. field->idfirma == cFirma ;
 enddo
 
 // tip placanja
+// --------------------
 // 0 - gotovina
 // 1 - cek
 // 2 - kartica
 // 3 - virman
 
+nTipPla := 0
+
+// povrat novca
+nPovrat := 0
+
+// uplaceno novca
+nUplaceno := nTotal
+
 // upisi u [pla_data] stavke
 AADD( aPla_data, { nBrDok, ;
 		nTipRac, ;
-		0, ;
-		nTotal, ;
-		nTotal, ;
-		0 })
+		nTipPla, ;
+		ABS(nTotal), ;
+		ABS(nUplaceno), ;
+		ABS(nPovrat) })
+
+// RACUN.MEM data
+//if LEN(aMemo) > 0
+	
+//	AADD( aTxt, aMemo[2] )
+	
+//	if LEN(aMemo) >= 4
+//		AADD( aTxt, aMemo[3] )
+//		AADD( aTxt, aMemo[4] )
+//	endif
+//endif
+
 
 // broj reklamnog racuna
 nRekl_rn := 0
@@ -690,6 +785,7 @@ elseif nTipRac == 1
 	
 	// maloprodaja
 	// posalji na fiskalni stampac
+	
 	fisc_m_rn( gFD_path, aItems, aTxt, aPla_data, aSem_data )
 
 endif

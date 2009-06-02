@@ -1446,6 +1446,71 @@ MsgBeep("Formirana je dodatna stavka. Vratite se tipkom <Esc> u pripremu"+"#i pr
 CLOSERET
 
 
+// ---------------------------------------------------
+// generisi storno dokument u pripremi
+// ---------------------------------------------------
+function storno_dok( cIdFirma, cIdTipDok, cBrDok )
+local cNoviBroj 
+
+if Pitanje(,"Formirati storno dokument ?","D") == "N"
+	return
+endif
+
+O_PRIPR
+select pripr
+
+if pripr->(RECCOUNT2()) <> 0
+	msgbeep("Priprema nije prazna !!!")
+	return
+endif
+
+
+O_FAKT
+O_DOKS
+O_ROBA
+O_PARTN
+
+// daj novi broj fakture
+cNoviBroj := FaNoviBroj( cIdFirma, cIdTipDok )
+nCnt := 0
+
+select fakt
+set order to tag "1"
+go top
+seek cIdFirma + cIdTipDok + cBrDok
+
+do while !EOF() .and. field->idfirma == cIdFirma ;
+		.and. field->idtipdok == cIdTipDok ;
+		.and. field->brdok == cBrDok
+	
+	
+	scatter()
+
+	select pripr
+	append blank
+	
+	gather()
+
+	replace field->kolicina with ( field->kolicina * -1 )
+	replace field->brdok with cNoviBroj
+	replace field->datdok with DATE()
+
+	select fakt
+	skip
+
+	++ nCnt
+
+enddo
+
+if nCnt > 0
+	msgbeep("Formiran je dokument " + cIdFirma + "-" + ;
+		cIdTipDok + "-" + ALLTRIM(cNoviBroj) + ;
+		" u pripremi !")
+endif
+
+return
+
+
 
 
 
