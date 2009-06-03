@@ -1470,8 +1470,7 @@ O_DOKS
 O_ROBA
 O_PARTN
 
-// daj novi broj fakture
-cNoviBroj := FaNoviBroj( cIdFirma, cIdTipDok )
+cNoviBroj := ALLTRIM(cBrDok) + "/S"
 nCnt := 0
 
 select fakt

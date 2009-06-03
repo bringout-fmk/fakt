@@ -245,7 +245,7 @@ do case
 		altd()
 
 		// send nivel to fiscal printer
-		ni_to_fiscal( cFFirma, cFTipDok, cFBrDok )
+		//ni_to_fiscal( cFFirma, cFTipDok, cFBrDok )
 		
 		// time out
 		sleep( gF_timeo )
@@ -597,8 +597,12 @@ local aItems := {}
 local aTxt := {}
 local aPla_data := {}
 local aSem_data := {}
-local lStorno := .f.
+local lStorno := .t.
 local aMemo := {}
+local nBrDok
+local nReklRn := 0
+local cStPatt := "/S"
+local GetList := {}
 
 // ako se ne koristi opcija fiscal, izadji !
 if gFiscal == "N"
@@ -608,8 +612,22 @@ endif
 select doks
 seek cFirma+cTipDok+cBrDok
 
+// ako je storno racun ...
+if cStPatt $ ALLTRIM(field->brdok)
+	nReklRn := VAL( STRTRAN( ALLTRIM(field->brdok), cStPatt, "" ))	
+endif
+
 nBrDok := VAL(ALLTRIM(field->brdok))
 nTotal := field->iznos
+nNRekRn := 0
+
+if nReklRn <> 0
+	Box(,1,60)
+		@ m_x + 1, m_y + 2 SAY "Broj rekl.racuna:" ;
+			GET nNRekRn PICT "99999"
+		read
+	BoxC()
+endif
 
 select fakt
 seek cFirma+cTipDok+cBrDok
@@ -621,8 +639,8 @@ do while !EOF() .and. field->idfirma == cFirma ;
 	.and. field->idtipdok == cTipDok ;
 	.and. field->brdok == cBrDok
 
-	if field->kolicina < 0
-		lStorno := .t.
+	if field->kolicina > 0
+		lStorno := .f.
 		exit
 	endif
 	
@@ -681,9 +699,6 @@ endif
 // vrati se opet na pocetak
 go (nTRec)
 
-// memo za footer racuna
-aMemo := ParsMemo( field->txt )
-
 // upisi u [items] stavke
 do while !EOF() .and. field->idfirma == cFirma ;
 	.and. field->idtipdok == cTipDok ;
@@ -698,7 +713,7 @@ do while !EOF() .and. field->idfirma == cFirma ;
 	// storno identifikator
 	nSt_Id := 0
 
-	if field->kolicina < 0
+	if ( field->kolicina < 0 ) .and. lStorno == .f.
 		nSt_id := 1
 	endif
 	
@@ -748,22 +763,13 @@ AADD( aPla_data, { nBrDok, ;
 		ABS(nPovrat) })
 
 // RACUN.MEM data
-//if LEN(aMemo) > 0
-	
-//	AADD( aTxt, aMemo[2] )
-	
-//	if LEN(aMemo) >= 4
-//		AADD( aTxt, aMemo[3] )
-//		AADD( aTxt, aMemo[4] )
-//	endif
-//endif
+AADD( aTxt, { "fakt: " + cTipDok + "-" + cBrDok } )
 
-
-// broj reklamnog racuna
-nRekl_rn := 0
+// reklamni racun uzmi sa box-a
+nReklRn := nNRekRn
 // print memo od - do
-nPrMemoOd := 0
-nPrMemoDo := 0
+nPrMemoOd := 1
+nPrMemoDo := 1
 
 // upisi stavke za [semafor]
 AADD( aSem_data, { nBrDok, ;
@@ -771,7 +777,7 @@ AADD( aSem_data, { nBrDok, ;
 		nPrMemoOd, ;
 		nPrMemoDo, ;
 		nPartnId, ;
-		nRekl_rn })
+		nReklRn })
 
 
 if nTipRac = 2
@@ -781,7 +787,7 @@ if nTipRac = 2
 	
 	fisc_v_rn( gFD_path, aItems, aTxt, aPla_data, aSem_data )
 
-elseif nTipRac == 1
+elseif nTipRac = 1
 	
 	// maloprodaja
 	// posalji na fiskalni stampac

@@ -172,7 +172,7 @@ return
 function _f_op_init()
 local aRet := {}
 
-AADD( aRet, { 0, "operater", "" })
+AADD( aRet, { 1, "operater 1", "" })
 
 return aRet 
 
@@ -184,7 +184,7 @@ return aRet
 function _f_ob_init()
 local aRet := {}
 
-AADD( aRet, { 0, "", "", "", "", "" })
+AADD( aRet, { 1, "objekat 1", "", "", "", "" })
 
 return aRet 
 
@@ -195,7 +195,7 @@ return aRet
 function _f_rg_init()
 local aRet := {}
 
-AADD( aRet, { 0, "grupa 0" })
+AADD( aRet, { 1, "grupa 1" })
 
 return aRet 
 
@@ -233,8 +233,14 @@ do while !EOF()
 		skip
 		loop
 	endif
+
+	// ako mpc nije definisana - preskoci
+	if field->mpc = 0
+		skip
+		loop
+	endif
 	
-	nRobaGr := 0
+	nRobaGr := 1
 	nPorSt := 0
 
 	AADD( aRet, { ;
@@ -243,7 +249,7 @@ do while !EOF()
 		ALLTRIM(field->barkod), ;
 		nRobaGr, ;
 		nPorSt, ;
-		field->vpc } )
+		field->mpc } )
 
 	skip
 
@@ -266,13 +272,19 @@ go top
 
 do while !EOF()
 	
+	cPId := field->id
+
+	cREGB := IzSifK("PARTN", "REGB", cPId )
+	
+	select partn
+
 	AADD( aRet, { ;
 		VAL(ALLTRIM(field->id)), ;
 		ALLTRIM(field->naz), ;
 		ALLTRIM(field->adresa), ;
 		"", ;
 		"", ;
-		IzSifK( "PARTN", "REGB", field->id ) } )
+		cREGB } )
 
 	skip
 
