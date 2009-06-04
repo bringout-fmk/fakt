@@ -623,8 +623,8 @@ nNRekRn := 0
 
 if nReklRn <> 0
 	Box(,1,60)
-		@ m_x + 1, m_y + 2 SAY "Broj rekl.racuna:" ;
-			GET nNRekRn PICT "99999"
+		@ m_x + 1, m_y + 2 SAY "Broj rekl.fiskalnog racuna:" ;
+			GET nNRekRn PICT "99999" VALID ( nNRekRn > 0 )
 		read
 	BoxC()
 endif
@@ -748,18 +748,24 @@ enddo
 
 nTipPla := 0
 
-// povrat novca
-nPovrat := 0
-
-// uplaceno novca
-nUplaceno := nTotal
+if lStorno == .f.
+	// povrat novca
+	nPovrat := 0	
+	// uplaceno novca
+	nUplaceno := nTotal
+else
+	// povrat novca
+	nPovrat := nTotal	
+	// uplaceno novca
+	nUplaceno := 0
+endif
 
 // upisi u [pla_data] stavke
 AADD( aPla_data, { nBrDok, ;
 		nTipRac, ;
 		nTipPla, ;
-		ABS(nTotal), ;
 		ABS(nUplaceno), ;
+		ABS(nTotal), ;
 		ABS(nPovrat) })
 
 // RACUN.MEM data
