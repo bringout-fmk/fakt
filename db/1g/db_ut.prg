@@ -206,7 +206,8 @@ return aRet
 function _f_por_init()
 local aRet := {}
 
-AADD( aRet, { 0, "A", 17.00 })
+AADD( aRet, { 0, "A", 00.00 })
+AADD( aRet, { 1, "E", 17.00 })
 
 return aRet 
 
@@ -241,7 +242,7 @@ do while !EOF()
 	endif
 	
 	nRobaGr := 1
-	nPorSt := 0
+	nPorSt := 1
 
 	AADD( aRet, { ;
 		VAL(ALLTRIM(field->sifradob)), ;

@@ -242,13 +242,11 @@ do case
 
 		msgo("stampa na fiskalni printer u toku...")
 
-		altd()
-
 		// send nivel to fiscal printer
 		//ni_to_fiscal( cFFirma, cFTipDok, cFBrDok )
 		
 		// time out
-		sleep( gF_timeo )
+		//sleep( gF_timeo )
 
 		// send invoice to fiscal printer
         	rn_to_fiscal( cFFirma, cFTipDok, cFBrDok )
@@ -721,7 +719,7 @@ do while !EOF() .and. field->idfirma == cFirma ;
 	cNazRoba := ALLTRIM( roba->naz )
 	cBarKod := ALLTRIM( roba->barkod )
 	nGrRoba := 1
-	nPorStopa := 0
+	nPorStopa := 1
 	nR_cijena := ABS( field->cijena )
 	nR_kolicina := ABS( field->kolicina )
 
