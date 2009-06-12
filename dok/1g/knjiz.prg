@@ -545,7 +545,7 @@ do while !EOF() .and. field->idfirma == cFirma ;
 	select fakt
 
 	nSifRoba := _g_sdob( field->idroba )
-	cNazRoba := ALLTRIM( roba->naz )
+	cNazRoba := ALLTRIM( konvznwin( roba->naz, gFFKonv) )
 	cBarKod := ALLTRIM( roba->barkod )
 	nGrRoba := 1
 	nPorStopa := 0
@@ -716,7 +716,7 @@ do while !EOF() .and. field->idfirma == cFirma ;
 	endif
 	
 	nSifRoba := _g_sdob( field->idroba )
-	cNazRoba := ALLTRIM( roba->naz )
+	cNazRoba := ALLTRIM( konvznwin( roba->naz, gFFkonv) )
 	cBarKod := ALLTRIM( roba->barkod )
 	nGrRoba := 1
 	nPorStopa := 1

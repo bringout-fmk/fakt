@@ -220,6 +220,7 @@ local aRet := {}
 local nTArea := SELECT()
 local nRobaGr := 0
 local nPorSt := 0
+local cNaz
 
 if lSifDob == nil
 	lSifDob := .t.
@@ -244,9 +245,11 @@ do while !EOF()
 	nRobaGr := 1
 	nPorSt := 1
 
+	cNaz := konvznwin( field->naz, gFFKonv )
+
 	AADD( aRet, { ;
 		VAL(ALLTRIM(field->sifradob)), ;
-		ALLTRIM(field->naz), ;
+		ALLTRIM(cNaz), ;
 		ALLTRIM(field->barkod), ;
 		nRobaGr, ;
 		nPorSt, ;
@@ -266,6 +269,8 @@ return aRet
 function _f_pa_init()
 local aRet := {}
 local nTArea := SELECT()
+local cAdr
+local cNaz
 
 O_PARTN
 select partn
@@ -276,13 +281,16 @@ do while !EOF()
 	cPId := field->id
 
 	cREGB := IzSifK("PARTN", "REGB", cPId )
-	
+
 	select partn
+	
+	cNaz := konvznwin( partn->naz, gFFKonv )
+	cAdr := konvznwin( partn->adresa, gFFKonv )
 
 	AADD( aRet, { ;
-		VAL(ALLTRIM(field->id)), ;
-		ALLTRIM(field->naz), ;
-		ALLTRIM(field->adresa), ;
+		VAL(cPid), ;
+		ALLTRIM(cNaz), ;
+		ALLTRIM(cAdr), ;
 		"", ;
 		"", ;
 		cREGB } )

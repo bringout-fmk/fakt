@@ -557,6 +557,7 @@ public gFiscal := "N"
 public gFD_path := PADR("c:\fiscal\out\", 150)
 public gFFPitanje := "D"
 public gF_timeo := 2
+public gFFKonv := "5"
 
 O_PARAMS
 private cSection:="1"
@@ -705,6 +706,7 @@ RPar("f1", @gFiscal)
 RPar("f2", @gFD_path)
 RPar("f3", @gFFpitanje)
 RPar("f4", @gF_timeo)
+RPar("f5", @gFFKonv)
 
 
 cSection := "1"

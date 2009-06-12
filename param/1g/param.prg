@@ -117,6 +117,11 @@ Box(,10,77,.f.,"PARAMETRI FISKALNOG STMPACA")
 
 		@ m_x+nX, m_y+2 SAY "Pitanje prije stampe ?" GET gFFPitanje ;
 			VALID gFFpitanje $ "DN" PICT "@!"
+		
+		++ nX
+
+		@ m_x+nX, m_y+2 SAY "Konverzija znakova (0-8)" GET gFFKonv ;
+			VALID gFFKonv $ "012345678"
 	
 	
   		read
@@ -129,6 +134,7 @@ if (LASTKEY() <> K_ESC)
    	Wpar("f2",gFD_path)
    	Wpar("f3",gFFpitanje)
    	Wpar("f4",gF_timeo)
+   	Wpar("f5",gFFKonv)
 endif
 
 return 
