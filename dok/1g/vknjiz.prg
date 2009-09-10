@@ -442,6 +442,7 @@ else
   cVarIDROBA:="_IDROBA"
 endif
 
+
 IF lPrikTar==NIL; lPrikTar:=.t.; ENDIF
 
 if right(trim(&cVarIdRoba),2)="++"
@@ -462,7 +463,16 @@ if right(trim(&cVarIdRoba),2)="--"
   endif
 endif
 
-P_Roba(@ _Idroba , nil, nil, gArtCDX )
+if gArtCDX = "SIFRADOB"
+	nLenSDob := LEN(roba->sifradob)
+	// dodaj prefiks ako je ukucano manje od 5
+	if LEN(ALLTRIM(_idroba)) < 5
+		_idroba := PADR( PADL( ALLTRIM(_idroba), 5, "0" ) , nLenSDob )
+	endif
+endif
+
+
+P_Roba( @_Idroba , nil, nil, gArtCDX )
 
 select roba
 select pripr
