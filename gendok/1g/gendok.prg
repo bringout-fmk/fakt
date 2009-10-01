@@ -329,8 +329,15 @@ if reccount2() == 0
       dNajnoviji:=CTOD("")
       do while !eof() .and. IdFirma+IdTipdok=cidrj+"12" ;
                .and. DOKS->Partner=cPartner
-         skip; nTrec0:=recno() ; skip -1
-         if m1="*"
+         
+	 skip
+	 nTrec0:=recno()
+	 skip -1
+         
+	 if m1="*"
+
+	    cIdPart := doks->idpartner
+	    
 	    if dNajnoviji<doks->datDok
 		    dNajnoviji:=doks->datDok
 	    endif
@@ -345,9 +352,12 @@ if reccount2() == 0
             dxBrDok   := DOKS->BrDok
             
 
-            select DOKS ; set order to 1
-            // *********  nadji sljedeci broj  10 - ke *********
-            IF gMreznoNum == "N"
+            select DOKS 
+	    set order to 1
+            
+	    // *********  nadji sljedeci broj  10 - ke *********
+            
+	    IF gMreznoNum == "N"
                dbseek( dxidfirma+"10"+"È",.t.)
                skip -1
                if "10"<>idtipdok
@@ -361,9 +371,11 @@ if reccount2() == 0
             ELSE
                cBrDok:=SPACE (LEN (cBrDok))
             ENDIF
-            SELECT FAKT
+            
+	    SELECT FAKT
             seek dxIdFirma+"12"+dxBrDok
-            do while  !eof() .and. (dxIdFirma+"12"+dxBrDok) == (idfirma+idtipdok+brdok)
+            
+	    do while  !eof() .and. (dxIdFirma+"12"+dxBrDok) == (idfirma+idtipdok+brdok)
                skip; nTrec:=recno();skip -1
                Scatter()
                Replace IdTipDok WITH "22"
@@ -375,22 +387,25 @@ if reccount2() == 0
                _datdok:=date()
                _m1:="X"
                _idtipdok:="10"
-               *
+               
                select pripr
                locate for idroba==fakt->idroba
                if found()
                    _kolicina:=pripr->kolicina+fakt->kolicina
                else
-                   // append blank
+		   // append blank
                    appblank2 (.t., .F.)
                endif
-               Gather2()
+               
+	       Gather2()
 
                select fakt
                go nTrec
-            enddo
+            
+	    enddo
          endif
-         select doks; set order to 2
+         select doks
+	 set order to 2
          //
          go nTrec0
       enddo   // doks

@@ -27,6 +27,8 @@ AADD(opc, "5. regeneracija polja fakt->rbr")
 AADD(opcexe, {|| fa_rbr_regen()})
 AADD(opc, "6. regeneracija polja idpartner")
 AADD(opcexe, {|| fa_part_regen()})
+AADD(opc, "7. fakt export (r_exp) ")
+AADD(opcexe, {|| fkt_export()})
 
 Menu_SC("fain")
 
