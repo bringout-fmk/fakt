@@ -1633,6 +1633,20 @@ g22Str:=PADR(g22Str,20)
 g25Str:=PADR(g25Str,20)
 g26Str:=PADR(g26Str,24)
 g27Str:=PADR(g27Str,20)
+
+g10ftxt:=PADR(g10ftxt,100)
+g11ftxt:=PADR(g11ftxt,100)
+g12ftxt:=PADR(g12ftxt,100)
+g13ftxt:=PADR(g13ftxt,100)
+g15ftxt:=PADR(g15ftxt,100)
+g16ftxt:=PADR(g16ftxt,100)
+g20ftxt:=PADR(g20ftxt,100)
+g21ftxt:=PADR(g21ftxt,100)
+g22ftxt:=PADR(g22ftxt,100)
+g25ftxt:=PADR(g25ftxt,100)
+g26ftxt:=PADR(g26ftxt,100)
+g27ftxt:=PADR(g27ftxt,100)
+
 g10Str2T:=PADR(g10Str2T,132)
 g10Str2R:=PADR(g10Str2R,132)
 g16Str2T:=PADR(g16Str2T,132)
@@ -1666,21 +1680,27 @@ Box(,22,76,.f.,"Naziv dokumenata, potpis na kraju, str. 1")
   	@ m_x+ 2,m_y+2 SAY "06 - Potpis TXT" GET g06Str2T PICT"@S50"
   	@ m_x+ 3,m_y+2 SAY "06 - Potpis RTF" GET g06Str2R PICT"@S50"
   	@ m_x+ 4,m_y+2 SAY "10 - Tekst"      GET g10Str
+  	@ m_x+ 4,col()+1 SAY "d.txt lista:" GET g10ftxt PICT "@S25"
   	@ m_x+ 5,m_y+2 SAY "10 - Potpis TXT" GET g10Str2T PICT"@S50"
   	@ m_x+ 6,m_y+2 SAY "10 - Potpis RTF" GET g10Str2R PICT"@S50"
   	@ m_x+ 7,m_Y+2 SAY "11 - Tekst"      GET g11Str
+  	@ m_x+ 7,col()+1 SAY "d.txt lista:" GET g11ftxt PICT "@S25"
   	@ m_x+ 8,m_y+2 SAY "11 - Potpis TXT" GET g11Str2T PICT "@S50"
   	@ m_x+ 9,m_y+2 SAY "11 - Potpis RTF" GET g11Str2R PICT "@S50"
   	@ m_x+10,m_y+2 SAY "12 - Tekst"      GET g12Str
+  	@ m_x+10,col()+1 SAY "d.txt lista:" GET g12ftxt PICT "@S25"
   	@ m_x+11,m_y+2 SAY "12 - Potpis TXT" GET g12Str2T PICT "@S50"
   	@ m_x+12,m_y+2 SAY "12 - Potpis RTF" GET g12Str2R PICT "@S50"
   	@ m_x+13,m_y+2 SAY "13 - Tekst"      GET g13Str
+  	@ m_x+13,col()+1 SAY "d.txt lista:" GET g13ftxt PICT "@S25"
   	@ m_x+14,m_y+2 SAY "13 - Potpis TXT" GET g13Str2T PICT "@S50"
   	@ m_x+15,m_y+2 SAY "13 - Potpis RTF" GET g13Str2R PICT "@S50"
   	@ m_x+16,m_y+2 SAY "15 - Tekst"      GET g15Str
+  	@ m_x+16,col()+1 SAY "d.txt lista:" GET g15ftxt PICT "@S25"
   	@ m_x+17,m_y+2 SAY "15 - Potpis TXT" GET g15Str2T PICT "@S50"
   	@ m_x+18,m_y+2 SAY "15 - Potpis RTF" GET g15Str2R PICT "@S50"
   	@ m_x+19,m_y+2 SAY "16 - Tekst"      GET g16Str
+  	@ m_x+19,col()+1 SAY "d.txt lista:" GET g16ftxt PICT "@S25"
   	@ m_x+20,m_y+2 SAY "16 - Potpis TXT" GET g16Str2T PICT"@S50"
   	@ m_x+21,m_y+2 SAY "16 - Potpis RTF" GET g16Str2R PICT"@S50"
   	read
@@ -1688,21 +1708,27 @@ BoxC()
 
 Box(,19, 76,.f.,"Naziv dokumenata, potpis na kraju, str. 2")
 	@ m_x+ 1,m_y+2 SAY "20 - Tekst"      GET g20Str
+  	@ m_x+ 1,col()+1 SAY "d.txt lista:" GET g20ftxt PICT "@S25"
   	@ m_x+ 2,m_y+2 SAY "20 - Potpis TXT" GET g20Str2T PICT "@S50"
   	@ m_x+ 3,m_y+2 SAY "20 - Potpis RTF" GET g20Str2R PICT "@S50"
   	@ m_x+ 4,m_y+2 SAY "21 - Tekst"      GET g21Str
+  	@ m_x+ 4,col()+1 SAY "d.txt lista:" GET g21ftxt PICT "@S25"
   	@ m_x+ 5,m_y+2 SAY "21 - Potpis TXT" GET g21Str2T PICT "@S50"
   	@ m_x+ 6,m_y+2 SAY "21 - Potpis RTF" GET g21Str2R PICT "@S50"
   	@ m_x+ 7,m_y+2 SAY "22 - Tekst"      GET g22Str
+  	@ m_x+ 7,col()+1 SAY "d.txt lista:" GET g22ftxt PICT "@S25"
   	@ m_x+ 8,m_y+2 SAY "22 - Potpis TXT" GET g22Str2T PICT"@S50"
   	@ m_x+ 9,m_y+2 SAY "22 - Potpis RTF" GET g22Str2R PICT"@S50"
   	@ m_x+10,m_y+2 SAY "25 - Tekst"      GET g25Str
+  	@ m_x+10,col()+1 SAY "d.txt lista:" GET g25ftxt PICT "@S25"
   	@ m_x+11,m_y+2 SAY "25 - Potpis TXT" GET g25Str2T PICT"@S50"
   	@ m_x+12,m_y+2 SAY "25 - Potpis RTF" GET g25Str2R PICT"@S50"
   	@ m_x+13,m_y+2 SAY "26 - Tekst"      GET g26Str
+  	@ m_x+13,col()+1 SAY "d.txt lista:" GET g26ftxt PICT "@S25"
   	@ m_x+14,m_y+2 SAY "26 - Potpis TXT" GET g26Str2T PICT"@S50"
  	@ m_x+15,m_y+2 SAY "26 - Potpis RTF" GET g26Str2R PICT"@S50"
   	@ m_x+16,m_y+2 SAY "27 - Tekst"      GET g27Str
+  	@ m_x+16,col()+1 SAY "d.txt lista:" GET g27ftxt PICT "@S25"
   	@ m_x+17,m_y+2 SAY "27 - Potpis TXT" GET g27Str2T PICT"@S50"
   	@ m_x+18,m_y+2 SAY "27 - Potpis RTF" GET g27Str2R PICT"@S50"
   	@ m_x+19,m_y+2 SAY "Dodatni red    " GET gNazPotStr PICT"@S50"
@@ -1834,10 +1860,23 @@ if (LASTKEY()<>K_ESC)
   	WPar("r1",@g10Str2R)
   	WPar("r2",@g16Str2R)
   	WPar("r5",@g06Str2R)
+  	// liste
+	WPar("ya",@g10ftxt)
+	WPar("yb",@g11ftxt)
+	WPar("yc",@g12ftxt)
+	WPar("yd",@g13ftxt)
+	WPar("ye",@g15ftxt)
+	WPar("yf",@g16ftxt)
+	WPar("yg",@g20ftxt)
+	WPar("yh",@g21ftxt)
+	WPar("yi",@g22ftxt)
+	WPar("yj",@g25ftxt)
+	WPar("yk",@g26ftxt)
+	WPar("yl",@g27ftxt)
+
 endif
 
 return 
-*}
 
 
 

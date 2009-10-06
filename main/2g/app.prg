@@ -478,6 +478,19 @@ public g27Str:="PREDRA¬UN MP br."
 public g27Str2T:="                                                               Direktor"
 public g27Str2R:="\tab \tab \tab Direktor:"
 public gNazPotStr:=SPACE(69)
+// lista kod dodatnog teksta
+public g10ftxt := PADR("", 100)
+public g11ftxt := PADR("", 100)
+public g12ftxt := PADR("", 100)
+public g13ftxt := PADR("", 100)
+public g15ftxt := PADR("", 100)
+public g16ftxt := PADR("", 100)
+public g20ftxt := PADR("", 100)
+public g21ftxt := PADR("", 100)
+public g22ftxt := PADR("", 100)
+public g25ftxt := PADR("", 100)
+public g26ftxt := PADR("", 100)
+public g27ftxt := PADR("", 100)
 
 public gDodPar:="2"
 public gDatVal:="N"
@@ -669,6 +682,21 @@ RPar("xk",@g26Str2R)
 RPar("xo",@g27Str)
 RPar("xp",@g27Str2T)
 RPar("xr",@g27Str2R)
+
+// lista dodatni tekst
+RPar("ya",@g10ftxt)
+RPar("yb",@g11ftxt)
+RPar("yc",@g12ftxt)
+RPar("yd",@g13ftxt)
+RPar("ye",@g15ftxt)
+RPar("yf",@g16ftxt)
+RPar("yg",@g20ftxt)
+RPar("yh",@g21ftxt)
+RPar("yi",@g22ftxt)
+RPar("yj",@g25ftxt)
+RPar("yk",@g26ftxt)
+RPar("yl",@g27ftxt)
+
 // dodatni parametri fakture broj otpremnice itd
 RPar("za",@gZagl)   
 RPar("zb",@gbold)

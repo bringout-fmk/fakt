@@ -598,71 +598,215 @@ endif
 
 ShowGets()
 return .t.
-*}
 
 
 
 
-/*! \fn UzorTxt()
- *  \brief Uzorak txt fajla
- */
- 
+// -------------------------------------------------
+// uzorak teksta na kraju fakture
+// -------------------------------------------------
 function UzorTxt()
-*{
-local cId
+local cId := "  "
 
-cId:="  "
+// INO kupci
 if IsPdv() .and. _IdTipDok $ "10#20" .and. IsIno(_IdPartner)
- InoKlauzula()
- if EMPTY(alltrim(_txt2))
-	 cId:="IN"
- endif
+	InoKlauzula()
+ 	if EMPTY(alltrim(_txt2))
+		cId:="IN"
+ 	endif
 endif
 
+// KOMISION
 if IsPdv() .and. _IdTipDok == "12" .and. IsProfil(_IdPartner, "KMS")
- // komisiona otprema klauzula
- KmsKlauzula()
- if EMPTY(alltrim(_txt2))
-	 cId:="KS"
- endif
+ 	// komisiona otprema klauzula
+ 	KmsKlauzula()
+ 	if EMPTY(alltrim(_txt2))
+		cId:="KS"
+ 	endif
 endif
 
 if (nRbr==1 .and. val(_podbr)<1)
- Box(,9,75)
- @ m_x+1,m_Y+1  SAY "Uzorak teksta (<c-W> za kraj unosa teksta):"  GET cId pict "@!"
- read
+	Box(,9,75)
+ 		@ m_x+1,m_Y+1  SAY "Uzorak teksta (<c-W> za kraj unosa teksta):"  GET cId pict "@!"
+ 		read
  
- if lastkey()<>K_ESC .and. !empty(cId)
-   P_Ftxt(@cId)
-   SELECT ftxt
-   SEEK cId
-   SELECT pripr
-   _txt2 := trim(ftxt->naz)
+ 		if lastkey()<>K_ESC .and. !empty(cId)
+   			P_Ftxt(@cId)
+   			SELECT ftxt
+   			SEEK cId
+   			SELECT pripr
+   			_txt2 := trim(ftxt->naz)
 
-   if gSecurity == "D"
-	_txt2 += "Dokument izradio: " + GetFullUserName( GetUserID() ) 
-   endif
+   			if gSecurity == "D"
+				_txt2 += "Dokument izradio: " + GetFullUserName( GetUserID() ) 
+   			endif
   
-  select PRIPR
-  IF glDistrib .and. _IdTipdok=="26"
-    IF cId $ IzFMKIni("FAKT","TXTIzjaveZaObracunPoreza",";",KUMPATH)
-      _k2 := "OPOR"
-    ELSE
-      _k2 := ""
-    ENDIF
-  ENDIF
- endif
- setcolor(Invert)
- UsTipke()
- private fUMemu:=.t.
- _txt2:=MemoEdit(_txt2,m_x+3,m_y+1,m_x+9,m_y+76)
- fUMemu:=NIL
- //BosTipke()
- setcolor(Normal)
- BoxC()
+  			select PRIPR
+  			IF glDistrib .and. _IdTipdok=="26"
+    				IF cId $ IzFMKIni("FAKT","TXTIzjaveZaObracunPoreza",";",KUMPATH)
+      					_k2 := "OPOR"
+    				ELSE
+      					_k2 := ""
+    				ENDIF
+  			ENDIF
+ 		endif
+ 		setcolor(Invert)
+ 		UsTipke()
+ 		private fUMemu:=.t.
+ 		_txt2:=MemoEdit(_txt2,m_x+3,m_y+1,m_x+9,m_y+76)
+ 		fUMemu:=NIL
+ 		//BosTipke()
+ 		setcolor(Normal)
+ 	BoxC()
 endif
 return
-*}
+
+
+
+// -------------------------------------------------
+// uzorak teksta na kraju fakture
+// verzija sa listom...
+// -------------------------------------------------
+function UzorTxt2( cList )
+local cId := "  "
+local cU_txt
+local aList := {}
+local i
+local nCount := 1
+
+if cList == nil
+	cList := ""
+endif
+
+cList := ALLTRIM( cList )
+
+if !EMPTY( cList )
+	// napravi matricu sa tekstovima
+	aList := TokToNiz( cList, ";" )
+endif
+
+// INO kupci
+if IsPdv() .and. _IdTipDok $ "10#20" .and. IsIno(_IdPartner)
+	InoKlauzula()
+ 	if EMPTY(alltrim(_txt2))
+		cId := "IN"
+		AADD( aList, cId )
+ 	endif
+endif
+
+// KOMISION
+if IsPdv() .and. _IdTipDok == "12" .and. IsProfil(_IdPartner, "KMS")
+ 	// komisiona otprema klauzula
+ 	KmsKlauzula()
+ 	if EMPTY(alltrim(_txt2))
+		cId := "KS"
+		AADD( aList, cId )
+ 	endif
+endif
+
+// dodaj sve iz liste u _TXT2
+// cID = "MX" - miksani sadrzaj
+
+if !EMPTY( cList )
+  for i:=1 to LEN( aList )
+	cU_txt := aList[i]
+	_add_to_txt( cU_txt, nCount, .t. )
+  	cId := "MX"
+	++ nCount 
+  next
+endif
+ 
+// prva stavka fakture 
+
+if (nRbr==1 .and. val(_podbr)<1)
+
+  Box(,11,75)
+     do while .t.
+
+	@ m_x + 1, m_y + 1 SAY "Odaberi uzorak teksta iz sifrarnika:" ;
+	 	GET cId pict "@!"
+ 	
+	@ m_x + 11, m_y + 1 SAY "<c+W> dodaj tekst na fakturu, unesi novi  <ESC> izlaz"
+	
+	read
+ 
+ 	if lastkey() <> K_ESC .and. !EMPTY( cId ) 
+	  	if cId <> "MX"
+   			P_Ftxt(@cId)
+			_add_to_txt( cId, nCount, .t. )
+			++ nCount
+			cId := "  "
+		endif
+   	endif	
+ 	setcolor(Invert)
+ 	UsTipke()
+ 	private fUMemu:=.t.
+ 	_txt2:=MemoEdit(_txt2,m_x+3,m_y+1,m_x+9,m_y+76)
+ 	fUMemu:=NIL
+ 	setcolor(Normal)
+     
+        if LastKey() == K_ESC
+	   exit
+	endif
+     
+     enddo
+  BoxC()
+
+endif
+
+return
+
+
+// ---------------------------------------------------------
+// dodaj tekst u _txt2
+// ---------------------------------------------------------
+static function _add_to_txt( cId_txt, nCount, lAppend )
+local cTmp 
+
+if lAppend == nil
+	lAppend := .f.
+endif
+if nCount == nil
+	nCount := 1
+endif
+
+// prazan tekst - ne radi nista
+if EMPTY( cId_Txt )
+	return
+endif
+
+select ftxt
+seek cId_txt
+select pripr
+
+if lAppend == .f.
+	_txt2 := trim(ftxt->naz)
+else
+	cTmp := ""
+	
+	if nCount > 1
+		cTmp += CHR(13) + CHR(10)
+	endif
+	
+	cTmp += trim(ftxt->naz)
+
+	_txt2 := _txt2 + cTmp
+endif
+
+if nCount = 1 .and. gSecurity == "D"
+	_txt2 += " Dokument izradio: " + GetFullUserName( GetUserID() ) 
+endif
+  
+select PRIPR
+if nCount = 1 .and. glDistrib .and. _IdTipdok=="26"
+	_k2 :=""
+	if cId_txt $ IzFMKIni("FAKT","TXTIzjaveZaObracunPoreza",";",KUMPATH)
+		_k2 := "OPOR"
+	endif
+endif
+
+return
+
 
 
 // ----------------------------

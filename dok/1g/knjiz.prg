@@ -1235,6 +1235,7 @@ BoxC()
 dDatDok:=_Datdok
 
 UzorTxt()
+
 if !Empty (cVezOtpr)
   _txt2 += Chr(13)+Chr(10)+cVezOtpr
 endif
@@ -1270,6 +1271,7 @@ local cPretvori := "N"
 local nPom:=IF(VAL(gIMenu)<1,ASC(gIMenu)-55,VAL(gIMenu))
 local lTxtNaKraju := .f.
 local cAvRacun
+local cListaTxt := ""
 
 lKonsignacija := IzFmkIni("FAKT","Konsignacija","N",KUMPATH) == "D"
 lDoks2:=(IzFmkIni("FAKT","Doks2","D", KUMPATH)=="D")
@@ -1886,7 +1888,10 @@ select (nTArea)
 
 
 if lTxtNaKraju
-	UzorTxt()
+	// uzmi odgovarajucu listu
+	cListaTxt := g_txt_tipdok( _idtipdok )
+	// unesi tekst
+	UzorTxt2( cListaTxt )
 endif
 
 if (_podbr==" ." .or.  roba->tip="U" .or. (nrbr==1 .and. val(_podbr)<1))
@@ -2021,7 +2026,30 @@ if lPoNarudzbi
 endif
 
 return 1
-*}
+
+
+
+// ---------------------------------------------
+// vraca listu za odredjeni tip dok
+// ---------------------------------------------
+function g_txt_tipdok( cIdTd )
+local cList := ""
+local cVal
+private cTmptxt
+
+if !EMPTY( cIdTd )
+	cTmptxt := "g" + cIdTd + "ftxt"
+	cVal := &cTmptxt
+
+	if !EMPTY( cVal )
+		cList := ALLTRIM( cVal )
+	endif
+
+endif
+
+return cList
+
+
 
 
 
@@ -2031,7 +2059,6 @@ return 1
  *  \param fNovi
  */
 function FRokPl(cVar, fNovi)
-*{
 local fOtp:=.f.
 local lRP0:=.t.
 
@@ -2585,7 +2612,8 @@ endif
  */
  
 function IsprUzorTxt(fSilent,bFunc)
-*{
+local cListaTxt := ""
+
 if fSilent==nil
 	fSilent:=.f.
 endif
@@ -2657,7 +2685,8 @@ if lDoks2
 endif
 
 if !fSilent
-  UzorTxt()
+	cListaTxt := g_txt_tipdok( _idtipdok )
+	UzorTxt2( cListaTxt )
 endif
 
 if bFunc<>nil; EVAL(bFunc); endif
@@ -2681,7 +2710,6 @@ if !fSilent
   Gather()
 endif
 return
-*}
 
 
 
