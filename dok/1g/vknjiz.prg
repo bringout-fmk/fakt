@@ -681,8 +681,15 @@ endif
 cList := ALLTRIM( cList )
 
 if !EMPTY( cList )
-	// napravi matricu sa tekstovima
-	aList := TokToNiz( cList, ";" )
+	// samo kod praznog teksta generisi iz liste
+	if EMPTY(_txt2) 
+	  if Pitanje(,"Dokument sadrzi txt listu, koristiti je ?","D") == "N"
+		// ponisti listu
+		cList := ""
+	  endif
+	  // napravi matricu sa tekstovima
+	  aList := TokToNiz( cList, ";" )
+	endif
 endif
 
 // INO kupci
@@ -726,7 +733,7 @@ if (nRbr==1 .and. val(_podbr)<1)
 	@ m_x + 1, m_y + 1 SAY "Odaberi uzorak teksta iz sifrarnika:" ;
 	 	GET cId pict "@!"
  	
-	@ m_x + 11, m_y + 1 SAY "<c+W> dodaj tekst na fakturu, unesi novi  <ESC> izlaz"
+	@ m_x + 11, m_y + 1 SAY "<c+W> dodaj tekst na fakturu, unesi novi  <ESC> izadji i snimi"
 	
 	read
  
