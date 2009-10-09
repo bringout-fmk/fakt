@@ -2037,7 +2037,7 @@ local cList := ""
 local cVal
 private cTmptxt
 
-if !EMPTY( cIdTd )
+if !EMPTY( cIdTd ) .and. cIdTD $ "10#11#12#13#15#16#20#21#22#25#26#27"
 	cTmptxt := "g" + cIdTd + "ftxt"
 	cVal := &cTmptxt
 
