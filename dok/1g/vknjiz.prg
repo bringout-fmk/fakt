@@ -246,12 +246,12 @@ local cRjTip
 local nUl:=nIzl:=0
 local nRezerv:=nRevers:=0
 
-if _kolicina==0
+if _kolicina == 0
 	return .f.
 endif
 
 if JeStorno10()
-  _kolicina := - ABS(_kolicina)
+	_kolicina := - ABS(_kolicina)
 endif
 
 if _podbr<>" ."
@@ -264,149 +264,167 @@ if _podbr<>" ."
 
 	NSRNPIdRoba(_IDROBA)
   	select ROBA
-if !(roba->tip="U")  // usluge ne diraj
-  	if _idtipdok=="13" .and. (gVar13=="2".or.glCij13Mpc).and.gVarNum=="1" .or. _idtipdok=="01" .and. IsNiagara()
-      		if gVar13=="2" .and. _idtipdok=="13"
-        		_cijena := UzmiMPCSif()
-      		else
-        		if g13dcij=="6"
-          			_cijena:=MPC6
-        		elseif g13dcij=="5"
-          			_cijena:=MPC5
-        		elseif g13dcij=="4"
-          			_cijena:=MPC4
-        		elseif g13dcij=="3"
-          			_cijena:=MPC3
-        		elseif g13dcij=="2"
-          			_cijena:=MPC2
-        		else
-          			_cijena:=MPC
-        		endif
-      		endif
-    	elseif _idtipdok=="13".and.(gVar13=="2".or.glCij13Mpc).and.gVarNum=="2" .or. _idtipdok=="19".and.IzFMKIni("FAKT","19KaoRacunParticipacije","N",KUMPATH)=="D"
-      		if g13dcij=="6"
-        		_cijena:=MPC6
-      		elseif g13dcij=="5"
-        		_cijena:=MPC5
-      		ELSEIF g13dcij=="4"
-       			_cijena:=MPC4
-      		ELSEIF g13dcij=="3"
-        		_cijena:=MPC3
-      		ELSEIF g13dcij=="2"
-        		_cijena:=MPC2
-      		else
-        		_cijena:=MPC
-      		endif
-    	elseif cRjtip="M"
-       		_cijena:=UzmiMPCSif()
-    	elseif _idtipdok$"11#15#27"
-      		if gMP=="1"
-        		_Cijena:=MPC
-      		elseif gMP=="2"
-        		_Cijena:=round(VPC * (1+ tarifa->opp/100) * (1+tarifa->ppp/100),VAL(IzFMKIni("FAKT","ZaokruzenjeMPCuDiskontu","1",KUMPATH)))
-      		elseif gMP=="3"
-        		_Cijena:=MPC2
-      		elseif gMP=="4"
-        		_Cijena:=MPC3
-      		elseif gMP=="5"
-        		_Cijena:=MPC4
-      		elseif gMP=="6"
-        		_Cijena:=MPC5
-      		elseif gMP=="7"
-        		_Cijena:=MPC6
-      		endif
-    	elseif _idtipdok=="25" .and. _cijena<>0
-      	// za knji§nu obavijest: ne dirati cijenu ako je ve† odreÐena
-    	elseif cRjTip="V".and._idTipDok $ "10#20" //ako se radi o racunima i predracunima
-		_cijena:=UzmiVPCSif()
-	else
-      		if cTipVPC=="1"
-        		_Cijena:=vpc
-      		elseif fieldpos("vpc2")<>0
-       			if gVarC=="1"
-         			_Cijena:=vpc2
-       			elseif gVarc=="2"
-         			_Cijena:=vpc
-         			if vpc<>0
-					_Rabat:= (vpc-vpc2) / vpc * 100
-				endif
-       			elseif gVarc=="3"
-         			_Cijena:=nc
-       			endif
-      		else
-        		_Cijena:=0
-      		endif
-    	endif
+	if !(roba->tip="U")  // usluge ne diraj
+  		if _idtipdok=="13" .and. (gVar13=="2".or.glCij13Mpc).and.gVarNum=="1" .or. _idtipdok=="01" .and. IsNiagara()
+      			if gVar13=="2" .and. _idtipdok=="13"
+        			_cijena := UzmiMPCSif()
+      			else
+        			if g13dcij=="6"
+          				_cijena:=MPC6
+        			elseif g13dcij=="5"
+          				_cijena:=MPC5
+        			elseif g13dcij=="4"
+          				_cijena:=MPC4
+        			elseif g13dcij=="3"
+          				_cijena:=MPC3
+        			elseif g13dcij=="2"
+          				_cijena:=MPC2
+        			else
+          				_cijena:=MPC
+        			endif
+      			endif
+    		elseif _idtipdok=="13".and.(gVar13=="2".or.glCij13Mpc).and.gVarNum=="2" .or. _idtipdok=="19".and.IzFMKIni("FAKT","19KaoRacunParticipacije","N",KUMPATH)=="D"
+      			if g13dcij=="6"
+        			_cijena:=MPC6
+      			elseif g13dcij=="5"
+        			_cijena:=MPC5
+      			elseif g13dcij=="4"
+       				_cijena:=MPC4
+      			elseif g13dcij=="3"
+        			_cijena:=MPC3
+      			elseif g13dcij=="2"
+        			_cijena:=MPC2
+      			else
+        			_cijena:=MPC
+      			endif
+    		elseif cRjtip="M"
+       			_cijena:=UzmiMPCSif()
+    		elseif _idtipdok$"11#15#27"
+      			if gMP=="1"
+        			_Cijena:=MPC
+      			elseif gMP=="2"
+        			_Cijena:=round(VPC * (1+ tarifa->opp/100) * (1+tarifa->ppp/100),VAL(IzFMKIni("FAKT","ZaokruzenjeMPCuDiskontu","1",KUMPATH)))
+      			elseif gMP=="3"
+        			_Cijena:=MPC2
+      			elseif gMP=="4"
+        			_Cijena:=MPC3
+      			elseif gMP=="5"
+        			_Cijena:=MPC4
+      			elseif gMP=="6"
+        			_Cijena:=MPC5
+      			elseif gMP=="7"
+        			_Cijena:=MPC6
+      			endif
+    		elseif _idtipdok=="25" .and. _cijena<>0
+      			// za knjiznu obavijest: 
+			// ne dirati cijenu ako je vec odredjena
+    		elseif cRjTip="V".and._idTipDok $ "10#20" 
+			//ako se radi o racunima i predracunima
+			_cijena:=UzmiVPCSif()
+		else
+      			if cTipVPC=="1"
+        			_Cijena:=vpc
+      			elseif fieldpos("vpc2")<>0
+       				if gVarC=="1"
+         				_Cijena:=vpc2
+       				elseif gVarc=="2"
+         				_Cijena:=vpc
+         				if vpc<>0
+						_Rabat:= (vpc-vpc2) / vpc * 100
+					endif
+       				elseif gVarc=="3"
+         				_Cijena:=nc
+       				endif
+      			else
+        			_Cijena:=0
+      			endif
+    		endif
+	endif
 endif
 
-
+if lPoNarudzbi
+	select pripr
+  	return .t.
 endif
 
-IF lPoNarudzbi
-  SELECT PRIPR
-  RETURN .t.
-ENDIF
-
-select fakt; set order to 3
+select fakt
+set order to 3
 
 lBezMinusa := ( IzFMKIni("FAKT","NemaIzlazaBezUlaza","N",KUMPATH) == "D" )
 
-if !(roba->tip="U") .and. !empty(_IdRoba) .and.  left(_idtipdok,1) $ "12"  .and. (gPratiK=="D".or.lBezMinusa) .and.;
-   !(left(_idtipdok,1) == "1" .and. left(_serbr,1)="*")  // ovo je onda faktura
-                                                        // na osnovu otpremnice
+if !(roba->tip="U") .and. !empty(_IdRoba) .and.  left(_idtipdok,1) $ "12"  ;
+	.and. (gPratiK=="D".or.lBezMinusa) .and. ;
+   	!(left(_idtipdok,1) == "1" .and. left(_serbr,1)="*")  
+	// ovo je onda faktura
+        // na osnovu otpremnice
 
+	if gTBDir="N"
+  		MsgO("Izracunavam trenutno stanje ...")
+	endif
+ 	
+	seek _idroba
+ 	
+	nUl:=0
+	nIzl:=0
+	nRezerv:=0
+	nRevers:=0
+ 	
+	do while !eof()  .and. roba->id==IdRoba
+   		
+		// ovdje provjeravam samo za tekucu firmu
+   		if fakt->IdFirma <> _IdFirma
+     			skip
+			loop
+   		endif
+   		
+		if idtipdok="0"  
+			// ulaz
+     			nUl  += kolicina
+   		elseif idtipdok="1"   
+			// izlaz faktura
+     			if !(left(serbr,1)=="*" .and. idtipdok=="10")  
+				// za fakture na osnovu otpremnice 
+				// ne racunaj izlaz
+       				nIzl += kolicina
+     			endif
+   		elseif idtipdok$"20#27"
+     			if serbr="*"
+       				nRezerv += kolicina
+     			endif
+   		elseif idtipdok=="21"
+     			nRevers += kolicina
+   		endif
+   		skip
+ 	enddo
 
-if gTBDir="N"
-  MsgO("Izracunavam trenutno stanje ...")
-endif
- seek _idroba
- nUl:=nIzl:=nRezerv:=nRevers:=0
- do while !eof()  .and. roba->id==IdRoba
-   // ovdje provjeravam samo za tekucu firmu
-   IF FAKT->IdFirma <> _IdFirma
-     SKIP; LOOP
-   EndIF
-   if idtipdok="0"  // ulaz
-     nUl  += kolicina
-   elseif idtipdok="1"   // izlaz faktura
-     if !(left(serbr,1)=="*" .and. idtipdok=="10")  // za fakture na osnovu otpremnice ne raŸunaj izlaz
-       nIzl += kolicina
-     endif
-   elseif idtipdok$"20#27"
-     if serbr="*"
-       nRezerv += kolicina
-     endif
-   elseif idtipdok=="21"
-     nRevers += kolicina
-   endif
-   skip
- enddo
+	if gTBDir="N"
+  		MsgC()
+	else
+  		@ m_x+17, m_y+1   SAY "Artikal: "
+		?? _idRoba 
+		?? "("+roba->jmj+")"
+  		@ m_x+18, m_y+1   SAY "Stanje :"
+  		@ m_x+18, col()+1 SAY nUl-nIzl-nRevers-nRezerv  picture pickol
+  		@ m_x+19, m_y+1   SAY "Tarifa : " 
+		?? roba->idtarifa
+	endif
 
-if gTBDir="N"
-  MsgC()
-else
-  @ m_x+17, m_y+1   SAY "Artikal: "; ?? _idRoba ; ?? "("+roba->jmj+")"
-  @ m_x+18, m_y+1   SAY "Stanje :"
-  @ m_x+18, col()+1 SAY nUl-nIzl-nRevers-nRezerv  picture pickol
-  @ m_x+19, m_y+1   SAY "Tarifa : " ; ?? roba->idtarifa
-endif
+	if ( ( nUl - nIzl - nRevers - nRezerv - _kolicina ) < 0 )
+ 		
+		BoxStanje({{_IdFirma, nUl,nIzl,nRevers,nRezerv}},_idroba)
+ 		
+		if _idtipdok = "1" .and. lBezMinusa
+   			select pripr
+   			return .f.
+		endif
 
-if nUl-nIzl-nRevers-nRezerv-_Kolicina<0
- // Msg("Na stanju je "+str(nUl-nIzl,12,3)+" robe")
- BoxStanje({{_IdFirma, nUl,nIzl,nRevers,nRezerv}},_idroba)
- IF _idtipdok="1" .and. lBezMinusa
-   SELECT PRIPR
-   RETURN .f.
- ENDIF
-endif
-
-
-endif //
+	endif
+endif 
 
 select pripr
 
 IF _idtipdok=="26" .and. glDistrib .and. !UGenNar()
-  RETURN .f.
+	RETURN .f.
 ENDIF
 
 if IsRabati() .and. (_idtipdok $ gcRabDok)

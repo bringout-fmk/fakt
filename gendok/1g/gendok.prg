@@ -276,6 +276,7 @@ function Iz20u10()
 local nOrder
 local cBrDok := ""
 local cIdTipDok := ""
+local lSumirati := .t.
 
 select pripr
 use
@@ -322,6 +323,9 @@ if reccount2() == 0
    BoxC()
 
    if Pitanje(,"Formirati fakturu na osnovu gornjih otpremnica ?","N")=="D"
+     
+      lSumirati := Pitanje(,"Sumirati stavke fakture (D/N)","D") == "D"
+      
       cVezOtpr := ""
       select pripr
       select doks  // order 2 !!!
@@ -375,26 +379,38 @@ if reccount2() == 0
 	    SELECT FAKT
             seek dxIdFirma+"12"+dxBrDok
             
-	    do while  !eof() .and. (dxIdFirma+"12"+dxBrDok) == (idfirma+idtipdok+brdok)
-               skip; nTrec:=recno();skip -1
-               Scatter()
-               Replace IdTipDok WITH "22"
-               IF gMreznoNum == "N"
+	    do while !eof() .and. (dxIdFirma+"12"+dxBrDok) == ;
+	    	(idfirma+idtipdok+brdok)
+               
+	       skip
+	       nTrec:=recno()
+	       skip -1
+               
+	       Scatter()
+               replace IdTipDok WITH "22"
+               
+	       if gMreznoNum == "N"
                   _Brdok:=cBrdok
-               ELSE
+               else
                   _Brdok:=SPACE (LEN (BrDok))
-               ENDIF
+               endif
+
                _datdok:=date()
                _m1:="X"
                _idtipdok:="10"
                
                select pripr
-               locate for idroba==fakt->idroba
-               if found()
-                   _kolicina:=pripr->kolicina+fakt->kolicina
+               
+	       locate for idroba==fakt->idroba
+
+	       if found() .and. lSumirati == .t. ;
+	       		.and. pripr->cijena = fakt->cijena
+
+                 	 _kolicina:=pripr->kolicina+fakt->kolicina
+
                else
-		   // append blank
-                   appblank2 (.t., .F.)
+		  	 // append blank
+                         appblank2( .t., .f. )
                endif
                
 	       Gather2()
