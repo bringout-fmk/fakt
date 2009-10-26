@@ -605,6 +605,36 @@ go nTrec
 return DE_CONT
 
 
+// stampaj poresku fakturu u odt formatu
+function pr_odt()
+*{
+select doks
+nTrec:=recno()
+_cIdFirma:=idfirma
+_cIdTipDok:=idtipdok
+_cBrDok:=brdok
+close all
+O_Edit()
+StDokOdt( _cidfirma, _cIdTipdok, _cbrdok )
+select (F_DOKS)
+use
+O_DOKS
+if lOpcine
+	O_PARTN
+       	select DOKS
+       	set relation to idpartner into PARTN
+endif
+if cFilter==".t."
+	set Filter to
+else
+	set Filter to &cFilter
+endif
+go nTrec
+    
+return DE_CONT
+
+
+
 // --------------------------
 // generisi fakturu
 // --------------------------
@@ -831,8 +861,12 @@ do case
      ENDIF
      
   case Ch==K_ENTER .and. gTBDir=="N"
-     nRet:=pr_pf()
-    
+     nRet := pr_pf()
+
+  case Ch==K_ALT_P
+     // print odt
+     nRet := pr_odt()
+
   case chr(Ch) $ "sS"
 
      // generisi storno dokument

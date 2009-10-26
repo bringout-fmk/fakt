@@ -50,8 +50,8 @@ xml_node("u_pop", ALLTRIM( STR( field->ukpopust, 12, 2 ) ) )
 xml_node("u_poptp", ALLTRIM( STR( field->ukpoptp, 12, 2 ) ) )
 xml_node("u_bpdvpop", ALLTRIM( STR( field->ukbpdvpop, 12, 2 ) ) )
 xml_node("u_pdv", ALLTRIM( STR( field->ukpdv, 12, 2 ) ) )
-xml_node("u_kol", ALLTRIM( STR( field->ukupno, 12, 2 ) ) )
-xml_node("u_total", ALLTRIM( STR( field->ukkol, 12, 2) ) )
+xml_node("u_kol", ALLTRIM( STR( field->ukkol, 12, 2 ) ) )
+xml_node("u_total", ALLTRIM( STR( field->ukupno, 12, 2) ) )
 
 // dokument iz tabele
 xml_node("dbr", ALLTRIM( field->brdok ) )
