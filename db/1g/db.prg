@@ -860,7 +860,7 @@ do while !eof()
   	private cBrDok:=brdok
 	private cIdTipDok:=idtipdok
 	private dDatDok:=datdok
-	
+
 	if IsRabati()
 		private cTipRabat:=tiprabat
 	endif
@@ -881,14 +881,16 @@ do while !eof()
   	endif
   	
 	select doks
-  	_field->IdFirma   := cIdFirma
+  	
+	_field->IdFirma   := cIdFirma
   	_field->BrDok     := cBrDok
   	_field->Rezerv    := cRezerv
   	_field->DatDok    := dDatDok
   	_field->IdTipDok  := cIdTipDok
   	_field->Partner   := cTxt
   	_field->dindem    := cDinDem
-  	_field->IdPartner := PRIPR->IdPartner
+  	_field->IdPartner := pripr->idpartner
+	_field->idpm      := pripr->idpm
   	
 	if IsRabati()
 		if (cIdTipDok $ gcRabDok)
@@ -897,9 +899,7 @@ do while !eof()
   		endif
 	endif
 	
-	//if lVrsteP
-   		_field->IdVrsteP:=pripr->idvrstep
-  	//endif
+   	_field->IdVrsteP:=pripr->idvrstep
   	
 	if (FieldPos("DATPL")>0)
    		_field->DatPl:=if(LEN(aMemo)>=9,CToD(aMemo[9]),CToD(""))

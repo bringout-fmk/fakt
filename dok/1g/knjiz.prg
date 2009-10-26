@@ -1222,7 +1222,7 @@ Box("#PARAMETRI DOKUMENTA:",10,75)
    if dNajnoviji<>NIL
    	@  m_x+4,m_y+35 SAY "Datum posljednje otpremnice:" GET dNajnoviji WHEN .f. COLOR "GR+/B"
    endif
-   @ m_x+5,m_y+2 SAY "Rok plac.(dana):" GET nRokPl PICT "99" WHEN FRokPl("0",.t.) VALID FRokPl("1",.t.)
+   @ m_x+5,m_y+2 SAY "Rok plac.(dana):" GET nRokPl PICT "999" WHEN FRokPl("0",.t.) VALID FRokPl("1",.t.)
    @ m_x+6,m_y+2 SAY "Datum placanja :" GET _DatPl VALID FRokPl("2",.t.)
    read
   endif
@@ -1534,24 +1534,13 @@ if (nRbr==1 .and. VAL(_podbr) < 1)
    		_txt3c:=padr(_txt3c,30)
 
    		lUSTipke:=.f.
-   		if (gNovine=="D" .or. IzFMKINI("FAKT","UnosPartneraObaveznoPoSifri","N",KUMPATH)=="D")
-     			@  m_x+5,m_y+2  SAY "Partner " get _idpartner  picture "@!" valid { || P_Firma(@_idpartner,6,11) , _Txt3a:=padr(_idpartner+".",30) , IzSifre() }
-     			if pripr->(FIELDPOS("IDPM"))<>0
-       				@  m_x+7,m_y+2  SAY "Prod.mj." get _idpm valid {|| P_IDPM(@_idpm,_idpartner)}
-     			endif
-   		else
-     			if IzFMKINI("FAKT","KupacMalaSlova","D", KUMPATH)=="D"
-       				lUSTipke:=.t.
-       				@  m_x+5,m_y+2  SAY "Partner " get _Txt3a  picture "@S30" valid IzSifre()
-       				@  m_x+6,m_y+2  SAY "        " get _Txt3b  picture "@"
-       				@ m_x+7,m_y+2  SAY "Mjesto  " get _Txt3c  picture "@"
-     			else
-       				@  m_x+5,m_y+2  SAY "Partner " get _Txt3a  picture "@!S30" valid IzSifre()
-       				@  m_x+6,m_y+2  SAY "        " get _Txt3b  picture "@!"
-       				@  m_x+7,m_y+2  SAY "Mjesto  " get _Txt3c  picture "@!"
-     			endif
-   		endif
-
+     		@  m_x+5,m_y+2  SAY "Partner " get _idpartner  picture "@!" valid { || P_Firma(@_idpartner,6,11) , _Txt3a:=padr(_idpartner+".",30) , IzSifre() }
+     		
+		if pripr->(FIELDPOS("IDPM"))<>0
+       			@  m_x+7,m_y+2  SAY "Prod.mj." get _idpm ;
+				valid {|| if( "RN" $ _idpm, .t., P_IDPM(@_idpm,_idpartner))}
+     		endif
+   		
    		if _idtipdok=="10"
      			if gDodPar=="1"
        				if IzFmkIni('FAKT','ProsiriPoljeOtpremniceNa50','N',KUMPATH)=='D'
@@ -1571,8 +1560,8 @@ if (nRbr==1 .and. VAL(_podbr) < 1)
 						nRokPl:=gRokPl
 					endif
 				endif
-      				
-				@  m_x+8,m_y+45 SAY "Rok plac.(dana):" GET nRokPl PICT "99" WHEN FRokPl("0",fnovi)   VALID FRokPl("1",fnovi)
+      			 	altd()	
+				@  m_x+8,m_y+45 SAY "Rok plac.(dana):" GET nRokPl PICT "999" WHEN FRokPl("0",fnovi)   VALID FRokPl("1",fnovi)
 				@  m_x+9,m_y+45 SAY "Datum placanja :" GET _DatPl VALID FRokPl("2",fnovi)
      			endif
 			
@@ -2095,6 +2084,7 @@ if cVar=="0"   // when
       endif
 
 elseif cVar=="1"  // valid
+	altd()
 	// ako je rama-glas
 	if !lRP0
 		if nRokPl < 1
