@@ -291,22 +291,31 @@ do case
          	label_bkod()
          	O_edit()
 	case Ch==K_ALT_P
-        	if !CijeneOK("Stampanje")
+        	
+		if !CijeneOK("Stampanje")
            		return DE_REFRESH
         	endif
-        	if EMPTY(NarBrDok())
+        	
+		if EMPTY(NarBrDok())
            		return DE_REFRESH
         	endif
+		
 		cPom:=idtipdok
-        	close all
+        	
 		if cPom=="13"
+			close all
           		StOLPP()
         	else
-          		StampRtf(PRIVPATH+"fakt.rtf", nil, cPom)
+          		//StampRtf(PRIVPATH+"fakt.rtf", nil, cPom)
+			StDokOdt( nil, nil, nil )
         	endif
-        	close all
-        	O_Edit()
-        	return DE_REFRESH
+        	
+		close all
+        	
+		O_Edit()
+        	
+		return DE_REFRESH
+
 	case Ch=K_ALT_A
 
 		// setuj podatke za fiskalni racun
