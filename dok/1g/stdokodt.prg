@@ -1,5 +1,12 @@
 #include "fakt.ch"
 
+static LEN_KOLICINA := 8
+static LEN_CIJENA := 10
+static LEN_VRIJEDNOST := 12
+static PIC_KOLICINA := ""
+static PIC_VRIJEDNOST := ""
+static PIC_CIJENA := ""
+
 
 // ------------------------------------------------
 // stampa dokumenta u odt formatu
@@ -32,8 +39,11 @@ local cXML := "c:\data.xml"
 local i
 local cTmpTxt := ""
 
+PIC_KOLICINA :=  PADL(ALLTRIM(RIGHT(PicKol, LEN_KOLICINA)), LEN_KOLICINA, "9")
+PIC_VRIJEDNOST := PADL(ALLTRIM(RIGHT(PicDem, LEN_VRIJEDNOST)), LEN_VRIJEDNOST, "9")
+PIC_CIJENA := PADL(ALLTRIM(RIGHT(PicCDem, LEN_CIJENA)), LEN_CIJENA, "9")
 
-// DRN
+// DRN tabela
 // brdok, datdok, datval, datisp, vrijeme, zaokr, ukbezpdv, ukpopust
 // ukpoptp, ukbpdvpop, ukpdv, ukupno, ukkol, csumrn
 
@@ -45,13 +55,13 @@ select drn
 go top
 
 // totali
-xml_node("u_bpdv", ALLTRIM( STR( field->ukbezpdv, 12, 2 ) ) )
-xml_node("u_pop", ALLTRIM( STR( field->ukpopust, 12, 2 ) ) )
-xml_node("u_poptp", ALLTRIM( STR( field->ukpoptp, 12, 2 ) ) )
-xml_node("u_bpdvpop", ALLTRIM( STR( field->ukbpdvpop, 12, 2 ) ) )
-xml_node("u_pdv", ALLTRIM( STR( field->ukpdv, 12, 2 ) ) )
-xml_node("u_kol", ALLTRIM( STR( field->ukkol, 12, 2 ) ) )
-xml_node("u_total", ALLTRIM( STR( field->ukupno, 12, 2) ) )
+xml_node("u_bpdv", show_number( field->ukbezpdv, PIC_VRIJEDNOST ) )
+xml_node("u_pop", show_number( field->ukpopust, PIC_VRIJEDNOST ) )
+xml_node("u_poptp", show_number( field->ukpoptp, PIC_VRIJEDNOST ) )
+xml_node("u_bpdvpop", show_number( field->ukbpdvpop, PIC_VRIJEDNOST ) )
+xml_node("u_pdv", show_number( field->ukpdv, PIC_VRIJEDNOST ) )
+xml_node("u_kol", show_number( field->ukkol, PIC_KOLICINA ) )
+xml_node("u_total", show_number( field->ukupno, PIC_VRIJEDNOST ) )
 
 // dokument iz tabele
 xml_node("dbr", ALLTRIM( field->brdok ) )
@@ -139,17 +149,27 @@ do while !EOF()
 	xml_node( "id", ALLTRIM( field->idroba ) )
 	xml_node( "naz", strkzn(ALLTRIM( field->robanaz ),"8","U" ))
 	xml_node( "jmj", ALLTRIM( field->jmj ) )
-	xml_node( "kol", ALLTRIM( STR( field->kolicina, 12, 2 ) ) )
-	xml_node( "cpdv", ALLTRIM( STR( field->cjenpdv, 12, 2 ) ) )
-	xml_node( "cbpdv", ALLTRIM( STR( field->cjenbpdv, 12, 2 ) ) )
-	xml_node( "c2pdv", ALLTRIM( STR( field->cjen2pdv, 12, 2 ) ) )
-	xml_node( "c2bpdv", ALLTRIM( STR( field->cjen2bpdv, 12, 2 ) ) )
-	xml_node( "pop", ALLTRIM( STR( field->popust, 12, 2 ) ) )
-	xml_node( "ppdv", ALLTRIM( STR( field->ppdv, 12, 2 ) ) )
-	xml_node( "vpdv", ALLTRIM( STR( field->vpdv, 12, 2 ) ) )
-	xml_node( "uk", ALLTRIM( STR( field->ukupno, 12, 2 ) ) )
-	xml_node( "ptp", ALLTRIM( STR( field->poptp, 12, 2 ) ) )
-	xml_node( "vtp", ALLTRIM( STR( field->vpoptp, 12, 2 ) ) )
+	xml_node( "kol", show_number( field->kolicina, PIC_KOLICINA ) )
+	xml_node( "cpdv", show_number( field->cjenpdv, PIC_CIJENA ) )
+	xml_node( "cbpdv", show_number( field->cjenbpdv, PIC_CIJENA ) )
+	xml_node( "c2pdv", show_number( field->cjen2pdv, PIC_CIJENA ) )
+	xml_node( "c2bpdv", show_number( field->cjen2bpdv, PIC_CIJENA ) )
+	xml_node( "pop", show_number( field->popust, PIC_VRIJEDNOST ) )
+	xml_node( "ppdv", show_number( field->ppdv, PIC_VRIJEDNOST ) )
+	xml_node( "vpdv", show_number( field->vpdv, PIC_VRIJEDNOST ) )
+	// ukupno bez pdv
+	xml_node( "ukbpdv", show_number( field->cjenbpdv * field->kolicina, ;
+		PIC_VRIJEDNOST ) )
+	// ukupno sa pdv
+	xml_node( "ukpdv", show_number( field->ukupno, PIC_VRIJEDNOST ) )
+	// ukupno bez pdv-a sa popustom
+	xml_node( "uk2bpdv", show_number( field->cjen2bpdv * field->kolicina, ;
+		PIC_VRIJEDNOST ) )
+	// ukupno sa pdv-om sa popustom
+	xml_node( "uk2pdv", show_number( field->cjen2pdv * field->kolicina, ;
+		PIC_VRIJEDNOST ) )
+	xml_node( "ptp", show_number( field->poptp, PIC_VRIJEDNOST ) )
+	xml_node( "vtp", show_number( field->vpoptp, PIC_VRIJEDNOST ) )
 	xml_node( "c1", ALLTRIM( field->c1 ) )
 	xml_node( "c2", ALLTRIM( field->c2 ) )
 	xml_node( "c3", ALLTRIM( field->c3 ) )
@@ -181,8 +201,8 @@ if lDirectPrint == nil
 	lDirectPrint := .f.
 endif
 
-cJodPath := EXEPATH + "java\jodrep.jar"
-cOOPath := '"c:\Program Files\OpenOffice.org 3\program\swriter.exe"'
+cJodPath := ALLTRIM(gJODRep)
+cOOPath := '"' + ALLTRIM(gOOPath) + ALLTRIM(gOOWriter) + '"'
 
 cCmdLine := "java -jar " + cJodPath + " " + cPath + cTemplate + ;
 	" c:\data.xml c:\out.odt" 
