@@ -1547,7 +1547,7 @@ if (nRbr==1 .and. VAL(_podbr) < 1)
      		
 		if pripr->(FIELDPOS("IDPM"))<>0
        			@  m_x+7,m_y+2  SAY "Prod.mj." get _idpm ;
-				valid {|| if( "RN" $ _idpm, .t., P_IDPM(@_idpm,_idpartner))}
+				valid {|| if( "RN" $ UPPER(_idpm), _f_idpm( @_idpm ), P_IDPM(@_idpm,_idpartner))}
      		endif
    		
    		if _idtipdok=="10"
@@ -2025,6 +2025,12 @@ endif
 
 return 1
 
+
+static function _f_idpm( cIdPm )
+
+cIdPM := UPPER(cIdPM)  
+
+return .t.
 
 
 // ---------------------------------------------
