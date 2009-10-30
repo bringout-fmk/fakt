@@ -311,6 +311,8 @@ if cTabela=="D"
    IF FIELDPOS("DATPL")>0
      AADD(ImeKol,{ "Datum placanja", {|| datpl} })
    ENDIF
+   AADD(ImeKol, {"veza rn", {|| idpm} })
+   
    Kol:={}; for i:=1 to len(ImeKol); AADD(Kol,i); next
    Box(,21,72)
    @ m_x+19,m_y+2 SAY " <ENTER> Stampa dokumenta        ³ <P> Povrat dokumenta u pripremu    ³"
