@@ -19,6 +19,7 @@ D   CARINA   N  5 2
 D   CARINA   N  6 2
 A   M1       C  1 0
 C   RABAT    N 5 2     RABAT  N 6 3
+A  DOK_VEZA C 150 0
 
 *_FAKT
 D   CARINA   N  5 2
@@ -54,6 +55,7 @@ A   SIFRA C 6 0
 A   IDVRSTEP    C 2 0
 A   DATPL    D 8 0
 A   IDPM     C 15 0
+A   DOK_VEZA  C 150 0
 
 *PRIPR.DBF
 C  KOLICINA N 12 3   KOLICINA N 14 5
@@ -77,6 +79,7 @@ C  POREZ    N  5 2   POREZ    N  9 5
 C  CIJENA   N 12 4   CIJENA   N 14 5
 A   IDVRSTEP    C 2 0
 A   IDPM     C 15 0
+A  DOK_VEZA C 150 0
 
 *FAKT.DBF
 C  CIJENA   N 12 4   CIJENA   N 14 5

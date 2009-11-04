@@ -891,6 +891,10 @@ do while !eof()
   	_field->dindem    := cDinDem
   	_field->IdPartner := pripr->idpartner
 	_field->idpm      := pripr->idpm
+	
+	if doks->(FIELDPOS("dok_veza"))<>0
+		_field->dok_veza  := pripr->dok_veza
+	endif
   	
 	if IsRabati()
 		if (cIdTipDok $ gcRabDok)

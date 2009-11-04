@@ -305,13 +305,18 @@ if cTabela=="D"
    AADD(ImeKol,{ "Ukupno-Rab ",    {|| iznos} })
    AADD(ImeKol,{ "Rabat",    {|| rabat} })
    AADD(ImeKol,{ "Ukupno",    {|| iznos+rabat} })
+   
    IF lVrsteP
      AADD(ImeKol,{ "Nacin placanja", {|| idvrstep} })
    ENDIF
+   
    IF FIELDPOS("DATPL")>0
      AADD(ImeKol,{ "Datum placanja", {|| datpl} })
    ENDIF
-   AADD(ImeKol, {"veza rn", {|| idpm} })
+
+   if FIELDPOS("DOK_VEZA")<>0
+   	AADD(ImeKol, {"veza rn", {|| dok_veza} })
+   endif
    
    Kol:={}; for i:=1 to len(ImeKol); AADD(Kol,i); next
    Box(,21,72)

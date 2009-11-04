@@ -1543,13 +1543,20 @@ if (nRbr==1 .and. VAL(_podbr) < 1)
    		_txt3c:=padr(_txt3c,30)
 
    		lUSTipke:=.f.
+
      		@  m_x+5,m_y+2  SAY "Partner " get _idpartner  picture "@!" valid { || P_Firma(@_idpartner,6,11) , _Txt3a:=padr(_idpartner+".",30) , IzSifre() }
      		
 		if pripr->(FIELDPOS("IDPM"))<>0
        			@  m_x+7,m_y+2  SAY "Prod.mj." get _idpm ;
-				valid {|| if( "RN" $ UPPER(_idpm), _f_idpm( @_idpm ), P_IDPM(@_idpm,_idpartner))}
+				valid {|| P_IDPM(@_idpm,_idpartner) }
      		endif
-   		
+   	
+		// veza dokumenti
+		if pripr->(FIELDPOS("DOK_VEZA"))<>0
+			@ m_x+8,m_y+2 SAY "Veza:" GET _dok_veza ;
+				PICT "@S20"
+		endif
+
    		if _idtipdok=="10"
      			if gDodPar=="1"
        				if IzFmkIni('FAKT','ProsiriPoljeOtpremniceNa50','N',KUMPATH)=='D'

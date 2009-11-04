@@ -495,8 +495,8 @@ add_drntext("D09", cIdTipDok)
 // radna jedinica
 add_drntext("D10", cIdFirma)
 
-// idprod.mjesto
-add_drntext("D11", ALLTRIM(pripr->idpm) )
+// dokument veza
+add_drntext("D11", ALLTRIM(pripr->dok_veza) )
 
 // tekst na kraju fakture F04, F05, F06
 fill_dod_text( aMemo[2], pripr->idpartner )
