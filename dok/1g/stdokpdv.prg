@@ -212,6 +212,9 @@ select pripr
 lPdvObveznik := .f.
 fill_part_data(idpartner, @lPdvObveznik)
 
+// popuni ostale podatke, radni nalog i slicno
+fill_other()
+
 select pripr
 
 // vrati naziv dokumenta
@@ -495,8 +498,10 @@ add_drntext("D09", cIdTipDok)
 // radna jedinica
 add_drntext("D10", cIdFirma)
 
-// dokument veza
-add_drntext("D11", ALLTRIM(pripr->dok_veza) )
+if pripr->(FIELDPOS("DOK_VEZA")) <> 0
+	// dokument veza
+	add_drntext("D11", ALLTRIM(pripr->dok_veza) )
+endif
 
 // tekst na kraju fakture F04, F05, F06
 fill_dod_text( aMemo[2], pripr->idpartner )
@@ -586,6 +591,7 @@ add_drn(cBrDok, dDatDok, dDatVal, dDatIsp, cTime, nUkBPDV, nUkVPop, nUkBPDVPop, 
 
 return
 
+
 // -------------------------------------
 // vraca opis grupe iz sifK
 // -------------------------------------
@@ -639,7 +645,22 @@ endif
 add_drntext("F10", cPotpis)
 
 return
-*}
+
+
+// -----------------------------------------------
+// popunjavanje ostalih podataka fakture
+// -----------------------------------------------
+static function fill_other()
+
+if pripr->(FIELDPOS("idrnal")) <> 0
+	// radni nalog
+	if !EMPTY( pripr->idrnal )
+		add_drntext("O01", ALLTRIM(pripr->idrnal) )
+		add_drntext("O02", GetNameRNal( pripr->idrnal ) )
+	endif
+endif
+
+return
 
 
 // daj naziv dokumenta iz parametara

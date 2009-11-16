@@ -1625,13 +1625,14 @@ if (nRbr==1 .and. VAL(_podbr) < 1)
 		endif
 		
 		_Dest:=PADR(_Dest, 80)
-   		if (gDest .and. !glDistrib)
-     		      @  m_x+10, col()+2  SAY "Destinacija:" get _Dest PICT "@S46"
+   		
+		if (gDest .and. !glDistrib)
+     		      @  m_x+10, m_y+2 SAY "Destinacija:" get _Dest PICT "@S20"
    		endif
 
 
 		if glRadNal .and. _idtipdok$"12"
-			@ m_x+9, m_y+15 SAY "Rad.nalog:" GET _idRNal VALID P_RNal(@_idRNal) PICT "@!"
+			@ m_x+10, col()+2 SAY "Rad.nalog:" GET _idRNal VALID P_RNal(@_idRNal) PICT "@!"
 		endif
 
    		if lUSTipke
