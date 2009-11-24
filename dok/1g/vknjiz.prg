@@ -4,60 +4,61 @@
 
 function IzSifre(fSilent)
 local nPos
-local cSif:=trim(_txt3a)
+local cSif := trim(_txt3a)
 local cPom
 local fTel
 
-altd()
-
-if fSilent==NIL
-  fSilent:=.f.
+if fSilent == nil
+	fSilent:=.f.
 endif
 
 fTel:=.f.
 if right(cSif,1)="." .and. len(csif)<=7
-   nPos:=RAT(".",cSif)
-   cSif:=left(cSif,nPos-1)
-   if !fsilent
-     P_Firma(padr(cSif,6))
-   endif
-   if lSpecifZips
-     _Txt3a:=TRIM(partn->id)+"- "+TRIM(LEFT(partn->naz,25))+" "+trim(partn->naz2)
-   else
-     IF IzFMKINI("PoljeZaNazivPartneraUDokumentu","Prosiriti","N",KUMPATH)=="D"
-       _Txt3a:=padr(partn->naz,60)
-     ELSE
-       _Txt3a:=padr(partn->naz,30)
-     ENDIF
-   endif
-   _txt3b:=trim(partn->adresa)
-   cPom:=""
-   if !empty(partn->telefon) .and. IzFmkIni('FAKT','NaslovPartnTelefon','D')=="D"
-      cPom:=_txt3b + ", Tel:" + trim(partn->telefon)
-   else
-      fTel:=.t.
-   endif
-   if !empty(cPom) .and. len(cPom)<=30
-      _txt3b:=cPom
-      ftel:=.t.
-   endif
-   if !empty(partn->ptt)
-     if IzFmkIni('FAKT','NaslovPartnPTT','D')=="D"
-        _txt3c:=trim(partn->ptt)+" "+trim(partn->mjesto)
-     endif
-   else
-     _txt3c:=trim(partn->mjesto)
-   endif
+	nPos:=RAT(".",cSif)
+   	cSif:=left(cSif,nPos-1)
+   	if !fsilent
+     		P_Firma(padr(cSif,6))
+   	endif
+   	if lSpecifZips
+     		_Txt3a:=TRIM(partn->id)+"- "+TRIM(LEFT(partn->naz,25))+" "+trim(partn->naz2)
+   	else
+     		IF IzFMKINI("PoljeZaNazivPartneraUDokumentu","Prosiriti","N",KUMPATH)=="D"
+       			_Txt3a:=padr(partn->naz,60)
+     		ELSE
+       			_Txt3a:=padr(partn->naz,30)
+     		ENDIF
+   	endif
 
-   if !ftel
-       if IzFmkIni('FAKT','NaslovPartnTelefon','D')=="D"
-          _txt3c:=_txt3c+", Tel:"+trim(partn->telefon)
-       endif
-   endif
+   	_txt3b:=trim(partn->adresa)
+   	cPom:=""
+   	
+	if !empty(partn->telefon) .and. IzFmkIni('FAKT','NaslovPartnTelefon','D')=="D"
+      		cPom:=_txt3b + ", Tel:" + trim(partn->telefon)
+   	else
+      		fTel:=.t.
+   	endif
+   	
+	if !empty(cPom) .and. len(cPom)<=30
+     		_txt3b:=cPom
+      		ftel:=.t.
+   	endif
+   	if !empty(partn->ptt)
+     		if IzFmkIni('FAKT','NaslovPartnPTT','D')=="D"
+        		_txt3c:=trim(partn->ptt)+" "+trim(partn->mjesto)
+     		endif
+   	else
+     		_txt3c:=trim(partn->mjesto)
+   	endif
 
-   _txt3b:=padr(_txt3b,30)
-   _txt3c:=padr(_txt3c,30)
-   _IdPartner:=partn->id
+   	if !ftel
+       		if IzFmkIni('FAKT','NaslovPartnTelefon','D')=="D"
+          		_txt3c:=_txt3c+", Tel:"+trim(partn->telefon)
+       		endif
+   	endif
+
+   	_txt3b:=padr(_txt3b,30)
+   	_txt3c:=padr(_txt3c,30)
+   	_IdPartner:=partn->id
 endif
 
 if gShSld == "D"
@@ -437,48 +438,61 @@ endif
 return .t.
 
 
-
+// -----------------------------------------------
+// WHEN roba
+// -----------------------------------------------
 function W_Roba()
 private Getlist:={}
 
 if _podbr==" ."
-     @  m_x+13,m_y+2  SAY "Roba     " get _txt1 pict "@!"
-     read
-     return .f.
+     	@ m_x + 15, m_y + 2  SAY "Roba     " ;
+     		GET _txt1 ;
+		PICT "@!"
+     	read
+     	return .f.
 else
-     return .t.
+     	return .t.
 endif
 
 
-
-function V_Roba(lPrikTar)
-local cPom , nArr
+// ----------------------------------------------
+// VALID roba
+// ----------------------------------------------
+function V_Roba( lPrikTar )
+local cPom
+local nArr
 private cVarIDROBA
+
 if fID_J
-  cVarIDROBA:="_IDROBA_J"
+	cVarIDROBA:="_IDROBA_J"
 else
-  cVarIDROBA:="_IDROBA"
+  	cVarIDROBA:="_IDROBA"
 endif
 
 
-IF lPrikTar==NIL; lPrikTar:=.t.; ENDIF
+if lPrikTar == nil
+	lPrikTar := .t.
+endif
 
 if right(trim(&cVarIdRoba),2)="++"
-  cPom:=padr(left(&cVarIdRoba,len(trim(&cVarIdRoba))-2),len(&cVarIdRoba))
-  select roba; seek cPom
-  if found()
-      BrowseKart(cPom)    // prelistaj kalkulacije
-      &cVarIdRoba:=cPom
-  endif
+	cPom:=padr(left(&cVarIdRoba,len(trim(&cVarIdRoba))-2),len(&cVarIdRoba))
+  	select roba
+	seek cPom
+  	if found()
+      		BrowseKart(cPom)    
+		// prelistaj kalkulacije
+      		&cVarIdRoba:=cPom
+  	endif
 endif
 
 if right(trim(&cVarIdRoba),2)="--"
-  cPom:=padr(left(&cVarIdRoba,len(trim(&cVarIdRoba))-2),len(&cVarIdRoba))
-  select roba; seek cPom
-  if found()
-      FaktStanje(roba->id)    // prelistaj kalkulacije
-      &cVarIdRoba:=cPom
-  endif
+	cPom:=padr(left(&cVarIdRoba,len(trim(&cVarIdRoba))-2),len(&cVarIdRoba))
+  	select roba
+	seek cPom
+  	if found()
+      		FaktStanje(roba->id)    // prelistaj kalkulacije
+      		&cVarIdRoba:=cPom
+  	endif
 endif
 
 if gArtCDX = "SIFRADOB"
@@ -489,7 +503,6 @@ if gArtCDX = "SIFRADOB"
 	endif
 endif
 
-
 P_Roba( @_Idroba , nil, nil, gArtCDX )
 
 select roba
@@ -497,60 +510,56 @@ select pripr
 
 select tarifa
 seek roba->idtarifa
-IF lPrikTar
+
+if lPrikTar
 	if gTBDir=="N"
     		if IsPDV()
-			@ m_X+14,m_y+28 SAY "TBr: "
+			@ m_X+16,m_y+28 SAY "TBr: "
 			?? roba->idtarifa, "PDV", str(tarifa->opp,7,2)+"%"
 		else
-			@ m_X+14,m_y+28 SAY "TBr: "
+			@ m_X+16,m_y+28 SAY "TBr: "
 			?? roba->idtarifa, "PPP", str(tarifa->opp,7,2)+"%", "PPU", str(tarifa->ppp,7,2)
   		endif
 	endif
   	if _IdTipdok=="13"
 		if IsPDV()
-     			@ m_X+16,m_y+47 SAY "MPC.s.PDV sif:"
+     			@ m_X+18,m_y+47 SAY "MPC.s.PDV sif:"
 		else
-     			@ m_X+16,m_y+47 SAY "MPC u sif:"
+     			@ m_X+18,m_y+47 SAY "MPC u sif:"
 		endif
 		?? str(roba->mpc,8,2)
   	endif
-ENDIF
+endif
 
 // uzmi rabat za ovu robu.... iz polja roba->n1
 if gRabIzRobe == "D"
 	_rabat := roba->n1
 endif
 
-
-SELECT PRIPR
+select pripr
 return .t.
 
 
-
-/*! \fn V_Porez()
- *  \brief
- */
- 
+// -------------------------------
+// VALID porez 
+// -------------------------------
 function V_Porez()
-*{
 local nPor
 if _porez<>0
-
-  if roba->tip="U"
-    nPor:=tarifa->ppp
-  else
-    nPor:=tarifa->opp
-  endif
-  if nPor<>_Porez
-    Beep(2)
-    Msg("Roba pripada tarifnom stavu "+roba->idtarifa+;
-      "#kod koga je porez "+str(nPor,5,2)  ;
-       )
-  endif
+	if roba->tip="U"
+    		nPor:=tarifa->ppp
+  	else
+    		nPor:=tarifa->opp
+  	endif
+  	if nPor<>_Porez
+    		Beep(2)
+    		Msg("Roba pripada tarifnom stavu "+roba->idtarifa+;
+      		"#kod koga je porez "+str(nPor,5,2)  ;
+       		)
+  	endif
 endif
 return .t.
-*}
+
 
 
 
@@ -560,12 +569,10 @@ return .t.
  */
  
 function W_BrOtp(fnovi)
-*{
 if fnovi
-     _datotp:=_datdok;_datpl:=_datdok
-  endif
+	_datotp:=_datdok;_datpl:=_datdok
+endif
 return .t.
-*}
 
 
 
@@ -574,7 +581,6 @@ return .t.
  */
  
 function V_Rabat()
-*{
 if trabat $ " U"
   if _Cijena*_Kolicina<>0
    _rabat:=_rabat*100/(_Cijena*_Kolicina)
@@ -879,9 +885,9 @@ private GetList:={}
 if gTBDir="N"
 
 if !(roba->tip="U")
- devpos(m_x+13,m_y+25)
+ devpos(m_x+15,m_y+25)
  ?? space(40)
- devpos(m_x+13,m_y+25)
+ devpos(m_x+15,m_y+25)
 
  ?? trim(LEFT(roba->naz,40)),"("+roba->jmj+")"
 endif
@@ -913,7 +919,7 @@ else
 endif
 
 return .t.
-*}
+
 
 
 
