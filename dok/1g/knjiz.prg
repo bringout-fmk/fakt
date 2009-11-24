@@ -260,7 +260,7 @@ do case
 			return DE_CONT
 		endif
 	case Ch==K_ENTER .and. gTBDir="N"
-    		Box("ist", 19, 75, .f.)
+    		Box("ist", 22, 75, .f.)
    		Scatter()
     		nRbr:=RbrUnum(_Rbr)
     		if EditPripr(.f.)==0
@@ -876,7 +876,7 @@ PushWA()
 
 select PRIPR
 // go top
-Box(,19,75,.f.,"")
+Box(,22,75,.f.,"")
 nDug:=0
 do while !eof()
 	skip
@@ -884,14 +884,13 @@ do while !eof()
 	skip-1
    	Scatter()
    	nRbr:=RbrUnum(_Rbr)
-   	//@ m_x+1,m_y+1 CLEAR to m_x+21,m_y+76
    	BoxCLS()
    	if EditPripr(.f.)==0
      		exit
    	endif
    	nDug+=round( _Cijena*_kolicina*PrerCij()*(1-_Rabat/100)*(1+_Porez/100) , ZAOKRUZENJE)
-   	@ m_x+20,m_y+2 SAY "ZBIR DOKUMENTA:"
-   	@ m_x+20,col()+1 SAY nDug PICTURE '9 999 999 999.99'
+   	@ m_x+23,m_y+2 SAY "ZBIR DOKUMENTA:"
+   	@ m_x+23,col()+1 SAY nDug PICTURE '9 999 999 999.99'
    	InkeySc(10)
    	select PRIPR
    	Gather()
@@ -919,7 +918,7 @@ enddo
 
 go bottom
 
-Box("knjn", 19, 77, .f., "Unos novih stavki")
+Box("knjn", 22, 77, .f., "Unos novih stavki")
 
 do while .t.
 	Scatter()
@@ -941,8 +940,8 @@ do while .t.
      		exit
    	endif
    	nDug += Round(_Cijena*_Kolicina*PrerCij()*(1-_Rabat/100)*(1+_Porez/100) , ZAOKRUZENJE)
-   	@ m_x+20,m_y+2 SAY "ZBIR DOKUMENTA:"
-   	@ m_x+20,col()+2 SAY nDug PICTURE '9 999 999 999.99'
+   	@ m_x+23,m_y+2 SAY "ZBIR DOKUMENTA:"
+   	@ m_x+23,col()+2 SAY nDug PICTURE '9 999 999 999.99'
    	InkeySc(10)
    	select PRIPR
    	APPEND BLANK
@@ -1731,9 +1730,9 @@ else
 	@ m_x + 1, m_y+ 2 SAY gNFirma 
 	?? "  RJ:", _IdFirma
    	@ m_x+3,m_y+2 SAY PADR(aPom[ASCAN(aPom,{|x|_IdTipdok==LEFT(x,2)})],35)
-   	@ m_x+3,m_y+40 SAY "Datum: "
+   	@ m_x+3,m_y+45 SAY "Datum: "
    	?? _datDok
-   	@ m_x+3,m_y+col()+2 SAY "Broj: "
+   	@ m_x+3,m_y+col()+1 SAY "Broj: "
 	?? _BrDok
    	_txt2:=""
 	// varijanta rabatnih skala
