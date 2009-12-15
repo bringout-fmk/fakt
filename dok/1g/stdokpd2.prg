@@ -108,6 +108,10 @@ local nDrnZaokr:=0
 local cDokNaz
 // ako je kupac pdv obveznik, ova varijable je .t.
 local lPdvObveznik
+local cOpis := ""
+local cC1 := ""
+local cC2 := ""
+local cC3 := ""
 
 // napuni firmine podatke
 fill_firm_data()
@@ -167,6 +171,13 @@ do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==c
 	nCj2BPDV := 0
 	nVPopust := 0
 	
+	if pripr->(FIELDPOS("C1")) <> 0
+		cC1 := pripr->c1
+		cC2 := pripr->c2
+		cC3 := pripr->c3
+		cOpis := pripr->opis
+	endif
+
 	cRbr := field->rbr
 	cPodBr := field->podbr
 	cJmj := roba->jmj
@@ -233,7 +244,7 @@ do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==c
 
 	++ nCSum
 	
-	add_rn(cBrDok, cRbr, cPodBr, cIdRoba, cRobaNaz, cJmj, nKol, nCjPDV, nCjBPDV, nCj2PDV, nCj2BPDV, nPopust, nPPDV, nVPDV, nUkStavka, nPopNaTeretProdavca, nVPopNaTeretProdavca )
+	add_rn(cBrDok, cRbr, cPodBr, cIdRoba, cRobaNaz, cJmj, nKol, nCjPDV, nCjBPDV, nCj2PDV, nCj2BPDV, nPopust, nPPDV, nVPDV, nUkStavka, nPopNaTeretProdavca, nVPopNaTeretProdavca, cC1, cC2, cC3, cOpis )
 
 	select pripr
 	skip
