@@ -259,13 +259,17 @@ gFText3 := PADR(gFText3, 72)
 gFTelefon := PADR(gFTelefon, 72)
 gFEmailWeb := PADR(gFEmailWeb, 72)
 
-Box( , 20, 77, .f., "Izgleda dokumenata - zaglavlje")
+Box( , 21, 77, .f., "Izgleda dokumenata - zaglavlje")
 
 	// opci podaci
 	@ m_x+nX, m_y+2 SAY PADL("Puni naziv firme:", nSay) GET gFNaziv ;
 		PICT sPict
 	nX++
 	
+	@ m_x+nX, m_y+2 SAY PADL("Dodatni opis:", nSay) GET gFPNaziv ;
+		PICT sPict
+	nX++
+
 	@ m_x+nX, m_y+2 SAY PADL("Adresa firme:", nSay) GET gFAdresa ;
 		PICT sPict 
 	nX++
@@ -335,6 +339,7 @@ BoxC()
 
 if (LASTKEY() <> K_ESC)
 	Wpar("F1",gFNaziv)
+	Wpar("f1",gFPNaziv)
    	Wpar("F2",gFAdresa)
    	Wpar("F3",gFIdBroj)
    	Wpar("F9",gFBanka1)

@@ -1040,6 +1040,7 @@ local cPom
 local lPrazno
 // opci podaci
 add_drntext("I01", gFNaziv)
+add_drntext("I20", gFPNaziv)
 add_drntext("I02", gFAdresa)
 add_drntext("I03", gFIdBroj)
 // 4. se koristi za id prod.mjesto u pos

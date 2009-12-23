@@ -740,7 +740,9 @@ RPar("f5", @gFFKonv)
 cSection := "1"
 // varijable PDV
 // firma naziv
-public gFNaziv:=SPACE(40) 
+public gFNaziv:=SPACE(250) 
+// firma dodatni opis
+public gFPNaziv:=SPACE(250) 
 // firma adresa
 public gFAdresa:=SPACE(35) 
 // firma id broj
@@ -778,6 +780,11 @@ public gPdvDokVar := "1"
 
 // parametri zaglavlja
 Rpar("F1",@gFNaziv)
+Rpar("f1",@gFPNaziv)
+// prosiri na len 250
+gFNaziv := PADR(ALLTRIM(gFNaziv), 250)
+gFPNaziv := PADR(ALLTRIM(gFPNaziv), 250)
+
 Rpar("F2",@gFAdresa)
 Rpar("F3",@gFIdBroj)
 Rpar("F9",@gFBanka1)
