@@ -27,7 +27,9 @@ AADD(opc, "5. regeneracija polja fakt->rbr")
 AADD(opcexe, {|| fa_rbr_regen()})
 AADD(opc, "6. regeneracija polja idpartner")
 AADD(opcexe, {|| fa_part_regen()})
-AADD(opc, "7. fakt export (r_exp) ")
+AADD(opc, "7. modifikacija partnera")
+AADD(opcexe, {|| fa_p_regen()})
+AADD(opc, "E. fakt export (r_exp) ")
 AADD(opcexe, {|| fkt_export()})
 
 Menu_SC("fain")
@@ -282,6 +284,56 @@ BoxC()
 if nCount > 0
 	msgbeep("Odradjeno " + ALLTRIM(STR(nCount)) + " zapisa !")
 endif
+
+return
+
+
+// ----------------------------------------
+// regeneracija partnera
+// ----------------------------------------
+function fa_p_regen()
+local nPrefiks := 2
+local nLenMod := 4
+local cInsChar := "0"
+local lSilent := .t. 
+
+msgo("konverzija - tabela PARTN...")
+O_PARTN
+mod_f_val( "ID", "0", cInsChar, nLenMod, nPrefiks, lSilent )
+msgc()
+
+msgo("konverzija - tabela UGOV...")
+O_UGOV
+mod_f_val( "ID", "0", cInsChar, nLenMod, nPrefiks, lSilent )
+msgc()
+msgo("konverzija - tabela UGOV...")
+mod_f_val( "IDPARTNER", "0", cInsChar, nLenMod, nPrefiks, lSilent )
+msgc()
+
+msgo("konverzija - tabela RUGOV...")
+O_RUGOV
+mod_f_val( "ID", "0", cInsChar, nLenMod, nPrefiks, lSilent )
+msgc()
+
+msgo("konverzija - tabela GEN_UG_P...")
+O_G_UG_P
+mod_f_val( "ID_UGOV", "0", cInsChar, nLenMod, nPrefiks )
+msgc()
+
+msgo("konverzija - tabela GEN_UG_P...")
+O_G_UG_P
+mod_f_val( "IDPARTNER", "0", cInsChar, nLenMod, nPrefiks )
+msgc()
+
+msgo("konverzija - tabela DOKS...")
+O_DOKS
+mod_f_val( "IDPARTNER", "1", cInsChar, nLenMod, nPrefiks, lSilent )
+msgc()
+
+msgo("konverzija - tabela FAKT...")
+O_FAKT
+mod_f_val( "IDPARTNER", "1", cInsChar, nLenMod, nPrefiks, lSilent )
+msgc()
 
 return
 
