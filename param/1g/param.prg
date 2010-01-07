@@ -198,17 +198,40 @@ endif
   	@ m_x+nX, m_y+2 SAY "Tekuca vrijednost za rok placanja  " GET gRokPl PICT "999"
 	nX++
 	
-if !IsPDV()
-  	@ m_x+nX, m_y+2 SAY "Mogucnost ispravke partnera u novoj stavci (D/N)" GET gIspPart PICT "@!" VALID gIspPart$"DN"
-	nX++
-else
-	gIspPart := "N"
-endif
+	if !IsPDV()
+  		@ m_x+nX, m_y+2 SAY "Mogucnost ispravke partnera u novoj stavci (D/N)" GET gIspPart PICT "@!" VALID gIspPart$"DN"
+		nX++
+	else
+		gIspPart := "N"
+	endif
 	
-  	@ m_x + nX, m_y+2 SAY "Uvijek resetuj artikal pri unosu dokumenata (D/N)" GET gResetRoba PICT "@!" VALID gResetRoba $ "DN"
-	nX++
-	
-  	READ
+	@ m_x + nX, m_y+2 SAY "Uvijek resetuj artikal pri unosu dokumenata (D/N)" GET gResetRoba PICT "@!" VALID gResetRoba $ "DN"
+
+	nX ++
+
+	@ m_x + nX, m_y + 2 SAY "Ispis racuna MP na traku (D/N/X)" ;
+		GET gMPPrint ;
+		PICT "@!" ;
+		VALID gMPPrint $ "DNX"
+
+	read
+
+	if gMPPrint $ "DX"
+
+		nX ++
+		@ m_x + nX, m_y + 2 SAY "Oznaka lokalnog porta za stampu:" ;
+			GET gMPLocPort ;
+			VALID gMPPrint $ "DNX"
+		
+		nX ++
+		@ m_x + nX, m_y + 2 SAY "Redukcija trake (0/1/2):" ;
+			GET gMPRedTraka ;
+			VALID gMPRedTraka $ "012"
+		
+		read
+
+	endif
+
 BoxC()
 
 
@@ -225,13 +248,16 @@ if (LASTKEY()<>K_ESC)
    	Wpar("ds",gnDS)
    	WPar("vz",gVlZagl)
    	WPar("if",gImeF)
-   	WPar("95",gKomLin)   // prvenstveno za win 95
+   	WPar("95",gKomLin)   
    	WPar("k1",@gDk1)
    	WPar("k2",@gDk2)
    	WPar("im",gIMenu)
    	WPar("mr",gMjRJ)
    	WPar("Fi",@gIspPart)
    	WPar("Fr",@gResetRoba)
+   	WPar("mP",gMpPrint)
+   	WPar("mL",gMpLocPort)
+   	WPar("mT",gMpRedTraka)
 endif
 
 return 

@@ -100,12 +100,39 @@ if Logirati(goModul:oDataBase:cName, "DOK", "PRINT")
 endif
 
 if cIdTipDok == "13"
+	// stampa 13-ke
 	omp_print()
 else
+
+  if cIdTipDok == "11" .and. gMPPrint $ "DX"
+	
+	if gMPPrint == "D" .or. ( gMpPrint == "X" .and. Pitanje(,"Stampati na traku (D/N)?","D") == "D" )
+	
+		// stampa na traku
+		gLocPort := gMpLocPort
+
+		lStartPrint := .t.
+		lPrepis := .f.
+	
+		cPrn := gPrinter
+		gPrinter := "0"
+		
+		st_rb_traka( lStartPrint, lPrepis )
+
+		gPrinter := cPrn
+
+	else
+		pf_a4_print(nil, cDocumentName)
+	endif
+  
+  else
 	pf_a4_print(nil, cDocumentName)
+  endif
+
 endif
 
 return
+
 
 // ----------------------------------------------------------------------
 // puni  pomocne tabele rn drn
@@ -660,12 +687,68 @@ if pripr->(FIELDPOS("idrnal")) <> 0
 	endif
 endif
 
+// traka - ispis, cjene bez pdv, sa pdv
+cPom := "1"
+add_drntext( "P20", cPom )
+
+// stampa id roba na racunu
+cPom := "1"
+add_drntext( "P21", cPom )
+
+// redukcija trake
+cPom := "2"
+add_drntext( "P22", cPom )
+
+// ispis kupca na racunu
+cPom := "D"
+add_drntext( "P23", cPom )
+
+
+// mjesto
+cPom := gMjStr
+add_drntext( "R01", cPom )
+
+// naziv operatera
+cPom := getfullusername( getuserid() )
+add_drntext( "R02", cPom )
+
+// smjena
+cPom := "1"
+add_drntext( "R03", cPom )
+
+// vrsta placanja
+cPom := "GOTOVINA"
+add_drntext( "R05", cPom )
+
+// dodatni tekst racuna
+cPom := ""
+add_drntext( "R06", cPom )
+add_drntext( "R07", cPom )
+add_drntext( "R08", cPom )
+
+// broj linija za odcjep.trake
+cPom := "8"
+add_drntext( "P12", cPom )
+
+// sekv.otvaranje ladice
+cPom := ""
+add_drntext( "P13", cPom )
+
+// sekv.cjepanje trake
+cPom := ""
+add_drntext( "P14", cPom )
+
+// prodajno mjesto
+cPom := "prod. 1"
+add_drntext( "I04", cPom )
+
 return
 
 
+// --------------------------------------------------------------
 // daj naziv dokumenta iz parametara
+// --------------------------------------------------------------
 function get_dok_naz(cNaz, cIdVd, cVP, lSamoKol)
-*{
 local cPom
 local cSamoKol
 
