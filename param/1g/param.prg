@@ -219,7 +219,7 @@ endif
 	if gMPPrint $ "DX"
 
 		nX ++
-		@ m_x + nX, m_y + 2 SAY "Oznaka lokalnog porta za stampu:" ;
+		@ m_x + nX, m_y + 2 SAY "Oznaka lokalnog porta za stampu: LPT" ;
 			GET gMPLocPort ;
 			VALID gMPPrint $ "DNX"
 		

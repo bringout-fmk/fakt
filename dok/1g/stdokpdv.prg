@@ -109,7 +109,7 @@ else
 	if gMPPrint == "D" .or. ( gMpPrint == "X" .and. Pitanje(,"Stampati na traku (D/N)?","D") == "D" )
 	
 		// stampa na traku
-		gLocPort := gMpLocPort
+		gLocPort := "LPT" + ALLTRIM( gMpLocPort )
 
 		lStartPrint := .t.
 		lPrepis := .f.
