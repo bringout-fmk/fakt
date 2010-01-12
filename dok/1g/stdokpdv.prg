@@ -708,9 +708,11 @@ add_drntext( "P23", cPom )
 cPom := gMjStr
 add_drntext( "R01", cPom )
 
-// naziv operatera
-cPom := getfullusername( getuserid() )
-add_drntext( "R02", cPom )
+if gSecurity == "D"
+	// naziv operatera
+	cPom := getfullusername( getuserid() )
+	add_drntext( "R02", cPom )
+endif
 
 // smjena
 cPom := "1"

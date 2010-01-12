@@ -297,6 +297,7 @@ local nLenMod := 4
 local cInsChar := "0"
 local lSilent := .t. 
 
+/*
 msgo("konverzija - tabela PARTN...")
 O_PARTN
 mod_f_val( "ID", "0", cInsChar, nLenMod, nPrefiks, lSilent )
@@ -317,12 +318,12 @@ msgc()
 
 msgo("konverzija - tabela GEN_UG_P...")
 O_G_UG_P
-mod_f_val( "ID_UGOV", "0", cInsChar, nLenMod, nPrefiks )
+mod_f_val( "ID_UGOV", "0", cInsChar, nLenMod, nPrefiks, lSilent )
 msgc()
 
 msgo("konverzija - tabela GEN_UG_P...")
 O_G_UG_P
-mod_f_val( "IDPARTNER", "0", cInsChar, nLenMod, nPrefiks )
+mod_f_val( "IDPARTNER", "0", cInsChar, nLenMod, nPrefiks, lSilent )
 msgc()
 
 msgo("konverzija - tabela DOKS...")
@@ -334,6 +335,17 @@ msgo("konverzija - tabela FAKT...")
 O_FAKT
 mod_f_val( "IDPARTNER", "1", cInsChar, nLenMod, nPrefiks, lSilent )
 msgc()
+*/
+
+if pitanje(,"konvertovati partnere", "N") == "N"
+	return
+endif
+
+msgo("konverzija - tabela DEST...")
+O_DEST
+mod_f_val( "IDPARTNER", "1", cInsChar, nLenMod, nPrefiks, lSilent )
+msgc()
+msgbeep("konverzija zavrsena !!!")
 
 return
 

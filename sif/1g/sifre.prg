@@ -1048,7 +1048,7 @@ cPTT      := SPACE(80)
 cMjesta   := SPACE(80)
 cNSort    := "4"
 
-Box(,8,77)
+Box(,10,77)
 DO WHILE .t.
  @ m_x+0, m_y+5 SAY "POSTAVLJENJE USLOVA ZA PRAVLJENJE LABELA"
  @ m_x+2, m_y+2 SAY "Artikal  :" GET cIdRoba  VALID P_Roba(@cIdRoba) PICT "@!"
@@ -1058,7 +1058,9 @@ DO WHILE .t.
  @ m_x+6, m_y+2 SAY "Nacin sortiranja (1-kolicina+mjesto+naziv ,"
  @ m_x+7, m_y+2 SAY "                  2-mjesto+naziv+kolicina ,"
  @ m_x+8, m_y+2 SAY "                  3-PTT+mjesto+naziv+kolicina),"
- @ m_x+8, m_y+2 SAY "                  4-kolicina+PTT+mjesto+naziv):" GET cNSort VALID cNSort$"1234" PICT "9"
+ @ m_x+9, m_y+2 SAY "                  4-kolicina+PTT+mjesto+naziv)," 
+@ m_x+10, m_y+2 SAY "                  5-idpartner)," ;
+ 	GET cNSort VALID cNSort$"12345" PICT "9"
  READ
  IF LASTKEY()==K_ESC; BoxC(); RETURN; ENDIF
  aUPart := Parsiraj( cPartneri , "IDPARTNER" )
@@ -1094,6 +1096,7 @@ index on str(kolicina,12,2)+mjesto+naz     tag "1"
 index on mjesto+naz+str(kolicina,12,2)     tag "2"
 index on ptt+mjesto+naz+str(kolicina,12,2) tag "3"
 index on str(kolicina,12,2)+ptt+mjesto+naz tag "4"
+index on idpartner tag "5"
 
 if is_dest()
 	select dest
