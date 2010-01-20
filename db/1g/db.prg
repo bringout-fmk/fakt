@@ -293,7 +293,8 @@ endif
 if (KLevel>"1")  // Klevel <> "0"
 	Beep(2)
     	Msg("Nemate pristupa ovoj opciji !",4)
-    	closeret
+    	close all
+	return 0
 endif
 
 
@@ -317,7 +318,7 @@ set order to 1
 
 cSifDok:="  "
 
-if cIdFirma==nil  // bez parametara
+if cIdFirma == nil  // bez parametara
 	cIdFirma:=gFirma
   	if fR
     		if Pitanje(,"Prekinuti rezervaciju VP-20 ili MP-27 (V/M)?","V","VM")=="V"
@@ -349,9 +350,37 @@ if cIdFirma==nil  // bez parametara
 
 endif  // cidfirma=NIL
 
+// provjeri pravila
+if (ImaPravoPristupa(goModul:oDataBase:cName,"DOK","POVRATDOK" + cIdTipDok ))
+	
+   if (ImaPravoPristupa(goModul:oDataBase:cName,"DOK","POVRATDOKDATUM" ))
+	
+	nTArea := SELECT()
+
+	select fakt
+  	hseek cIdFirma+cIdTipDok+cBrDok
+	if FOUND()
+		if fakt->datdok <> DATE()
+			msgbeep("Datum dokumenta <> tekuci datum#Opcija onemogucena !")
+			close all
+			return 0
+		endif
+	endif
+	
+	select (nTArea)
+   
+   endif
+
+else	
+	msgbeep( cZabrana )	
+	close all
+	return 0
+endif
+
 if (!fR .and. !lTest)
 	if Pitanje("","Dokument "+cIdFirma+"-"+cIdTipDok+"-"+cBrDok+" povuci u pripremu (D/N) ?","D")=="N"
-   		closeret
+   		close all
+		return 0
  	endif
 endif
 
@@ -359,14 +388,16 @@ select fakt
 
 if !FLock()
 	MsgBeep("FAKT datoteka je zauzeta ",10)
-	closeret
+	close all
+	return 0
 endif
 
 if lDoks2
 	select doks2
   	if !FLock()
 		Msg("DOKS2 datoteka je zauzeta ",10)
-		closeret
+		close all
+		return 0
 	endif
 endif
 
@@ -374,7 +405,8 @@ select doks
 
 if !FLock()
 	MsgBeep("DOKS datoteka je zauzeta ",10)
-	closeret
+	close all
+	return 0
 endif
 
 fBrisao:=.f.
@@ -387,7 +419,8 @@ if !fR
     		// izgenerisani dokument
     		MsgBeep("Radi se o izgenerisanom dokumentu!!!")
     		if Pitanje(,"Zelite li nastaviti?!", "N")=="N"
-      			CLOSERET
+      			close all
+			return 0
     		endif
   	endif
 	
@@ -464,7 +497,8 @@ endif
 if !fR
 	if !fBrisao
     		MsgBeep("Ne postoji zadani dokument ")
-    		closeret
+    		close all
+		return 0
   	endif
   	if lTest
     		cBrisiKum:="D"
@@ -531,8 +565,8 @@ if Logirati(goModul:oDataBase:cName,"DOK","POVRAT")
 
 endif
 		
-closeret
-return
+close all
+return 1
 
 
 
@@ -647,8 +681,9 @@ do while !eof()
     	skip 1
 enddo
 
-closeret
-return
+close all
+return 0
+
 
 // -----------------------------------
 // Azur(lSilent)

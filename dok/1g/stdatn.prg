@@ -962,7 +962,7 @@ do case
      _cIdTipDok:=idtipdok
      _cBrDok:=brdok
      close all
-     Povrat(.f.,_cidfirma,_cIdTipdok,_cbrdok)
+     nR_tmp := Povrat(.f.,_cidfirma,_cIdTipdok,_cbrdok)
      select (F_DOKS)
      use
      O_DOKS
@@ -977,7 +977,7 @@ do case
        set Filter to &cFilter
      endif
      go nTrec
-     if Pitanje(,"Preci u tabelu pripreme ?","D")=="D"
+     if nR_tmp <> 0 .and. Pitanje(,"Preci u tabelu pripreme ?","D")=="D"
       fUPripremu:=.t.
       nRet:=DE_ABORT
      else
@@ -991,7 +991,7 @@ do case
      _cBrDok    := brdok
      close all
      if _cidtipdok$"20#27"
-       Povrat(.t.,_cidfirma,_cIdTipdok,_cbrdok)
+       nR_tmp := Povrat(.t.,_cidfirma,_cIdTipdok,_cbrdok)
      elseif _cidtipdok $ "01#19"
        O_DOKS
        seek _cidfirma+_cidtipdok+_cbrdok
