@@ -340,11 +340,24 @@ msgc()
 if pitanje(,"konvertovati partnere", "N") == "N"
 	return
 endif
-
+/*
 msgo("konverzija - tabela DEST...")
 O_DEST
 mod_f_val( "IDPARTNER", "1", cInsChar, nLenMod, nPrefiks, lSilent )
 msgc()
+*/
+msgo("konverzija - tabela SIFV...")
+
+O_SIFV
+cFilter := "ALLTRIM(id) == 'PARTN'"
+set filter to &cFilter
+go top
+
+mod_f_val( "IDSIF", "0", cInsChar, nLenMod, nPrefiks, lSilent )
+
+set filter to
+msgc()
+
 msgbeep("konverzija zavrsena !!!")
 
 return
