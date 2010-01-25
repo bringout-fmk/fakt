@@ -353,7 +353,8 @@ endif  // cidfirma=NIL
 // provjeri pravila
 if (ImaPravoPristupa(goModul:oDataBase:cName,"DOK","POVRATDOK" + cIdTipDok ))
 	
-   if (ImaPravoPristupa(goModul:oDataBase:cName,"DOK","POVRATDOKDATUM" ))
+   if (ImaPravoPristupa(goModul:oDataBase:cName,"DOK","POVRATDOKDATUM" )) ;
+   	.and. gSecurity == "D"
 	
 	nTArea := SELECT()
 
