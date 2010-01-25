@@ -447,6 +447,8 @@ do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==c
 	  if roba->k2 <> "X"
 	  	nUkkol += nKol
 	  endif
+	else
+		nUkKol += nKol
 	endif
 	
 	
