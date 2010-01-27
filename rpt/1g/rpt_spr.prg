@@ -57,7 +57,6 @@ local nX := 1
 local cExport := "N"
 local lExpRpt := .f.
 local lRelations := .f.
-private lOpcine:=(IzFmkIni("FAKT","Opcine","N",SIFPATH)=="D")
 private cPrikaz
 private cSection:="N"
 private cHistory:=" "
@@ -78,11 +77,7 @@ if fakt->(fieldpos("idrelac")) <> 0
 endif
 
 _o_tables()
-
-
-if lOpcine
-	O_OPS
-endif
+O_OPS
 
 // partneri po grupama
 lGroup := p_group()
@@ -140,13 +135,11 @@ Box("#SPECIFIKACIJA PRODAJE PO ARTIKLIMA",12,77)
 		++nX
 		
 		@ m_x + nX, m_y+2 SAY "Uslov po artiklu (prazno svi) "  get qqIdRoba pict "@!"
- 		if lOpcine
    			
-			++nX
+		++nX
 			
-			@ m_x + nX, m_y + 2 SAY "Uslov po opcini (prazno sve) "  get cOpcina pict "@!"
+		@ m_x + nX, m_y + 2 SAY "Uslov po opcini (prazno sve) "  get cOpcina pict "@!"
  		
-		endif
  		
 		if lRelations == .t.
 			
@@ -191,9 +184,7 @@ Box("#SPECIFIKACIJA PRODAJE PO ARTIKLIMA",12,77)
 
  		aUslRB:=Parsiraj(qqIdRoba,"IDROBA","C")
 
- 		if lOpcine
-   			aUslOpc:=Parsiraj(cOpcina,"IDOPS","C")
- 		endif
+		aUslOpc:=Parsiraj(cOpcina,"IDOPS","C")
 
  		aUslTD:=Parsiraj(qqTipdok,"IdTipdok","C")
  		
@@ -309,15 +300,13 @@ if cPrikaz=="1"
 		cIdPartner:=IdPartner
     		
 		do while !eof() .and. IdFirma=cIdFirma .and. idpartner==cIdpartner
-      			if lOpcine
-        			SELECT partn
-				HSEEK fakt->idPartner
-				SELECT fakt
-        			if !(partn->(&aUslOpc))
-           				skip 1
-					loop
-        			endif
-      			endif
+        		SELECT partn
+			HSEEK fakt->idPartner
+			SELECT fakt
+        		if !(partn->(&aUslOpc))
+           			skip 1
+				loop
+        		endif
       			
 			nKolicina += kolicina
       			
@@ -398,15 +387,14 @@ else
 		endif
     		
 		do while !eof() .and. idRoba==cIdRoba
-			if lOpcine
-        			SELECT partn
-				HSEEK fakt->idPartner
-				SELECT fakt
-        			if !(partn->(&aUslOpc))
-           				skip 1
-					loop
-        			endif
-      			endif
+        			
+			SELECT partn
+			HSEEK fakt->idPartner
+			SELECT fakt
+        		if !(partn->(&aUslOpc))
+           			skip 1
+				loop
+        		endif
 			
 			if lGroup .and. !EMPTY(cPGroup)
 				cPartn := fakt->idpartner
@@ -552,7 +540,7 @@ if cPrikaz=="2" .and. !EMPTY(qqPartn)
 	?? "Partner: " + qqPartn + " - " + Ocitaj(F_PARTN, qqPartn, "naz")
 endif
 
-if lOpcine .and. !empty(cOpcina)
+if !empty(cOpcina)
 	? SPACE(gnLMarg)
 	?? "Opcine: " + TRIM(cOpcina)
 endif
