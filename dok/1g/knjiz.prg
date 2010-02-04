@@ -1311,6 +1311,7 @@ AADD(aPom, "21 - Revers")
 
 
 AADD(aPom, "22 - Realizovane otpremnice   ")
+AADD(aPom, "23 - Realizovane otpremnice MP")
 
 AADD(aPom, "25 - Knjizna obavijest ")
 
@@ -1458,6 +1459,7 @@ if (nRbr==1 .and. VAL(_podbr) < 1)
 		MsgBeep(cZabrana)
 		return 0
 	endif
+	
 	// varijanta rabatnih skala
 	if IsRabati() .and. (_idtipdok $ gcRabDok)
 		
@@ -1512,8 +1514,17 @@ if (nRbr==1 .and. VAL(_podbr) < 1)
      		gOcitBarkod:=.f.
      		if (gMreznoNum=="N")
         		cBroj1:=OdrediNBroj(_idfirma,_idtipdok)   //_brdok
-        		if (_idTipDok=="12")
-           			cBroj2:=OdrediNBroj(_idfirma,"22")
+        		if ( _idTipDok $ "12#13" )
+				
+				cTmpTip := "12"
+				cTmpTip2 := "22"
+           			
+				if _idtipdok == "13"
+					cTmpTip := "13"
+					cTmpTip2 := "23"
+				endif
+
+				cBroj2 := OdrediNBroj( _idfirma, cTmpTip2 )
            			if VAL(LEFT(cBroj1,gNumDio))>=val(left(cBroj2,gNumDio))
               			// maximum izmedju broja 22 i 12
               				_Brdok:=cBroj1
@@ -1864,7 +1875,7 @@ if (gSamokol != "D")
 
 	else
 		
-    		@ m_x+18+RKOR+RKOR2, 25  SAY IF( _idtipdok=="13".and.( gVar13=="2" .or. glCij13Mpc), "MPC.s.PDV", "Cijena ("+ALLTRIM(ValDomaca())+")") GET _Cijena ;
+    		@ m_x+18+RKOR+RKOR2, 25  SAY IF( _idtipdok $ "13#23".and.( gVar13=="2" .or. glCij13Mpc), "MPC.s.PDV", "Cijena ("+ALLTRIM(ValDomaca())+")") GET _Cijena ;
 		     PICT piccdem ;
 		     WHEN  _podbr<>" ." .and. KLevel<="1" .and. SKCKalk(.t.) ;
 		     VALID SKCKalk(.f.)
@@ -2124,7 +2135,8 @@ local cList := ""
 local cVal
 private cTmptxt
 
-if !EMPTY( cIdTd ) .and. cIdTD $ "10#11#12#13#15#16#20#21#22#25#26#27"
+if !EMPTY( cIdTd ) .and. cIdTD $ "10#11#12#13#15#16#20#21#22#23#25#26#27"
+	
 	cTmptxt := "g" + cIdTd + "ftxt"
 	cVal := &cTmptxt
 
@@ -2388,15 +2400,26 @@ endif
 
 cBroj1:=OdrediNBroj(_idfirma,_idtipdok)   //_brdok
 
-if _idtipdok=="12"
-   cBroj2:=OdrediNBroj(_idfirma,"22")
-   if val(left(cBroj1,gNumDio))>=val(left(cBroj2,gNumDio))
-      _Brdok:=cBroj1
-   else
-      _BrDok:=cBroj2
-   endif
+if _idtipdok $ "12#13"
+
+	if _idtipdok == "12"
+		cTmpTip := "12"
+		cTmpTip2 := "22"
+	endif
+	
+	if _idtipdok == "13"
+		cTmpTip := "13"
+		cTmpTip2 := "23"
+	endif
+	
+	cBroj2 := OdrediNBroj( _idfirma, cTmpTip2 )
+	if VAL( LEFT( cBroj1, gNumDio )) >= VAL( LEFT(cBroj2, gNumDio))
+		_Brdok := cBroj1
+	else
+      		_BrDok := cBroj2
+   	endif
 else
-   _BrDok:=cBroj1
+	_BrDok := cBroj1
 endif
 
 if gMreznoNum == "D"
@@ -2505,12 +2528,6 @@ if !(cIdTipdok $ "10#11#13#15#25#27") .and.;
    Picdem:=space(len(picdem))
    PicCdem:=space(len(piccdem))
 endif
-
-
-#ifndef CAX
-close all
-#endif
-
 
 lPartic := ( IzFMKIni("FAKT","19KaoRacunParticipacije","N",KUMPATH)=="D" )
 

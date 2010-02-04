@@ -13,7 +13,7 @@ private cImekup,cidfirma,qqTipDok,cBrFakDok,qqPartn
 private ddatod,ddatdo
 
 private lVrsteP := ( IzFmkIni("FAKT","VrstePlacanja","N",SIFPATH)=="D" )
-private lOpcine := ( IzFmkIni("FAKT","Opcine","N",SIFPATH)=="D" )
+private lOpcine := .t.
 
 if lVrsteP
  	O_VRSTEP
@@ -184,9 +184,7 @@ do while .t.
    @ m_x+15,col()+2 SAY "do" GET dDatVal1
    @ m_x+16,m_y+2 SAY "----------------------------------------"
  ENDIF
- if lOpcine
-   @ m_x+17,m_y+2 SAY "Opcina (prazno-sve): "  get cOpcina
- endif
+ @ m_x+17,m_y+2 SAY "Opcina (prazno-sve): "  get cOpcina
  if glRadNal
    @ m_x+18,m_y+2 SAY "Radni nalog (prazno-svi): "  get cRadniNalog valid EMPTY(cRadniNalog) .or. P_RNal(@cRadniNalog)
  endif
@@ -196,9 +194,7 @@ do while .t.
  aUslBFD:=Parsiraj(cBrFakDok,"BRDOK","C")
  aUslSK:=Parsiraj(qqPartn,"IDPARTNER","C")
  aUslVrsteP:=Parsiraj(qqVrsteP,"IDVRSTEP","C")
- if lOpcine
-   aUslOpc:=Parsiraj(cOpcina,"IDOPS","C")
- endif
+ aUslOpc:=Parsiraj(cOpcina,"IDOPS","C")
  if glRadNal
  	//aUslRadNal:=
  endif
@@ -250,9 +246,7 @@ if cTabela=="D"  // tabel prikaz
 
   cFilter+=".and. IdFirma="+cm2str(cIdFirma)
 
-  if lOpcine
-    cFilter+=".and. PARTN->("+aUslOpc+")"
-  endif
+  cFilter+=".and. PARTN->("+aUslOpc+")"
 
 endif
 
@@ -280,11 +274,7 @@ else
   set Filter to &cFilter
 endif
 
-#ifdef CAX
-  @ 22,77 SAY str(aofGetOptlevel(),2)
-#else
-  @ 22,77 SAY str(rloptlevel(),2)
-#endif
+@ 22,77 SAY str(rloptlevel(),2)
 
 qqTipDok:=trim(qqTipDok)
 
@@ -376,27 +366,35 @@ if glRadNal .and. !Empty(cRadniNalog)
 	? GetNameRNal(cRadniNalog)
 endif
 
-m:="----- -------- -- -- --------- ------------------------------ ------------ ------------ ------------ ---"
+m:="----- -------- -- -- --------- ------------------------------ ------------ ------------ ------------ ------------ ------------ ------------ ---"
+
 if fieldpos("SIFRA")<>0
 	m+=" --"
 endif
+
 if lVrsteP
   	m+=" -------"
 endif
+
 if fieldpos("DATPL")<>0
   	m+=" --------"
 endif
 
+P_COND2
 ? space(gnLMarg)
 ?? m
 ? space(gnLMarg)
-?? "  Rbr Dat.Dok  RJ TD Br.Dok   Partner                            Ukupno       Rabat         UKUPNO   VAL"
+
+?? "  Rbr Dat.Dok  RJ TD Br.Dok   Partner                            Ukupno       Rabat         UKUPNO     OSNOVICA       PDV       UK.SA PDV      VAL"
+
 if fieldpos("SIFRA")<>0
 	?? " OP"
 endif
+
 if lVrsteP
   	?? " Nac.pl."
 endif
+
 if fieldpos("DATPL")<>0
   	?? " Dat.pl. "
 endif
@@ -408,6 +406,9 @@ nC:=0
 nIznos:=nRab:=0
 nIznosD:=nRabD:=0
 nIznos3:=nRab3:=0
+nOsn_tot := 0
+nPdv_tot := 0
+nUkPDV_tot := 0
 private cRezerv:=" "
 cImeKup:=trim(cimekup)
 do while !eof() .and. IdFirma=cIdFirma
@@ -435,19 +436,53 @@ do while !eof() .and. IdFirma=cIdFirma
    @ prow(),pcol()+1 SAY str(iznos+rabat,12,2)
    @ prow(),pcol()+1 SAY str(Rabat,12,2)
    @ prow(),pcol()+1 SAY str(ROUND(iznos,gFZaok),12,2)
+   
+   // osnovica i pdv na prikazu
+   @ prow(),pcol()+1 SAY ;
+   	STR( nOsn_izn := ROUND(_osnovica( idtipdok, idpartner, iznos ),gFZaok),;
+		12, 2 )
+   @ prow(),pcol()+1 SAY ;
+   	STR( nPdv_izn := ROUND(_pdv( idtipdok, idpartner, iznos ),gFZaok), ;
+		12, 2 )
+   @ prow(),pcol()+1 SAY ;
+   	STR( nUkPdv_izn := ROUND(_uk_sa_pdv( idtipdok, idpartner, iznos ), ;
+		gFZaok), 12, 2 )
+  
    nIznos+=ROUND(iznos,gFZaok)
    nRab+=rabat
    nIznos3+=ROUND(iznos,gFZaok)
    nRab3+=rabat
+   nOsn_tot += nOsn_izn
+   nPdv_tot += nPdv_izn
+   nUkPDV_tot += nUkPDV_izn
+
   else
+
    @ prow(),pcol()+1 SAY str(iznos+rabat,12,2)
    @ prow(),pcol()+1 SAY str(Rabat,12,2)
    @ prow(),pcol()+1 SAY str(ROUND(iznos,gFZaok),12,2)
-   nIznosD+=ROUND(iznos,gFZaok)
-   nRabD+=rabat
-   nIznos3+=ROUND(iznos*UBaznuValutu(datdok),gFZaok)
-   nRab3+=rabat*UBaznuValutu(datdok)
+   
+   // osnovica i pdv na prikazu
+   @ prow(),pcol()+1 SAY ;
+   	STR( nOsn_izn := ROUND(_osnovica( idtipdok, idpartner, iznos ),gFZaok),;
+		12, 2)
+   @ prow(),pcol()+1 SAY ;
+   	STR( nPDV_izn := ROUND(_pdv( idtipdok, idpartner, iznos ),gFZaok), ;
+		12, 2)
+   @ prow(),pcol()+1 SAY ;
+   	STR( nUkPdv_izn := ROUND(_uk_sa_pdv( idtipdok, idpartner, iznos ), ;
+		gFZaok), 12, 2 )
+
+   nIznosD += ROUND(iznos,gFZaok)
+   nRabD += rabat
+   nIznos3 += ROUND(iznos*UBaznuValutu(datdok),gFZaok)
+   nRab3 += rabat*UBaznuValutu(datdok)
+   nOsn_tot += nOsn_izn * UBaznuValutu(datdok)
+   nPdv_tot += nPdv_izn * UBaznuValutu(datdok)
+   nUkPdv_tot += nUkPdv_izn * UBaznuValutu(datdok)
+
   endif
+
   @ prow(),pcol()+1 SAY cDinDEM
   if fieldpos("SIFRA")<>0
     @ prow(),pcol()+1 SAY iif(empty(sifra),space(2),left(CryptSC(sifra),2))
@@ -461,12 +496,14 @@ do while !eof() .and. IdFirma=cIdFirma
   skip
 enddo
 
-
 ? space(gnLMarg);?? m
 ? space(gnLMarg);?? "UKUPNO "+ValBazna()+":"
 @ prow(),nCol1    SAY  STR(nIznos+nRab,12,2)
 @ prow(),pcol()+1 SAY  STR(nRab,12,2)
 @ prow(),pcol()+1 SAY  STR(nIznos,12,2)
+@ prow(),pcol()+1 SAY  STR(nOsn_tot,12,2)
+@ prow(),pcol()+1 SAY  STR(nPDV_tot,12,2)
+@ prow(),pcol()+1 SAY  STR(nUkPDV_tot,12,2)
 @ prow(),pcol()+1 SAY  LEFT(ValBazna(),3)
 ? space(gnLMarg);?? m
 ? space(gnLMarg);?? "UKUPNO "+ValSekund()+":"
@@ -522,7 +559,78 @@ FF
 END PRINT
 
 closeret
-*}
+return
+
+
+// ------------------------------------------------------
+// vraca ukupno sa pdv
+// ------------------------------------------------------
+static function _uk_sa_pdv( cIdTipDok, cPartner, nIznos )
+local nRet := 0
+local nTArea := SELECT()
+
+if cIdTipDok $ "11#13#23"
+	nRet := nIznos
+else
+	if !isino( cPartner )
+		nRet := ( nIznos * 1.17 )
+	else
+		nRet := nIznos
+	endif
+endif
+
+select (nTArea)
+return nRet
+
+
+// ------------------------------------------------------
+// vraca osnovicu dokumenta
+// ------------------------------------------------------
+static function _osnovica( cIdTipDok, cPartner, nIznos )
+local nRet := 0
+local nTArea := SELECT()
+
+if cIdTipDok $ "11#13#23"
+
+	if !isino( cPartner )
+		nRet := ( nIznos / 1.17 )
+	else
+		nRet := nIznos
+	endif
+
+else
+	// kod ovih je to osnovica
+	nRet := nIznos
+endif
+
+select (nTArea)
+return nRet
+
+
+
+// -----------------------------------------------------
+// vraca pdv dokumenta
+// -----------------------------------------------------
+static function _pdv( cIdTipDok, cPartner, nIznos )
+local nRet := 0
+local nTArea := SELECT()
+
+if cIdTipDok $ "11#13#23"
+
+	if !isino( cPartner )
+		nRet := ( nIznos / 1.17 ) * 0.17
+	else
+		nRet := 0
+	endif
+
+else
+	nRet := nIznos * 0.17
+endif
+
+select (nTArea)
+
+return nRet
+
 
 // printaj narudzbenicu
 function pr_nar()

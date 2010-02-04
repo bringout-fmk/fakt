@@ -66,7 +66,7 @@ cDocumentName:=doc_name(cIdFirma, cIdTipDok, cBrDok, pripr->IdPartner)
 
 
 // prikaz samo kolicine
-if cIdTipDok $ "01#00#12#13#19#21#22#26"
+if cIdTipDok $ "01#00#12#13#19#21#22#23#26"
 	if ((gPSamoKol == "0" .and. Pitanje(,"Prikazati samo kolicine (D/N)", "N") == "D")) ;
 	    .or. gPSamoKol == "D"
 		lSamoKol:=.t.
@@ -99,7 +99,7 @@ if Logirati(goModul:oDataBase:cName, "DOK", "PRINT")
 		if(PCount()=0,"Stampanje fakture iz pripreme","Stampanje fakture iz kumulativa") )
 endif
 
-if cIdTipDok == "13"
+if cIdTipDok $ "13#23"
 	// stampa 13-ke
 	omp_print()
 else

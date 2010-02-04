@@ -1661,6 +1661,7 @@ g15Str:=PADR(g15Str,20)
 g20Str:=PADR(g20Str,20)
 g21Str:=PADR(g21Str,20)
 g22Str:=PADR(g22Str,20)
+g23Str:=PADR(g23Str,20)
 g25Str:=PADR(g25Str,20)
 g26Str:=PADR(g26Str,24)
 g27Str:=PADR(g27Str,20)
@@ -1674,6 +1675,7 @@ g16ftxt:=PADR(g16ftxt,100)
 g20ftxt:=PADR(g20ftxt,100)
 g21ftxt:=PADR(g21ftxt,100)
 g22ftxt:=PADR(g22ftxt,100)
+g23ftxt:=PADR(g23ftxt,100)
 g25ftxt:=PADR(g25ftxt,100)
 g26ftxt:=PADR(g26ftxt,100)
 g27ftxt:=PADR(g27ftxt,100)
@@ -1698,6 +1700,8 @@ g21Str2T:=PADR(g21Str2T,132)
 g21Str2R:=PADR(g21Str2R,132)
 g22Str2T:=PADR(g22Str2T,132)
 g22Str2R:=PADR(g22Str2R,132)
+g23Str2T:=PADR(g23Str2T,132)
+g23Str2R:=PADR(g23Str2R,132)
 g25Str2T:=PADR(g25Str2T,132)
 g25Str2R:=PADR(g25Str2R,132)
 g26Str2T:=PADR(g26Str2T,132)
@@ -1750,19 +1754,26 @@ Box(,19, 76,.f.,"Naziv dokumenata, potpis na kraju, str. 2")
   	@ m_x+ 7,col()+1 SAY "d.txt lista:" GET g22ftxt PICT "@S25"
   	@ m_x+ 8,m_y+2 SAY "22 - Potpis TXT" GET g22Str2T PICT"@S50"
   	@ m_x+ 9,m_y+2 SAY "22 - Potpis RTF" GET g22Str2R PICT"@S50"
-  	@ m_x+10,m_y+2 SAY "25 - Tekst"      GET g25Str
-  	@ m_x+10,col()+1 SAY "d.txt lista:" GET g25ftxt PICT "@S25"
-  	@ m_x+11,m_y+2 SAY "25 - Potpis TXT" GET g25Str2T PICT"@S50"
-  	@ m_x+12,m_y+2 SAY "25 - Potpis RTF" GET g25Str2R PICT"@S50"
-  	@ m_x+13,m_y+2 SAY "26 - Tekst"      GET g26Str
-  	@ m_x+13,col()+1 SAY "d.txt lista:" GET g26ftxt PICT "@S25"
-  	@ m_x+14,m_y+2 SAY "26 - Potpis TXT" GET g26Str2T PICT"@S50"
- 	@ m_x+15,m_y+2 SAY "26 - Potpis RTF" GET g26Str2R PICT"@S50"
-  	@ m_x+16,m_y+2 SAY "27 - Tekst"      GET g27Str
-  	@ m_x+16,col()+1 SAY "d.txt lista:" GET g27ftxt PICT "@S25"
-  	@ m_x+17,m_y+2 SAY "27 - Potpis TXT" GET g27Str2T PICT"@S50"
-  	@ m_x+18,m_y+2 SAY "27 - Potpis RTF" GET g27Str2R PICT"@S50"
-  	@ m_x+19,m_y+2 SAY "Dodatni red    " GET gNazPotStr PICT"@S50"
+  	
+	@ m_x+ 10,m_y+2 SAY "23 - Tekst"      GET g23Str
+  	@ m_x+ 10,col()+1 SAY "d.txt lista:" GET g23ftxt PICT "@S25"
+  	@ m_x+ 11,m_y+2 SAY "23 - Potpis TXT" GET g23Str2T PICT"@S50"
+  	@ m_x+ 12,m_y+2 SAY "23 - Potpis RTF" GET g23Str2R PICT"@S50"
+  	
+	@ m_x+13,m_y+2 SAY "25 - Tekst"      GET g25Str
+  	@ m_x+13,col()+1 SAY "d.txt lista:" GET g25ftxt PICT "@S25"
+  	@ m_x+14,m_y+2 SAY "25 - Potpis TXT" GET g25Str2T PICT"@S50"
+  	@ m_x+15,m_y+2 SAY "25 - Potpis RTF" GET g25Str2R PICT"@S50"
+  	@ m_x+16,m_y+2 SAY "26 - Tekst"      GET g26Str
+  	@ m_x+16,col()+1 SAY "d.txt lista:" GET g26ftxt PICT "@S25"
+  	@ m_x+17,m_y+2 SAY "26 - Potpis TXT" GET g26Str2T PICT"@S50"
+ 	@ m_x+18,m_y+2 SAY "26 - Potpis RTF" GET g26Str2R PICT"@S50"
+  	@ m_x+19,m_y+2 SAY "27 - Tekst"      GET g27Str
+  	@ m_x+19,col()+1 SAY "d.txt lista:" GET g27ftxt PICT "@S25"
+  	@ m_x+20,m_y+2 SAY "27 - Potpis TXT" GET g27Str2T PICT"@S50"
+  	@ m_x+21,m_y+2 SAY "27 - Potpis RTF" GET g27Str2R PICT"@S50"
+  	@ m_x+22,m_y+2 SAY "Dodatni red    " GET gNazPotStr PICT"@S50"
+	
 	read
 BoxC()
 
@@ -1797,7 +1808,12 @@ if gKodnaS=="8"
         g22Str:=KSTo852(TRIM(g22Str)  )
         g22Str2T:=KSTo852(TRIM(g22Str2T))
         g22Str2R:=(TRIM(g22Str2R))
-        g25Str:=KSTo852(TRIM(g25Str)  )
+        
+	g23Str:=KSTo852(TRIM(g23Str)  )
+        g23Str2T:=KSTo852(TRIM(g23Str2T))
+        g23Str2R:=(TRIM(g23Str2R))
+       
+	g25Str:=KSTo852(TRIM(g25Str)  )
         g25Str2T:=KSTo852(TRIM(g25Str2T))
         g25Str2R:=(TRIM(g25Str2R))
         g26Str:=KSTo852(TRIM(g26Str)  )
@@ -1838,7 +1854,12 @@ else
         g22Str:=KSTo7(TRIM(g22Str)  )
         g22Str2T:=KSTo7(TRIM(g22Str2T))
         g22Str2R:=(TRIM(g22Str2R))
-        g25Str:=KSTo7(TRIM(g25Str)  )
+        
+	g23Str:=KSTo7(TRIM(g23Str)  )
+        g23Str2T:=KSTo7(TRIM(g23Str2T))
+        g23Str2R:=(TRIM(g23Str2R))
+       
+	g25Str:=KSTo7(TRIM(g25Str)  )
         g25Str2T:=KSTo7(TRIM(g25Str2T))
         g25Str2R:=(TRIM(g25Str2R))
         g26Str:=KSTo7(TRIM(g26Str)  )
@@ -1878,7 +1899,12 @@ if (LASTKEY()<>K_ESC)
   	WPar("xc",@g22Str)
  	WPar("xd",@g22Str2T)
   	WPar("xe",@g22Str2R)
-  	WPar("xf",@g25Str)
+
+  	WPar("xC",@g23Str)
+ 	WPar("xD",@g23Str2T)
+  	WPar("xE",@g23Str2R)
+  	
+	WPar("xf",@g25Str)
   	WPar("xg",@g25Str2T)
   	WPar("xh",@g25Str2R)
   	WPar("xi",@g26Str)
@@ -1901,6 +1927,7 @@ if (LASTKEY()<>K_ESC)
 	WPar("yg",@g20ftxt)
 	WPar("yh",@g21ftxt)
 	WPar("yi",@g22ftxt)
+	WPar("yI",@g23ftxt)
 	WPar("yj",@g25ftxt)
 	WPar("yk",@g26ftxt)
 	WPar("yl",@g27ftxt)

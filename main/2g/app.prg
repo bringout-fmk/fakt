@@ -466,6 +466,10 @@ public g22Str:="ZAKLJ.OTPREMNICA br."
 public g22Str2T:="              Predao                  Odobrio                  Preuzeo"
 public g22Str2R:="\tab Predao\tab Odobrio\tab Preuzeo"
 
+public g23Str:="ZAKLJ.OTPR.MP    br."
+public g23Str2T:="              Predao                  Odobrio                  Preuzeo"
+public g23Str2R:="\tab Predao\tab Odobrio\tab Preuzeo"
+
 public g25Str:="KNJI¦NA OBAVIJEST br."
 public g25Str2T:="              Predao                  Odobrio                  Preuzeo"
 public g25Str2R:="\tab Predao\tab Odobrio\tab Preuzeo"
@@ -488,6 +492,7 @@ public g16ftxt := PADR("", 100)
 public g20ftxt := PADR("", 100)
 public g21ftxt := PADR("", 100)
 public g22ftxt := PADR("", 100)
+public g23ftxt := PADR("", 100)
 public g25ftxt := PADR("", 100)
 public g26ftxt := PADR("", 100)
 public g27ftxt := PADR("", 100)
@@ -679,6 +684,9 @@ RPar("xb",@g21Str2R)
 RPar("xc",@g22Str)
 RPar("xd",@g22Str2T)
 RPar("xe",@g22Str2R)
+RPar("xC",@g23Str)
+RPar("xD",@g23Str2T)
+RPar("xE",@g23Str2R)
 RPar("xf",@g25Str)
 RPar("xg",@g25Str2T)
 RPar("xh",@g25Str2R)
@@ -699,6 +707,7 @@ RPar("yf",@g16ftxt)
 RPar("yg",@g20ftxt)
 RPar("yh",@g21ftxt)
 RPar("yi",@g22ftxt)
+RPar("yI",@g23ftxt)
 RPar("yj",@g25ftxt)
 RPar("yk",@g26ftxt)
 RPar("yl",@g27ftxt)
