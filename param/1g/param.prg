@@ -212,22 +212,37 @@ endif
 	@ m_x + nX, m_y + 2 SAY "Ispis racuna MP na traku (D/N/X)" ;
 		GET gMPPrint ;
 		PICT "@!" ;
-		VALID gMPPrint $ "DNX"
+		VALID gMPPrint $ "DNXT"
 
 	read
 
-	if gMPPrint $ "DX"
+	if gMPPrint $ "DXT"
 
 		nX ++
+		
 		@ m_x + nX, m_y + 2 SAY "Oznaka lokalnog porta za stampu: LPT" ;
 			GET gMPLocPort ;
-			VALID gMPPrint $ "DNX"
+			VALID gMPPrint $ "DNX" PICT "@!"
 		
 		nX ++
+		
 		@ m_x + nX, m_y + 2 SAY "Redukcija trake (0/1/2):" ;
 			GET gMPRedTraka ;
 			VALID gMPRedTraka $ "012"
+	
+		nX ++
+	
+		@ m_x + nX, m_y + 2 SAY "Ispis id artikla na racunu (D/N):" ;
+			GET gMPArtikal ;
+			VALID gMPArtikal $ "DN" PICT "@!"
 		
+		nX ++
+	
+		@ m_x + nX, m_y + 2 SAY "Ispis cjene sa pdv (2) ili bez (1):" ;
+			GET gMPCjenPDV ;
+			VALID gMPCjenPDV $ "12"
+	
+
 		read
 
 	endif
@@ -258,6 +273,9 @@ if (LASTKEY()<>K_ESC)
    	WPar("mP",gMpPrint)
    	WPar("mL",gMpLocPort)
    	WPar("mT",gMpRedTraka)
+	WPar("mA",gMpArtikal)
+	WPar("mC",gMpCjenPDV)
+
 endif
 
 return 

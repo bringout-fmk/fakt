@@ -15,6 +15,7 @@ static __SH_SLD_VAR
 // ----------------------------------------------------
 function stdokpdv(cIdFirma, cIdTipDok, cBrDok, lJFill)
 local cFax
+local lPrepisDok := .f.
 
 // samo kolicine
 local lSamoKol:=.f. 
@@ -30,6 +31,7 @@ drn_empty()
 // otvori tabele
 if PCount() == 4 .and. ( cIdtipdok <> nil )
 	O_Edit(.t.)
+	lPrepisDok := .t.
 else
  	O_Edit()
 endif
@@ -104,20 +106,24 @@ if cIdTipDok $ "13#23"
 	omp_print()
 else
 
-  if cIdTipDok == "11" .and. gMPPrint $ "DX"
+  if cIdTipDok == "11" .and. gMPPrint $ "DXT"
 	
-	if gMPPrint == "D" .or. ( gMpPrint == "X" .and. Pitanje(,"Stampati na traku (D/N)?","D") == "D" )
+	if gMPPrint == "D" .or. ( gMpPrint == "X" .and. Pitanje(,"Stampati na traku (D/N)?","D") == "D" ) .or. gMPPrint == "T"
 	
 		// stampa na traku
 		gLocPort := "LPT" + ALLTRIM( gMpLocPort )
 
 		lStartPrint := .t.
-		lPrepis := .f.
-	
+		
 		cPrn := gPrinter
 		gPrinter := "0"
-		
-		st_rb_traka( lStartPrint, lPrepis )
+
+		if gMPPrint == "T"
+			// test mode
+			gPrinter := "R"
+		endif
+	
+		st_rb_traka( lStartPrint, lPrepisDok )
 
 		gPrinter := cPrn
 
@@ -689,22 +695,21 @@ if pripr->(FIELDPOS("idrnal")) <> 0
 	endif
 endif
 
-// traka - ispis, cjene bez pdv, sa pdv
-cPom := "1"
+// traka - ispis, cjene bez pdv, sa pdv (1) bez pdv, (2) sa pdv
+cPom := gMPCjenPDV
 add_drntext( "P20", cPom )
 
-// stampa id roba na racunu
-cPom := "1"
+// stampa id roba na racunu D/N
+cPom := gMPArtikal
 add_drntext( "P21", cPom )
 
-// redukcija trake
-cPom := "2"
+// redukcija trake 0/1/2
+cPom := gMpRedTraka
 add_drntext( "P22", cPom )
 
 // ispis kupca na racunu
 cPom := "D"
 add_drntext( "P23", cPom )
-
 
 // mjesto
 cPom := gMjStr
@@ -1131,6 +1136,8 @@ add_drntext("I20", gFPNaziv)
 add_drntext("I02", gFAdresa)
 add_drntext("I03", gFIdBroj)
 // 4. se koristi za id prod.mjesto u pos
+// telefon pos = I05
+add_drntext("I05", ALLTRIM(gFTelefon))
 add_drntext("I10", ALLTRIM(gFTelefon))
 add_drntext("I11", ALLTRIM(gFEmailWeb))
 

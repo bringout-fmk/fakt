@@ -580,8 +580,9 @@ public gFFKonv := "5"
 // stmpa na traku
 public gMpPrint := "N"
 public gMPLocPort := "1"
-public gMPRedTraka := "0"
-
+public gMPRedTraka := "2"
+public gMPArtikal := "D"
+public gMPCjenPDV := "2"
 
 O_PARAMS
 private cSection:="1"
@@ -716,6 +717,8 @@ RPar("yl",@g27ftxt)
 RPar("mP",@gMpPrint)
 RPar("mL",@gMpLocPort)
 RPar("mT",@gMpRedTraka)
+RPar("mA",@gMpArtikal)
+RPar("mC",@gMpCjenPDV)
 
 // dodatni parametri fakture broj otpremnice itd
 RPar("za",@gZagl)   
