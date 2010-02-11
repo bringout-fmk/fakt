@@ -1051,6 +1051,13 @@ do case
      endif
   
   case chr(Ch) $ "pP" .and. gTBDir=="N"  // povrat
+     
+     if !(ImaPravoPristupa(goModul:oDataBase:cName,"DOK","POVRATDOK"))
+     	msgbeep( cZabrana )
+	nRet := DE_CONT
+	return nRet
+     endif
+     
      select doks
      nTrec:=recno()
      _cIdFirma:=idfirma

@@ -353,8 +353,8 @@ endif  // cidfirma=NIL
 // provjeri pravila
 if (ImaPravoPristupa(goModul:oDataBase:cName,"DOK","POVRATDOK" + cIdTipDok ))
 	
-   if (ImaPravoPristupa(goModul:oDataBase:cName,"DOK","POVRATDOKDATUM" )) ;
-   	.and. gSecurity == "D"
+   if (ImaPravoPristupa(goModul:oDataBase:cName,"DOK","POVRATDOKDATUM" + ;
+   	cIdTipDok )) .and. gSecurity == "D"
 	
 	nTArea := SELECT()
 
@@ -378,7 +378,7 @@ else
 	return 0
 endif
 
-if (!fR .and. !lTest)
+if ( !fR .and. !lTest )
 	if Pitanje("","Dokument "+cIdFirma+"-"+cIdTipDok+"-"+cBrDok+" povuci u pripremu (D/N) ?","D")=="N"
    		close all
 		return 0

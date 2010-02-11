@@ -1,172 +1,6 @@
 #include "fakt.ch"
 
-/*
- * ----------------------------------------------------------------
- *                          Copyright Sigma-com software 1996-2006 
- * ----------------------------------------------------------------
- */
 
-
-/*! \file fmk/fakt/main/2g/app.prg
- *  \brief
- */
-
-/*! \ingroup ini
-  * \var *string FmkIni_KumPath_ZASTITA_PodBugom
-  * \brief Odredjuje da li ce se zabraniti izbor opcija glavnog menija
-  * \param N - ne, default vrijednost
-  * \param D - da, zabrani izbor opcija glavnog menija (kao da je pod bug-om)
-  */
-*string FmkIni_KumPath_ZASTITA_PodBugom;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_SifPath_SifRoba_DuzSifra
-  * \brief Odredjuje duzinu sifre robe pri unosu u dokumentu
-  * \param 10 - default vrijednost
-  */
-*string FmkIni_SifPath_SifRoba_DuzSifra;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_SifPath_FAKT_TekVpc
-  * \brief Odredjuje koja je tekuca veleprodajna cijena iz sifrarnika robe
-  * \param 1 - VPC, default vrijednost
-  * \param 2 - VPC2
-  */
-*string FmkIni_SifPath_FAKT_TekVpc;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_KumPath_FAKT_Distribucija
-  * \brief Odredjuje da li se koriste specificnosti za distribuciju robe (sistem koji koristi Vindija)
-  * \param N - default vrijednost
-  * \param D - da, koriste se specificnosti za distribuciju robe
-  */
-*string FmkIni_KumPath_FAKT_Distribucija;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_KumPath_FAKT_DestinacijaNaFakturi
-  * \brief Da li ce se prikazivati destinacija kupca na fakturi?
-  * \param N - default vrijednost
-  * \param D - da, prikazivati destinaciju kupca na fakturi
-  */
-*string FmkIni_KumPath_FAKT_DestinacijaNaFakturi;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_KumPath_FAKT_TipDok01_StampaPovrataDobavljacu_DefaultOdgovor
-  * \brief Odredjuje da li ce se pojaviti upit za stampanje dokumenta povrata dobavljacu pri izboru opcije stampanja dokumenta tipa 01 (ulaz), pod uslovom da je unesena kolicina manja od 0
-  * \param 0 - nema upita, default vrijednost
-  * \param D - pojavljuje se upit sa ponudjenim odgovorom "D"
-  * \param N - pojavljuje se upit sa ponudjenim odgovorom "N"
-  */
-*string FmkIni_KumPath_FAKT_TipDok01_StampaPovrataDobavljacu_DefaultOdgovor;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_ExePath_POREZI_PPUgostKaoPPU
-  * \brief Odredjuje nacin obracuna poreza u maloprodaji (u ugostiteljstvu)
-  * \param M - racuna PRUC iskljucivo koristeci propisani donji limit RUC-a, default vrijednost
-  * \param R - racuna PRUC na osnovu stvarne RUC ili na osnovu pr.d.lim.RUC-a ako je stvarni RUC manji od propisanog limita
-  * \param J - metoda koju koriste u Jerry-ju
-  * \param D - racuna PPU a ne PRUC (stari sistem), s tim da se PP racuna na istu osnovicu kao i PPU
-  * \param N - racuna PPU a ne PRUC (stari sistem), s tim da se PP racuna na istu osnovicu kao i PPP
-  */
-*string FmkIni_ExePath_POREZI_PPUgostKaoPPU;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_KumPath_POREZI_PPUgostKaoPPU
-  * \brief Odredjuje nacin obracuna poreza u maloprodaji (u ugostiteljstvu). Ako se definise ovaj parametar ima prioritet nad istim koji se nalazi u ExePath-u
-  * \param - - gleda se vrijednost drugog parametra koji je pod istim nazivom ali se nalazi u ExePath-u, default vrijednost
-  * \param M - racuna PRUC iskljucivo koristeci propisani donji limit RUC-a, default vrijednost
-  * \param R - racuna PRUC na osnovu stvarne RUC ili na osnovu pr.d.lim.RUC-a ako je stvarni RUC manji od propisanog limita
-  * \param J - metoda koju koriste u Jerry-ju
-  * \param D - racuna PPU a ne PRUC (stari sistem), s tim da se PP racuna na istu osnovicu kao i PPU
-  * \param N - racuna PPU a ne PRUC (stari sistem), s tim da se PP racuna na istu osnovicu kao i PPP
-  * \sa FmkIni_ExePath_POREZI_PPUgostKaoPPU
-  */
-*string FmkIni_KumPath_POREZI_PPUgostKaoPPU;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_KumPath_Svi_SQLLog
-  * \brief Da li se koriste SQL logovi?
-  * \param N - ne, default vrijednost
-  * \param D - da
-  */
-*string FmkIni_KumPath_Svi_SQLLog;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_PrivPath_FAKT_ReadOnly
-  * \brief Da li se FAKT koristi samo za preglede?
-  * \param N - ne, default vrijednost
-  * \param D - da
-  */
-*string FmkIni_PrivPath_FAKT_ReadOnly;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_ExePath_FMK_TerminalServer
-  * \brief
-  * \param N - default vrijednost
-  * \param
-  */
-*string FmkIni_ExePath_FMK_TerminalServer;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_KumPath_FAKT_10PoNarudzbi
-  * \brief Da li se koristi evidencija po narudzbi?
-  * \param N - ne, default vrijednost
-  * \param D - da
-  */
-*string FmkIni_KumPath_FAKT_10PoNarudzbi;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_KumPath_CROBA_GledajFakt
-  * \brief Da li se FAKT-dokumenti koriste za utvrdjivanje stanja robe u centralnoj bazi robe CROBA?
-  * \param N - ne, default vrijednost
-  * \param D - da
-  */
-*string FmkIni_KumPath_CROBA_GledajFakt;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_KumPath_SQL_cSQLKom
-  * \brief
-  * \param mysql -f -h 192.168.0.1 -B -N - default vrijednost
-  * \param
-  */
-*string FmkIni_KumPath_SQL_cSQLKom;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_KumPath_CROBA_CROBA_RJ
-  * \brief Lista radnih jedinica ciji se dokumenti odrazavaju na stanje u centralnoj bazi robe CROBA
-  * \param 10#20 - radne jedinice 10 i 20, default vrijednost
-  */
-*string FmkIni_KumPath_CROBA_CROBA_RJ;
-
-
-/*! \ingroup Zips
-  * \var *string FmkIni_ExePath_Fakt_Specif_ZIPS
-  * \brief Odredjuje mogucnost koristenja specificnosti radjenih za Zips
-  * \param N - ne, default vrijednost
-  * \param D - da, omoguci specificnosti radjene za Zips
-  */
-*string FmkIni_ExePath_Fakt_Specif_ZIPS;
-
-
-
-/*! \fn TFaktModNew()
- *  \brief
- */
- 
 function TFaktModNew()
 local oObj
 
@@ -174,7 +8,6 @@ oObj:=TFaktMod():new()
 
 oObj:self:=oObj
 return oObj
-*}
 
 
 #ifdef CPP
@@ -326,11 +159,13 @@ AADD(opcexe,{|| nil})
 AADD(opc,"A. stampa azuriranog dokumenta")
 AADD(opcexe,{|| StAzFakt()})
 AADD(opc,"P. povrat dokumenta u pripremu")
+
 if (ImaPravoPristupa(goModul:oDataBase:cName,"DOK","POVRATDOK"))
 	AADD(opcexe,{|| Povrat()})
 else
 	AADD(opcexe,{|| MsgBeep(cZabrana)})
 endif
+
 AADD(opc,"------------------------------------")
 AADD(opcexe,{|| nil})
 AADD(opc,"X. parametri")
