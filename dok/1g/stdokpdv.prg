@@ -1180,7 +1180,7 @@ return
 
 // ------------------------------------
 // ------------------------------------
-static function ZAO_VRIJEDNOST()
+function ZAO_VRIJEDNOST()
 local nPos
 local nLen
 
@@ -1199,7 +1199,7 @@ return nLen - nPos
 
 // ------------------------------------
 // ------------------------------------
-static function ZAO_CIJENA()
+function ZAO_CIJENA()
 local nPos
 local nLen
 

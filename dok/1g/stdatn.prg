@@ -565,7 +565,7 @@ return
 // ------------------------------------------------------
 // vraca ukupno sa pdv
 // ------------------------------------------------------
-static function _uk_sa_pdv( cIdTipDok, cPartner, nIznos )
+function _uk_sa_pdv( cIdTipDok, cPartner, nIznos )
 local nRet := 0
 local nTArea := SELECT()
 
@@ -586,20 +586,13 @@ return nRet
 // ------------------------------------------------------
 // vraca osnovicu dokumenta
 // ------------------------------------------------------
-static function _osnovica( cIdTipDok, cPartner, nIznos )
+function _osnovica( cIdTipDok, cPartner, nIznos )
 local nRet := 0
 local nTArea := SELECT()
 
 if cIdTipDok $ "11#13#23"
-
-	if !isino( cPartner )
-		nRet := ( nIznos / 1.17 )
-	else
-		nRet := nIznos
-	endif
-
+	nRet := ( nIznos / 1.17 )
 else
-	// kod ovih je to osnovica
 	nRet := nIznos
 endif
 
@@ -611,18 +604,12 @@ return nRet
 // -----------------------------------------------------
 // vraca pdv dokumenta
 // -----------------------------------------------------
-static function _pdv( cIdTipDok, cPartner, nIznos )
+function _pdv( cIdTipDok, cPartner, nIznos )
 local nRet := 0
 local nTArea := SELECT()
 
 if cIdTipDok $ "11#13#23"
-
-	if !isino( cPartner )
-		nRet := ( nIznos / 1.17 ) * 0.17
-	else
-		nRet := 0
-	endif
-
+	nRet := ( nIznos / 1.17 ) * 0.17
 else
 	nRet := nIznos * 0.17
 endif

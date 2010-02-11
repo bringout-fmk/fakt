@@ -1,21 +1,9 @@
 #include "fakt.ch"
 
-/*
- * ----------------------------------------------------------------
- *                          Copyright Sigma-com software 1996-2006
- * ----------------------------------------------------------------
- */
-
-/*! \file fmk/fakt/rpt/1g/mnu_izvj.prg
- *  \brief Izvjestajni dio
- */
- 
-/*! \fn Izvj()
- *  \brief Menij izvjestaja
- */
-
+// ------------------------------------------------------------
+// glavni menij izvjestaja
+// ------------------------------------------------------------
 function Izvj()
-*{
 private opc:={}
 private opcexe:={}
 private Izbor:=1
@@ -39,6 +27,8 @@ AADD(opc,"7. specifikacija prodaje")
 AADD(opcexe,{|| RealKol()})
 AADD(opc,"8. specifikacija prodaje po parternima ")
 AADD(opcexe,{|| spec_kol_partn()})
+AADD(opc,"9. realizacija maloprodaje ")
+AADD(opcexe,{|| real_mp()})
 
 if IsRudnik() 
 	AADD(opc,"R. rudnik")

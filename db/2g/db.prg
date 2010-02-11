@@ -496,6 +496,7 @@ if (nArea==-1 .or. nArea==(F_DOKS))
 	AADD(aDBf,{ 'DATPL'               , 'D' ,   8 ,  0 })
 	AADD(aDBf,{ 'IDPM'                , 'C' ,  15 ,  0 })
 	AADD(aDBf,{ 'DOK_VEZA'            , 'C' , 150 ,  0 })
+	AADD(aDBf,{ 'OPER_ID'             , 'N' ,   3 ,  0 })
 	
 	if IsRabati()
 		AADD(aDBf,{ 'IDRABAT'             , 'C' ,  10 ,  0 })
@@ -552,28 +553,6 @@ if (nArea==-1 .or. nArea==(F_VRSTEP))
 	CREATE_INDEX("ID","Id",SIFPATH+"VRSTEP.DBF")
 endif
 
-/*
-if (nArea==-1 .or. nArea==(F_DEST)) 
-		
-	aDBf:={}
-     	AADD(aDBf,{ "ID"                  , "C" ,   6 ,  0 })
-     	AADD(aDBf,{ "NAZ"                 , "C" ,  25 ,  0 })
-     	AADD(aDBf,{ "NAZ2"                , "C" ,  25 ,  0 })
-     	AADD(aDBf,{ "OZNAKA"              , "C" ,   1 ,  0 })
-     	AADD(aDBf,{ "PTT"                 , "C" ,   5 ,  0 })
-     	AADD(aDBf,{ "MJESTO"              , "C" ,  16 ,  0 })
-     	AADD(aDBf,{ "ADRESA"              , "C" ,  24 ,  0 })
-     	AADD(aDBf,{ "TELEFON"             , "C" ,  12 ,  0 })
-     	AADD(aDBf,{ "FAX"                 , "C" ,  12 ,  0 })
-     	AADD(aDBf,{ "MOBTEL"              , "C" ,  20 ,  0 })
-     
-  	if !FILE( KUMPATH + "DEST.DBF" )
-     		DBcreate2( KUMPATH + "DEST.DBF", aDbf )
-  	endif
-  		
-  	CREATE_INDEX( "1" ,"id+oznaka", KUMPATH + "DEST" )
-endif
-*/
  
 if glDistrib
 	if (nArea==-1 .or. nArea==(F_RELAC)) 
@@ -631,7 +610,6 @@ endif
 db_cre_ugov()
 
 return
-*}
 
 
 

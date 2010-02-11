@@ -928,8 +928,12 @@ do while !eof()
   	_field->IdPartner := pripr->idpartner
 	_field->idpm      := pripr->idpm
 	
-	if doks->(FIELDPOS("dok_veza"))<>0
-		_field->dok_veza  := pripr->dok_veza
+	if doks->(FIELDPOS("dok_veza")) <> 0
+		_field->dok_veza := pripr->dok_veza
+	endif
+
+	if doks->(FIELDPOS("oper_id")) <> 0 .and. gSecurity == "D"
+		_field->oper_id := GetUserID()
 	endif
   	
 	if IsRabati()
@@ -939,7 +943,7 @@ do while !eof()
   		endif
 	endif
 	
-   	_field->IdVrsteP:=pripr->idvrstep
+   	_field->IdVrsteP := pripr->idvrstep
   	
 	if (FieldPos("DATPL")>0)
    		_field->DatPl:=if(LEN(aMemo)>=9,CToD(aMemo[9]),CToD(""))
