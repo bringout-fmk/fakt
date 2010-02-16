@@ -125,7 +125,7 @@ Box( , 10, 66)
 	++ nX
 
 	@ m_x + nX, m_y + 2 SAY "Operater (0-svi):" GET nOperater ;
-		PICT "999"
+		PICT "999" VALID nOperater = 0 .or. P_USERS( @nOperater )
 
 	++ nX
 	++ nX
@@ -524,8 +524,13 @@ do while !EOF()
 
 	// ako postoji operater
 	if nOperater <> 0
+
 		nTArea := SELECT()
+
 		cOper_naz := GetFullUserName( nOperater )
+		cOper_naz := "(" + ALLTRIM( STR( nOperater ) ) + ") " + ;
+			cOper_naz
+
 		select (nTArea)
 	endif
 
