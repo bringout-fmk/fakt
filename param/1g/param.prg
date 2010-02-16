@@ -222,7 +222,7 @@ endif
 		
 		@ m_x + nX, m_y + 2 SAY "Oznaka lokalnog porta za stampu: LPT" ;
 			GET gMPLocPort ;
-			VALID gMPPrint $ "DNX" PICT "@!"
+			VALID gMPLocPort $ "1234567" PICT "@!"
 		
 		nX ++
 		

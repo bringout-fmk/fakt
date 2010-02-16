@@ -1,5 +1,11 @@
 #include "fakt.ch"
 
+static PIC_IZN := "999999999.99"
+static _NUM := 12
+static _DEC := 2
+static _ZAOK := 2
+static _FNUM := 15
+static _FDEC := 4
 
 // --------------------------------------------
 // realizacija maloprodaje fakt
@@ -46,6 +52,9 @@ START PRINT CRET
 
 P_COND
 
+// uzmi totale
+_st_mp_dok( @nT_osn, @nT_pdv, @nT_uk, .t. )
+
 // stampaj po operateru
 _st_mp_oper()
 
@@ -53,10 +62,10 @@ _st_mp_oper()
 
 if nVar = 1
 	// odstampaj po robi
-	_st_mp_roba( @nT_osn, @nT_pdv, @nT_uk )
-else
+	_st_mp_roba()
+elseif nVar = 2
 	// odstampaj po dokumentima
-	_st_mp_dok( @nT_osn, @nT_pdv, @nT_uk )
+	_st_mp_dok()
 endif
 
 ?
@@ -66,9 +75,12 @@ P_10CPI
 
 ? "REKAPITULACIJA:"
 ? "---------------------------"
-? "1) ukupno bez pdv-a:", STR( nT_osn, 12, 2 )
-? "2) vrijednost pdv-a:", STR( nT_pdv, 12, 2 )
-? "3)    ukupno sa pdv:", STR( nT_uk, 12, 2 )
+? "1) ukupno bez pdv-a:"
+@ prow(), pcol()+1 SAY STR( nT_osn, _NUM, _DEC ) PICT PIC_IZN
+? "2) vrijednost pdv-a:"
+@ prow(), pcol()+1 SAY STR( nT_pdv, _NUM, _DEC ) PICT PIC_IZN
+? "3)    ukupno sa pdv:"
+@ prow(), pcol()+1 SAY STR( nT_uk, _NUM, _DEC ) PICT PIC_IZN
 
 FF
 END PRINT
@@ -118,9 +130,13 @@ Box( , 10, 66)
 	++ nX
 	++ nX
 	
-	@ m_x + nX, m_y + 2 SAY "Varijanta prikaza 1-po robi 2-po dokumentima" ;
-		GET nVar PICT "9"
+	@ m_x + nX, m_y + 2 SAY "Varijanta prikaza 1-po robi 2-po dokumentima" 
 	
+	++ nX
+
+	@ m_x + nX, m_y + 2 SAY "                  3-samo total" GET nVar ;
+		PICT "9"
+
 	read
 BoxC()
 
@@ -141,6 +157,7 @@ local cFilter := ""
 local cF_firma 
 local cF_tipdok
 local cF_brdok
+local nUkupno
 
 O_DOKS
 O_FAKT
@@ -202,7 +219,8 @@ do while !EOF()
 	cF_firma := field->idfirma
 	cF_tipdok := field->idtipdok
 	cF_brdok := field->brdok
-	
+	nUkupno := field->iznos
+
 	nOperater := 0
 
 	if doks->(FIELDPOS( "oper_id" )) <> 0
@@ -280,47 +298,9 @@ do while !EOF()
 		
 		// izracuna PDV na cijenu sa popustom
 		nCj2PDV := (nCj2BPDV * (1 + nPPDV/100))
-	
-		// ukupno stavka
-		nUkStavka := nKol * nCj2PDV
-		nUkStavke := ROUND(nUkStavka, ZAO_VRIJEDNOST() + ;
-			IIF(field->idtipdok=="13", 4, 0) )
-
-		nPom1 := nKol * nCjBPDV 
-		nPom1 := ROUND(nPom1, ZAO_VRIJEDNOST() + ;
-			IIF(field->idtipdok=="13", 4, 0) )
 		
-		// ukupno bez pdv
-		nUkBPDV := nPom1 
-	
-		// ukupno popusta za stavku
-		nPom2 := nKol * nVPopust
-		nPom2 := ROUND(nPom2, ZAO_VRIJEDNOST() + ;
-			IIF(field->idtipdok=="13", 4, 0) )
-		
-		nUkVPop := nPom2
-
 		// preracunaj VPDV sa popustom
 		nVPDV := (nCj2BPDV * (nPPDV/100))
-
-		//  ukupno vrijednost bez pdva sa uracunatim poputstom
-		nPom3 := nPom1 - nPom2 
-		nPom3 := ROUND(nPom3, ZAO_VRIJEDNOST() + ;
-			IIF(idtipdok=="13", 4, 0))
-		
-		nUkBPDVPop := nPom3
-	
-		// ukupno PDV za stavku = (ukupno bez pdv - ukupno popust) 
-		// * stopa
-
-		nPom4 := nPom3 * nPPDV/100
-		// povecaj preciznost
-		nPom4 := ROUND(nPom4, ZAO_VRIJEDNOST() + ;
-			IIF(idtipdok=="13", 4, 2))
-		nUkPDV := nPom4
-	
-		// ukupno za stavku sa pdv-om
-		nTotal :=  nPom3 + nPom4
 
 		select r_export
 		append blank
@@ -334,13 +314,14 @@ do while !EOF()
 		replace field->part_naz with ALLTRIM( partn->naz )
 		replace field->roba_id with fakt->idroba
 		replace field->roba_naz with ALLTRIM( roba->naz )
-		replace field->kolicina with fakt->kolicina
-		replace field->cijena with fakt->cijena
-		replace field->rabat with nUkVPop
-		replace field->osnovica with nUkBPDV
-		replace field->pdv with nUkPDV
-		replace field->ukupno with nTotal
-	
+		replace field->kolicina with nKol
+		replace field->s_pdv with nPPDV
+		replace field->popust with nVPopust
+		replace field->c_bpdv with nCj2BPdv
+		replace field->pdv with nVPDV
+		replace field->c_pdv with nCj2PDV
+		replace field->uk_fakt with nUkupno
+
 		select fakt
 		skip
 	enddo
@@ -370,19 +351,20 @@ AADD( aDbf, { "part_id", "C", 6, 0 } )
 AADD( aDbf, { "part_naz", "C", 100, 0 } )
 AADD( aDbf, { "roba_id", "C", 10, 0 } )
 AADD( aDbf, { "roba_naz", "C", 100, 0 } )
-AADD( aDbf, { "kolicina", "N", 12, 2 } )
-AADD( aDbf, { "cijena", "N", 12, 2 } )
-AADD( aDbf, { "rabat", "N", 12, 2 } )
-AADD( aDbf, { "osnovica", "N", 12, 2 } )
-AADD( aDbf, { "pdv", "N", 12, 2 } )
-AADD( aDbf, { "ukupno", "N", 12, 2 } )
+AADD( aDbf, { "kolicina", "N", 15, 5 } )
+AADD( aDbf, { "popust", "N", 15, 5 } )
+AADD( aDbf, { "s_pdv", "N", 12, 2 } )
+AADD( aDbf, { "c_bpdv", "N", _FNUM, _FDEC } )
+AADD( aDbf, { "pdv", "N", _FNUM, _FDEC } )
+AADD( aDbf, { "c_pdv", "N", _FNUM, _FDEC } )
+AADD( aDbf, { "uk_fakt", "N", _FNUM, _FDEC } )
 
 t_exp_create( aDbf )
 O_R_EXP
 
 index on idfirma + idtipdok + brdok tag "1"
 index on roba_id tag "2"
-index on STR( operater, 3 ) tag "3"
+index on STR( operater, 3 ) + idfirma + idtipdok + brdok tag "3"
 
 return
 
@@ -392,7 +374,7 @@ return
 // stampa rekapitulacije
 // varijanta po dokumentima
 // ---------------------------------------------
-static function _st_mp_dok( nT_osnovica, nT_pdv, nT_ukupno )
+static function _st_mp_dok( nT_osnovica, nT_pdv, nT_ukupno, lCalc )
 local nOsnovica
 local nPDV
 local nUkupno
@@ -400,15 +382,21 @@ local nRbr := 0
 local nRow := 35
 local cLine := ""
 
+if lCalc == nil
+	lCalc := .f.
+endif
+
 nT_osnovica := 0
 nT_pdv := 0
 nT_ukupno := 0
 
-// vraca liniju
-g_l_mpdok( @cLine )
+if lCalc == .f.
+	// vraca liniju
+	g_l_mpdok( @cLine )
 
-// zaglavlje pregled po robi
-s_z_mpdok( cLine )
+	// zaglavlje pregled po robi
+	s_z_mpdok( cLine )
+endif
 
 select r_export
 // po dokumentima
@@ -426,38 +414,52 @@ do while !EOF()
 	nOsnovica := 0
 	nPDV := 0
 	nUkupno := 0
+	nS_pdv := 0
+	nUk_fakt := 0
 
 	do while !EOF() .and. field->idfirma + field->idtipdok + ;
 		field->brdok == cIdFirma + cIdTipDok + cBrDok
 		
-		nOsnovica += field->osnovica
-		nPDV += field->pdv
-		nUkupno += field->ukupno
+		nOsnovica += field->kolicina * field->c_bpdv
+		nPDV += field->kolicina * field->pdv
+		nS_pdv := field->s_pdv
+		nUk_fakt := field->uk_fakt
 
 		skip
 	enddo
 
-	// pa ispisi tu stavku
+	// zaokruzi
+	nOsnovica := ROUND( ( nUk_fakt / ( 1 + ( nS_pdv/100 )) ), ;
+		ZAO_VRIJEDNOST() )
+	nPDV := ROUND( ( nUk_fakt / ( 1 + ( nS_pdv/100 ) ) * ;
+		(nS_pdv/100)) , ZAO_VRIJEDNOST() )
+	nUkupno := ROUND( nUk_fakt , ZAO_VRIJEDNOST() )
 
-	// rbr
-	? PADL( ALLTRIM( STR( ++nRbr ) ), 4 ) + "."
+	if lCalc == .f.
+		// pa ispisi tu stavku
 
-	// dokument
-	@ prow(), pcol()+1 SAY PADR( ALLTRIM( cIdFirma + "-" + ;
-		cIdTipDok + "-" + cBrDok ), 16 )
+		// rbr
+		? PADL( ALLTRIM( STR( ++nRbr ) ), 4 ) + "."
 
-	// partner
-	@ prow(), pcol()+1 SAY PADR( ALLTRIM( cPart_id ) + "-" + ;
-		ALLTRIM( cPart_naz ), 40 )
+		// dokument
+		@ prow(), pcol()+1 SAY PADR( ALLTRIM( cIdFirma + "-" + ;
+			cIdTipDok + "-" + cBrDok ), 16 )
+
+		// partner
+		@ prow(), pcol()+1 SAY PADR( ALLTRIM( cPart_id ) + "-" + ;
+			ALLTRIM( cPart_naz ), 40 )
 	
-	// osnovica
-	@ prow(), nRow := pcol()+1 SAY STR( nOsnovica, 12, 2 )
+		// osnovica
+		@ prow(), nRow := pcol()+1 SAY STR( nOsnovica, _NUM, _DEC ) ;
+			PICT PIC_IZN
 
-	// pdv
-	@ prow(), pcol()+1 SAY STR( nPDV, 12, 2 ) 
+		// pdv
+		@ prow(), pcol()+1 SAY STR( nPDV, _NUM, _DEC ) PICT PIC_IZN
 
-	// ukupno
-	@ prow(), pcol()+1 SAY STR( nUkupno, 12, 2 ) 
+		// ukupno
+		@ prow(), pcol()+1 SAY STR( nUkupno, _NUM, _DEC ) PICT PIC_IZN
+
+	endif
 
 	// dodaj na total
 
@@ -467,15 +469,18 @@ do while !EOF()
 
 enddo
 
-// ispisi sada total
-? cLine
+if lCalc == .f.
+	
+	// ispisi sada total
+	? cLine
 
-? "UKUPNO:"
-@ prow(), nRow SAY STR( nT_osnovica, 12, 2 )
-@ prow(), pcol()+1 SAY STR( nT_pdv, 12, 2 )
-@ prow(), pcol()+1 SAY STR( nT_ukupno, 12, 2 )
+	? "UKUPNO:"
+	@ prow(), nRow SAY STR( nT_osnovica, _NUM, _DEC ) PICT PIC_IZN
+	@ prow(), pcol()+1 SAY STR( nT_pdv, _NUM, _DEC ) PICT PIC_IZN
+	@ prow(), pcol()+1 SAY STR( nT_ukupno, _NUM, _DEC ) PICT PIC_IZN
 
-? cLine
+	? cLine
+endif
 
 return
 
@@ -493,6 +498,9 @@ local nUkupno
 local nRbr := 0
 local nRow := 35
 local cLine := ""
+local cF_tipdok
+local cF_firma
+local cF_brdok
 
 nT_osnovica := 0
 nT_pdv := 0
@@ -524,15 +532,39 @@ do while !EOF()
 	nOsnovica := 0
 	nPDV := 0
 	nUkupno := 0
+	nS_pdv := 0
+	nU_fakt := 0
+	nUU_fakt := 0
 
-	do while !EOF() .and. field->operater == nOperater
+	do while !EOF() .and. field->operater == nOperater 
+	
+		cF_brdok := field->brdok
+		cF_tipdok := field->idtipdok
+		cF_firma := field->idfirma
+
+		do while !EOF() .and. field->operater == nOperater .and. ;
+			cF_firma + cF_tipdok + cF_brdok == field->idfirma + ;
+				field->idtipdok + field->brdok
 		
-		nOsnovica += field->osnovica
-		nPDV += field->pdv
-		nUkupno += field->ukupno
+			nU_fakt := field->uk_fakt
+			nS_pdv := field->s_pdv
+			nOsnovica += field->kolicina * field->c_bpdv
+			nPDV += field->kolicina * field->pdv
 
-		skip
+			skip
+		enddo
+
+		nUU_fakt += nU_fakt
+
 	enddo
+
+	// zaokruzi
+	nOsnovica := ROUND( ( nUU_fakt / ( 1 + ( nS_pdv/100 )) ), ;
+		ZAO_VRIJEDNOST() )
+	nPDV := ROUND( ( nUU_fakt / ( 1 + ( nS_pdv/100 ) ) * ;
+		(nS_pdv/100)) , ZAO_VRIJEDNOST() )
+	nUkupno := ROUND( nUU_fakt , ZAO_VRIJEDNOST() )
+
 
 	// pa ispisi tu stavku
 
@@ -542,14 +574,15 @@ do while !EOF()
 	// operater
 	@ prow(), pcol()+1 SAY PADR( ALLTRIM( cOper_naz ), 40 )
 	
-	// osnovica
-	@ prow(), nRow := pcol()+1 SAY STR( nOsnovica, 12, 2 ) 
+	// total
+	@ prow(), nRow := pcol()+1 SAY STR( nUkupno, _NUM, _DEC ) ;
+		PICT PIC_IZN 
 
 	// pdv
-	@ prow(), pcol()+1 SAY STR( nPDV, 12, 2 ) 
+	//@ prow(), pcol()+1 SAY STR( nPDV, _NUM, _DEC ) PICT PIC_IZN
 
-	// ukupno
-	@ prow(), pcol()+1 SAY STR( nUkupno, 12, 2 ) 
+	// osnovica
+	//@ prow(), pcol()+1 SAY STR( nOsnovica, _NUM, _DEC ) PICT PIC_IZN 
 
 	// dodaj na total
 
@@ -563,9 +596,9 @@ enddo
 ? cLine
 
 ? "UKUPNO:"
-@ prow(), nRow SAY STR( nT_osnovica, 12, 2 )
-@ prow(), pcol()+1 SAY STR( nT_pdv, 12, 2 )
-@ prow(), pcol()+1 SAY STR( nT_ukupno, 12, 2 )
+@ prow(), nRow SAY STR( nT_Ukupno, _NUM, _DEC ) PICT PIC_IZN
+//@ prow(), pcol()+1 SAY STR( nT_pdv, _NUM, _DEC ) PICT PIC_IZN
+//@ prow(), pcol()+1 SAY STR( nT_ukupno, _NUM, _DEC ) PICT PIC_IZN
 
 ? cLine
 
@@ -576,7 +609,7 @@ return
 // stampa rekapitulacije
 // varijanta po robama
 // ---------------------------------------------
-static function _st_mp_roba( nT_osnovica, nT_pdv, nT_ukupno )
+static function _st_mp_roba()
 local cRoba_id 
 local nOsnovica
 local nPDV
@@ -586,10 +619,9 @@ local nT_kolicina := 0
 local nRbr := 0
 local nRow := 35
 local cLine := ""
-
-nT_osnovica := 0
-nT_pdv := 0
-nT_ukupno := 0
+local nT_osnovica := 0
+local nT_pdv := 0
+local nT_ukupno := 0
 
 // vraca liniju
 g_l_mproba( @cLine )
@@ -608,18 +640,25 @@ do while !EOF()
 
 	nOsnovica := 0
 	nPDV := 0
+	nS_pdv := 0
 	nUkupno := 0
 	nKolicina := 0
 
 	do while !EOF() .and. field->roba_id == cRoba_id
 		
-		nOsnovica += field->osnovica
-		nPDV += field->pdv
-		nUkupno += field->ukupno
+		nS_pdv := field->s_pdv
+		nOsnovica += field->kolicina * field->c_bpdv
+		nPDV += field->kolicina * field->pdv
 		nKolicina += field->kolicina
 
 		skip
 	enddo
+
+	// zaokruzi
+	nOsnovica := ROUND(nOsnovica, ZAO_VRIJEDNOST() )
+	nPDV := ROUND( (nOsnovica * (nS_pdv/100)) , ZAO_VRIJEDNOST() + _ZAOK )
+	nUkupno := ROUND( nOsnovica + nPDV , ZAO_VRIJEDNOST() )
+
 
 	// pa ispisi tu stavku
 
@@ -630,17 +669,9 @@ do while !EOF()
 	
 	@ prow(), nRow := pcol()+1 SAY STR( nKolicina, 12, 2 )
 
-	@ prow(), pcol()+1 SAY STR( nOsnovica, 12, 2 ) 
-
-	@ prow(), pcol()+1 SAY STR( nPDV, 12, 2 ) 
-
-	@ prow(), pcol()+1 SAY STR( nUkupno, 12, 2 ) 
-
+	
 	// dodaj na total
 
-	nT_ukupno += nUkupno
-	nT_osnovica += nOsnovica
-	nT_pdv += nPDV
 	nT_kolicina += nKolicina
 
 enddo
@@ -650,9 +681,6 @@ enddo
 
 ? "UKUPNO:"
 @ prow(), nRow SAY STR( nT_kolicina, 12, 2 )
-@ prow(), pcol()+1 SAY STR( nT_osnovica, 12, 2 )
-@ prow(), pcol()+1 SAY STR( nT_pdv, 12, 2 )
-@ prow(), pcol()+1 SAY STR( nT_ukupno, 12, 2 )
 
 ? cLine
 
@@ -671,12 +699,12 @@ cLine += SPACE(1)
 cLine += REPLICATE("-", 50)
 cLine += SPACE(1)
 cLine += REPLICATE("-", 12)
-cLine += SPACE(1)
-cLine += REPLICATE("-", 12)
-cLine += SPACE(1)
-cLine += REPLICATE("-", 12)
-cLine += SPACE(1)
-cLine += REPLICATE("-", 12)
+//cLine += SPACE(1)
+//cLine += REPLICATE("-", 12)
+//cLine += SPACE(1)
+//cLine += REPLICATE("-", 12)
+//cLine += SPACE(1)
+//cLine += REPLICATE("-", 12)
 
 return
 
@@ -693,12 +721,12 @@ cTxt += SPACE(1)
 cTxt += PADR("roba (id/naziv)", 50)
 cTxt += SPACE(1)
 cTxt += PADR("kolicina", 12)
-cTxt += SPACE(1)
-cTxt += PADR("osnovica", 12)
-cTxt += SPACE(1)
-cTxt += PADR("pdv", 12)
-cTxt += SPACE(1)
-cTxt += PADR("ukupno", 12)
+//cTxt += SPACE(1)
+//cTxt += PADR("osnovica", 12)
+//cTxt += SPACE(1)
+//cTxt += PADR("pdv", 12)
+//cTxt += SPACE(1)
+//cTxt += PADR("ukupno", 12)
 
 ? "Realizacija po robi:"
 ? cLine
@@ -706,7 +734,6 @@ cTxt += PADR("ukupno", 12)
 ? cLine
 
 return
-
 
 // -----------------------------------------
 // vraca liniju za pregled po robi
@@ -720,10 +747,10 @@ cLine += SPACE(1)
 cLine += REPLICATE("-", 40)
 cLine += SPACE(1)
 cLine += REPLICATE("-", 12)
-cLine += SPACE(1)
-cLine += REPLICATE("-", 12)
-cLine += SPACE(1)
-cLine += REPLICATE("-", 12)
+//cLine += SPACE(1)
+//cLine += REPLICATE("-", 12)
+//cLine += SPACE(1)
+//cLine += REPLICATE("-", 12)
 
 return
 
@@ -739,11 +766,11 @@ cTxt += PADR("r.br", 5)
 cTxt += SPACE(1)
 cTxt += PADR("operater (id/naziv)", 40)
 cTxt += SPACE(1)
-cTxt += PADR("osnovica", 12)
-cTxt += SPACE(1)
-cTxt += PADR("pdv", 12)
-cTxt += SPACE(1)
 cTxt += PADR("ukupno", 12)
+//cTxt += SPACE(1)
+//cTxt += PADR("pdv", 12)
+//cTxt += SPACE(1)
+//cTxt += PADR("ukupno", 12)
 
 ? "Realizacija po opearterima:"
 ? cLine
