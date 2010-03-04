@@ -156,6 +156,10 @@ do while !EOF()
 	replace cijena with fakt->cijena
 	replace rabat with fakt->rabat
 
+	if fakt->(FIELDPOS("IDRELAC")) <> 0
+		replace idrel with fakt->idrelac
+	endif
+
 	select fakt
 	skip
 enddo

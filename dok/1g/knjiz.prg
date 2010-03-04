@@ -1917,9 +1917,11 @@ if (gSamokol != "D")
 
 	private cId:="  "
 
+
 endif //gSamokol=="D"  // samo kolicine
 
 read
+
 
 _idvrstep := SPACE(2)
 

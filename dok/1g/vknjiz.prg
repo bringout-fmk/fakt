@@ -620,6 +620,9 @@ else
  endif
 endif
 
+// setuj novu cijenu u sifrarnik i rabat ako postoji
+set_cijena( _idtipdok, _idroba, _cijena, _rabat )
+
 ShowGets()
 return .t.
 
@@ -1132,3 +1135,46 @@ endif
 
 ShowGets()
 return .t.
+
+
+// ------------------------------------------------
+// setuje cijenu i rabat u sifrarniku robe
+// ------------------------------------------------
+function set_cijena( cIdTipDok, cIdRoba, nCijena, nRabat )
+local nTArea := SELECT()
+local lFill := .f.
+
+select roba
+go top
+seek cIdRoba
+
+if FOUND()	
+
+	// provjeri da li je cijena ista ?
+
+	if cIdTipDok $ "#10#01#12#20#" .and. nCijena <> 0
+		if field->vpc <> nCijena .and. ;
+			Pitanje(, "Postaviti novu VPC u sifranik ?", "N") == "D"
+			replace field->vpc with nCijena
+			lFill := .t.
+		endif
+	elseif cIdTipDok $ "#11#13#" .and. nCijena <> 0
+		if field->mpc <> nCijena .and. ;
+			Pitanje(,"Postaviti novu MPC u sifrarnik ?", "N") == "D"
+			replace field->mpc with nCijena
+			lFill := .t.
+		endif
+	endif
+	
+	if gRabIzRobe == "D" .and. lFill == .t. .and. nRabat <> 0 .and. ;
+		nRabat <> field->n1
+		replace field->n1 with nRabat
+	endif
+
+endif
+
+select (nTArea)
+return
+
+
+
