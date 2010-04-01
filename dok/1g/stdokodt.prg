@@ -16,6 +16,10 @@ local cPath := "c:\"
 local cFilter := "f*.odt"
 local cTemplate := ""
 
+if !EMPTY( gJODTemplate )
+	cPath := ALLTRIM( gJODTemplate )
+endif
+
 // samo napuni pomocne tabele
 stdokpdv( cIdF, cIdVd, cBrDok, .t. )
 
@@ -170,10 +174,10 @@ do while !EOF()
 		PIC_VRIJEDNOST ) )
 	xml_node( "ptp", show_number( field->poptp, PIC_VRIJEDNOST ) )
 	xml_node( "vtp", show_number( field->vpoptp, PIC_VRIJEDNOST ) )
-	xml_node( "c1", ALLTRIM( field->c1 ) )
-	xml_node( "c2", ALLTRIM( field->c2 ) )
-	xml_node( "c3", ALLTRIM( field->c3 ) )
-	xml_node( "opis", ALLTRIM( field->opis ) )
+	xml_node( "c1", strkzn( ALLTRIM( field->c1 ), "8", "U" ) )
+	xml_node( "c2", strkzn( ALLTRIM( field->c2 ), "8", "U" ) )
+	xml_node( "c3", strkzn( ALLTRIM( field->c3 ), "8", "U" ) )
+	xml_node( "opis", strkzn( ALLTRIM( field->opis ), "8", "U" ) )
 
 	xml_subnode( "item", .t. )
 	
