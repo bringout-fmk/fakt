@@ -1180,6 +1180,8 @@ go top
 
 Scatter()
 _txt1:=_txt2:=_txt3a:=_txt3b:=_txt3c:=""
+_dest := SPACE(150)
+
 if IzFmkIni('FAKT','ProsiriPoljeOtpremniceNa50','N',KUMPATH)=='D'
 	_BrOtp:=space(50)
 else
@@ -1210,6 +1212,12 @@ endif
 if len(aMemo)>=10 .and. !EMPTY(aMemo[10])
   	cVezOtpr := aMemo[10]
 endif
+
+// destinacija
+if LEN( aMemo) = 18
+	_dest := PADR( aMemo[18], 150 )
+endif
+
 nRbr:=1
 
 Box("#PARAMETRI DOKUMENTA:",10,75)
@@ -1222,20 +1230,21 @@ Box("#PARAMETRI DOKUMENTA:",10,75)
     endif
    @  m_x+2,m_y+2 SAY "          datum:" GET _Datotp
    @  m_x+3,m_y+2 SAY "Ugovor/narudzba:" GET _brNar
+   @  m_x+4,m_y+2 SAY "    Destinacija:" GET _dest PICT "@S45"
   endif
 
   if gDodPar=="1" .or. gDatVal=="D"
    nRokPl:=gRokPl
-   @  m_x+4,m_y+2 SAY "Datum fakture  :" GET _DatDok
+   @  m_x+5,m_y+2 SAY "Datum fakture  :" GET _DatDok
    if dNajnoviji<>NIL
-   	@  m_x+4,m_y+35 SAY "Datum posljednje otpremnice:" GET dNajnoviji WHEN .f. COLOR "GR+/B"
+   	@  m_x+5,m_y+35 SAY "Datum posljednje otpremnice:" GET dNajnoviji WHEN .f. COLOR "GR+/B"
    endif
-   @ m_x+5,m_y+2 SAY "Rok plac.(dana):" GET nRokPl PICT "999" WHEN FRokPl("0",.t.) VALID FRokPl("1",.t.)
-   @ m_x+6,m_y+2 SAY "Datum placanja :" GET _DatPl VALID FRokPl("2",.t.)
+   @ m_x+6,m_y+2 SAY "Rok plac.(dana):" GET nRokPl PICT "999" WHEN FRokPl("0",.t.) VALID FRokPl("1",.t.)
+   @ m_x+7,m_y+2 SAY "Datum placanja :" GET _DatPl VALID FRokPl("2",.t.)
    read
   endif
 
-  @ m_x+8, m_y+2 SAY "Obracunati PDV ?" GET cSetPor pict "@!" valid cSetPor $ "DN"
+  @ m_x+9, m_y+2 SAY "Obracunati PDV ?" GET cSetPor pict "@!" valid cSetPor $ "DN"
   read
 
 BoxC()
@@ -1247,6 +1256,7 @@ UzorTxt()
 if !Empty (cVezOtpr)
   _txt2 += Chr(13)+Chr(10)+cVezOtpr
 endif
+
 _txt:=Chr(16)+trim(_txt1)+Chr(17) + Chr(16)+_txt2+Chr(17)+;
       Chr(16)+trim(_txt3a)+Chr(17) + Chr(16)+_txt3b+Chr(17)+;
       Chr(16)+trim(_txt3c)+Chr(17) +;
@@ -1254,7 +1264,15 @@ _txt:=Chr(16)+trim(_txt1)+Chr(17) + Chr(16)+_txt2+Chr(17)+;
       Chr(16)+dtoc(_DatOtp)+Chr(17) +;
       Chr(16)+_BrNar+Chr(17) +;
       Chr(16)+dtoc(_DatPl)+Chr(17)+;
-      Iif (Empty (cVezOtpr), "", Chr(16)+cVezOtpr+Chr(17))
+      IIF(Empty (cVezOtpr), "", Chr(16)+cVezOtpr+Chr(17))+;
+      Chr(16)+Chr(17)+;
+      Chr(16)+Chr(17)+;
+      Chr(16)+Chr(17)+;
+      Chr(16)+Chr(17)+;
+      Chr(16)+Chr(17)+;
+      Chr(16)+Chr(17)+;
+      Chr(16)+Chr(17)+;
+      Chr(16)+TRIM(_dest)+Chr(17)
 
 if datDok<>dDatDok
 	lSetujDatum:=.t.
@@ -2006,6 +2024,7 @@ if (_podbr==" ." .or.  roba->tip="U" .or. (nrbr==1 .and. val(_podbr)<1))
 	endif
 	_txt += Chr(16)+ cPom + Chr(17) 
 
+	// 12
  	if lDoks2
 		cPom:= d2k2
 	else
@@ -2013,6 +2032,7 @@ if (_podbr==" ." .or.  roba->tip="U" .or. (nrbr==1 .and. val(_podbr)<1))
 	endif
 	_txt += Chr(16)+ cPom + Chr(17) 
 
+	// 13
 	if lDoks2
 		cPom:= d2k3
 	else
@@ -2020,6 +2040,7 @@ if (_podbr==" ." .or.  roba->tip="U" .or. (nrbr==1 .and. val(_podbr)<1))
 	endif
 	_txt += Chr(16)+ cPom + Chr(17) 
 
+	// 14
  	if lDoks2
 		cPom:= d2k4
 	else
@@ -2027,6 +2048,7 @@ if (_podbr==" ." .or.  roba->tip="U" .or. (nrbr==1 .and. val(_podbr)<1))
 	endif
 	_txt += Chr(16)+ cPom + Chr(17) 
 
+	// 15
  	if lDoks2
 		cPom:= d2k5
 	else
