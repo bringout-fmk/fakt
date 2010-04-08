@@ -1181,6 +1181,7 @@ go top
 Scatter()
 _txt1:=_txt2:=_txt3a:=_txt3b:=_txt3c:=""
 _dest := SPACE(150)
+_m_dveza := SPACE(500)
 
 if IzFmkIni('FAKT','ProsiriPoljeOtpremniceNa50','N',KUMPATH)=='D'
 	_BrOtp:=space(50)
@@ -1214,8 +1215,12 @@ if len(aMemo)>=10 .and. !EMPTY(aMemo[10])
 endif
 
 // destinacija
-if LEN( aMemo) = 18
+if LEN( aMemo) >= 18
 	_dest := PADR( aMemo[18], 150 )
+endif
+
+if LEN( aMemo ) >= 19
+	_m_dveza := PADR( aMemo[19], 500 )
 endif
 
 nRbr:=1
@@ -1231,20 +1236,21 @@ Box("#PARAMETRI DOKUMENTA:",10,75)
    @  m_x+2,m_y+2 SAY "          datum:" GET _Datotp
    @  m_x+3,m_y+2 SAY "Ugovor/narudzba:" GET _brNar
    @  m_x+4,m_y+2 SAY "    Destinacija:" GET _dest PICT "@S45"
+   @  m_x+5,m_y+2 SAY "Vezni dokumenti:" GET _m_dveza PICT "@S45"
   endif
 
   if gDodPar=="1" .or. gDatVal=="D"
    nRokPl:=gRokPl
-   @  m_x+5,m_y+2 SAY "Datum fakture  :" GET _DatDok
+   @  m_x+6,m_y+2 SAY "Datum fakture  :" GET _DatDok
    if dNajnoviji<>NIL
-   	@  m_x+5,m_y+35 SAY "Datum posljednje otpremnice:" GET dNajnoviji WHEN .f. COLOR "GR+/B"
+   	@  m_x+6,m_y+35 SAY "Datum posljednje otpremnice:" GET dNajnoviji WHEN .f. COLOR "GR+/B"
    endif
-   @ m_x+6,m_y+2 SAY "Rok plac.(dana):" GET nRokPl PICT "999" WHEN FRokPl("0",.t.) VALID FRokPl("1",.t.)
-   @ m_x+7,m_y+2 SAY "Datum placanja :" GET _DatPl VALID FRokPl("2",.t.)
+   @ m_x+7,m_y+2 SAY "Rok plac.(dana):" GET nRokPl PICT "999" WHEN FRokPl("0",.t.) VALID FRokPl("1",.t.)
+   @ m_x+8,m_y+2 SAY "Datum placanja :" GET _DatPl VALID FRokPl("2",.t.)
    read
   endif
 
-  @ m_x+9, m_y+2 SAY "Obracunati PDV ?" GET cSetPor pict "@!" valid cSetPor $ "DN"
+  @ m_x+10, m_y+2 SAY "Obracunati PDV ?" GET cSetPor pict "@!" valid cSetPor $ "DN"
   read
 
 BoxC()
@@ -1272,11 +1278,13 @@ _txt:=Chr(16)+trim(_txt1)+Chr(17) + Chr(16)+_txt2+Chr(17)+;
       Chr(16)+Chr(17)+;
       Chr(16)+Chr(17)+;
       Chr(16)+Chr(17)+;
-      Chr(16)+TRIM(_dest)+Chr(17)
+      Chr(16)+TRIM(_dest)+Chr(17)+;
+      Chr(16)+TRIM(_m_dveza)+Chr(17)
 
 if datDok<>dDatDok
 	lSetujDatum:=.t.
 endif
+
 Gather()
 
 if lSetujDatum .or. cSetPor=="D"    // obracunaj porez na promet proizvoda na sve stavke!!
@@ -1357,7 +1365,7 @@ _BrNar:=SPACE(8)
 _DatPl:=CToD("")
 _VezOtpr:=""
 _Dest:=""
-
+_m_dveza := ""
 
 if lDoks2
 	d2k1:=SPACE(15)
@@ -1418,18 +1426,25 @@ if !fnovi
    	endif
 
 	if LEN(aMemo)>=18
+		// destinacija
 		public _DEST := aMemo[18]
+		// dokumenti veza
+		public _m_dveza := aMemo[19]
 	endif
+
 else
 	
 	cPretvori := "D"
 	
 	_serbr:=SPACE(LEN(serbr))
 	public _DEST := ""
+	public _m_dveza := ""
+
    	if glDistrib
      		_ambp:=0
 		_ambk:=0
    	endif
+	
 	_cijena:=0
 	
 	// ako je ovaj parametar ukljucen ponisti polje roba
@@ -1597,10 +1612,12 @@ if (nRbr==1 .and. VAL(_podbr) < 1)
      		endif
    	
 		// veza dokumenti
-		if pripr->(FIELDPOS("DOK_VEZA"))<>0
-			@ m_x + 6, m_y + 2 SAY "Veza:" GET _dok_veza ;
+		//if pripr->(FIELDPOS("DOK_VEZA"))<>0
+		_m_dveza := PADR( _m_dveza, 500 )
+
+		@ m_x + 6, m_y + 2 SAY "Veza:" GET _m_dveza ;
 				PICT "@S25"
-		endif
+		//endif
 	
 		if lUSTipke
    			USTipke()
@@ -2075,6 +2092,10 @@ if (_podbr==" ." .or.  roba->tip="U" .or. (nrbr==1 .and. val(_podbr)<1))
 	// 18 - Destinacija
 	cPom := ALLTRIM(_Dest)
 	_txt += Chr(16)+ cPom + Chr(17) 
+
+	// 19 - vezni dokumenti
+	cPom := ALLTRIM(_m_dveza)
+	_txt += CHR(16) + cPom + CHR(17)
 
 else
 	_txt:=""

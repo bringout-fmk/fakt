@@ -25,9 +25,9 @@ ENDIF
 
 if glRadNal
 	O_RNAL
-	O_FAKT
 endif
 
+O_FAKT
 O_PARTN
 O_DOKS
 
@@ -304,10 +304,12 @@ if cTabela=="D"
      AADD(ImeKol,{ "Datum placanja", {|| datpl} })
    ENDIF
 
-   if FIELDPOS("DOK_VEZA")<>0
-   	AADD(ImeKol, {"veza rn", {|| dok_veza} })
+   if FIELDPOS("DOK_VEZA") <> 0
+     AADD(ImeKol,{ "Vezni dokumenti", ;
+     	{|| PADR( ALLTRIM( g_d_veza(idfirma,idtipdok,brdok,dok_veza)) , ;
+		60) + "..." }})
    endif
-   
+
    Kol:={}; for i:=1 to len(ImeKol); AADD(Kol,i); next
    Box(,21,72)
    @ m_x+19,m_y+2 SAY " <ENTER> Stampa dokumenta        ³ <P> Povrat dokumenta u pripremu    ³"
@@ -940,6 +942,101 @@ Menu_SC("pch")
 return nSelected
 
 
+
+// ----------------------------------------------------------------
+// vraca vezu dokumenta
+// ----------------------------------------------------------------
+function g_d_veza( cIdFirma, cTipDok, cBrDok, cDok_veza, cTxt )
+local cVeza := ""
+local nTArea := SELECT()
+local lDok_veza := .f.
+
+if cTxt == nil
+	cTxt := ""
+endif
+
+if doks->(FIELDPOS("DOK_VEZA")) <> 0
+	lDok_veza := .t.
+endif
+
+if lDok_veza .and. !EMPTY( cDok_veza )
+	// uzmi iz polja dok_veza
+	cVeza := ALLTRIM( cDok_veza )
+else
+	
+	if EMPTY( cTxt )
+		// uzmi iz fakt->memo polja broj veze
+		O_FAKT
+		select fakt
+		go top
+		seek cIdFirma + cTipDok + cBrDok
+		cTxt := field->txt
+	endif
+
+	aTemp := ParsMemo( cTxt )
+	
+	select ( nTArea )
+
+	if LEN( aTemp ) >= 19
+		cVeza := ALLTRIM( aTemp[19] )
+	else
+		cVeza := ""
+	endif
+endif
+
+return cVeza
+
+
+
+// ----------------------------------------------------
+// prikazuje brojeve veze
+// ----------------------------------------------------
+static function box_d_veza()
+local cTmp := ""
+local cPom
+local aTmp := {}
+local i
+local nSelected
+private GetList := {}
+private Opc:={}
+private opcexe:={}
+private Izbor
+
+cTmp := g_d_veza( doks->idfirma, doks->idtipdok, doks->brdok, ;
+	doks->dok_veza )
+
+if EMPTY( cTmp )
+	msgbeep("Nema definisanih veznih dokumenata !")
+	return
+endif
+
+// zamjeni karaktere ako su drugacije definisani
+cTmp := STRTRAN( cTmp, ";", "," )
+
+// dodaj u matricu vezne brojeve
+aTmp := TokToNiz( cTmp, "," )
+
+for i:=1 to LEN( aTmp )
+
+	cPom := PADR( aTmp[ i ], 10 )
+	
+	AADD(opc, cPom )
+	AADD(opcexe, {|| nSelected := Izbor, Izbor := 0  } )
+next
+
+Izbor := 1
+// 0 - ako se kaze <ESC>
+Menu_SC("o_dvz")
+
+if LastKey() == K_ESC
+	nSelected := 0
+	Izbor := 0
+endif
+
+return nSelected
+
+
+
 /*! \fn EdDatN()
  *  \brief Ispravka azuriranih dokumenata (u tabelarnom pregledu)
  */
@@ -980,8 +1077,14 @@ do case
      else
      	  nRet := DE_CONT
      endif
+  
+  case UPPER(chr(Ch)) == "V"
+  	
+	box_d_veza()
 
-  case chr(Ch) $ "bB"
+	return DE_CONT
+
+  case UPPER(chr(Ch)) == "B"
      nRet:=pr_rn()  
      
   case chr(Ch) $ "nN"

@@ -92,6 +92,15 @@ xml_node("didpm", ALLTRIM(get_dtxt_opis("D11")) )
 cTmp := ALLTRIM(get_dtxt_opis("F10"))
 xml_node("dsign", strkzn(cTmp,"8","U"))
 
+// broj veze
+nLines := VAL( get_dtxt_opis("D30") )
+cTmp := ""
+nTmp := 30
+for i:=1 to nLines
+	cTmp += get_dtxt_opis("D" + ALLTRIM(STR( nTmp + i )))
+next
+xml_node("dveza", strkzn(cTmp,"8","U"))
+
 // zaglavlje
 cTmp := ALLTRIM(get_dtxt_opis("I01"))
 xml_node("fnaz", strkzn(cTmp,"8","U"))

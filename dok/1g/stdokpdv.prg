@@ -156,6 +156,8 @@ local cRobaNaz := ""
 local cRbr := ""
 local cPodBr := ""
 local cJmj:=""
+local i
+local nTmp
 local nKol:=0
 local nCjPDV:=0
 local nCjBPDV:=0
@@ -233,7 +235,6 @@ RPar("x8", @nSw5)
 // narudzbenice - samo kolicine 0, cijene 1
 RPar("x9", @nSw6)
 RPar("y1", @nSw7)
-
 
 // napuni firmine podatke
 fill_firm_data()
@@ -503,8 +504,10 @@ endif
 // destinacija na fakturi
 if LEN(aMemo) >= 18
 	cDestinacija := aMemo[18]
+	cM_d_veza := aMemo[19]
 else
 	cDestinacija := ""
+	cM_d_veza := ""
 endif
 
 // mjesto
@@ -533,10 +536,21 @@ add_drntext("D09", cIdTipDok)
 // radna jedinica
 add_drntext("D10", cIdFirma)
 
-if pripr->(FIELDPOS("DOK_VEZA")) <> 0
-	// dokument veza
-	add_drntext("D11", ALLTRIM(pripr->dok_veza) )
+// dokument veza
+if !EMPTY( pripr->dok_veza )
+	cTmp := pripr->dok_veza
+else
+	cTmp := cM_d_veza
 endif
+
+aTmp := SjeciStr( cTmp, 200 )
+nTmp := 30
+
+// koliko ima redova
+add_drntext("D30", ALLTRIM( STR(LEN(aTmp)) ) )
+for i := 1 to LEN( aTmp )
+	add_drntext("D" + ALLTRIM(STR( nTmp + i )), aTmp[i] )
+next
 
 // tekst na kraju fakture F04, F05, F06
 fill_dod_text( aMemo[2], pripr->idpartner )
