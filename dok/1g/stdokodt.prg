@@ -207,6 +207,7 @@ static function _odt_print( cPath, cTemplate, lDirectPrint )
 local cJodPath 
 local cOOPath
 local cOOParams := ""
+local cJavaStart := ALLTRIM( gJavaStart )
 
 private cCmdLine
 
@@ -217,7 +218,7 @@ endif
 cJodPath := ALLTRIM(gJODRep)
 cOOPath := '"' + ALLTRIM(gOOPath) + ALLTRIM(gOOWriter) + '"'
 
-cCmdLine := "java -jar " + cJodPath + " " + cPath + cTemplate + ;
+cCmdLine := cJavaStart + " " + cJodPath + " " + cPath + cTemplate + ;
 	" c:\data.xml c:\out.odt" 
 
 save screen to cScreen
