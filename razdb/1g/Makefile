@@ -3,7 +3,7 @@ MODUL=fa_1rdb
 
 SRCDOSROOT=$(BASEDOS)\\fmk\\fakt\\razdb\\1g\\
 
-PRGS=kafak.prg topsfakt.prg mnu_raz.prg rpt_kafa.prg
+PRGS=kafak.prg topsfakt.prg mnu_raz.prg rpt_kafa.prg imp_txt.prg
 CS=
 ASMS=
 
