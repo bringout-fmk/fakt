@@ -23,12 +23,24 @@ TxtErase( cFile, .t. )
 return
 
 
+// ----------------------------------------
+// export podataka za terminal
+// ----------------------------------------
+function exp_bterm()
+local nRet
+
+nRet := eBTerm_data()
+
+return
+
+
 // -----------------------------------------------
 // kopira TEMP.DBF -> PRIPR.DBF
 // -----------------------------------------------
 static function bterm_to_pripr()
 local aParams := {}
 local nCnt := 0
+local cSave
 
 private cTipVPC := "1"
 
@@ -43,6 +55,12 @@ O_TEMP
 if _gForm( @aParams ) = 0
 	return 0
 endif
+
+// sacuvaj parametar cijene
+cSave := g13dcij
+
+// setuj tip cijene koja se koristi
+g13dcij := ALLTRIM( aParams[12] )
 
 select temp
 // idroba
@@ -108,6 +126,9 @@ do while !EOF()
 	select temp
 enddo
 
+// vrati parametar cijene
+g13dcij := cSave
+
 msgbeep("Kreiran je novi dokument i nalazi se u pripremi.")
 
 return 1
@@ -130,8 +151,9 @@ local dDatOtpr := DATE()
 local dDatIsp := DATE()
 local nTArea := SELECT()
 local cGen := "D"
+local cMPCSet := " "
 
-Box(, 12, 67 )
+Box(, 15, 67 )
 	
 	@ m_x + nX, m_y + 2 SAY "Generisanje podataka iz barkod terminala:"
 
@@ -178,7 +200,19 @@ Box(, 12, 67 )
 
 	++ nX
 	++ nX
+
+	if cVpMp == "2"
+
+		// tip cijena
+		@ m_x + nX, m_y + 2 SAY "Koristiti MPC ( /1/2/3...)" ;
+			GET cMPCSet ;
+			VALID cMPCSet $ " 123456"
 	
+		++ nX
+		++ nX
+	
+	endif
+
 	@ m_x + nX, m_y + 2 SAY "Izvrsiti transfer (D/N)?" GET cGen ;
 		VALID cGen $ "DN" PICT "@!"
 
@@ -220,6 +254,9 @@ if LastKey() <> K_ESC
 	// [11]
 	AADD( aParam, ALLTRIM(field->ptt) )
 
+	// [12]
+	AADD( aParam, cMPCSet )
+
 else
 	return 0
 endif
@@ -244,8 +281,8 @@ static function _gTdok( cTip )
 local cRet := ""
 do case
 	case cTip == "1" 
-		// veleprodaja
-		cRet := "12"
+		// veleprodaja - direktno racun
+		cRet := "10"
 	case cTip == "2"
 		// maloprodaja
 		cRet := "13"

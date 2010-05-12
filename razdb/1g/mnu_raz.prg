@@ -28,6 +28,8 @@ AADD(opc,"2. kalk->fakt (modem)")
 AADD(opcexe,{|| PovModem()})
 AADD(opc,"3. import barkod terminal")
 AADD(opcexe,{|| imp_bterm()})
+AADD(opc,"4. export barkod terminal")
+AADD(opcexe,{|| exp_bterm()})
 
 
 private Izbor:=1
