@@ -504,9 +504,14 @@ endif
 // destinacija na fakturi
 if LEN(aMemo) >= 18
 	cDestinacija := aMemo[18]
-	cM_d_veza := aMemo[19]
 else
 	cDestinacija := ""
+endif
+
+// dokument veza
+if LEN(aMemo) >= 19
+	cM_d_veza := aMemo[19]
+else
 	cM_d_veza := ""
 endif
 
@@ -537,7 +542,7 @@ add_drntext("D09", cIdTipDok)
 add_drntext("D10", cIdFirma)
 
 // dokument veza
-if !EMPTY( pripr->dok_veza )
+if pripr->(FIELDPOS("dok_veza")) <> 0 .and. !EMPTY( pripr->dok_veza )
 	cTmp := pripr->dok_veza
 else
 	cTmp := cM_d_veza
