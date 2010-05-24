@@ -495,13 +495,8 @@ if right(trim(&cVarIdRoba),2)="--"
   	endif
 endif
 
-if gArtCDX = "SIFRADOB"
-	nLenSDob := LEN(roba->sifradob)
-	// dodaj prefiks ako je ukucano manje od 5
-	if LEN(ALLTRIM(_idroba)) < 5
-		_idroba := PADR( PADL( ALLTRIM(_idroba), 5, "0" ) , nLenSDob )
-	endif
-endif
+// sredi sifru dobavljaca...
+fix_sifradob( @_idroba, 5, "0" ) 
 
 P_Roba( @_Idroba , nil, nil, gArtCDX )
 
