@@ -1424,10 +1424,16 @@ if !fnovi
        			d2n2:=aMemo[17]
      		endif
    	endif
+	
+	
+	altd()
 
 	if LEN(aMemo)>=18
 		// destinacija
 		public _DEST := aMemo[18]
+	endif
+	
+	if LEN(aMemo)>=19
 		// dokumenti veza
 		public _m_dveza := aMemo[19]
 	endif
@@ -1612,19 +1618,17 @@ if (nRbr==1 .and. VAL(_podbr) < 1)
      		endif
    	
 		// veza dokumenti
-		//if pripr->(FIELDPOS("DOK_VEZA"))<>0
-		_m_dveza := PADR( _m_dveza, 500 )
+		_m_dveza := PADR( ALLTRIM(_m_dveza), 500 )
 
 		@ m_x + 6, m_y + 2 SAY "Veza:" GET _m_dveza ;
 				PICT "@S25"
-		//endif
 	
 		if lUSTipke
    			USTipke()
    		endif
    	
 		// destinacija
-		_dest := PADR( _dest, 80 )
+		_dest := PADR( ALLTRIM(_dest), 80 )
    		
 		if ( gDest .and. !glDistrib )
      		      	@ m_x + 7, m_y + 2 SAY "Dest:" GET _dest ;
