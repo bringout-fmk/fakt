@@ -468,7 +468,6 @@ return
  */
  
 function SetFirma()
-*{
 private  GetList:={}
 
 O_PARAMS
@@ -486,8 +485,9 @@ Box(, 6, 60, .f.,"Podaci o maticnoj firmi")
 BoxC()
 
 gMjStr:=TRIM(gMjStr)
+
 // bazna valuta uvijek domaca
-gBaznaV:="D"
+gBaznaV := "D"
 
 if (LASTKEY()<>K_ESC)
 	WPar("s7",gMjStr)
@@ -499,7 +499,7 @@ if (LASTKEY()<>K_ESC)
 endif
 
 return
-*}
+
 
 
 *string Params_p0;
