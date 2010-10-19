@@ -218,6 +218,7 @@ Skloni(SIFPATH,"BANKE.DBF",cSezona,finverse,fda,fnul)
 Skloni(SIFPATH,"VRSTEP.DBF",cSezona,finverse,fda,fnul)
 Skloni(SIFPATH,"VOZILA.DBF",cSezona,finverse,fda,fnul)
 Skloni(SIFPATH,"RELAC.DBF",cSezona,finverse,fda,fnul)
+Skloni(SIFPATH,"DEST.DBF",cSezona,finverse,fda,fnul)
 Skloni(SIFPATH,"FMK.INI",cSezona,finverse,fda,fnul)
 
 ?
@@ -282,6 +283,7 @@ PUBLIC gaDBFs := {;
 { F_VRSTEP ,"VRSTEP"  , P_SIFPATH     },;
 { F_RELAC  ,"RELAC"   , P_SIFPATH     },;
 { F_VOZILA ,"VOZILA"  , P_SIFPATH     },;
+{ F_DEST   ,"DEST"    , P_SIFPATH     },;
 { F_KALPOS ,"KALPOS"  , P_KUMPATH     },;
 { F_BANKE  ,"BANKE"   , P_SIFPATH     },;
 { F_OPS    ,"OPS"     , P_SIFPATH     };
@@ -648,6 +650,7 @@ if i==F_GEN_UG .or. i==F_G_UG_P
 	lIdiDalje:=.t.
 endif
 
+altd()
 
 if lIdiDalje
 	cDbfName:=DBFName(i,.t.)
