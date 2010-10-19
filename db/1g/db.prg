@@ -811,6 +811,8 @@ set order to tag "ID"
 select pripr
 go top
 
+// 1. azuriranje u bazu FAKT
+
 Box("#Proces azuriranja u toku",3,60)
 	do while !eof()
   	if lViseDok
@@ -862,9 +864,14 @@ Box("#Proces azuriranja u toku",3,60)
 	skip
 enddo
 
+
+// 2. azuriranje u bazu DOKS
+
 select pripr
 go top
+
 do while !eof()
+	
 	if (lViseDok .and. ASCAN(aOstaju,cPom:=idfirma+idtipdok+brdok)<>0)
     		do while !eof() .and. cPom==idfirma+idtipdok+brdok
       			skip 1
@@ -975,7 +982,8 @@ do while !eof()
   	endif
   	
 	select pripr
-  	nDug:=0
+  	
+	nDug:=0
 	nRab:=0
   	nDugD:=0
 	nRabD:=0
@@ -1034,10 +1042,20 @@ do while !eof()
       			_brdok:=TRIM(_brdok)+"/13"
       			Gather2()
     		endif
-  	endif
+	endif
+
 	if Logirati(goModul:oDataBase:cName,"DOK","AZUR")
 		EventLog(nUser,goModul:oDataBase:cName,"DOK","AZUR",nil,nil,nil,nil,"","","dokument: " + cIdFirma+"-"+cIdTipDok+"-"+cBrDok,dDatDok,Date(),"","Azuriranje dokumenta")
 	endif
+	
+	// ponovo odradi lock tabele DOKS
+	if !(doks->(FLock()))
+		
+		Beep(4)
+  		Msg("Azuriranje NE moze vrsiti vise korisnika istovremeno !", 15)
+  		closeret
+	endif
+
   	select pripr
 enddo
 
