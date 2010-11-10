@@ -915,7 +915,9 @@ else
 endif
 
 go nTrec
-    
+   
+msgbeep("Formiran dokument 10-" + cNBrFakt )
+
 return DE_REFRESH
 
 
