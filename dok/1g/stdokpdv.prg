@@ -411,17 +411,17 @@ do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==c
 	
 	// ukupno stavka
 	nUkStavka := nKol * nCj2PDV
-	nUkStavke := ROUND(nUkStavka, ZAO_VRIJEDNOST() + IIF(idtipdok=="13", 4, 0) )
+	nUkStavke := ROUND(nUkStavka, ZAO_VRIJEDNOST() + IIF(idtipdok$"11#13", 4, 0) )
 
 	nPom1 := nKol * nCjBPDV 
-	nPom1 := ROUND(nPom1, ZAO_VRIJEDNOST() + IIF(idtipdok=="13", 4, 0) )
+	nPom1 := ROUND(nPom1, ZAO_VRIJEDNOST() + IIF(idtipdok$"11#13", 4, 0) )
 	// ukupno bez pdv
 	nUkBPDV += nPom1 
 	
 
 	// ukupno popusta za stavku
 	nPom2 := nKol * nVPopust
-	nPom2 := ROUND(nPom2, ZAO_VRIJEDNOST() + IIF(idtipdok=="13", 4, 0) )
+	nPom2 := ROUND(nPom2, ZAO_VRIJEDNOST() + IIF(idtipdok$"11#13", 4, 0) )
 	nUkVPop += nPom2
 
 	// preracunaj VPDV sa popustom
@@ -430,14 +430,14 @@ do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==c
 
 	//  ukupno vrijednost bez pdva sa uracunatim poputstom
 	nPom3 := nPom1 - nPom2 
-	nPom3 := ROUND(nPom3, ZAO_VRIJEDNOST() + IIF(idtipdok=="13", 4, 0))
+	nPom3 := ROUND(nPom3, ZAO_VRIJEDNOST() + IIF(idtipdok$"11#13", 4, 0))
 	nUkBPDVPop += nPom3
 	
 
 	// ukupno PDV za stavku = (ukupno bez pdv - ukupno popust) * stopa
 	nPom4 := nPom3 * nPPDV/100
 	// povecaj preciznost
-	nPom4 := ROUND(nPom4, ZAO_VRIJEDNOST() + IIF(idtipdok=="13", 4, 2))
+	nPom4 := ROUND(nPom4, ZAO_VRIJEDNOST() + IIF(idtipdok$"11#13", 4, 2))
 	nUkPDV += nPom4
 	
 	// ukupno za stavku sa pdv-om
