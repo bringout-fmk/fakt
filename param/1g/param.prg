@@ -92,7 +92,7 @@ private GetList:={}
 
 O_PARAMS
 
-Box(,10,77,.f.,"PARAMETRI FISKALNOG STMPACA")
+Box(,20,77,.f.,"PARAMETRI FISKALNOG STMPACA")
 
 	nX := 1
 
@@ -104,10 +104,33 @@ Box(,10,77,.f.,"PARAMETRI FISKALNOG STMPACA")
 	if gFiscal == "D"
 	
 		nX += 2
-
-		@ m_x+nX, m_y+2 SAY "Direktorij txt fajlova:" GET gFD_path ;
-			VALID !EMPTY(gFD_path)
+	
+		@ m_x+nX, m_y+2 SAY "Tip uredjaja:" GET gFC_type ;
+			VALID !EMPTY(gFC_type)
 		
+		nX += 2
+
+		@ m_x+nX, m_y+2 SAY "HTTP adresa:" GET gFC_addr ;
+			PICT "@S20"
+	
+		@ m_x+nX, col()+1 SAY "port:" GET gFC_port ;
+			PICT "@S5"
+		
+		nX += 2
+
+		@ m_x+nX, m_y+2 SAY "Direktorij izl. fajlova:" GET gFD_path ;
+			VALID !EMPTY(gFD_path) PICT "@S25"
+		
+		++ nX
+		
+		@ m_x+nX, m_y+2 SAY "Naziv izl. fajla:" GET gFD_name ;
+			VALID !EMPTY(gFD_name) PICT "@S25"
+		
+		++ nX
+	
+		@ m_x+nX, m_y+2 SAY "Provjera gresaka:" GET gFC_error ;
+			VALID gFC_error $ "DN" PICT "@!"
+	
 		++ nX
 
 		@ m_x+nX, m_y+2 SAY "Timeout izmedju fiskalnih operacija:" GET gF_timeo ;
@@ -122,8 +145,37 @@ Box(,10,77,.f.,"PARAMETRI FISKALNOG STMPACA")
 
 		@ m_x+nX, m_y+2 SAY "Konverzija znakova (0-8)" GET gFFKonv ;
 			VALID gFFKonv $ "012345678"
-	
-	
+		
+		nX += 2
+		
+		@ m_x+nX, m_y+2 SAY "Komandna linija:" GET gFC_cmd ;
+			PICT "@S40"
+		
+		++ nX
+
+		@ m_x+nX, m_y+2 SAY "($1):" GET gFC_cp1 ;
+			PICT "@S50"
+		
+		++ nX
+		
+		@ m_x+nX, m_y+2 SAY "($2):" GET gFC_cp2 ;
+			PICT "@S50"
+		
+		++ nX
+		
+		@ m_x+nX, m_y+2 SAY "($3):" GET gFC_cp3 ;
+			PICT "@S50"
+		
+		++ nX
+		
+		@ m_x+nX, m_y+2 SAY "($4):" GET gFC_cp4 ;
+			PICT "@S50"
+		
+		++ nX
+		
+		@ m_x+nX, m_y+2 SAY "($5):" GET gFC_cp5 ;
+			PICT "@S50"
+
   		read
 	endif
 
@@ -135,6 +187,17 @@ if (LASTKEY() <> K_ESC)
    	Wpar("f3",gFFpitanje)
    	Wpar("f4",gF_timeo)
    	Wpar("f5",gFFKonv)
+	WPar("f6",gFC_type)
+	WPar("f7",gFD_name)
+	WPar("f8",gFC_error)
+	WPar("f9",gFC_cmd)
+	WPar("f0",gFC_cp1)
+	WPar("fa",gFC_cp2)
+	WPar("fb",gFC_cp3)
+	WPar("fc",gFC_cp4)
+	WPar("fd",gFC_cp5)
+	WPar("fe",gFC_addr)
+	WPar("ff",gFC_port)
 endif
 
 return 

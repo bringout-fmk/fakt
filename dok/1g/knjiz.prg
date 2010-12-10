@@ -248,9 +248,15 @@ do case
 		// time out
 		//sleep( gF_timeo )
 
-		// send invoice to fiscal printer
-        	rn_to_fiscal( cFFirma, cFTipDok, cFBrDok )
-		
+		if ALLTRIM( gFC_type ) == "TRING"
+			// send invoice to fiscal printer
+			rn_to_tfp( cFFirma, cFTipDok, cFBrDok )
+		else
+
+			// send invoice to fiscal printer
+        		rn_to_fiscal( cFFirma, cFTipDok, cFBrDok )
+		endif
+
 		msgc()
 	
 	case (Ch==K_CTRL_T .or. (Ch=K_DEL .and. gTBDir=="D"))
@@ -594,6 +600,150 @@ fisc_nivel( gFD_path, aItems, aSem_data )
 return
 
 
+// -------------------------------------------------------------
+// izdavanje fiskalnog isjecka na TFP uredjaj - tring
+// -------------------------------------------------------------
+static function rn_to_tfp( cFirma, cTipDok, cBrDok )
+local cError := ""
+local lStorno := .t.
+local aStavke := {}
+local aKupac := {}
+local nReklRn := 0
+local nTipRn := 0
+local nPartnId := 0
+
+// ako se ne koristi opcija fiscal, izadji !
+if gFiscal == "N"
+	return
+endif
+
+select doks
+seek ( cFirma + cTipDok + cBrDok )
+
+// ako je storno racun ...
+//if cStPatt $ ALLTRIM(field->brdok)
+//	nReklRn := VAL( STRTRAN( ALLTRIM(field->brdok), cStPatt, "" ))	
+//endif
+
+nBrDok := VAL(ALLTRIM(field->brdok))
+nTotal := field->iznos
+nNRekRn := 0
+
+if nReklRn <> 0
+	Box(,1,60)
+		@ m_x + 1, m_y + 2 SAY "Broj rekl.fiskalnog racuna:" ;
+			GET nNRekRn PICT "99999" VALID ( nNRekRn > 0 )
+		read
+	BoxC()
+endif
+
+select fakt
+seek ( cFirma + cTipDok + cBrDok )
+
+nTRec := RECNO()
+
+// da li se radi o storno racunu ?
+do while !EOF() .and. field->idfirma == cFirma ;
+	.and. field->idtipdok == cTipDok ;
+	.and. field->brdok == cBrDok
+
+	if field->kolicina > 0
+		lStorno := .f.
+		exit
+	endif
+	
+	skip
+enddo
+
+nPartnId := 0
+
+if cTipDok $ "10#"
+
+	// veleprodajni racun
+
+	nTipRn := 2
+	
+	// daj mi partnera za ovu fakturu
+	nPartnId := _g_spart( doks->idpartner )
+	
+	//if lStorno == .t.
+		// stampa storno vp racuna
+	//endif
+
+elseif cTipDok $ "11#"
+	
+	// maloprodajni racun
+
+	nTipRn := 1
+
+	// nema parnera
+	nPartnId := 0
+
+	//if lStorno == .t.
+		// stampa storno mp racuna
+	//endif
+
+endif
+
+// vrati se opet na pocetak
+go (nTRec)
+
+// upisi u matricu stavke
+do while !EOF() .and. field->idfirma == cFirma ;
+	.and. field->idtipdok == cTipDok ;
+	.and. field->brdok == cBrDok
+
+	// nastimaj se na robu ...
+	select roba
+	seek fakt->idroba
+	
+	select fakt
+
+	// storno identifikator
+	nSt_Id := 0
+
+	if ( field->kolicina < 0 ) .and. lStorno == .f.
+		nSt_id := 1
+	endif
+	
+	cF_brrn := fakt->brdok
+	cF_rbr := fakt->rbr
+	
+	cF_idart := fakt->idroba
+	cF_barkod := ALLTRIM( roba->barkod )
+
+	cF_artnaz := ALLTRIM( konvznwin( roba->naz, gFFkonv) )
+	cF_artjmj := ALLTRIM( roba->jmj )
+
+	nF_cijena := ABS ( field->cijena )
+	nF_kolicina := ABS ( field->kolicina )
+	nF_rabat := ABS ( field->rabat ) 
+
+	cF_tarifa := roba->idtarifa
+	cF_st_rn := ""
+	
+	dF_datum := fakt->datdok
+
+	AADD( aStavke, { cF_brrn , ;
+			cF_rbr, ;
+			cF_idart, ;
+			cF_artnaz, ;
+			nF_cijena, ;
+			nF_rabat, ;
+			nF_kolicina, ;
+			cF_tarifa, ;
+			cF_st_rn, ;
+			dF_datum, ;
+			cF_artjmj } )
+
+	skip
+enddo
+
+// ispisi racun
+fc_trng_rn( ALLTRIM( gFD_path ), ;
+	ALLTRIM( gFD_name ), aStavke, aKupac, lStorno, cError  )
+
+return
 
 
 // ------------------------------------------------------

@@ -406,11 +406,22 @@ public gcF9USmece := "N"
 public gAzurTimeOut := 150
 
 // fiskalni stampac
+public gFC_type := PADR( "", 20 )
 public gFiscal := "N"
 public gFD_path := PADR("c:\fiscal\out\", 150)
+public gFD_name := PADR("out.inp", 150 ) 
 public gFFPitanje := "D"
+public gFC_error := "N"
+public gFC_cmd := PADR( "", 200 )
+public gFC_cp1 := PADR( "", 150 )
+public gFC_cp2 := PADR( "", 150 )
+public gFC_cp3 := PADR( "", 150 )
+public gFC_cp4 := PADR( "", 150 )
+public gFC_cp5 := PADR( "", 150 )
 public gF_timeo := 2
 public gFFKonv := "5"
+public gFC_addr := PADR("", 30)
+public gFC_port := PADR("", 10)
 
 // stmpa na traku
 public gMpPrint := "N"
@@ -593,6 +604,18 @@ RPar("f2", @gFD_path)
 RPar("f3", @gFFpitanje)
 RPar("f4", @gF_timeo)
 RPar("f5", @gFFKonv)
+
+RPar("f6", @gFC_type)
+RPar("f7", @gFD_name)
+RPar("f8", @gFC_error)
+RPar("f9", @gFC_cmd)
+RPar("f0", @gFC_cp1)
+RPar("fa", @gFC_cp2)
+RPar("fb", @gFC_cp3)
+RPar("fc", @gFC_cp4)
+RPar("fd", @gFC_cp5)
+RPar("fe", @gFC_addr)
+RPar("ff", @gFC_port)
 
 
 cSection := "1"
