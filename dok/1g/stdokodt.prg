@@ -66,7 +66,8 @@ xml_node("u_bpdvpop", show_number( field->ukbpdvpop, PIC_VRIJEDNOST ) )
 xml_node("u_pdv", show_number( field->ukpdv, PIC_VRIJEDNOST ) )
 xml_node("u_kol", show_number( field->ukkol, PIC_KOLICINA ) )
 xml_node("u_total", show_number( field->ukupno, PIC_VRIJEDNOST ) )
-
+xml_node("u_zaokr", show_number( field->zaokr, PIC_VRIJEDNOST ) )
+xml_node("u_tottp", show_number( field->ukupno - field->ukpoptp, PIC_VRIJEDNOST ) )
 // dokument iz tabele
 xml_node("dbr", ALLTRIM( field->brdok ) )
 xml_node("ddat", DTOC( field->datdok ) )
@@ -84,7 +85,14 @@ xml_node("dslovo", strkzn(cTmp,"8","U"))
 xml_node("dotpr", ALLTRIM(get_dtxt_opis("D05")) )
 xml_node("dnar", ALLTRIM(get_dtxt_opis("D06")) )
 xml_node("ddin", ALLTRIM(get_dtxt_opis("D07")) )
+
+// destinacija na fakturi
 cTmp := ALLTRIM(get_dtxt_opis("D08"))
+if EMPTY(cTmp)
+	// ako je prazno, uzmi adresu partnera
+	cTmp := get_dtxt_opis("K02")
+endif
+
 xml_node("ddest", strkzn(cTmp,"8","U"))
 xml_node("dtdok", ALLTRIM(get_dtxt_opis("D09")) )
 xml_node("drj", ALLTRIM(get_dtxt_opis("D10")) )
@@ -161,7 +169,7 @@ do while !EOF()
 	xml_node( "pbr", ALLTRIM( field->podbr ) )
 	xml_node( "id", ALLTRIM( field->idroba ) )
 	xml_node( "naz", strkzn(ALLTRIM( field->robanaz ),"8","U" ))
-	xml_node( "jmj", ALLTRIM( field->jmj ) )
+	xml_node( "jmj", strkzn(ALLTRIM( field->jmj ), "8", "U") )
 	xml_node( "kol", show_number( field->kolicina, PIC_KOLICINA ) )
 	xml_node( "cpdv", show_number( field->cjenpdv, PIC_CIJENA ) )
 	xml_node( "cbpdv", show_number( field->cjenbpdv, PIC_CIJENA ) )

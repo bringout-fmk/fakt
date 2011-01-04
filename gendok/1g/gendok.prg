@@ -373,7 +373,8 @@ if reccount2() == 0
                                   )
                endif
             ELSE
-               cBrDok:=SPACE (LEN (cBrDok))
+	    	// ostavi prazno za mreznu numeraciju
+               	cBrDok := SPACE(LEN(brdok))
             ENDIF
             
 	    SELECT FAKT
@@ -469,7 +470,7 @@ if  idtipdok $ "12#20#13#01#27"
         endif
         cBrDok:=padr(cbrdok,8)
      ELSE
-        cBrDok:=SPACE (LEN (cBrDok))
+        cBrDok:=SPACE (LEN (BrDok))
      ENDIF
      select PRIPR; PushWa()
 
@@ -624,4 +625,6 @@ MsgBeep("Dodao: " + STR(nAdd) + ", ispravio: " + STR(nEdit) + " stavki")
 
 select pripr
 return .t.
-*}
+
+
+

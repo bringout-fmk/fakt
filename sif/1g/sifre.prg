@@ -1047,19 +1047,23 @@ cPartneri := SPACE(80)
 cPTT      := SPACE(80)
 cMjesta   := SPACE(80)
 cNSort    := "4"
+dDatDo    := DATE()
+cG_dat    := "D"
 
-Box(,10,77)
+Box(,11,77)
 DO WHILE .t.
  @ m_x+0, m_y+5 SAY "POSTAVLJENJE USLOVA ZA PRAVLJENJE LABELA"
  @ m_x+2, m_y+2 SAY "Artikal  :" GET cIdRoba  VALID P_Roba(@cIdRoba) PICT "@!"
  @ m_x+3, m_y+2 SAY "Partner  :" GET cPartneri PICT "@S50!"
  @ m_x+4, m_y+2 SAY "Mjesto   :" GET cMjesta   PICT "@S50!"
  @ m_x+5, m_y+2 SAY "PTT      :" GET cPTT      PICT "@S50!"
- @ m_x+6, m_y+2 SAY "Nacin sortiranja (1-kolicina+mjesto+naziv ,"
- @ m_x+7, m_y+2 SAY "                  2-mjesto+naziv+kolicina ,"
- @ m_x+8, m_y+2 SAY "                  3-PTT+mjesto+naziv+kolicina),"
- @ m_x+9, m_y+2 SAY "                  4-kolicina+PTT+mjesto+naziv)," 
-@ m_x+10, m_y+2 SAY "                  5-idpartner)," ;
+ @ m_x+6, m_y+2 SAY "Gledati tekuci datum (D/N):" GET cG_dat ;
+ 	VALID cG_dat $ "DN" PICT "@!"
+ @ m_x+7, m_y+2 SAY "Nacin sortiranja (1-kolicina+mjesto+naziv ,"
+ @ m_x+8, m_y+2 SAY "                  2-mjesto+naziv+kolicina ,"
+ @ m_x+9, m_y+2 SAY "                  3-PTT+mjesto+naziv+kolicina),"
+ @ m_x+10, m_y+2 SAY "                  4-kolicina+PTT+mjesto+naziv)," 
+ @ m_x+11, m_y+2 SAY "                  5-idpartner)," ;
  	GET cNSort VALID cNSort$"12345" PICT "9"
  READ
  IF LASTKEY()==K_ESC; BoxC(); RETURN; ENDIF
@@ -1120,7 +1124,6 @@ do while !eof()
 	set order to tag "ID"
 	go top
 	seek rugov->id
-  	
 
 	// stampati samo ugovore kod kojih je LAB_PRN <> "N"
 	if ugov->(FIELDPOS("LAB_PRN")) <> 0
@@ -1136,7 +1139,15 @@ do while !eof()
 			loop
   		endif
 	endif
-	
+
+	// pogledaj i datum ugovora, ako je istekao 
+	// ne stampaj labelu
+	if cG_dat == "D" .and. ( dDatDo > ugov->datdo )
+		select rugov
+		skip 1
+		loop
+	endif
+
   	select partn
 	seek ugov->idpartner
   	
