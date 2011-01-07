@@ -471,7 +471,14 @@ nUkPDV := ROUND( nUkPDV, ZAO_VRIJEDNOST() )
 nTotal := (nUkBPDVPop + nUkPDV)
 
 // zaokruzenje
-nFZaokr := ROUND(nTotal, ZAO_VRIJEDNOST()) - ROUND2(ROUND(nTotal, ZAO_VRIJEDNOST()), gFZaok)
+//nFZaokr := ROUND(nTotal, ZAO_VRIJEDNOST()) - ROUND2(ROUND(nTotal, ZAO_VRIJEDNOST()), gFZaok)
+
+if goModul:oDataBase:cSezona >= "2011" 
+	nFZaokr := zaokr_5pf( nTotal )
+else
+	nFZaokr := ROUND(nTotal, ZAO_VRIJEDNOST()) - ROUND2(ROUND(nTotal, ZAO_VRIJEDNOST()), gFZaok)
+endif
+
 if (gFZaok <> 9 .and. ROUND(nFZaokr, 4) <> 0)
 	nDrnZaokr := nFZaokr
 endif

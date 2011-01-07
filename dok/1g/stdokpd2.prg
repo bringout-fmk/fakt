@@ -251,7 +251,14 @@ do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==c
 enddo	
 
 // zaokruzenje
-nFZaokr := ROUND(nTotal, nZaokr) - ROUND2(ROUND(nTotal, nZaokr), gFZaok)
+//nFZaokr := ROUND(nTotal, nZaokr) - ROUND2(ROUND(nTotal, nZaokr), gFZaok)
+
+if goModul:oDataBase:cSezona >= "2011" 
+	nFZaokr := zaokr_5pf( nTotal )
+else
+	nFZaokr := ROUND(nTotal, ZAO_VRIJEDNOST()) - ROUND2(ROUND(nTotal, ZAO_VRIJEDNOST()), gFZaok)
+endif
+
 if (gFZaok <> 9 .and. ROUND(nFZaokr, 4) <> 0)
 	nDrnZaokr := nFZaokr
 endif
