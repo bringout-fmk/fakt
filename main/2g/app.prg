@@ -430,6 +430,9 @@ public gMPRedTraka := "2"
 public gMPArtikal := "D"
 public gMPCjenPDV := "2"
 
+// zaokruzenje 5pf
+public gZ_5pf := "D"
+
 O_PARAMS
 private cSection:="1"
 public cHistory:=" "
@@ -565,6 +568,9 @@ RPar("mL",@gMpLocPort)
 RPar("mT",@gMpRedTraka)
 RPar("mA",@gMpArtikal)
 RPar("mC",@gMpCjenPDV)
+
+// zaokruzenje 5 pf
+RPar("mZ",@gZ_5pf)
 
 // dodatni parametri fakture broj otpremnice itd
 RPar("za",@gZagl)   

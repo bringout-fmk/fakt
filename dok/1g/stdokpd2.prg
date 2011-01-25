@@ -255,6 +255,9 @@ enddo
 
 if goModul:oDataBase:cSezona >= "2011" 
 	nFZaokr := zaokr_5pf( nTotal )
+	if gZ_5pf == "N"
+		nFZaokr := 0
+	endif
 else
 	nFZaokr := ROUND(nTotal, ZAO_VRIJEDNOST()) - ROUND2(ROUND(nTotal, ZAO_VRIJEDNOST()), gFZaok)
 endif

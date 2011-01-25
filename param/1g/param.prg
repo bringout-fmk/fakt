@@ -620,6 +620,9 @@ Box(, 6, 60, .f.,"PARAMETRI PRIKAZA")
 
   	@ m_x+nX, m_y+2 SAY "Na kraju fakture izvrsiti zaokruzenje" GET gFZaok PICT "99"
 	nX++
+  	
+	@ m_x+nX, m_y+2 SAY "Zaokruzenje 5 pf (D/N)?" GET gZ_5pf PICT "@!" ;
+		VALID gZ_5pf $ "DN"
 
 
   	read
@@ -630,6 +633,7 @@ if (LASTKEY()<>K_ESC)
    	WPar("p1", PicDem)
    	WPar("p2", PicKol)
    	WPar("fz", gFZaok)
+   	WPar("mZ", gZ_5pf)
 endif
 
 return 

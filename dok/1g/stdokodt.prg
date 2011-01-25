@@ -126,7 +126,7 @@ cTmp := ALLTRIM(get_dtxt_opis("I14"))
 xml_node("fdt3", strkzn(cTmp,"8","U"))
 
 // partner
-xml_node("knaz", strkzn(ALLTRIM(get_dtxt_opis("K01")),"8","U") )
+xml_node("knaz", strkznutf8(ALLTRIM(get_dtxt_opis("K01")),"8","U") )
 xml_node("kadr", strkzn(ALLTRIM(get_dtxt_opis("K02")),"8","U") )
 xml_node("kid", ALLTRIM(get_dtxt_opis("K03")) )
 xml_node("kpbr", ALLTRIM(get_dtxt_opis("K05")) )
