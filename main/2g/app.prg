@@ -431,7 +431,7 @@ public gMPArtikal := "D"
 public gMPCjenPDV := "2"
 
 // zaokruzenje 5pf
-public gZ_5pf := "D"
+public gZ_5pf := "N"
 
 O_PARAMS
 private cSection:="1"
