@@ -189,6 +189,9 @@ do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==c
 	nKol := field->kolicina
 	nRCijen := field->cijena
 
+	nPopNaTeretProdavca := 0
+	nPopust := 0
+	
 	// zasticena cijena, za krajnjeg kupca
 	if RobaZastCijena(tarifa->id)  .and. !lPdvObveznik
 		// krajnji potrosac
@@ -212,19 +215,22 @@ do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==c
 		nCjPDV := (nRCijen * (1 + nPPDV/100))
 	endif
 	
+	nVPopust := 0
+
 	// izracunaj vrijednost popusta
 	if Round(nPopust,4) <> 0
 		// vrijednost popusta
 		nVPopust := (nCjBPDV * (nPopust/100))
 	endif
 	
+	nVPopNaTeretProdavca := 0
+
 	// izacunaj vrijednost popusta na teret prodavca
 	if Round(nPopNaTeretProdavca, 4) <> 0
 		// vrijednost popusta
 		nVPopNaTeretProdavca := (nCjBPDV * (nPopNaTeretProdavca/100))
 	endif
 
-	
 	// cijena sa popustom bez pdv-a
 	nCj2BPDV := (nCjBPDV - nVPopust)
 	// izracuna PDV na cijenu sa popustom

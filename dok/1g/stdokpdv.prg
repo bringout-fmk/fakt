@@ -366,6 +366,8 @@ do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==c
 		nRCijen:=ROUND(nRCijen, DEC_CIJENA() )
    	endif
 
+	// resetuj prije eventualnog setovanja
+	nPopNaTeretProdavca := 0
 
 	// zasticena cijena, za krajnjeg kupca
 	if RobaZastCijena(tarifa->id)  .and. !lPdvObveznik
@@ -390,12 +392,17 @@ do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==c
 		nCjBPDV:= nRCijen
 		nCjPDV := (nRCijen * (1 + nPPDV/100))
 	endif
-	
+
+	nVPopust := 0
+
 	// izracunaj vrijednost popusta
 	if Round(nPopust,4) <> 0
 		// vrijednost popusta
 		nVPopust := (nCjBPDV * (nPopust/100))
 	endif
+	
+	// resetuj prije eventualnog setovanja
+	nVPopNaTeretProdavca := 0
 	
 	// izacunaj vrijednost popusta na teret prodavca
 	if Round(nPopNaTeretProdavca, 4) <> 0
