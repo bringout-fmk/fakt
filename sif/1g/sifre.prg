@@ -340,6 +340,9 @@ elseif upper(Chr(Ch))=="O"
   PopWa()
   return 7
 
+elseif upper(CHR(ch)) == "P"
+  return gen_all_plu()
+
 elseif Ch==K_ALT_M
   if pitanje(,"Formirati MPC na osnovu VPC ? (D/N)","N")=="D"
       private GetList:={}, nZaokNa:=1, cMPC:=" ", cVPC:=" "

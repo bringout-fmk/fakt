@@ -108,8 +108,12 @@ Box(,20,77,.f.,"PARAMETRI FISKALNOG STMPACA")
 		@ m_x+nX, m_y+2 SAY "Tip uredjaja:" GET gFC_type ;
 			VALID !EMPTY(gFC_type)
 		
-		nX += 2
-
+		nX += 1
+	
+		@ m_x+nX, m_y+2 SAY "IOSA broj:" GET giosa 
+	
+		nX += 1
+		
 		@ m_x+nX, m_y+2 SAY "HTTP adresa:" GET gFC_addr ;
 			PICT "@S20"
 	
@@ -118,33 +122,37 @@ Box(,20,77,.f.,"PARAMETRI FISKALNOG STMPACA")
 		
 		nX += 2
 
-		@ m_x+nX, m_y+2 SAY "Direktorij izl. fajlova:" GET gFD_path ;
-			VALID !EMPTY(gFD_path) PICT "@S25"
+		@ m_x+nX, m_y+2 SAY "Direktorij izl. fajlova:" GET gFC_path ;
+			VALID !EMPTY(gFC_path) PICT "@S25"
 		
 		++ nX
 		
-		@ m_x+nX, m_y+2 SAY "Naziv izl. fajla:" GET gFD_name ;
-			VALID !EMPTY(gFD_name) PICT "@S25"
+		@ m_x+nX, m_y+2 SAY "Naziv izl. fajla:" GET gFC_name ;
+			VALID !EMPTY(gFC_name) PICT "@S25"
 		
 		++ nX
 	
+		@ m_x+nX, m_y+2 SAY "duzina naziva robe:" GET gFC_alen
+		
+		++ nX
+
 		@ m_x+nX, m_y+2 SAY "Provjera gresaka:" GET gFC_error ;
 			VALID gFC_error $ "DN" PICT "@!"
 	
 		++ nX
 
-		@ m_x+nX, m_y+2 SAY "Timeout izmedju fiskalnih operacija:" GET gF_timeo ;
+		@ m_x+nX, m_y+2 SAY "Timeout izmedju fiskalnih operacija:" GET gFC_tout ;
 			PICT "9999.99"
 	
 		++ nX
 
-		@ m_x+nX, m_y+2 SAY "Pitanje prije stampe ?" GET gFFPitanje ;
-			VALID gFFpitanje $ "DN" PICT "@!"
+		@ m_x+nX, m_y+2 SAY "Pitanje prije stampe ?" GET gFC_Pitanje ;
+			VALID gFC_pitanje $ "DN" PICT "@!"
 		
 		++ nX
 
-		@ m_x+nX, m_y+2 SAY "Konverzija znakova (0-8)" GET gFFKonv ;
-			VALID gFFKonv $ "012345678"
+		@ m_x+nX, m_y+2 SAY "Konverzija znakova (0-8)" GET gFC_Konv ;
+			VALID gFC_Konv $ "012345678"
 		
 		nX += 2
 		
@@ -183,12 +191,12 @@ BoxC()
 
 if (LASTKEY() <> K_ESC)
 	Wpar("f1",gFiscal)
-   	Wpar("f2",gFD_path)
-   	Wpar("f3",gFFpitanje)
-   	Wpar("f4",gF_timeo)
-   	Wpar("f5",gFFKonv)
+   	Wpar("f2",gFC_path)
+   	Wpar("f3",gFC_pitanje)
+   	Wpar("f4",gFC_tout)
+   	Wpar("f5",gFC_Konv)
 	WPar("f6",gFC_type)
-	WPar("f7",gFD_name)
+	WPar("f7",gFC_name)
 	WPar("f8",gFC_error)
 	WPar("f9",gFC_cmd)
 	WPar("f0",gFC_cp1)
@@ -198,6 +206,9 @@ if (LASTKEY() <> K_ESC)
 	WPar("fd",gFC_cp5)
 	WPar("fe",gFC_addr)
 	WPar("ff",gFC_port)
+	WPar("fi",giosa)
+	WPar("fj",gFC_alen)
+
 endif
 
 return 

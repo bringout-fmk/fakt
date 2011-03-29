@@ -158,7 +158,7 @@ aObj := _f_ob_init()
 aOper := _f_op_init()
 
 // napravi inicijalizaciju u txt fajlove
-fisc_init( gFD_path, aPor, aRoba, aRobaGr, aPartn, aObj, aOper )
+fisc_init( gFC_path, aPor, aRoba, aRobaGr, aPartn, aObj, aOper )
 
 msgc()
 
@@ -245,7 +245,7 @@ do while !EOF()
 	nRobaGr := 1
 	nPorSt := 1
 
-	cNaz := konvznwin( field->naz, gFFKonv )
+	cNaz := konvznwin( field->naz, gFc_Konv )
 
 	AADD( aRet, { ;
 		VAL(ALLTRIM(field->sifradob)), ;
@@ -284,8 +284,8 @@ do while !EOF()
 
 	select partn
 	
-	cNaz := konvznwin( partn->naz, gFFKonv )
-	cAdr := konvznwin( partn->adresa, gFFKonv )
+	cNaz := konvznwin( partn->naz, gFC_Konv )
+	cAdr := konvznwin( partn->adresa, gFc_Konv )
 
 	AADD( aRet, { ;
 		VAL(cPid), ;

@@ -1298,7 +1298,7 @@ if (gVarNum=="2".and._idtipdok=="13")
 else
 	seek _idfirma+_idtipdok+"È"
  	skip -1
- 	if (_idtipdok=="11" .and. !EMPTY(SUBSTR(brdok,gNumDio+1)) .and. IzFmkIni("FAKT","Brojac11BezEkstenzije","N",KUMPATH)=="D")
+ 	if (_idtipdok $ "10#11" .and. !EMPTY(SUBSTR(brdok,gNumDio+1)) .and. IzFmkIni("FAKT","Brojac11BezEkstenzije","N",KUMPATH)=="D")
    		do while !bof() .and. _idfirma==idfirma .and. _idtipdok==idtipdok .and. !Empty(SUBSTR(brdok,gNumDio+1))
      			skip -1
    		enddo

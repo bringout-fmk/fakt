@@ -29,6 +29,8 @@ AADD(opc,"8. specifikacija prodaje po parternima ")
 AADD(opcexe,{|| spec_kol_partn()})
 AADD(opc,"9. realizacija maloprodaje ")
 AADD(opcexe,{|| real_mp()})
+AADD(opc,"10. fiskalni izvjestaji i komande ")
+AADD(opcexe,{|| rpt_fisc()})
 
 if IsRudnik() 
 	AADD(opc,"R. rudnik")
