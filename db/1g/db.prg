@@ -943,6 +943,10 @@ do while !eof()
 		_field->oper_id := GetUserID()
 	endif
   	
+	if doks->(FIELDPOS("fisc_rn")) <> 0 
+		_field->fisc_rn := pripr->fisc_rn
+	endif
+  	
 	if IsRabati()
 		if (cIdTipDok $ gcRabDok)
 			_field->idrabat := PADR(gcRabDef, 10)
@@ -1535,6 +1539,12 @@ O_PARTN
 cNoviBroj := ALLTRIM(cBrDok) + "/S"
 nCnt := 0
 
+select doks
+set order to tag "1"
+go top
+seek cIdFirma + cIdTipDok + cBrDok
+nFiscal := field->fisc_rn
+
 select fakt
 set order to tag "1"
 go top
@@ -1555,6 +1565,7 @@ do while !EOF() .and. field->idfirma == cIdFirma ;
 	replace field->kolicina with ( field->kolicina * -1 )
 	replace field->brdok with cNoviBroj
 	replace field->datdok with DATE()
+	replace field->fisc_rn with nFiscal
 
 	select fakt
 	skip

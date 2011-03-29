@@ -424,6 +424,7 @@ public gFC_addr := PADR("", 30)
 public gFC_port := PADR("", 10)
 public giosa := PADR("1234567890123456", 16)
 public gFC_alen := 32
+public gFC_nftxt := "N"
 
 // stmpa na traku
 public gMpPrint := "N"
@@ -626,6 +627,7 @@ RPar("fe", @gFC_addr)
 RPar("ff", @gFC_port)
 RPar("fi", @giosa)
 RPar("fj", @gFC_alen)
+RPar("fn", @gFC_nftxt)
 
 
 cSection := "1"

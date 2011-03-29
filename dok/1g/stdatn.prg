@@ -304,6 +304,10 @@ if cTabela=="D"
      AADD(ImeKol,{ "Datum placanja", {|| datpl} })
    ENDIF
 
+   IF FIELDPOS("FISC_RN")>0
+     AADD(ImeKol,{ "Fisk.rn", {|| fisc_rn} })
+   ENDIF
+
    if FIELDPOS("DOK_VEZA") <> 0
      AADD(ImeKol,{ "Vezni dokumenti", ;
      	{|| PADR( ALLTRIM( g_d_veza(idfirma,idtipdok,brdok,dok_veza)) , ;
@@ -574,7 +578,7 @@ local nTArea := SELECT()
 if cIdTipDok $ "11#13#23"
 	nRet := nIznos
 else
-	if !isino( cPartner )
+	if !IsIno( cPartner ) .and. !IsOslClan( cPartner )
 		nRet := ( nIznos * 1.17 )
 	else
 		nRet := nIznos

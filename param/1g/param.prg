@@ -120,7 +120,7 @@ Box(,20,77,.f.,"PARAMETRI FISKALNOG STMPACA")
 		@ m_x+nX, col()+1 SAY "port:" GET gFC_port ;
 			PICT "@S5"
 		
-		nX += 2
+		++ nX
 
 		@ m_x+nX, m_y+2 SAY "Direktorij izl. fajlova:" GET gFC_path ;
 			VALID !EMPTY(gFC_path) PICT "@S25"
@@ -154,7 +154,13 @@ Box(,20,77,.f.,"PARAMETRI FISKALNOG STMPACA")
 		@ m_x+nX, m_y+2 SAY "Konverzija znakova (0-8)" GET gFC_Konv ;
 			VALID gFC_Konv $ "012345678"
 		
-		nX += 2
+		++ nX
+
+		@ m_x+nX, m_y+2 SAY "Stampa broja racuna ?" GET gFC_nftxt ;
+			VALID gFC_nftxt $ "DN" PICT "@!"
+	
+		
+		++ nX
 		
 		@ m_x+nX, m_y+2 SAY "Komandna linija:" GET gFC_cmd ;
 			PICT "@S40"
@@ -208,6 +214,7 @@ if (LASTKEY() <> K_ESC)
 	WPar("ff",gFC_port)
 	WPar("fi",giosa)
 	WPar("fj",gFC_alen)
+	WPar("fn",gFC_nftxt)
 
 endif
 

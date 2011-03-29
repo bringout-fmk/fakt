@@ -150,20 +150,21 @@ local cVr_placanja := "0"
 local nErr := 0
 local nFisc_no := 0
 local cJibPartn := ""
+local lIno := .f.
+local cPOslob := ""
+local cNF_txt := cFirma + "-" + cTipDok + "-" + ALLTRIM( cBrDok )
 
 // ako se ne koristi opcija fiscal, izadji !
 if gFiscal == "N"
 	return
 endif
 
-altd()
-
 select doks
 seek ( cFirma + cTipDok + cBrDok )
 
 nBrDok := VAL(ALLTRIM(field->brdok))
 nTotal := field->iznos
-nNRekRn := 0
+nNRekRn := field->fisc_rn
 
 
 select fakt
@@ -211,27 +212,57 @@ if cTipDok $ "10#"
 endif
 
 if !EMPTY( cPartnId )
-	
+
 	cJibPartn := ALLTRIM( IzSifK( "PARTN" , "REGB", cPartnId, .f. ) )
+	cPOslob := ALLTRIM( IzSifK( "PARTN" , "PDVO", cPartnId, .f. ) )
+
+	if "INO" $ cJibPartn .or. !EMPTY( cPOslob )
+		
+		// ovo je ino partner
+		// uzmi podatak iz deviznog ziro racuna
+
+		// medjutim sada necu setovati partnera uopste 
+		// ovdje imam problem sa uredjajem
+		
+		//nTArea := SELECT()
+		
+		//select partn
+		//seek cPartnId
+
+		//select (nTArea)
+
+		//cJibPartn := PADL( ALLTRIM( partn->dziror ), 13, "A" )
+
+		lIno := .t.
 	
-	if LEN( cJibPartn ) = 12
+	elseif LEN( cJibPartn ) = 12
 
 		// ako je pdv obveznik
 		// dodaj "4" ispred id broja
+		
 		cJibPartn := "4" + ALLTRIM( cJibPartn )
+		
+		lIno := .f.
+
+	endif
+
+	// ako nije INO, onda setuj partnera
+
+	if lIno = .f.
+		
+		nTarea := SELECT()
+	
+		select partn
+		seek cPartnId
+
+		select (nTArea)
+	
+		// ubaci u matricu podatke o partneru
+		AADD( aKupac, { cJibPartn, partn->naz, partn->adresa, ;
+			partn->ptt, partn->mjesto } )
 	
 	endif
 
-	nTarea := SELECT()
-	
-	select partn
-	seek cPartnId
-
-	select (nTArea)
-	
-	// ubaci u matricu podatke o partneru
-	AADD( aKupac, { cJibPartn, partn->naz, partn->adresa, ;
-		partn->ptt, partn->mjesto } )
 endif
 
 // vrati se opet na pocetak
@@ -275,6 +306,9 @@ do while !EOF() .and. field->idfirma == cFirma ;
 		nF_plu := roba->fisc_plu
 	endif
 
+	// generisanje inkrementalnog PLU kod-a
+	nF_plu := auto_plu()
+
 	nF_pprice := roba->mpc
 
 	cF_artnaz := ALLTRIM( konvznwin( roba->naz, gFc_konv) )
@@ -296,7 +330,13 @@ do while !EOF() .and. field->idfirma == cFirma ;
 	nF_rabat := ABS ( field->rabat ) 
 
 	cF_tarifa := ALLTRIM( roba->idtarifa )
-	
+
+	// ako je za ino kupca onda ide nulta stopa
+	// oslobodi ga poreza
+	if lIno = .t.
+		cF_tarifa := "PDV0"
+	endif
+
 	cF_st_rn := ""
 
 	if nNRekRn > 0
@@ -352,13 +392,46 @@ if nFisc_no <= 0
 endif
 
 if nErr <> 0
+	
 	msgbeep("Postoji greska sa stampanjem !!!")
+
+	// vrati dokument u pripremu...
+	// to do
+
 else
+	
+	if gFC_nftxt == "D"
+		// printaj non-fiscal txt
+		// u ovom slucaju broj racuna iz fakt
+		fp_nf_txt( ALLTRIM( gFC_path ), ;
+			ALLTRIM( gFC_name ), cNF_txt )
+	endif
+
 	msgbeep("Kreiran fiskalni racun broj: " + ALLTRIM(STR(nFisc_No)))
-	// ...
+
+	// ubaci broj fiskalnog racuna u fakturu
+	fisc_to_fakt( cFirma, cTipDok, cBrDok, nFisc_no )
+
 endif
 
 return nErr
+
+
+
+// -------------------------------------------------------------
+// setovanje broja fiskalnog racuna u dokumentu 
+// -------------------------------------------------------------
+static function fisc_to_fakt( cFirma, cTD, cBroj, nFiscal )
+local nTArea := SELECT()
+
+select doks
+set order to tag "1"
+seek cFirma + cTD + cBroj
+
+replace field->fisc_rn with nFiscal
+
+select (nTArea)
+return
 
 
 
