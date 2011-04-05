@@ -346,7 +346,7 @@ if cTabela=="D"
                    {|| .t.}, {|| P_Firma(@widpartner)}, "V" }
    adKol:={}; for i:=1 to len(adImeKol); AADD(adKol,i); next
 
-   ObjDbedit("",20,72,{|| EdDatn()},"","", , , , ,2)
+   ObjDbedit("",20,72,{|| EdDatn()},"","", , , ,{ || if(gFC_use == "D", fisc_rn > 0, .f. ) } ,2)
    BoxC()
    if fupripremu
      close all
@@ -1042,6 +1042,37 @@ endif
 return nSelected
 
 
+// -------------------------------------------------
+// prikazuje broj fiskalnog racuna
+// -------------------------------------------------
+static function _veza_fc_rn()
+local cFiscal
+
+if doks->(FIELDPOS("FISC_RN")) = 0
+	return
+endif
+
+cFiscal := ALLTRIM( STR( doks->fisc_rn ) )
+
+// samo za izlazne dokumente
+if doks->idtipdok $ "10#11"
+	
+	if cFiscal == "0"
+		@ m_x + 1, m_y + 2 SAY ;
+			PADR( "nema fiskalnog racuna !!!", 40 ) ;
+			COLOR "W/R+"
+	else
+		@ m_x + 1, m_y + 2 SAY ;
+			PADR( "fiskalni racun: " + cFiscal, 40 ) ;
+			COLOR "GR+/B"
+	endif
+else
+	@ m_x + 1, m_y + 2 SAY PADR( "", 40 )
+endif
+
+return
+
+
 
 /*! \fn EdDatN()
  *  \brief Ispravka azuriranih dokumenata (u tabelarnom pregledu)
@@ -1049,6 +1080,11 @@ return nSelected
  
 function EdDatn()
 local nRet:=DE_CONT
+
+if gFC_use == "D"
+	// ispis informacije o fiskalnom racunu
+	_veza_fc_rn()
+endif
 
 do case
  
@@ -1071,6 +1107,23 @@ do case
   case Ch==K_ALT_P
      // print odt
      nRet := pr_odt()
+
+  case chr(Ch) $ "fF"
+
+  	// stampa fiskalnog racuna
+	if field->idtipdok $ "10#11"
+		
+		if field->fisc_rn > 0
+			msgbeep("Fiskalni racun stampan za ovaj dokument !!!")
+		endif
+		
+		if Pitanje(,"Stampati fiskalni racun ?", "D") == "D"
+
+			fisc_rn( field->idfirma, field->idtipdok, field->brdok )
+
+		endif
+
+	endif
 
   case chr(Ch) $ "sS"
 

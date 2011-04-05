@@ -51,7 +51,7 @@ if IsUgovori()
 	AADD(opcexe,{|| o_ugov(), SifUgovori()})
 endif
 
-if gFiscal == "D"
+if gFc_use == "D"
 	AADD(opc,"I. fiscal : inicijalizacija")
 	AADD(opcexe,{|| ffisc_init() })
 endif

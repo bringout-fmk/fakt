@@ -92,111 +92,80 @@ private GetList:={}
 
 O_PARAMS
 
-Box(,20,77,.f.,"PARAMETRI FISKALNOG STMPACA")
+Box(,21,77,.f.,"PARAMETRI FISKALNOG STMPACA")
 
 	nX := 1
-
-	@ m_x+nX, m_y+2 SAY "Ispis racuna na fiskalni stampac ?" GET gFiscal ;
-		VALID gFiscal $ "DN" PICT "@!"
-
-	read
-
-	if gFiscal == "D"
 	
-		nX += 2
-	
-		@ m_x+nX, m_y+2 SAY "Tip uredjaja:" GET gFC_type ;
+	@ m_x+nX, col()+1 SAY "PDV obveznik (D/N):" GET gFC_pdv ;
+			VALID gFC_pdv $ "DN" PICT "@!"
+
+	++ nX
+
+	@ m_x+nX, m_y+2 SAY "Tip uredjaja:" GET gFC_type ;
 			VALID !EMPTY(gFC_type)
 		
-		nX += 1
-	
-		@ m_x+nX, m_y+2 SAY "IOSA broj:" GET giosa 
-	
-		nX += 1
-		
-		@ m_x+nX, m_y+2 SAY "HTTP adresa:" GET gFC_addr ;
-			PICT "@S20"
-	
-		@ m_x+nX, col()+1 SAY "port:" GET gFC_port ;
-			PICT "@S5"
-		
-		++ nX
+	@ m_x+nX, col()+1 SAY "IOSA broj:" GET gIOSA 
 
-		@ m_x+nX, m_y+2 SAY "Direktorij izl. fajlova:" GET gFC_path ;
+	++ nX
+	
+	@ m_x+nX, m_y+2 SAY "[K] kasa-printer [P] printer ?" GET gFC_device ;
+			VALID gFC_device $ "KP" PICT "@!"
+
+	++ nX
+	++ nX
+
+	@ m_x+nX, m_y+2 SAY "Izl.dir:" GET gFC_path ;
 			VALID !EMPTY(gFC_path) PICT "@S25"
 		
-		++ nX
-		
-		@ m_x+nX, m_y+2 SAY "Naziv izl. fajla:" GET gFC_name ;
+	@ m_x+nX, col()+1 SAY "Izl.fajl:" GET gFC_name ;
 			VALID !EMPTY(gFC_name) PICT "@S25"
 		
-		++ nX
+	++ nX
 	
-		@ m_x+nX, m_y+2 SAY "duzina naziva robe:" GET gFC_alen
+	@ m_x+nX, m_y+2 SAY "Duzina naziva robe:" GET gFC_alen PICT "999"
 		
-		++ nX
-
-		@ m_x+nX, m_y+2 SAY "Provjera gresaka:" GET gFC_error ;
+	@ m_x+nX, col()+2 SAY "Provjera gresaka:" GET gFC_error ;
 			VALID gFC_error $ "DN" PICT "@!"
 	
-		++ nX
+	++ nX
 
-		@ m_x+nX, m_y+2 SAY "Timeout izmedju fiskalnih operacija:" GET gFC_tout ;
-			PICT "9999.99"
+	@ m_x+nX, m_y+2 SAY "Timeout fiskalnih operacija:" ;
+		GET gFC_tout PICT "9999"
 	
-		++ nX
+	++ nX
 
-		@ m_x+nX, m_y+2 SAY "Pitanje prije stampe ?" GET gFC_Pitanje ;
+	@ m_x+nX, m_y+2 SAY "Pitanje prije stampe ?" GET gFC_Pitanje ;
 			VALID gFC_pitanje $ "DN" PICT "@!"
 		
-		++ nX
-
-		@ m_x+nX, m_y+2 SAY "Konverzija znakova (0-8)" GET gFC_Konv ;
+	@ m_x+nX, col()+2 SAY "Konverzija znakova (0-8)" GET gFC_Konv ;
 			VALID gFC_Konv $ "012345678"
 		
-		++ nX
+	++ nX
+	++ nX
 
-		@ m_x+nX, m_y+2 SAY "Stampa broja racuna ?" GET gFC_nftxt ;
+	@ m_x+nX, m_y+2 SAY "Stampa broja racuna ?" GET gFC_nftxt ;
 			VALID gFC_nftxt $ "DN" PICT "@!"
 	
-		
-		++ nX
-		
-		@ m_x+nX, m_y+2 SAY "Komandna linija:" GET gFC_cmd ;
-			PICT "@S40"
-		
-		++ nX
+	++ nX
+	++ nX
+	
+	@ m_x+nX, m_y+2 SAY "'kod' artikla [P/D]Plu, [I]Id, [B]Barkod:" ;
+			GET gFC_acd VALID gFC_acd $ "PIBD" PICT "@!"
 
-		@ m_x+nX, m_y+2 SAY "($1):" GET gFC_cp1 ;
-			PICT "@S50"
-		
-		++ nX
-		
-		@ m_x+nX, m_y+2 SAY "($2):" GET gFC_cp2 ;
-			PICT "@S50"
-		
-		++ nX
-		
-		@ m_x+nX, m_y+2 SAY "($3):" GET gFC_cp3 ;
-			PICT "@S50"
-		
-		++ nX
-		
-		@ m_x+nX, m_y+2 SAY "($4):" GET gFC_cp4 ;
-			PICT "@S50"
-		
-		++ nX
-		
-		@ m_x+nX, m_y+2 SAY "($5):" GET gFC_cp5 ;
-			PICT "@S50"
+	++ nX
+	++ nX
+	++ nX
+	++ nX
 
-  		read
-	endif
+	@ m_x+nX, m_y+2 SAY "Koristiti fiskalne funkcije ?" GET gFc_use ;
+		VALID gFc_use $ "DN" PICT "@!"
+
+  	read
 
 BoxC()
 
 if (LASTKEY() <> K_ESC)
-	Wpar("f1",gFiscal)
+	Wpar("f1",gFc_use)
    	Wpar("f2",gFC_path)
    	Wpar("f3",gFC_pitanje)
    	Wpar("f4",gFC_tout)
@@ -215,6 +184,9 @@ if (LASTKEY() <> K_ESC)
 	WPar("fi",giosa)
 	WPar("fj",gFC_alen)
 	WPar("fn",gFC_nftxt)
+	WPar("fC",gFC_acd)
+	WPar("fO",gFC_pdv)
+	WPar("fD",gFC_device)
 
 endif
 

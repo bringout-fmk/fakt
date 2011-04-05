@@ -325,7 +325,7 @@ do case
 		lDirty:=.t.
         	O_Edit()
 	
-		if gFiscal == "D"
+		if gFc_use == "D" .and. cFTipDok $ "10#11"
 			lFisMark := .t.			
 		endif
 		

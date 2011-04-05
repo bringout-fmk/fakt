@@ -1,8 +1,6 @@
 #include "fakt.ch"
 
 
-
-
 // ---------------------------------------------------------
 // centralna funkcija za poziv stampe fiskalnog racuna
 // ---------------------------------------------------------
@@ -69,7 +67,7 @@ local aItems := {}
 local aSem_data := {}
 
 // ako se ne koristi opcija fiscal, izadji !
-if gFiscal == "N"
+if gFc_use == "N"
 	return
 endif
 
@@ -154,8 +152,14 @@ local lIno := .f.
 local cPOslob := ""
 local cNF_txt := cFirma + "-" + cTipDok + "-" + ALLTRIM( cBrDok )
 
+O_DOKS
+O_FAKT
+O_ROBA
+O_SIFK
+O_SIFV
+
 // ako se ne koristi opcija fiscal, izadji !
-if gFiscal == "N"
+if gFc_use == "N"
 	return
 endif
 
@@ -216,7 +220,7 @@ if !EMPTY( cPartnId )
 	cJibPartn := ALLTRIM( IzSifK( "PARTN" , "REGB", cPartnId, .f. ) )
 	cPOslob := ALLTRIM( IzSifK( "PARTN" , "PDVO", cPartnId, .f. ) )
 
-	if "INO" $ cJibPartn .or. !EMPTY( cPOslob )
+	if LEN(cJibPartn) < 12 .or. !EMPTY( cPOslob )
 		
 		// ovo je ino partner
 		// uzmi podatak iz deviznog ziro racuna
@@ -302,12 +306,15 @@ do while !EOF() .and. field->idfirma == cFirma ;
 	endif
 
 	nF_plu := 0
+	
 	if roba->(fieldpos("FISC_PLU")) <> 0
 		nF_plu := roba->fisc_plu
 	endif
 
-	// generisanje inkrementalnog PLU kod-a
-	nF_plu := auto_plu()
+	if gFC_acd == "D"
+		// generisanje inkrementalnog PLU kod-a
+		nF_plu := auto_plu()
+	endif
 
 	nF_pprice := roba->mpc
 
@@ -449,7 +456,7 @@ local nTipRn := 0
 local nPartnId := 0
 
 // ako se ne koristi opcija fiscal, izadji !
-if gFiscal == "N"
+if gFc_use == "N"
 	return
 endif
 
@@ -586,7 +593,7 @@ local cStPatt := "/S"
 local GetList := {}
 
 // ako se ne koristi opcija fiscal, izadji !
-if gFiscal == "N"
+if gFc_use == "N"
 	return
 endif
 
