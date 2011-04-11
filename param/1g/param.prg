@@ -153,6 +153,11 @@ Box(,21,77,.f.,"PARAMETRI FISKALNOG STMPACA")
 			GET gFC_acd VALID gFC_acd $ "PIBD" PICT "@!"
 
 	++ nX
+	
+	@ m_x+nX, m_y+2 SAY "inicijalni PLU" ;
+			GET gFC_pinit PICT "99999"
+
+
 	++ nX
 	++ nX
 	++ nX
@@ -187,6 +192,7 @@ if (LASTKEY() <> K_ESC)
 	WPar("fC",gFC_acd)
 	WPar("fO",gFC_pdv)
 	WPar("fD",gFC_device)
+	WPar("fT",gFC_pinit)
 
 endif
 

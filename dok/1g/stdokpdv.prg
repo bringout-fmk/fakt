@@ -731,6 +731,10 @@ if pripr->(FIELDPOS("idrnal")) <> 0
 	endif
 endif
 
+// broj fiskalnog isjecka
+add_drntext("O10", fisc_isjecak( pripr->idfirma, pripr->idtipdok, ;
+	pripr->brdok ) )
+
 // traka - ispis, cjene bez pdv, sa pdv (1) bez pdv, (2) sa pdv
 cPom := gMPCjenPDV
 add_drntext( "P20", cPom )

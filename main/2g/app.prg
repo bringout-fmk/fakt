@@ -428,6 +428,7 @@ public gFC_alen := 32
 public gFC_nftxt := "N"
 public gFC_acd := "D"
 public gFC_pdv := "D"
+public gFC_pinit := 10
 
 // stmpa na traku
 public gMpPrint := "N"
@@ -634,6 +635,7 @@ RPar("fn", @gFC_nftxt)
 RPar("fC", @gFC_acd)
 RPar("fO", @gFC_pdv)
 RPar("fD", @gFC_device)
+RPar("fT", @gFC_pinit)
 
 
 cSection := "1"

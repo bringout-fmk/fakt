@@ -55,6 +55,8 @@ open_xml( cXml )
 xml_head()
 xml_subnode("invoice", .f.)
 
+altd()
+
 select drn
 go top
 
@@ -77,11 +79,11 @@ xml_node("dvr", ALLTRIM( field->vrijeme ) )
 
 // dokument iz teksta
 cTmp := ALLTRIM(get_dtxt_opis("D01"))
-xml_node("dmj", strkzn(cTmp, "8", "U"))
+xml_node("dmj", strkznutf8(cTmp, "8", "U"))
 cTmp := ALLTRIM(get_dtxt_opis("D02"))
-xml_node("ddok", strkzn(cTmp,"8","U"))
+xml_node("ddok", strkznutf8(cTmp,"8","U"))
 cTmp := ALLTRIM(get_dtxt_opis("D04"))
-xml_node("dslovo", strkzn(cTmp,"8","U"))
+xml_node("dslovo", strkznutf8(cTmp,"8","U"))
 xml_node("dotpr", ALLTRIM(get_dtxt_opis("D05")) )
 xml_node("dnar", ALLTRIM(get_dtxt_opis("D06")) )
 xml_node("ddin", ALLTRIM(get_dtxt_opis("D07")) )
@@ -93,12 +95,15 @@ if EMPTY(cTmp)
 	cTmp := get_dtxt_opis("K02")
 endif
 
-xml_node("ddest", strkzn(cTmp,"8","U"))
+xml_node("ddest", strkznutf8(cTmp,"8","U"))
 xml_node("dtdok", ALLTRIM(get_dtxt_opis("D09")) )
 xml_node("drj", ALLTRIM(get_dtxt_opis("D10")) )
 xml_node("didpm", ALLTRIM(get_dtxt_opis("D11")) )
+// broj fiskalnog racuna
+xml_node("fisc", ALLTRIM(get_dtxt_opis("O10")) )
+
 cTmp := ALLTRIM(get_dtxt_opis("F10"))
-xml_node("dsign", strkzn(cTmp,"8","U"))
+xml_node("dsign", strkznutf8(cTmp,"8","U"))
 
 // broj veze
 nLines := VAL( get_dtxt_opis("D30") )
@@ -107,30 +112,30 @@ nTmp := 30
 for i:=1 to nLines
 	cTmp += get_dtxt_opis("D" + ALLTRIM(STR( nTmp + i )))
 next
-xml_node("dveza", strkzn(cTmp,"8","U"))
+xml_node("dveza", strkznutf8(cTmp,"8","U"))
 
 // zaglavlje
 cTmp := ALLTRIM(get_dtxt_opis("I01"))
-xml_node("fnaz", strkzn(cTmp,"8","U"))
+xml_node("fnaz", strkznutf8(cTmp,"8","U"))
 cTmp := ALLTRIM(get_dtxt_opis("I02"))
-xml_node("fadr", strkzn(cTmp,"8","U"))
+xml_node("fadr", strkznutf8(cTmp,"8","U"))
 xml_node("fid", ALLTRIM(get_dtxt_opis("I03")) )
 xml_node("ftel", ALLTRIM(get_dtxt_opis("I10")) )
 xml_node("feml", ALLTRIM(get_dtxt_opis("I11")) )
 xml_node("fbnk", ALLTRIM(get_dtxt_opis("I09")) )
 cTmp := ALLTRIM(get_dtxt_opis("I12"))
-xml_node("fdt1", strkzn(cTmp,"8","U"))
+xml_node("fdt1", strkznutf8(cTmp,"8","U"))
 cTmp := ALLTRIM(get_dtxt_opis("I13"))
-xml_node("fdt2", strkzn(cTmp,"8","U"))
+xml_node("fdt2", strkznutf8(cTmp,"8","U"))
 cTmp := ALLTRIM(get_dtxt_opis("I14"))
-xml_node("fdt3", strkzn(cTmp,"8","U"))
+xml_node("fdt3", strkznutf8(cTmp,"8","U"))
 
 // partner
 xml_node("knaz", strkznutf8(ALLTRIM(get_dtxt_opis("K01")),"8","U") )
-xml_node("kadr", strkzn(ALLTRIM(get_dtxt_opis("K02")),"8","U") )
-xml_node("kid", ALLTRIM(get_dtxt_opis("K03")) )
+xml_node("kadr", strkznutf8(ALLTRIM(get_dtxt_opis("K02")),"8","U") )
+xml_node("kid", strkznutf8(ALLTRIM(get_dtxt_opis("K03")), "8", "U" ))
 xml_node("kpbr", ALLTRIM(get_dtxt_opis("K05")) )
-xml_node("kmj", strkzn(ALLTRIM(get_dtxt_opis("K10")),"8","U") )
+xml_node("kmj", strkznutf8(ALLTRIM(get_dtxt_opis("K10")),"8","U") )
 xml_node("kptt", ALLTRIM(get_dtxt_opis("K11")) )
 xml_node("ktel", ALLTRIM(get_dtxt_opis("K13")) )
 xml_node("kfax", ALLTRIM(get_dtxt_opis("K14")) )
@@ -146,7 +151,7 @@ for i := 20 to ( 20 + nTxtR )
 	cTmpTxt := ALLTRIM( get_dtxt_opis(cTmp) )
 
 	xml_subnode("text", .f.)
-	xml_node("row", strkzn(cTmpTxt,"8","U") )
+	xml_node("row", strkznutf8(cTmpTxt,"8","U") )
 	xml_subnode("text", .t.)
 
 next
@@ -167,9 +172,9 @@ do while !EOF()
 	
 	xml_node( "rbr", ALLTRIM( field->rbr ) )
 	xml_node( "pbr", ALLTRIM( field->podbr ) )
-	xml_node( "id", ALLTRIM( field->idroba ) )
-	xml_node( "naz", strkzn(ALLTRIM( field->robanaz ),"8","U" ))
-	xml_node( "jmj", strkzn(ALLTRIM( field->jmj ), "8", "U") )
+	xml_node( "id", strkznutf8(ALLTRIM( field->idroba ),"8","U") )
+	xml_node( "naz", strkznutf8(ALLTRIM( field->robanaz ),"8","U" ))
+	xml_node( "jmj", strkznutf8(ALLTRIM( field->jmj ), "8", "U") )
 	xml_node( "kol", show_number( field->kolicina, PIC_KOLICINA ) )
 	xml_node( "cpdv", show_number( field->cjenpdv, PIC_CIJENA ) )
 	xml_node( "cbpdv", show_number( field->cjenbpdv, PIC_CIJENA ) )
@@ -191,10 +196,10 @@ do while !EOF()
 		PIC_VRIJEDNOST ) )
 	xml_node( "ptp", show_number( field->poptp, PIC_VRIJEDNOST ) )
 	xml_node( "vtp", show_number( field->vpoptp, PIC_VRIJEDNOST ) )
-	xml_node( "c1", strkzn( ALLTRIM( field->c1 ), "8", "U" ) )
-	xml_node( "c2", strkzn( ALLTRIM( field->c2 ), "8", "U" ) )
-	xml_node( "c3", strkzn( ALLTRIM( field->c3 ), "8", "U" ) )
-	xml_node( "opis", strkzn( ALLTRIM( field->opis ), "8", "U" ) )
+	xml_node( "c1", strkznutf8( ALLTRIM( field->c1 ), "8", "U" ) )
+	xml_node( "c2", strkznutf8( ALLTRIM( field->c2 ), "8", "U" ) )
+	xml_node( "c3", strkznutf8( ALLTRIM( field->c3 ), "8", "U" ) )
+	xml_node( "opis", strkznutf8( ALLTRIM( field->opis ), "8", "U" ) )
 
 	xml_subnode( "item", .t. )
 	

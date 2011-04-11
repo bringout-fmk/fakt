@@ -316,9 +316,11 @@ if cTabela=="D"
 
    Kol:={}; for i:=1 to len(ImeKol); AADD(Kol,i); next
    Box(,21,72)
-   @ m_x+19,m_y+2 SAY " <ENTER> Stampa dokumenta        ³ <P> Povrat dokumenta u pripremu    ³"
-   @ m_x+20,m_y+2 SAY " <N>     Stampa narudzbenice     ³ <B> Stampa radnog naloga           ³ "
-   @ m_x+21,m_y+2 SAY " <S>     Storno dokument         ³ <R> Rezervacija/Realizacija        ³"
+
+   @ m_x+18,m_y+2 SAY " <ENTER> Stampa dokumenta        ³ <P> Povrat dokumenta u pripremu    ³"
+   @ m_x+19,m_y+2 SAY " <N>     Stampa narudzbenice     ³ <B> Stampa radnog naloga           ³ "
+   @ m_x+20,m_y+2 SAY " <S>     Storno dokument         ³ <R> Rezervacija/Realizacija        ³"
+   @ m_x+21,m_y+2 SAY " <R>  Stampa fiskalnog racuna    ³ <F> otpremnica -> faktura          ³"
    fUPripremu:=.f.
 
    adImeKol:={}
@@ -346,7 +348,7 @@ if cTabela=="D"
                    {|| .t.}, {|| P_Firma(@widpartner)}, "V" }
    adKol:={}; for i:=1 to len(adImeKol); AADD(adKol,i); next
 
-   ObjDbedit("",20,72,{|| EdDatn()},"","", , , ,{ || if(gFC_use == "D", fisc_rn > 0, .f. ) } ,2)
+   ObjDbedit("",19,72,{|| EdDatn()},"","", , , ,{ || if(gFC_use == "D", fisc_rn > 0, .f. ) } ,2)
    BoxC()
    if fupripremu
      close all
@@ -1108,13 +1110,26 @@ do case
      // print odt
      nRet := pr_odt()
 
-  case chr(Ch) $ "fF"
+  case Ch == K_F5
+  
+  	select doks
+	go top
+
+	// refresh tabele
+	nRet := DE_REFRESH
+
+  case chr(Ch) $ "rR"
+	
+	select doks
 
   	// stampa fiskalnog racuna
 	if field->idtipdok $ "10#11"
 		
 		if field->fisc_rn > 0
-			msgbeep("Fiskalni racun stampan za ovaj dokument !!!")
+			msgbeep("Fiskalni racun vec stampan za ovaj dokument !!!")
+			if Pitanje(,"Sigurno zelite opet stampati racun ?","N") == "N"
+				return DE_CONT
+			endif
 		endif
 		
 		if Pitanje(,"Stampati fiskalni racun ?", "D") == "D"

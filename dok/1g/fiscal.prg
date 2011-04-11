@@ -793,3 +793,23 @@ endif
 return
 
 
+// --------------------------------------------------------
+// vraca broj fiskalnog isjecka
+// --------------------------------------------------------
+function fisc_isjecak( cFirma, cTipDok, cBrDok )
+local nTArea := SELECT()
+local nFisc_no := 0
+
+select doks
+go top
+seek cFirma + cTipDok + cBrDok
+
+if FOUND() .and. field->fisc_rn <> 0
+	nFisc_no := field->fisc_rn
+endif
+
+select (nTArea)
+return ALLTRIM( STR( nFisc_no ) )
+
+
+
