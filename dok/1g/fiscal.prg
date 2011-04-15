@@ -260,6 +260,26 @@ if !EMPTY( cPartnId )
 		seek cPartnId
 
 		select (nTArea)
+
+		// provjeri podatke partnera
+		lPEmpty := .f.
+		lPEmpty := EMPTY( cJibPartn )
+		if !lPEmpty
+			lPEmpty := EMPTY( partn->naz )
+		endif
+		if !lPEmpty
+			lPEmpty := EMPTY( partn->adresa )
+		endif
+		if !lPEmpty
+			lPEmpty := EMPTY( partn->ptt )
+		endif
+		if !lPEmpty
+			lPEmpty := EMPTY( partn->mjesto )
+		endif
+		if lPEmpty
+			msgbeep("!!! Podaci partnera nisu kompletirani !!!#Prekidam operaciju")
+			return 0
+		endif
 	
 		// ubaci u matricu podatke o partneru
 		AADD( aKupac, { cJibPartn, partn->naz, partn->adresa, ;
@@ -271,6 +291,7 @@ endif
 
 // vrati se opet na pocetak
 go (nTRec)
+
 
 // upisi u matricu stavke
 do while !EOF() .and. field->idfirma == cFirma ;
@@ -804,7 +825,7 @@ select doks
 go top
 seek cFirma + cTipDok + cBrDok
 
-if FOUND() .and. field->fisc_rn <> 0
+if doks->(FIELDPOS("FISC_RN")) <> 0 .and. FOUND() .and. field->fisc_rn <> 0
 	nFisc_no := field->fisc_rn
 endif
 

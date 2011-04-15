@@ -1118,6 +1118,35 @@ do case
 	// refresh tabele
 	nRet := DE_REFRESH
 
+  case CH == K_CTRL_R
+  	
+	// setovanje broj fiskalnog isjecka
+	select doks
+	
+	if field->fisc_rn <> 0
+		msgbeep("veza: fiskalni racun vec setovana !")
+		if Pitanje(,"Promjeniti postojecu vezu (D/N)?", "N") == "N"
+			return DE_CONT
+		endif
+	endif
+	
+	if Pitanje(,"Setovati novu vezu sa fiskalnim racunom (D/N)?") == "N"
+		return DE_CONT
+	endif
+	
+	nFiscal := field->fisc_rn
+
+	Box(,1,40)
+		@ m_x + 1, m_y + 2 SAY "fiskalni racun:" GET nFiscal ;
+			PICT "9999999999"
+		read
+	BoxC()
+	
+	if nFiscal <> field->fisc_rn
+		replace field->fisc_rn with nFiscal
+		return DE_REFRESH
+	endif
+
   case chr(Ch) $ "rR"
 	
 	select doks
