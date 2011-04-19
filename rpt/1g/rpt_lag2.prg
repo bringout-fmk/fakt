@@ -1,36 +1,12 @@
 #include "fakt.ch"
 
-/*
- * ----------------------------------------------------------------
- *                           Copyright Sigma-com software 1996-2006 
- * ----------------------------------------------------------------
- */
 
-
-/*! \ingroup ini
-  * \var *string FmkIni_KumPath_IZVJESTAJI_BezUlaza
-  * \brief Da li se na izvjestajima lager-liste i stanja robe prikazuju samo izlazi?
-  * \param N - ne, default vrijednost
-  * \param D - da
-  */
-*string FmkIni_KumPath_IZVJESTAJI_BezUlaza;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_ExePath_Svi_SaberiKol
-  * \brief Da li se na izvjestajima prikazuje zbir kolicina svih artikala
-  * \param N - ne, default vrijednost
-  * \param D - da
-  */
-*string FmkIni_ExePath_Svi_SaberiKol;
-
-
-/*! \fn StanjeRobe()
- *  \brief Izvjestaj stanje robe
- */
- 
+// -------------------------------------------------------
+// izvjestaj stanje robe
+// -------------------------------------------------------
 function StanjeRobe()
 local fSaberiKol, nKU, nKI
+local cDDokOtpr 
 private cIdFirma
 private qqroba,ddatod,ddatdo,nRezerv,nRevers
 private nul,nizl,nRbr,cRR,nCol1:=0,nCol0:=50
@@ -56,10 +32,11 @@ qqRoba:=""
 dDatOd:=ctod("")
 dDatDo:=date()
 cSaldo0:="N"
+cDDokOtpr := "D"
 qqPartn:=space(20)
 private qqTipdok:="  "
 
-Box (,12+IIF(lPoNarudzbi,2,0),66)
+Box (,13+IIF(lPoNarudzbi,2,0),66)
 O_PARAMS
 private cSection:="5",cHistory:=" "; aHistory:={}
 Params1()
@@ -67,9 +44,9 @@ RPar("c1",@cIdFirma)
 RPar("c2",@qqRoba)
 RPar("d1",@dDatOd)
 RPar("d2",@dDatDo)
+RPar("d3",@cDDokOtpr)
 
 fSaberikol:=(IzFMKIni('Svi','SaberiKol','N')=='D')
-
 
 if gNW$"DR"
  //cIdfirma:=gFirma
@@ -96,8 +73,11 @@ do while .t.
    @ m_x+2,m_y+2 SAY "Roba   "  GET qqRoba   pict "@!S40"
    @ m_x+3,m_y+2 SAY "Od datuma "  get dDatOd
    @ m_x+3,col()+1 SAY "do"  get dDatDo
+   @ m_x+4,m_y+2 SAY "gledati datum (D)dok. (O)otpr. (V)value:" get cDDokOtpr ;
+   	VALID cDDokOtpr $ "DOV" PICT "@!"
+   
    cRR := "N"
-   xPos := 4
+   xPos := 5
 @ m_x+xPos,m_y+2 SAY "Prikaz stavki sa stanjem 0 (D/N)    "  get cSaldo0 pict "@!" valid cSaldo0 $ "DN"
 if gVarC $ "12"
    @ m_x+xPos+1,m_y+2 SAY "Stanje prikazati sa Cijenom 1/2 (1/2) "  get cTipVpc pict "@!" valid cTipVPC $ "12"
@@ -147,6 +127,7 @@ WPar("c7",qqPartn)
 WPar("c8",qqTipDok)
 WPar("d1",dDatOd)
 WPar("d2",dDatDo)
+WPar("d3",cDDokOtpr)
 select params; use
 
 BoxC()
@@ -155,6 +136,12 @@ fSMark:=.f.
 if (right(qqRoba,1)=="*")
   // izvrsena je markacija robe ..
   fSMark:=.t.
+endif
+
+// ako ne postoji polje datuma isporuke
+// uvijek gledaj dokumente
+if doks->(FIELDPOS("DAT_ISP")) = 0
+	cDDokOtpr := "D"
 endif
 
 select FAKT
@@ -171,7 +158,13 @@ if aUsl1<>".t."
 endif
 
 if !empty(dDatOd) .or. !empty(dDatDo)
-  cFilt+= ".and. DatDok>="+cm2str(dDatOd)+".and. DatDok<="+cm2str(dDatDo)
+ 
+ // sort po datumu dokumenta
+ if cDDokOtpr == "D"
+	cFilt+= ".and. DatDok>="+cm2str(dDatOd)+;
+		".and. DatDok<="+cm2str(dDatDo)
+ endif
+
 endif
 
 if lPoNarudzbi .and. aUslN<>".t."
@@ -205,11 +198,32 @@ nRezerv:=nRevers:=0
 qqPartn:=trim(qqPartn)
 cidfirma:=trim(cidfirma)
 
-
-
 nH:=0
 
 do while !eof()
+    
+    // provjeri datumski valutu, otpremnicu
+    if cDDokOtpr == "O"
+    	select doks
+	seek fakt->idfirma + fakt->idtipdok + fakt->brdok
+	if doks->dat_otpr < dDatOd .or. doks->dat_otpr > dDatDo
+		select fakt
+		skip
+		loop
+	endif
+	select fakt
+    endif
+    
+    if cDDokOtpr == "V"
+    	select doks
+	seek fakt->idfirma + fakt->idtipdok + fakt->brdok
+	if doks->dat_val < dDatOd .or. doks->dat_val > dDatDo
+		select fakt
+		skip
+		loop
+	endif
+	select fakt
+    endif
 
   // skip & loop gdje je roba->_M1_ != "*"
   if fSMark .and. SkLoNMark("ROBA",SiSiRo()) 
@@ -226,6 +240,29 @@ do while !eof()
   nRezerv := nRevers := 0
 
   do while !eof()  .and. cIdRoba==IdRoba 
+
+    // provjeri datumski valutu, otpremnicu
+    if cDDokOtpr == "O"
+    	select doks
+	seek fakt->idfirma + fakt->idtipdok + fakt->brdok
+	if doks->dat_otpr < dDatOd .or. doks->dat_otpr > dDatDo
+		select fakt
+		skip
+		loop
+	endif
+	select fakt
+    endif
+    
+    if cDDokOtpr == "V"
+    	select doks
+	seek fakt->idfirma + fakt->idtipdok + fakt->brdok
+	if doks->dat_val < dDatOd .or. doks->dat_val > dDatDo
+		select fakt
+		skip
+		loop
+	endif
+	select fakt
+    endif
 
     // skip & loop gdje je roba->_M1_ != "*"
     if fSMark .and. SkLoNMark("ROBA",SiSiRo()) 

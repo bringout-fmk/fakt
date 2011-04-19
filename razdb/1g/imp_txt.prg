@@ -100,25 +100,25 @@ do while !EOF()
 	v_kolicina()
 	select pripr
 
-	// roba tip U - nista
+	// 1 roba tip U - nista
 	a_to_txt( "", .t. )
-	// dodatni tekst otpremnice - nista
+	// 2 dodatni tekst otpremnice - nista
 	a_to_txt( "", .t. )
-	// naziv partnera
+	// 3 naziv partnera
 	a_to_txt( aParams[9] , .t. )
-	// adresa
+	// 4 adresa
 	a_to_txt( aParams[10] , .t. )
-	// ptt i mjesto
+	// 5 ptt i mjesto
 	a_to_txt( aParams[11] , .t. )
-	// broj otpremnice
+	// 6 broj otpremnice
 	a_to_txt( "" , .t. )
-	// datum  otpremnice
+	// 7 datum  otpremnice
 	a_to_txt( DTOC( aParams[6] ) , .t. )
-	// broj ugovora - nista
+	// 8 broj ugovora - nista
 	a_to_txt( "", .t. )
-	// datum isporuke - nista
+	// 9 datum isporuke - nista
 	a_to_txt( DTOC( aParams[7] ), .t. )
-	// datum valute - nista
+	// 10 datum valute - nista
 	a_to_txt( "", .t. )
 
 	gather()

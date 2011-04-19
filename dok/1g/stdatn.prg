@@ -314,6 +314,12 @@ if cTabela=="D"
 		60) + "..." }})
    endif
 
+   // datum otpremnice, datum isporuke
+   if FIELDPOS("DAT_OTPR") <> 0
+     AADD(ImeKol,{ "Dat.otpr", {|| dat_otpr} })
+     AADD(ImeKol,{ "Dat.val.", {|| dat_val} })
+   endif
+
    Kol:={}; for i:=1 to len(ImeKol); AADD(Kol,i); next
    Box(,21,72)
 

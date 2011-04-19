@@ -946,7 +946,14 @@ do while !eof()
 	if doks->(FIELDPOS("fisc_rn")) <> 0 
 		_field->fisc_rn := pripr->fisc_rn
 	endif
-  	
+  
+  	// datum isporuke, otpremnice, valute
+	if doks->(FIELDPOS("dat_isp")) <> 0 
+   		_field->dat_isp:=if(LEN(aMemo)>=7,CToD(aMemo[7]),CToD(""))
+   		_field->dat_otpr:=if(LEN(aMemo)>=7,CToD(aMemo[7]),CToD(""))
+   		_field->dat_val:=if(LEN(aMemo)>=9,CToD(aMemo[9]),CToD(""))
+	endif
+
 	if IsRabati()
 		if (cIdTipDok $ gcRabDok)
 			_field->idrabat := PADR(gcRabDef, 10)

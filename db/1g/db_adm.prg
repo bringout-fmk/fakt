@@ -27,8 +27,8 @@ AADD(opc, "5. regeneracija polja fakt->rbr")
 AADD(opcexe, {|| fa_rbr_regen()})
 AADD(opc, "6. regeneracija polja idpartner")
 AADD(opcexe, {|| fa_part_regen()})
-AADD(opc, "7. modifikacija partnera")
-AADD(opcexe, {|| fa_p_regen()})
+AADD(opc, "7. generisanja datuma otpr. isp.")
+AADD(opcexe, {|| gen_dotpr()})
 AADD(opc, "E. fakt export (r_exp) ")
 AADD(opcexe, {|| fkt_export()})
 
@@ -83,6 +83,77 @@ enddo
 BoxC()
 
 return
+
+
+// --------------------------------------------------
+// generisanje podataka za polja dat_isp, dat_otpr
+// --------------------------------------------------
+function gen_dotpr()
+local cRbr
+local aMemo
+local cD_firma
+local cD_tdok
+local cD_brdok
+local nCounter
+
+O_FAKT
+O_DOKS
+
+if doks->(FIELDPOS("dat_isp")) = 0
+	msgbeep("potrebna modifikacija struktura !")
+	return
+endif
+
+if !SigmaSif("REGEN")
+	return 
+endif
+
+if Pitanje(,"Izvrsiti regeneraciju (D/N)?","N") == "N"
+	return
+endif
+
+select doks
+set order to tag "1"
+go top
+
+nCounter := 0
+
+Box(,3, 60)
+
+@ 1 + m_x, 2 + m_y SAY "popunjavanje polja u toku..."
+
+do while !EOF()
+	
+	cD_firma := field->idfirma
+	cD_tdok := field->idtipdok
+	cD_brdok := field->brdok
+
+	select fakt
+	set order to tag "1"
+	go top
+	seek ( cD_firma + cD_tdok + cD_brdok )
+ 	
+	aMemo := ParsMemo( field->txt )
+	
+	select doks
+	
+	replace field->dat_otpr with IF(LEN(aMemo)>=7, CTOD(aMemo[7]), CTOD(""))
+	replace field->dat_isp with IF(LEN(aMemo)>=7, CTOD(aMemo[7]), CTOD(""))
+	replace field->dat_val with IF(LEN(aMemo)>=9, CTOD(aMemo[9]), CTOD(""))
+
+	++nCounter
+
+	@ 3+m_x, 2+m_y SAY "odradjeno zapisa " + ALLTRIM(STR(nCounter)) 
+
+	skip
+
+enddo
+
+BoxC()
+
+return
+
+
 
 
 // ---------------------------------------
