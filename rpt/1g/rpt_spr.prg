@@ -6,6 +6,7 @@
 // ---------------------------------
 static function _o_tables()
 O_FAKT
+O_DOKS
 O_PARTN
 O_VALUTE
 O_RJ
@@ -57,6 +58,7 @@ local nX := 1
 local cExport := "N"
 local lExpRpt := .f.
 local lRelations := .f.
+local cDDokOtpr := "D"
 private cPrikaz
 private cSection:="N"
 private cHistory:=" "
@@ -87,11 +89,12 @@ dDatOd:=ctod("")
 dDatDo:=date()
 qqTipDok:=space(20)
 
-Box("#SPECIFIKACIJA PRODAJE PO ARTIKLIMA",12,77)
+Box("#SPECIFIKACIJA PRODAJE PO ARTIKLIMA",13,77)
 	O_PARAMS
 	RPar("c1", @cIdFirma)
 	RPar("d1", @dDatOd)
 	RPar("d2", @dDatDo)
+	RPar("d3", @cDDokOtpr)
 	qqIdRoba := SPACE(20)
 	cPrikaz := "2"
 	if IsPlanika()
@@ -128,6 +131,10 @@ Box("#SPECIFIKACIJA PRODAJE PO ARTIKLIMA",12,77)
  		
 		@ m_x + nX, col()+1 SAY "do"  get dDatDo
 		
+		++ nX
+
+		@ m_x + nX, m_y + 2 SAY "gledati dat. (D)dok. (O)otpr. (V)valute:" GET cDDokOtpr VALID cDDokOtpr $ "DOV" PICT "@!"
+
 		nX := nX + 3
 		
 		@ m_x + nX, m_y+2 SAY "Uslov po sifri partnera (prazno svi) "  get qqPartn pict "@!" valid {|| empty(qqPartn).or.P_Firma(@qqPartn)}
@@ -203,6 +210,7 @@ Box("#SPECIFIKACIJA PRODAJE PO ARTIKLIMA",12,77)
 	WPar("c1", cIdFirma)
 	WPar("d1", dDatOd)
 	WPar("d2", dDatDo)
+	WPar("d3", cDDokOtpr)
 	WPar("vi", cPrikaz)
 	WPar("td", qqTipDok)
 	
@@ -229,12 +237,20 @@ endif
 
 _o_tables()
 
+if doks->(FIELDPOS("dat_isp")) = 0
+	// ako nema ovog polja, samo gledaj po dokumentima
+	cDDokOtpr := "D"
+endif
+
 select fakt
 
 private cFilter:=".t."
 
 if (!empty(dDatOd) .or. !empty(dDatDo))
-	cFilter+=".and.  datdok>=" + Cm2Str(dDatOd) + " .and. datdok<="+Cm2Str(dDatDo)
+
+	if cDDokOtpr == "D"
+		cFilter+=".and.  datdok>=" + Cm2Str(dDatOd) + " .and. datdok<="+Cm2Str(dDatDo)
+	endif
 endif
 
 if (!empty(cIdFirma))
@@ -296,11 +312,60 @@ if cPrikaz=="1"
   	
 	do while !eof() .and. IdFirma=cIdFirma
     		
+		if cDDokOtpr == "O"
+    			select doks
+			seek fakt->idfirma + fakt->idtipdok + fakt->brdok
+			if doks->dat_otpr < dDatOd .or. doks->dat_otpr > dDatDo
+				select fakt
+				skip
+				loop
+			endif
+			select fakt
+    		endif
+    		
+		if cDDokOtpr == "V"
+    			select doks
+			seek fakt->idfirma + fakt->idtipdok + fakt->brdok
+			if doks->dat_val < dDatOd .or. doks->dat_val > dDatDo
+				select fakt
+				skip
+				loop
+			endif
+			select fakt
+    		endif
+    
 		nKolicina:=0
 		cIdPartner:=IdPartner
     		
 		do while !eof() .and. IdFirma=cIdFirma .and. idpartner==cIdpartner
-        		SELECT partn
+        		
+			if cDDokOtpr == "O"
+    				select doks
+				seek fakt->idfirma + fakt->idtipdok + ;
+					fakt->brdok
+				if doks->dat_otpr < dDatOd .or. ;
+					doks->dat_otpr > dDatDo
+					select fakt
+					skip
+					loop
+				endif
+				select fakt
+    			endif
+    		
+			if cDDokOtpr == "V"
+    				select doks
+				seek fakt->idfirma + fakt->idtipdok + ;
+					fakt->brdok
+				if doks->dat_val < dDatOd .or. ;
+					doks->dat_val > dDatDo
+					select fakt
+					skip
+					loop
+				endif
+				select fakt
+    			endif
+			
+			SELECT partn
 			HSEEK fakt->idPartner
 			SELECT fakt
         		if !(partn->(&aUslOpc))
@@ -364,6 +429,28 @@ else
 		nIznos := 0
    		cIdRoba := IdRoba
 		
+		if cDDokOtpr == "O"
+    			select doks
+			seek fakt->idfirma + fakt->idtipdok + fakt->brdok
+			if doks->dat_otpr < dDatOd .or. doks->dat_otpr > dDatDo
+				select fakt
+				skip
+				loop
+			endif
+			select fakt
+    		endif
+    		
+		if cDDokOtpr == "V"
+    			select doks
+			seek fakt->idfirma + fakt->idtipdok + fakt->brdok
+			if doks->dat_val < dDatOd .or. doks->dat_val > dDatDo
+				select fakt
+				skip
+				loop
+			endif
+			select fakt
+    		endif
+    
 		if IsPlanika()
 			select roba
 			set order to tag "ID"
@@ -388,6 +475,32 @@ else
     		
 		do while !eof() .and. idRoba==cIdRoba
         			
+			if cDDokOtpr == "O"
+    				select doks
+				seek fakt->idfirma + fakt->idtipdok + ;
+					fakt->brdok
+				if doks->dat_otpr < dDatOd .or. ;
+					doks->dat_otpr > dDatDo
+					select fakt
+					skip
+					loop
+				endif
+				select fakt
+    			endif
+    		
+			if cDDokOtpr == "V"
+    				select doks
+				seek fakt->idfirma + fakt->idtipdok + ;
+					fakt->brdok
+				if doks->dat_val < dDatOd .or. ;
+					doks->dat_val > dDatDo
+					select fakt
+					skip
+					loop
+				endif
+				select fakt
+    			endif
+			
 			SELECT partn
 			HSEEK fakt->idPartner
 			SELECT fakt
