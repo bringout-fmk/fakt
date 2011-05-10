@@ -404,6 +404,12 @@ do while !EOF() .and. field->idfirma == cFirma ;
 	skip
 enddo
 
+
+// provjeri prije stampe stavke kolicina, cijena
+if fp_check( @aStavke ) < 0
+	return 1	
+endif
+
 // pobrisi answer fajl
 fp_d_answer( ALLTRIM(gFc_path) )
 

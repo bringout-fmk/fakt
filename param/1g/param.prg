@@ -148,7 +148,15 @@ Box(,21,77,.f.,"PARAMETRI FISKALNOG STMPACA")
 	
 	++ nX
 	++ nX
+
+	@ m_x+nX, m_y+2 SAY "Provjera kolicine i cijene (1/2)" ;
+		GET gFC_chk ;
+		VALID gFC_chk $ "12" PICT "@!"
 	
+	++ nX
+	++ nX
+
+
 	@ m_x+nX, m_y+2 SAY "'kod' artikla [P/D]Plu, [I]Id, [B]Barkod:" ;
 			GET gFC_acd VALID gFC_acd $ "PIBD" PICT "@!"
 
@@ -193,6 +201,7 @@ if (LASTKEY() <> K_ESC)
 	WPar("fO",gFC_pdv)
 	WPar("fD",gFC_device)
 	WPar("fT",gFC_pinit)
+	WPar("fX",gFC_chk)
 
 endif
 
