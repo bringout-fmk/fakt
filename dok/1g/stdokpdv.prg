@@ -283,11 +283,14 @@ do while !EOF() .and. idfirma==cIdFirma .and. idtipdok==cIdTipDok .and. brdok==c
 	cIdRoba := field->idroba
 	
 	if roba->tip="U"
+
 		cRobaNaz:=aMemo[1]
+	
 	else
-		cRobaNaz:=ALLTRIM(LEFT(roba->naz,40))
+		cRobaNaz := ALLTRIM( roba->naz )
+		
 		if lBarKod
-			cRobaNaz:=cRobaNaz + " (BK: " + roba->barkod + ")"
+			cRobaNaz := cRobaNaz + " (BK: " + roba->barkod + ")"
 		endif
 	endif
 
