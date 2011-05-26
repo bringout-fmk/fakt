@@ -246,6 +246,17 @@ do case
 		fisc_rn( cFFirma, cFTipDok, cFBrDok )
 
 		msgc()
+
+		if gFC_faktura == "D" .and. ;
+			Pitanje(,"Stampati fakturu ?", "N") == "D"
+			
+			// stampaj dokument odmah nakon fiskalnog racuna
+
+			StampTXT( cFFirma, cFTipDok, cFBrDok )
+			
+			select pripr
+
+		endif
 	
 	case (Ch==K_CTRL_T .or. (Ch=K_DEL .and. gTBDir=="D"))
      		if BrisiStavku()==1
@@ -270,7 +281,7 @@ do case
     		endif
 	case Ch==K_CTRL_A  .and. gTBDir="N"
         	ProdjiKrozStavke()
-		lDirti:=.t.
+		lDirty:=.t.
         	return DE_REFRESH
 	case Ch==K_CTRL_N  .and. gTBDir="N"
         	NoveStavke()

@@ -147,6 +147,12 @@ Box(,21,77,.f.,"PARAMETRI FISKALNOG STMPACA")
 			VALID gFC_nftxt $ "DN" PICT "@!"
 	
 	++ nX
+	
+	@ m_x+nX, m_y+2 SAY "Stampati racun nakon stampe fiskalnog racuna ?" ;
+			GET gFC_faktura ;
+			VALID gFC_faktura $ "DN" PICT "@!"
+	
+	++ nX
 	++ nX
 
 	@ m_x+nX, m_y+2 SAY "Provjera kolicine i cijene (1/2)" ;
@@ -202,6 +208,7 @@ if (LASTKEY() <> K_ESC)
 	WPar("fD",gFC_device)
 	WPar("fT",gFC_pinit)
 	WPar("fX",gFC_chk)
+	WPar("fZ",gFC_faktura)
 
 endif
 
