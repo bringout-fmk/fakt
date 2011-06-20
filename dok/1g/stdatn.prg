@@ -1124,7 +1124,7 @@ do case
 	// refresh tabele
 	nRet := DE_REFRESH
 
-  case CH == K_CTRL_R
+  case CH == K_CTRL_V
   	
 	// setovanje broj fiskalnog isjecka
 	select doks
@@ -1161,10 +1161,11 @@ do case
 	if field->idtipdok $ "10#11"
 		
 		if field->fisc_rn > 0
-			msgbeep("Fiskalni racun vec stampan za ovaj dokument !!!")
-			if Pitanje(,"Sigurno zelite opet stampati racun ?","N") == "N"
-				return DE_CONT
-			endif
+			
+			msgbeep("Fiskalni racun vec stampan za ovaj dokument !!!#Ako je potrebna ponovna stampa resetujte broj veze.")
+			
+			return DE_CONT
+		
 		endif
 		
 		if Pitanje(,"Stampati fiskalni racun ?", "D") == "D"
