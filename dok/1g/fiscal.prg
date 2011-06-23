@@ -625,8 +625,9 @@ do while !EOF() .and. field->idfirma == cFirma ;
 		nF_plu := roba->fisc_plu
 	endif
 
-	if gFC_acd == "D"
+	if gFC_acd == "D" .and. gFc_zbir <> 1
 		// generisanje inkrementalnog PLU kod-a
+		// ako je opcija zbirnog racuna 1 - onda nece generisati
 		nF_plu := auto_plu()
 	endif
 
@@ -697,8 +698,14 @@ do while !EOF() .and. field->idfirma == cFirma ;
 	skip
 enddo
 
-// fprint, zbirni racun
-fp_zbirni( @aStavke )
+if cTipDok $ "10"
+	
+	// fprint, zbirni racun
+	// samo za veleprodaju
+
+	fp_zbirni( @aStavke )
+
+endif
 
 // provjeri prije stampe stavke kolicina, cijena
 if fp_check( @aStavke ) < 0
@@ -756,7 +763,7 @@ local nKolicina := 1
 local cArt_naz := ""
 local nDataLen := LEN( aData )
 
-if gFc_zbir < 1 .or. gFc_acd == "P" .or. gFc_zbir < nDataLen
+if gFc_zbir < 1 .or. gFc_acd == "P" .or. ( gFc_zbir > 1 .and. gFc_zbir < nDataLen )
 	// ova opcija se ne koristi
 	// ako je iskljucena opcija
 	// ili ako je sifra artikla genericki PLU
