@@ -142,6 +142,11 @@ Box(,21,77,.f.,"PARAMETRI FISKALNOG STMPACA")
 		
 	++ nX
 	++ nX
+	
+	@ m_x+nX, m_y+2 SAY "Stampanje zbirnog racuna (0/1/2)" GET gFC_zbir ;
+			VALID gFC_zbir >= 0 PICT "999"
+
+	++ nX
 
 	@ m_x+nX, m_y+2 SAY "Stampa broja racuna ?" GET gFC_nftxt ;
 			VALID gFC_nftxt $ "DN" PICT "@!"
@@ -209,6 +214,7 @@ if (LASTKEY() <> K_ESC)
 	WPar("fT",gFC_pinit)
 	WPar("fX",gFC_chk)
 	WPar("fZ",gFC_faktura)
+	WPar("fk",gFC_zbir)
 
 endif
 

@@ -697,6 +697,8 @@ do while !EOF() .and. field->idfirma == cFirma ;
 	skip
 enddo
 
+// fprint, zbirni racun
+fp_zbirni( @aStavke )
 
 // provjeri prije stampe stavke kolicina, cijena
 if fp_check( @aStavke ) < 0
@@ -742,6 +744,52 @@ else
 endif
 
 return nErr
+
+
+// --------------------------------------------------
+// napravi zbirni racun ako je potrebno
+// --------------------------------------------------
+static function fp_zbirni( aData )
+local aTmp := {}
+local nTotal := 0
+local nKolicina := 1
+local cArt_naz := ""
+local nDataLen := LEN( aData )
+
+if gFc_zbir < 1 .or. gFc_acd == "P" .or. gFc_zbir < nDataLen
+	// ova opcija se ne koristi
+	// ako je iskljucena opcija
+	// ili ako je sifra artikla genericki PLU
+	// ili ako je zadato da ide iznad neke vrijednosti stavki na racunu
+	return
+endif
+
+cArt_naz := "Stavke racuna " + ALLTRIM( aData[1, 1] )
+
+// ukupna vrijednost racuna za sve stavke matrice je ista popunjena
+nTotal := ROUND2( aData[1, 14], 2 )
+
+// dodaj u aTmp zbirnu stavku...
+AADD( aTmp, { aData[1, 1] , ;
+	aData[1, 2], ;
+	"", ;
+	cArt_naz, ;
+	nTotal, ;
+	nKolicina, ;
+	aData[1, 7], ;
+	aData[1, 8], ;
+	auto_plu(), ;
+	nTotal, ;
+	0, ;
+	"", ;
+	aData[1, 13], ;
+	nTotal } )
+
+
+// proslijedi u aData
+aData := aTmp
+
+return
 
 
 

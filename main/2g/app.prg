@@ -431,6 +431,7 @@ public gFC_pdv := "D"
 public gFC_pinit := 10
 public gFC_chk := "1"
 public gFC_faktura := "N"
+public gFC_zbir := 0
 
 // stmpa na traku
 public gMpPrint := "N"
@@ -640,6 +641,7 @@ RPar("fD", @gFC_device)
 RPar("fT", @gFC_pinit)
 RPar("fX", @gFC_chk)
 RPar("fZ", @gFC_faktura)
+RPar("fk", @gFC_zbir)
 
 
 cSection := "1"
