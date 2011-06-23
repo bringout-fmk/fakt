@@ -143,7 +143,8 @@ Box(,21,77,.f.,"PARAMETRI FISKALNOG STMPACA")
 	++ nX
 	++ nX
 	
-	@ m_x+nX, m_y+2 SAY "Stampanje zbirnog racuna (0/1/2)" GET gFC_zbir ;
+	@ m_x+nX, m_y+2 SAY "Stampanje zbirnog racuna u VP (0/1/...)" ;
+			GET gFC_zbir ;
 			VALID gFC_zbir >= 0 PICT "999"
 
 	++ nX

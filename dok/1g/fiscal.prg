@@ -776,6 +776,13 @@ cArt_naz := "Stavke racuna " + ALLTRIM( aData[1, 1] )
 // ukupna vrijednost racuna za sve stavke matrice je ista popunjena
 nTotal := ROUND2( aData[1, 14], 2 )
 
+if !EMPTY( aData[1, 8] )
+	// ako je storno racun
+	// napravi korekciju da je kolicina u minusu a iznos pozitivan
+	nKolicina := -1
+	nTotal := ABS( nTotal )
+endif
+
 // dodaj u aTmp zbirnu stavku...
 AADD( aTmp, { aData[1, 1] , ;
 	aData[1, 2], ;
