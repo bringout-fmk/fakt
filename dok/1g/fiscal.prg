@@ -708,7 +708,7 @@ if cTipDok $ "10"
 endif
 
 // provjeri prije stampe stavke kolicina, cijena
-if fp_check( @aStavke ) < 0
+if fp_check( @aStavke, lStorno ) < 0
 	return 1	
 endif
 
