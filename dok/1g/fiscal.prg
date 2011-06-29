@@ -13,18 +13,36 @@ do case
 		nErr := rn_to_tfp( cFirma, cTipDok, cBrDok )
 	case ALLTRIM( gFc_type ) == "FLINK"
 		// flink funkcije
-        	rn_to_flink( cFirma, cTipDok, cBrDok )
+        	nErr := rn_to_flink( cFirma, cTipDok, cBrDok )
 	case ALLTRIM( gFc_type ) == "HCP"
 		// hcp funkcije
-        	rn_to_hcp( cFirma, cTipDok, cBrDok )
+        	nErr := rn_to_hcp( cFirma, cTipDok, cBrDok )
 	case ALLTRIM( gFc_type ) == "TREMOL"
 		// tremol funkcije
-        	rn_to_trm( cFirma, cTipDok, cBrDok )
+        	nErr := rn_to_trm( cFirma, cTipDok, cBrDok )
 	case ALLTRIM( gFc_type ) == "FPRINT"
 		// fprint funkcije
         	nErr := rn_to_fprint( cFirma, cTipDok, cBrDok )
 
 endcase
+
+if gFC_error == "D" .and. nErr > 0
+	
+	if ALLTRIM( gFc_type ) == "TREMOL"
+		
+		// posalji drugi put za ponistavanje komande racuna
+		// parametar continue = 2
+		nErr := rn_to_trm( cFirma, cTipDok, cBrDok, "2" )
+
+		if nErr > 0
+			msgbeep("Problem sa stampanjem na fiskalni stampac !!!")
+		endif
+	//else
+		// ima greska
+		//msgbeep("Problem sa stampanjem na fiskalni stampac !!!")
+	endif
+
+endif
 
 return nErr
 
@@ -277,12 +295,13 @@ if !EMPTY( cPartnId )
 
 endif
 
-// vrati se opet na pocetak
-go (nTRec)
-
 // i total sracunaj sa pdv
 // upisat cemo ga u svaku stavku matrice
 nTotal := _uk_sa_pdv( cTipDok, cPartnId, nTotal )
+
+// vrati se opet na pocetak
+go (nTRec)
+select fakt
 
 // upisi u matricu stavke
 do while !EOF() .and. field->idfirma == cFirma ;
@@ -339,6 +358,8 @@ do while !EOF() .and. field->idfirma == cFirma ;
 		// moramo uzeti cijenu sa pdv-om
 		nF_cijena := ABS( _uk_sa_pdv( cTipDok, cPartnId, ;
 			field->cijena ) )
+		// vrsta placanja je virman
+		cVr_placanja := "3"
 
 	endif
 	
@@ -389,7 +410,7 @@ do while !EOF() .and. field->idfirma == cFirma ;
 			nF_cijena, ;
 			nF_rabat, ;
 			cF_barkod, ;
-			"", ;
+			cVr_placanja, ;
 			nTotal, ;
 			dDatRn, ;
 			cF_artjmj } )
@@ -417,27 +438,28 @@ nErr := fc_trm_rn( ALLTRIM( gFC_path ), ;
 		aStavke, aKupac, lStorno, ; 
 		gFc_error, cContinue )
 
-/*
+
 // pogledati kako obraditi gresku...
+
 if nErr = 0 .and. lStorno = .f.
 
 	// vrati broj fiskalnog racuna
 	
-	nFisc_no := hcp_fisc_no( ALLTRIM(gFc_path), ;
-		ALLTRIM(gFc_name), gFc_error )
+	//nFisc_no := hcp_fisc_no( ALLTRIM(gFc_path), ;
+	//	ALLTRIM(gFc_name), gFc_error )
 
-	if nFisc_no > 0
+	//if nFisc_no > 0
 		
-		msgbeep("Kreiran fiskalni racun broj: " + ;
-				ALLTRIM(STR(nFisc_No)))
+	//	msgbeep("Kreiran fiskalni racun broj: " + ;
+	//			ALLTRIM(STR(nFisc_No)))
 
 		// ubaci broj fiskalnog racuna u fakturu
-		fisc_to_fakt( cFirma, cTipDok, cBrDok, nFisc_no )
+	//	fisc_to_fakt( cFirma, cTipDok, cBrDok, nFisc_no )
 	
-	endif
+	//endif
 
 endif
-*/
+
 
 return nErr
 
@@ -647,6 +669,8 @@ do while !EOF() .and. field->idfirma == cFirma ;
 		// moramo uzeti cijenu sa pdv-om
 		nF_cijena := ABS( _uk_sa_pdv( cTipDok, cPartnId, ;
 			field->cijena ) )
+		// vrsta placanja je virman
+		cVr_placanja := "3"
 
 	endif
 	
@@ -697,7 +721,7 @@ do while !EOF() .and. field->idfirma == cFirma ;
 			nF_cijena, ;
 			nF_rabat, ;
 			cF_barkod, ;
-			"", ;
+			cVr_placanja, ;
 			nTotal, ;
 			dDatRn, ;
 			cF_artjmj } )
