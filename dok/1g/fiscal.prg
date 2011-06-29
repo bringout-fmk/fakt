@@ -778,8 +778,7 @@ nTotal := ROUND2( aData[1, 14], 2 )
 
 if !EMPTY( aData[1, 8] )
 	// ako je storno racun
-	// napravi korekciju da je kolicina u minusu a iznos pozitivan
-	nKolicina := -1
+	// napravi korekciju da je iznos pozitivan
 	nTotal := ABS( nTotal )
 endif
 
