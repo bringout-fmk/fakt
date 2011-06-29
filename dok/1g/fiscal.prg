@@ -19,7 +19,7 @@ do case
         	rn_to_hcp( cFirma, cTipDok, cBrDok )
 	case ALLTRIM( gFc_type ) == "TREMOL"
 		// tremol funkcije
-        	//rn_to_trm( cFirma, cTipDok, cBrDok )
+        	rn_to_trm( cFirma, cTipDok, cBrDok )
 	case ALLTRIM( gFc_type ) == "FPRINT"
 		// fprint funkcije
         	nErr := rn_to_fprint( cFirma, cTipDok, cBrDok )
@@ -132,10 +132,11 @@ fisc_nivel( gFC_path, aItems, aSem_data )
 return
 
 
+
 // -------------------------------------------------------------
-// izdavanje fiskalnog isjecka na HCP uredjaj
+// izdavanje fiskalnog isjecka na TREMOL uredjaj
 // -------------------------------------------------------------
-static function rn_to_hcp( cFirma, cTipDok, cBrDok )
+static function rn_to_trm( cFirma, cTipDok, cBrDok, cContinue )
 local cError := ""
 local lStorno := .t.
 local aStavke := {}
@@ -149,7 +150,10 @@ local cJibPartn := ""
 local lIno := .f.
 local cPOslob := ""
 local cNF_txt := cFirma + "-" + cTipDok + "-" + ALLTRIM( cBrDok )
-local nU_total
+
+if cContinue == nil
+	cContinue := "0"
+endif
 
 O_DOKS
 O_FAKT
@@ -167,8 +171,8 @@ seek ( cFirma + cTipDok + cBrDok )
 
 nBrDok := VAL(ALLTRIM(field->brdok))
 nTotal := field->iznos
+dDatRn := field->datdok
 nNRekRn := field->fisc_rn
-
 
 select fakt
 seek ( cFirma + cTipDok + cBrDok )
@@ -276,7 +280,9 @@ endif
 // vrati se opet na pocetak
 go (nTRec)
 
-nU_total := 0
+// i total sracunaj sa pdv
+// upisat cemo ga u svaku stavku matrice
+nTotal := _uk_sa_pdv( cTipDok, cPartnId, nTotal )
 
 // upisi u matricu stavke
 do while !EOF() .and. field->idfirma == cFirma ;
@@ -336,10 +342,6 @@ do while !EOF() .and. field->idfirma == cFirma ;
 
 	endif
 	
-	// i total sracunaj sa pdv
-	nTotal := _uk_sa_pdv( cTipDok, cPartnId, nTotal )
-	nU_total += nTotal
-
 	nF_kolicina := ABS ( field->kolicina )
 	nF_rabat := ABS ( field->rabat ) 
 
@@ -363,35 +365,354 @@ do while !EOF() .and. field->idfirma == cFirma ;
 	// 3 - id roba
 	// 4 - roba naziv
 	// 5 - cijena
-	// 6 - n.cijena
-	// 7 - kolicina
-	// 8 - tarifa
-	// 9 - broj racuna za storniranje
-	// 10 - datum
-	// 11 - roba jmj
-	// 12 - roba plu
-	// 13 - plu cijena
+	// 6 - kolicina
+	// 7 - tarifa
+	// 8 - broj racuna za storniranje
+	// 9 - roba plu
+	// 10 - plu cijena
 	// 11 - popust
 	// 12 - barkod
+	// 13 - vrsta placanja
+	// 14 - total racuna
+	// 15 - datum racuna
+	// 16 - roba jmj
 
 	AADD( aStavke, { cF_brrn , ;
 			cF_rbr, ;
 			cF_idart, ;
 			cF_artnaz, ;
 			nF_cijena, ;
+			nF_kolicina, ;
+			cF_tarifa, ;
+			cF_st_rn, ;
+			nF_plu, ;
+			nF_cijena, ;
+			nF_rabat, ;
+			cF_barkod, ;
+			"", ;
+			nTotal, ;
+			dDatRn, ;
+			cF_artjmj } )
+
+	skip
+enddo
+
+if cTipDok $ "10"
+	
+	// tremol, zbirni racun
+	// samo za veleprodaju
+
+	fp_zbirni( @aStavke )
+
+endif
+
+// provjeri prije stampe stavke kolicina, cijena
+if trm_check( @aStavke ) < 0
+	return 1	
+endif
+
+// stampaj racun !
+nErr := fc_trm_rn( ALLTRIM( gFC_path ), ;
+		ALLTRIM(gFC_name), ;
+		aStavke, aKupac, lStorno, ; 
+		gFc_error, cContinue )
+
+/*
+// pogledati kako obraditi gresku...
+if nErr = 0 .and. lStorno = .f.
+
+	// vrati broj fiskalnog racuna
+	
+	nFisc_no := hcp_fisc_no( ALLTRIM(gFc_path), ;
+		ALLTRIM(gFc_name), gFc_error )
+
+	if nFisc_no > 0
+		
+		msgbeep("Kreiran fiskalni racun broj: " + ;
+				ALLTRIM(STR(nFisc_No)))
+
+		// ubaci broj fiskalnog racuna u fakturu
+		fisc_to_fakt( cFirma, cTipDok, cBrDok, nFisc_no )
+	
+	endif
+
+endif
+*/
+
+return nErr
+
+
+
+
+// -------------------------------------------------------------
+// izdavanje fiskalnog isjecka na HCP uredjaj
+// -------------------------------------------------------------
+static function rn_to_hcp( cFirma, cTipDok, cBrDok )
+local cError := ""
+local lStorno := .t.
+local aStavke := {}
+local aKupac := {}
+local nNRekRn := 0
+local cPartnId := ""
+local cVr_placanja := "0"
+local nErr := 0
+local nFisc_no := 0
+local cJibPartn := ""
+local lIno := .f.
+local cPOslob := ""
+local cNF_txt := cFirma + "-" + cTipDok + "-" + ALLTRIM( cBrDok )
+local nU_total
+
+O_DOKS
+O_FAKT
+O_ROBA
+O_SIFK
+O_SIFV
+
+// ako se ne koristi opcija fiscal, izadji !
+if gFc_use == "N"
+	return
+endif
+
+select doks
+seek ( cFirma + cTipDok + cBrDok )
+
+nBrDok := VAL(ALLTRIM(field->brdok))
+nTotal := field->iznos
+dDatRn := field->datdok
+nNRekRn := field->fisc_rn
+
+select fakt
+seek ( cFirma + cTipDok + cBrDok )
+
+nTRec := RECNO()
+
+// da li se radi o storno racunu ?
+do while !EOF() .and. field->idfirma == cFirma ;
+	.and. field->idtipdok == cTipDok ;
+	.and. field->brdok == cBrDok
+
+	if field->kolicina > 0
+		lStorno := .f.
+		exit
+	endif
+	
+	skip
+enddo
+
+// koji je broj racuna koji storniramo
+if lStorno 
+	Box(,1,60)
+		@ m_x + 1, m_y + 2 SAY "Reklamiramo fisk.racun:" ;
+			GET nNRekRn PICT "999999999" VALID ( nNRekRn > 0 )
+		read
+	BoxC()
+endif
+
+// kupac
+// 1 - id broj kupca
+// 2 - naziv
+// 3 - adresa
+// 4 - ptt
+// 5 - grad
+
+if cTipDok $ "10#"
+
+	// uzmi kupca i setuj placanje
+
+	// daj mi partnera za ovu fakturu
+	cPartnId := doks->idpartner
+	cVr_Placanja := "3"
+
+endif
+
+if !EMPTY( cPartnId )
+
+	cJibPartn := ALLTRIM( IzSifK( "PARTN" , "REGB", cPartnId, .f. ) )
+	cPOslob := ALLTRIM( IzSifK( "PARTN" , "PDVO", cPartnId, .f. ) )
+
+	if LEN(cJibPartn) < 12 .or. !EMPTY( cPOslob )
+		
+		lIno := .t.
+	
+	elseif LEN( cJibPartn ) = 12
+
+		// ako je pdv obveznik
+		// dodaj "4" ispred id broja
+		
+		cJibPartn := "4" + ALLTRIM( cJibPartn )
+		
+		lIno := .f.
+
+	endif
+
+	// ako nije INO, onda setuj partnera
+
+	if lIno = .f.
+		
+		nTarea := SELECT()
+	
+		select partn
+		seek cPartnId
+
+		select (nTArea)
+
+		// provjeri podatke partnera
+		lPEmpty := .f.
+		lPEmpty := EMPTY( cJibPartn )
+		if !lPEmpty
+			lPEmpty := EMPTY( partn->naz )
+		endif
+		if !lPEmpty
+			lPEmpty := EMPTY( partn->adresa )
+		endif
+		if !lPEmpty
+			lPEmpty := EMPTY( partn->ptt )
+		endif
+		if !lPEmpty
+			lPEmpty := EMPTY( partn->mjesto )
+		endif
+		if lPEmpty
+			msgbeep("!!! Podaci partnera nisu kompletirani !!!#Prekidam operaciju")
+			return 0
+		endif
+	
+		// ubaci u matricu podatke o partneru
+		AADD( aKupac, { cJibPartn, partn->naz, partn->adresa, ;
+			partn->ptt, partn->mjesto } )
+	
+	endif
+
+endif
+
+// vrati se opet na pocetak
+go (nTRec)
+
+// i total sracunaj sa pdv
+// upisat cemo ga u svaku stavku matrice
+nTotal := _uk_sa_pdv( cTipDok, cPartnId, nTotal )
+
+// upisi u matricu stavke
+do while !EOF() .and. field->idfirma == cFirma ;
+	.and. field->idtipdok == cTipDok ;
+	.and. field->brdok == cBrDok
+
+	// nastimaj se na robu ...
+	select roba
+	seek fakt->idroba
+
+	if roba->(fieldpos("FISC_PLU")) = 0
+		msgbeep("Odraditi modifikaciju struktura, nema FISC_PLU !")
+		return 0
+	endif
+
+	select fakt
+
+	// storno identifikator
+	nSt_Id := 0
+
+	if ( field->kolicina < 0 ) .and. lStorno == .f.
+		nSt_id := 1
+	endif
+	
+	cF_brrn := fakt->brdok
+	cF_rbr := fakt->rbr
+	
+	cF_idart := fakt->idroba
+	
+	cF_barkod := ""
+	if roba->(fieldpos("BARKOD")) <> 0
+		cF_barkod := ALLTRIM( roba->barkod )
+	endif
+
+	nF_plu := 0
+	
+	if roba->(fieldpos("FISC_PLU")) <> 0
+		nF_plu := roba->fisc_plu
+	endif
+
+	if gFC_acd == "D"
+		// generisanje inkrementalnog PLU kod-a
+		nF_plu := auto_plu()
+	endif
+
+	nF_pprice := roba->mpc
+
+	cF_artnaz := ALLTRIM( konvznwin( roba->naz, gFc_konv) )
+	cF_artjmj := ALLTRIM( roba->jmj )
+
+	nF_cijena := ABS ( field->cijena )
+	
+	if cTipDok $ "10#"
+		// moramo uzeti cijenu sa pdv-om
+		nF_cijena := ABS( _uk_sa_pdv( cTipDok, cPartnId, ;
+			field->cijena ) )
+
+	endif
+	
+	nF_kolicina := ABS ( field->kolicina )
+	nF_rabat := ABS ( field->rabat ) 
+
+	cF_tarifa := ALLTRIM( roba->idtarifa )
+
+	// ako je za ino kupca onda ide nulta stopa
+	// oslobodi ga poreza
+	if lIno = .t.
+		cF_tarifa := "PDV0"
+	endif
+
+	cF_st_rn := ""
+
+	if nNRekRn > 0
+		// ovo ce biti racun koji reklamiramo !
+		cF_st_rn := ALLTRIM( STR( nNRekRn ))
+	endif
+	
+	// 1 - broj racuna
+	// 2 - redni broj
+	// 3 - id roba
+	// 4 - roba naziv
+	// 5 - cijena
+	// 6 - kolicina
+	// 7 - tarifa
+	// 8 - broj racuna za storniranje
+	// 9 - roba plu
+	// 10 - plu cijena
+	// 11 - popust
+	// 12 - barkod
+	// 13 - vrsta placanja
+	// 14 - total racuna
+	// 15 - datum racuna
+	// 16 - roba jmj
+
+	AADD( aStavke, { cF_brrn , ;
+			cF_rbr, ;
+			cF_idart, ;
+			cF_artnaz, ;
 			nF_cijena, ;
 			nF_kolicina, ;
 			cF_tarifa, ;
 			cF_st_rn, ;
-			DATE(), ;
-			cF_artjmj, ;
 			nF_plu, ;
 			nF_cijena, ;
 			nF_rabat, ;
-			cF_barkod } )
+			cF_barkod, ;
+			"", ;
+			nTotal, ;
+			dDatRn, ;
+			cF_artjmj } )
 
 	skip
 enddo
+
+if cTipDok $ "10"
+	
+	// hcp, zbirni racun
+	// samo za veleprodaju
+
+	fp_zbirni( @aStavke )
+
+endif
 
 // provjeri prije stampe stavke kolicina, cijena
 if hcp_check( @aStavke ) < 0
@@ -402,7 +723,7 @@ endif
 nErr := fc_hcp_rn( ALLTRIM( gFC_path ), ;
 		ALLTRIM(gFC_name), ;
 		aStavke, aKupac, lStorno, ; 
-		gFc_error, nU_total )
+		gFc_error, nTotal )
 
 if nErr = 0 .and. lStorno = .f.
 
@@ -461,8 +782,8 @@ seek ( cFirma + cTipDok + cBrDok )
 
 nBrDok := VAL(ALLTRIM(field->brdok))
 nTotal := field->iznos
+dDatRn := field->datdok
 nNRekRn := field->fisc_rn
-
 
 select fakt
 seek ( cFirma + cTipDok + cBrDok )
@@ -585,6 +906,9 @@ endif
 // vrati se opet na pocetak
 go (nTRec)
 
+// i total sracunaj sa pdv
+// upisat cemo ga u svaku stavku matrice
+nTotal := _uk_sa_pdv( cTipDok, cPartnId, nTotal )
 
 // upisi u matricu stavke
 do while !EOF() .and. field->idfirma == cFirma ;
@@ -645,9 +969,6 @@ do while !EOF() .and. field->idfirma == cFirma ;
 
 	endif
 	
-	// i total sracunaj sa pdv
-	nTotal := _uk_sa_pdv( cTipDok, cPartnId, nTotal )
-	
 	nF_kolicina := ABS ( field->kolicina )
 	nF_rabat := ABS ( field->rabat ) 
 
@@ -679,6 +1000,9 @@ do while !EOF() .and. field->idfirma == cFirma ;
 	// 11 - popust
 	// 12 - barkod
 	// 13 - vrsta placanja
+	// 14 - total racuna
+	// 15 - datum racuna
+	// 16 - roba jmj
 
 	AADD( aStavke, { cF_brrn , ;
 			cF_rbr, ;
@@ -693,7 +1017,9 @@ do while !EOF() .and. field->idfirma == cFirma ;
 			nF_rabat, ;
 			cF_barkod, ;
 			cVr_placanja, ;
-			nTotal } )
+			nTotal, ;
+			dDatRn, ;
+			cF_artjmj } )
 
 	skip
 enddo
@@ -796,7 +1122,9 @@ AADD( aTmp, { aData[1, 1] , ;
 	0, ;
 	"", ;
 	aData[1, 13], ;
-	nTotal } )
+	nTotal, ;
+	aData[1, 15], ;
+	aData[1, 16] } )
 
 
 // proslijedi u aData
