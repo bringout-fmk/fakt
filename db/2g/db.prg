@@ -195,6 +195,7 @@ Skloni(KUMPATH,"RUGOV.DBF",cSezona,finverse,fda,fnul)
 Skloni(KUMPATH,"GEN_UG.DBF",cSezona,finverse,fda,fnul)
 Skloni(KUMPATH,"GEN_UG_P.DBF",cSezona,finverse,fda,fnul)
 Skloni(KUMPATH,"KALPOS.DBF",cSezona,finverse,fda,fnul)
+Skloni(KUMPATH,"FDEVICE.DBF",cSezona,finverse,fda,fnul)
 Skloni(KUMPATH,"FMK.INI",cSezona,finverse,fda,fnul)
 
 
@@ -265,6 +266,7 @@ PUBLIC gaDBFs := {;
 { F_IZVJE  ,"IZVJE"   , P_KUMPATH     },;
 { F_ZAGLI  ,"ZAGLI"   , P_KUMPATH     },;
 { F_KOLIZ  ,"KOLIZ"   , P_KUMPATH     },;
+{ F_FDEVICE,"FDEVICE" , P_KUMPATH     },;
 { F_LOGK   ,"LOGK"    , P_KUMPATH     },;
 { F_LOGKD  ,"LOGKD"   , P_KUMPATH     },;
 { F_BARKOD ,"BARKOD"  , P_PRIVPATH    },;
@@ -616,6 +618,11 @@ endif
 // kreiranje tabela ugovora
 db_cre_ugov()
 
+if gFc_use == "D"
+	// kreiranje tabele sa listom uredjaja
+	c_fdevice()
+endif
+
 return
 
 
@@ -655,7 +662,9 @@ if i==F_GEN_UG .or. i==F_G_UG_P
 	lIdiDalje:=.t.
 endif
 
-altd()
+if i==F_FDEVICE
+	lIdiDalje := .t.
+endif
 
 if lIdiDalje
 	cDbfName:=DBFName(i,.t.)

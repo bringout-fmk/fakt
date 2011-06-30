@@ -72,8 +72,11 @@ if IsRabati()
 	AADD(opcexe,{|| PRabat()})
 endif
 
-AADD(opc,"F. parametri fiskalnog stampaca  ")
+AADD(opc,"F. parametri fiskalnog uredjaja  ")
 AADD(opcexe,{|| fisc_param() })
+
+AADD(opc,"L. lista fiskalnih uredjaja  ")
+AADD(opcexe,{|| p_fdevice() })
 
 
 Menu_SC("parf")
@@ -122,6 +125,11 @@ Box(,21,77,.f.,"PARAMETRI FISKALNOG STMPACA")
 		
 	++ nX
 	
+	@ m_x+nX, m_y+2 SAY "Sekundarna lokacija:" GET gFC_path2 ;
+			PICT "@S25"
+
+	++ nX
+	
 	@ m_x+nX, m_y+2 SAY "Duzina naziva robe:" GET gFC_alen PICT "999"
 		
 	@ m_x+nX, col()+2 SAY "Provjera gresaka:" GET gFC_error ;
@@ -166,8 +174,6 @@ Box(,21,77,.f.,"PARAMETRI FISKALNOG STMPACA")
 		VALID gFC_chk $ "12" PICT "@!"
 	
 	++ nX
-	++ nX
-
 
 	@ m_x+nX, m_y+2 SAY "'kod' artikla [P/D]Plu, [I]Id, [B]Barkod:" ;
 			GET gFC_acd VALID gFC_acd $ "PIBD" PICT "@!"
@@ -179,7 +185,10 @@ Box(,21,77,.f.,"PARAMETRI FISKALNOG STMPACA")
 
 
 	++ nX
-	++ nX
+	
+	@ m_x+nX, m_y+2 SAY "Koristiti listu uredjaja ?" GET gFc_dlist ;
+		VALID gFc_dlist $ "DN" PICT "@!"
+
 	++ nX
 
 	@ m_x+nX, m_y+2 SAY "Koristiti fiskalne funkcije ?" GET gFc_use ;
@@ -216,6 +225,8 @@ if (LASTKEY() <> K_ESC)
 	WPar("fX",gFC_chk)
 	WPar("fZ",gFC_faktura)
 	WPar("fk",gFC_zbir)
+	WPar("fS",gFC_path2)
+	WPar("fK",gFC_dlist)
 
 endif
 

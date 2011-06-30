@@ -1154,7 +1154,9 @@ do case
 	endif
 
   case chr(Ch) $ "rR"
-	
+
+	cFilter := DBFilter()
+
 	select doks
 
   	// stampa fiskalnog racuna
@@ -1171,6 +1173,11 @@ do case
 		if Pitanje(,"Stampati fiskalni racun ?", "D") == "D"
 
 			fisc_rn( field->idfirma, field->idtipdok, field->brdok )
+		
+			select doks
+			set filter to &cFilter
+			
+			return DE_REFRESH
 
 		endif
 

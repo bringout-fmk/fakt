@@ -6,6 +6,15 @@
 // ---------------------------------------------------------
 function fisc_rn( cFirma, cTipDok, cBrDok )
 local nErr := 0
+local nDevice
+
+// listaj mi uredjaje koje imam
+nDevice := list_device( cTipDok )
+
+if nDevice > 0
+	// setuj parametre za dati uredjaj
+	fdev_params( nDevice )
+endif
 
 do case
 	case ALLTRIM( gFc_type ) == "TRING"

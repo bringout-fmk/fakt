@@ -406,11 +406,12 @@ public gcF9USmece := "N"
 public gAzurTimeOut := 150
 
 // fiskalni stampac
-public gFC_type := PADR( "", 20 )
+public gFC_type := PADR( "FPRINT", 20 )
 public gFC_device := "P"
 public gFc_use := "N"
-public gFC_path := PADR("c:\fiscal\out\", 150)
-public gFC_name := PADR("out.inp", 150 ) 
+public gFC_path := PADR("c:\fiscal\", 150)
+public gFC_path2 := PADR("", 150)
+public gFC_name := PADR("OUT.TXT", 150 ) 
 public gFC_Pitanje := "D"
 public gFC_error := "N"
 public gFC_cmd := PADR( "", 200 )
@@ -432,6 +433,7 @@ public gFC_pinit := 10
 public gFC_chk := "1"
 public gFC_faktura := "N"
 public gFC_zbir := 0
+public gFc_dlist := "N"
 
 // stmpa na traku
 public gMpPrint := "N"
@@ -642,7 +644,8 @@ RPar("fT", @gFC_pinit)
 RPar("fX", @gFC_chk)
 RPar("fZ", @gFC_faktura)
 RPar("fk", @gFC_zbir)
-
+RPar("fS", @gFC_path2)
+RPar("fK", @gFC_dlist)
 
 cSection := "1"
 // varijable PDV
