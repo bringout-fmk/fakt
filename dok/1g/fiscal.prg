@@ -349,7 +349,7 @@ do while !EOF() .and. field->idfirma == cFirma ;
 
 	nF_pprice := roba->mpc
 
-	cF_artnaz := ALLTRIM( konvznwin( roba->naz, gFc_konv) )
+	cF_artnaz := ALLTRIM( roba->naz )
 	cF_artjmj := ALLTRIM( roba->jmj )
 
 	nF_cijena := ABS ( field->cijena )
@@ -440,26 +440,39 @@ nErr := fc_trm_rn( ALLTRIM( gFC_path ), ;
 
 
 // pogledati kako obraditi gresku...
-
-if nErr = 0 .and. lStorno = .f.
-
-	// vrati broj fiskalnog racuna
+if gFc_error == "D"
 	
-	//nFisc_no := hcp_fisc_no( ALLTRIM(gFc_path), ;
-	//	ALLTRIM(gFc_name), gFc_error )
+	// provjeri greske...
+	// nErr := ...
 
-	//if nFisc_no > 0
+	cFName := trm_filename( cF_brrn )
+
+	if trm_read_out( ALLTRIM(gFc_path), ALLTRIM(cFName) )
 		
-	//	msgbeep("Kreiran fiskalni racun broj: " + ;
-	//			ALLTRIM(STR(nFisc_No)))
-
-		// ubaci broj fiskalnog racuna u fakturu
-	//	fisc_to_fakt( cFirma, cTipDok, cBrDok, nFisc_no )
-	
-	//endif
+		// procitaj poruku greske
+		nErr := trm_r_error( ALLTRIM(gFc_path), ALLTRIM(cFName), ;
+			gFc_tout, @nFisc_no ) 
+		
+	else
+		nErr := -99
+	endif
 
 endif
 
+if nErr = 0 .and. lStorno = .f. .and. cContinue <> "2"
+
+	// vrati broj fiskalnog racuna
+	if nFisc_no > 0
+		
+		msgbeep("Kreiran fiskalni racun broj: " + ;
+				ALLTRIM(STR(nFisc_No)))
+
+		// ubaci broj fiskalnog racuna u fakturu
+		fisc_to_fakt( cFirma, cTipDok, cBrDok, nFisc_no )
+	
+	endif
+
+endif
 
 return nErr
 
@@ -660,7 +673,7 @@ do while !EOF() .and. field->idfirma == cFirma ;
 
 	nF_pprice := roba->mpc
 
-	cF_artnaz := ALLTRIM( konvznwin( roba->naz, gFc_konv) )
+	cF_artnaz := ALLTRIM( roba->naz )
 	cF_artjmj := ALLTRIM( roba->jmj )
 
 	nF_cijena := ABS ( field->cijena )
@@ -1121,7 +1134,11 @@ if gFc_zbir < 1 .or. gFc_acd == "P" .or. ( gFc_zbir > 1 .and. gFc_zbir < nDataLe
 	return
 endif
 
-cArt_naz := "Stavke racuna " + ALLTRIM( aData[1, 1] )
+cArt_naz := "Stavke racuna"
+
+if ALLTRIM( gFc_type ) $ "#FPRINT#HCP#"
+	cArt_naz += " " + ALLTRIM( aData[1, 1] )
+endif
 
 // ukupna vrijednost racuna za sve stavke matrice je ista popunjena
 nTotal := ROUND2( aData[1, 14], 2 )

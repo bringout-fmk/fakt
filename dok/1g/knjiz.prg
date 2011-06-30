@@ -235,6 +235,12 @@ do case
 	
 		lFisMark := .f.
 
+		if pripr->(reccount()) <> 0
+			// priprema nije prazna, nema stampanja racuna
+			msgbeep("Priprema nije prazna, stampa fisk.racuna nije moguca!")
+			return DE_CONT
+		endif
+
 		if gFC_Pitanje == "D" .and. ;
 			Pitanje(,"Odstampati racun na fiskalni printer ?", "D") == "N"
 			return DE_CONT

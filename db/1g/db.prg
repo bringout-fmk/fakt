@@ -1550,6 +1550,15 @@ O_ROBA
 O_PARTN
 
 cNoviBroj := ALLTRIM(cBrDok) + "/S"
+
+if LEN( ALLTRIM( cNoviBroj ) ) > 8
+	
+	// otkini prva dva karaktera
+	// da moze stati "/S"
+	cNoviBroj := RIGHT( ALLTRIM( cBrDok ), 6 ) + "/S"
+
+endif
+
 nCnt := 0
 
 select doks
