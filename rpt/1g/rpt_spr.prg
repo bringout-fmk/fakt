@@ -427,6 +427,7 @@ else
     		nKolicina := 0
 		nKolJmj := 0
 		nIznos := 0
+		nPojIznos := 0
    		cIdRoba := IdRoba
 		
 		if cDDokOtpr == "O"
@@ -529,7 +530,21 @@ else
 			
 			endif
 			
-			nIznos += ROUND( kolicina * Cijena * (1-Rabat/100) * (1+Porez/100) ,ZAOKRUZENJE)
+			// pojedinacni iznos
+			nPojIznos := ROUND( kolicina * Cijena * (1-Rabat/100) * (1+Porez/100) ,ZAOKRUZENJE)
+			
+			// ako je rijec o MP dokumentima
+			// potrebno je izvuci osnovicu iz iznosa
+			// jer se radi o cijeni sa PDV-om
+
+			if field->idtipdok $ "11#13#23"
+			
+				nPojIznos := _osnovica( field->idtipdok, ;
+					field->idpartner, nPojIznos )
+			endif
+
+			// dodaj na total
+			nIznos += nPojIznos
 		
 			++ nCounter
 			
