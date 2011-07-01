@@ -173,6 +173,10 @@ Box(,21,77,.f.,"PARAMETRI FISKALNOG STMPACA")
 		GET gFC_chk ;
 		VALID gFC_chk $ "12" PICT "@!"
 	
+	@ m_x+nX, col()+1 SAY "Automatski polog:" ;
+		GET gFC_pauto ;
+		PICT "999999.99"
+
 	++ nX
 
 	@ m_x+nX, m_y+2 SAY "'kod' artikla [P/D]Plu, [I]Id, [B]Barkod:" ;
@@ -227,6 +231,7 @@ if (LASTKEY() <> K_ESC)
 	WPar("fk",gFC_zbir)
 	WPar("fS",gFC_path2)
 	WPar("fK",gFC_dlist)
+	WPar("fA",gFC_pauto)
 
 endif
 
