@@ -1095,6 +1095,16 @@ fp_pos_rn( ALLTRIM( gFC_path ), ;
 // procitaj gresku!
 nErr := fp_r_error( ALLTRIM( gFC_path ), gFc_tout, @nFisc_no )
 
+if nErr = -9
+  // nestanak trake ?
+  if Pitanje(,"Da li je nestalo trake ?", "N") == "D"
+     if Pitanje(,"Ubacite traku i pritisnite 'D'","D") == "D"
+ 	// procitaj gresku opet !
+	nErr := fp_r_error( ALLTRIM( gFC_path ), gFc_tout, @nFisc_no )
+     endif
+  endif
+endif
+
 if nFisc_no <= 0
 	nErr := 1
 endif
