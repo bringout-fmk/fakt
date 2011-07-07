@@ -1565,7 +1565,11 @@ select doks
 set order to tag "1"
 go top
 seek cIdFirma + cIdTipDok + cBrDok
-nFiscal := field->fisc_rn
+
+nFiscal := 0
+if gFc_use == "D"
+	nFiscal := field->fisc_rn
+endif
 
 select fakt
 set order to tag "1"
@@ -1587,7 +1591,10 @@ do while !EOF() .and. field->idfirma == cIdFirma ;
 	replace field->kolicina with ( field->kolicina * -1 )
 	replace field->brdok with cNoviBroj
 	replace field->datdok with DATE()
-	replace field->fisc_rn with nFiscal
+	
+	if gFc_use == "D"
+		replace field->fisc_rn with nFiscal
+	endif
 
 	select fakt
 	skip

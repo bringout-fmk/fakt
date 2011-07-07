@@ -995,7 +995,7 @@ do while !EOF() .and. field->idfirma == cFirma ;
 		nF_plu := roba->fisc_plu
 	endif
 
-	if gFC_acd == "D" .and. gFc_zbir <> 1
+	if gFC_acd == "D" .and. ( gFc_zbir <> 1 .or. cTipDok $ "11" )
 		// generisanje inkrementalnog PLU kod-a
 		// ako je opcija zbirnog racuna 1 - onda nece generisati
 		nF_plu := auto_plu()
