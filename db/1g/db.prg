@@ -943,7 +943,7 @@ do while !eof()
 		_field->oper_id := GetUserID()
 	endif
   	
-	if doks->(FIELDPOS("fisc_rn")) <> 0 
+	if doks->(FIELDPOS("fisc_rn")) <> 0 .and. gFc_use == "D" 
 		_field->fisc_rn := pripr->fisc_rn
 	endif
   

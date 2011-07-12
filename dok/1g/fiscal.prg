@@ -779,10 +779,7 @@ if nErr = 0 .and. lStorno = .f.
 		ALLTRIM(gFc_name), gFc_error )
 
 	if nFisc_no > 0
-		
-		msgbeep("Kreiran fiskalni racun broj: " + ;
-				ALLTRIM(STR(nFisc_No)))
-
+	
 		// ubaci broj fiskalnog racuna u fakturu
 		fisc_to_fakt( cFirma, cTipDok, cBrDok, nFisc_no )
 	
@@ -1153,7 +1150,7 @@ if gFc_zbir < 1 .or. gFc_acd == "P" .or. ( gFc_zbir > 1 .and. gFc_zbir < nDataLe
 	return
 endif
 
-cArt_naz := "Stavke racuna"
+cArt_naz := "Stavke rn."
 
 if ALLTRIM( gFc_type ) $ "#FPRINT#HCP#"
 	cArt_naz += " " + ALLTRIM( aData[1, 1] )
