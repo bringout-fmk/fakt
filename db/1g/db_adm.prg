@@ -29,6 +29,8 @@ AADD(opc, "6. regeneracija polja idpartner")
 AADD(opcexe, {|| fa_part_regen()})
 AADD(opc, "7. generisanja datuma otpr. isp.")
 AADD(opcexe, {|| gen_dotpr()})
+AADD(opc, "8. kontrola duplih partnera")
+AADD(opcexe, {|| chk_dpartn()})
 AADD(opc, "E. fakt export (r_exp) ")
 AADD(opcexe, {|| fkt_export()})
 
@@ -411,12 +413,13 @@ msgc()
 if pitanje(,"konvertovati partnere", "N") == "N"
 	return
 endif
+
 /*
 msgo("konverzija - tabela DEST...")
 O_DEST
 mod_f_val( "IDPARTNER", "1", cInsChar, nLenMod, nPrefiks, lSilent )
 msgc()
-*/
+
 msgo("konverzija - tabela SIFV...")
 
 O_SIFV
@@ -430,6 +433,92 @@ set filter to
 msgc()
 
 msgbeep("konverzija zavrsena !!!")
+*/
+
+return
+
+
+// -----------------------------------------------------
+// provjera duplih partnera u sifrarniku partnera
+// -----------------------------------------------------
+function chk_dpartn()
+local cId
+local cPNaz
+local aPartn := {}
+
+O_DOKS
+O_PARTN
+select partn
+go top
+
+Box(,1,50)
+
+do while !EOF()
+		
+	cId := field->id
+	cPNaz := field->naz
+	nCnt := 0
+	
+	@ m_x + 1, m_y + 2 SAY "partner: " + cId + " " + ;
+		PADR( cPNaz, 15 ) + " ..."
+
+	do while !EOF() .and. field->id == cId
+		++ nCnt
+		skip
+	enddo
+	
+	if nCnt > 1
+		
+		select doks
+		go top
+		
+		do while !EOF()
+			
+			if field->idpartner == cId
+				
+				AADD( aPartn, { cId, PADR( cPNaz, 25), ;
+					doks->idfirma + ;
+					"-" + doks->idtipdok + ;
+					"-" + doks->brdok } )
+			endif
+			
+			skip
+		
+		enddo
+
+		select partn
+	else
+		select partn
+		skip
+	endif
+
+enddo
+
+BoxC()
+
+if LEN( aPartn ) > 0
+
+	START PRINT CRET
+	P_COND
+
+	?
+	? "-------------------------------------------------"
+	? " partner (id/naz)                   dokument "
+	? "-------------------------------------------------"
+	?
+
+	for i:=1 to LEN( aPartn )
+		
+		// id partnera
+		? aPartn[i, 1]
+		// naziv partnera
+		@ prow(), pcol()+1 SAY aPartn[i, 2]
+		// dokument na kojem se pojavljuje
+		@ prow(), pcol()+1 SAY aPartn[i, 3]
+	next
+
+	END PRINT
+endif
 
 return
 
