@@ -488,6 +488,8 @@ return nErr
 
 
 
+
+
 // -------------------------------------------------------------
 // izdavanje fiskalnog isjecka na HCP uredjaj
 // -------------------------------------------------------------
@@ -1000,7 +1002,7 @@ do while !EOF() .and. field->idfirma == cFirma ;
 
 	nF_pprice := roba->mpc
 
-	cF_artnaz := ALLTRIM( konvznwin( roba->naz, gFc_konv) )
+	cF_artnaz := ALLTRIM( konvznwin( fp_f_naz(roba->naz), gFc_konv) )
 	cF_artjmj := ALLTRIM( roba->jmj )
 
 	nF_cijena := ABS ( field->cijena )
