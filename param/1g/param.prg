@@ -125,9 +125,12 @@ Box(,21,77,.f.,"PARAMETRI FISKALNOG STMPACA")
 		
 	++ nX
 	
-	@ m_x+nX, m_y+2 SAY "Sekundarna lokacija:" GET gFC_path2 ;
+	@ m_x+nX, m_y+2 SAY "Sek.dir:" GET gFC_path2 ;
 			PICT "@S25"
 
+	@ m_x+nX, col()+1 SAY "Fajl odgovora:" GET gFC_answ ;
+			PICT "@S25"
+	
 	++ nX
 	
 	@ m_x+nX, m_y+2 SAY "Duzina naziva robe:" GET gFC_alen PICT "999"
@@ -232,6 +235,7 @@ if (LASTKEY() <> K_ESC)
 	WPar("fS",gFC_path2)
 	WPar("fK",gFC_dlist)
 	WPar("fA",gFC_pauto)
+	WPar("fB",gFC_answ)
 
 endif
 

@@ -412,6 +412,7 @@ public gFc_use := "N"
 public gFC_path := PADR("c:\fiscal\", 150)
 public gFC_path2 := PADR("", 150)
 public gFC_name := PADR("OUT.TXT", 150 ) 
+public gFC_answ := PADR("ANSWER.TXT",40)
 public gFC_Pitanje := "D"
 public gFC_error := "N"
 public gFC_cmd := PADR( "", 200 )
@@ -648,6 +649,7 @@ RPar("fk", @gFC_zbir)
 RPar("fS", @gFC_path2)
 RPar("fK", @gFC_dlist)
 RPar("fA", @gFC_pauto)
+RPar("fB", @gFC_answ)
 
 cSection := "1"
 // varijable PDV

@@ -1084,7 +1084,7 @@ if fp_check( @aStavke, lStorno ) < 0
 endif
 
 // pobrisi answer fajl
-fp_d_answer( ALLTRIM(gFc_path) )
+fp_d_answer( ALLTRIM(gFc_path), ALLTRIM(gFc_name) )
 
 // ispisi racun
 fp_pos_rn( ALLTRIM( gFC_path ), ;
@@ -1092,14 +1092,16 @@ fp_pos_rn( ALLTRIM( gFC_path ), ;
 
 
 // procitaj gresku!
-nErr := fp_r_error( ALLTRIM( gFC_path ), gFc_tout, @nFisc_no )
+nErr := fp_r_error( ALLTRIM( gFC_path ), ALLTRIM( gFC_name), ;
+	gFc_tout, @nFisc_no )
 
 if nErr = -9
   // nestanak trake ?
   if Pitanje(,"Da li je nestalo trake ?", "N") == "D"
      if Pitanje(,"Ubacite traku i pritisnite 'D'","D") == "D"
  	// procitaj gresku opet !
-	nErr := fp_r_error( ALLTRIM( gFC_path ), gFc_tout, @nFisc_no )
+	nErr := fp_r_error( ALLTRIM( gFC_path ), ;
+		ALLTRIM( gFC_name ), gFc_tout, @nFisc_no )
      endif
   endif
 endif
