@@ -11,6 +11,11 @@ local nDevice
 // listaj mi uredjaje koje imam
 nDevice := list_device( cTipDok )
 
+if nDevice = -99
+	msgbeep("Ponistena operacija stampe !!!")
+	return 0
+endif
+
 if nDevice > 0
 	// setuj parametre za dati uredjaj
 	fdev_params( nDevice )
