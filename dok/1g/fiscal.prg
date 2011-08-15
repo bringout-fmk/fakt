@@ -1090,6 +1090,7 @@ fp_d_answer( ALLTRIM(gFc_path), ALLTRIM(gFc_name) )
 fp_pos_rn( ALLTRIM( gFC_path ), ;
 	ALLTRIM( gFC_name ), aStavke, aKupac, lStorno, cError  )
 
+altd()
 
 // procitaj gresku!
 nErr := fp_r_error( ALLTRIM( gFC_path ), ALLTRIM( gFC_name), ;

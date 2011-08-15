@@ -113,6 +113,8 @@ Box(,21,77,.f.,"PARAMETRI FISKALNOG STMPACA")
 	
 	@ m_x+nX, m_y+2 SAY "[K] kasa-printer [P] printer ?" GET gFC_device ;
 			VALID gFC_device $ "KP" PICT "@!"
+	
+	@ m_x+nX, col()+2 SAY "serijski broj:" GET gFC_serial PICT "@S10"
 
 	++ nX
 	++ nX
@@ -236,6 +238,7 @@ if (LASTKEY() <> K_ESC)
 	WPar("fK",gFC_dlist)
 	WPar("fA",gFC_pauto)
 	WPar("fB",gFC_answ)
+	WPar("fY",gFC_serial)
 
 endif
 

@@ -436,6 +436,7 @@ public gFC_faktura := "N"
 public gFC_zbir := 0
 public gFc_dlist := "N"
 public gFc_pauto := 0
+public gFc_serial := PADR("010000", 15)
 
 // stmpa na traku
 public gMpPrint := "N"
@@ -650,6 +651,7 @@ RPar("fS", @gFC_path2)
 RPar("fK", @gFC_dlist)
 RPar("fA", @gFC_pauto)
 RPar("fB", @gFC_answ)
+RPar("fY", @gFC_serial)
 
 cSection := "1"
 // varijable PDV
