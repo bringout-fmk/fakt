@@ -146,6 +146,7 @@ Skloni(PRIVPATH,"_ROBA.DBF",cSezona,finverse,fda,fnul)
 Skloni(PRIVPATH,"_ROBA.FPT",cSezona,finverse,fda,fnul)
 Skloni(PRIVPATH,"PARAMS.DBF",cSezona,finverse,fda,fnul)
 Skloni(PRIVPATH,"BARKOD.DBF",cSezona,finverse,fda,fnul)
+Skloni(PRIVPATH,"FDEVICE.DBF",cSezona,finverse,fda,fnul)
 Skloni(PRIVPATH,"ZAGL.TXT",cSezona,finverse,fda,fnul)
 Skloni(PRIVPATH,"NAR.TXT",cSezona,finverse,fda,fnul)
 Skloni(PRIVPATH,"FMK.INI",cSezona,finverse,fda,fnul)
@@ -195,7 +196,6 @@ Skloni(KUMPATH,"RUGOV.DBF",cSezona,finverse,fda,fnul)
 Skloni(KUMPATH,"GEN_UG.DBF",cSezona,finverse,fda,fnul)
 Skloni(KUMPATH,"GEN_UG_P.DBF",cSezona,finverse,fda,fnul)
 Skloni(KUMPATH,"KALPOS.DBF",cSezona,finverse,fda,fnul)
-Skloni(KUMPATH,"FDEVICE.DBF",cSezona,finverse,fda,fnul)
 Skloni(KUMPATH,"FMK.INI",cSezona,finverse,fda,fnul)
 
 
@@ -244,6 +244,7 @@ PUBLIC gaDBFs := {;
 { F_PRIPR2 ,"PRIPR2"  , P_PRIVPATH    },;
 { F_PRIPR9 ,"PRIPR9"  , P_PRIVPATH    },;
 { F__KALK  ,"_KALK"   , P_PRIVPATH    },;
+{ F_FDEVICE,"FDEVICE" , P_PRIVPATH     },;
 { F_FINMAT ,"FINMAT"  , P_PRIVPATH    },;
 { F_KALK   ,"KALK"    , P_KUMPATH     },;
 { F_KALKS  ,"KALKS"   , P_KUMPATH     },;
@@ -266,7 +267,6 @@ PUBLIC gaDBFs := {;
 { F_IZVJE  ,"IZVJE"   , P_KUMPATH     },;
 { F_ZAGLI  ,"ZAGLI"   , P_KUMPATH     },;
 { F_KOLIZ  ,"KOLIZ"   , P_KUMPATH     },;
-{ F_FDEVICE,"FDEVICE" , P_KUMPATH     },;
 { F_LOGK   ,"LOGK"    , P_KUMPATH     },;
 { F_LOGKD  ,"LOGKD"   , P_KUMPATH     },;
 { F_BARKOD ,"BARKOD"  , P_PRIVPATH    },;
