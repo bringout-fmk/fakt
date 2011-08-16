@@ -221,7 +221,7 @@ function EdPripr()
 local nTr2
 local cPom
 local cENTER:=chr(K_ENTER)+chr(K_ENTER)+chr(K_ENTER)
-
+local aFakt_dok := {}
 	
 if (Ch==K_ENTER  .and. Empty(BrDok) .and. EMPTY(rbr))
 	return DE_CONT
@@ -337,18 +337,31 @@ do case
 		if !CijeneOK("Azuriranje")
            		return DE_REFRESH
         	endif
-        	CLOSE ALL
-        	Azur()
+        	
+		CLOSE ALL
+        	
+		// funkcija azuriranja vraca matricu sa podacima dokumenta
+		aFakt_dok := Azur()
+		
 		lDirty:=.t.
-        	O_Edit()
+        	
+		O_Edit()
 	
 		if gFc_use == "D" .and. cFTipDok $ "10#11"
+			
+			if aFakt_dok <> nil .and. LEN( aFakt_dok ) > 0
+				cFirma := aFakt_dok[ 1, 1 ] 
+				cFTipDok := aFakt_dok[ 1, 2 ] 
+				cFBrDok := aFakt_dok[ 1, 3 ] 
+			endif
+			
 			lFisMark := .t.			
 		endif
 		
 		return DE_REFRESH
 
 	case Ch==K_CTRL_F9
+		
 		BrisiPripr()
 		lDirty:=.t.
         	return DE_REFRESH

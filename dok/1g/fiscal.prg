@@ -1,5 +1,6 @@
 #include "fakt.ch"
 
+static __device := 0
 
 // ---------------------------------------------------------
 // centralna funkcija za poziv stampe fiskalnog racuna
@@ -19,6 +20,7 @@ endif
 if nDevice > 0
 	// setuj parametre za dati uredjaj
 	fdev_params( nDevice )
+	__device := nDevice
 endif
 
 do case
@@ -358,7 +360,7 @@ do while !EOF() .and. field->idfirma == cFirma ;
 
 	if gFC_acd == "D"
 		// generisanje inkrementalnog PLU kod-a
-		nF_plu := auto_plu()
+		nF_plu := auto_plu( nil, nil, __device )
 	endif
 
 	nF_pprice := roba->mpc
@@ -684,7 +686,7 @@ do while !EOF() .and. field->idfirma == cFirma ;
 
 	if gFC_acd == "D"
 		// generisanje inkrementalnog PLU kod-a
-		nF_plu := auto_plu()
+		nF_plu := auto_plu( nil, nil,  __device )
 	endif
 
 	nF_pprice := roba->mpc
@@ -828,6 +830,7 @@ if gFc_use == "N"
 endif
 
 select doks
+go top
 seek ( cFirma + cTipDok + cBrDok )
 
 nBrDok := VAL(ALLTRIM(field->brdok))
@@ -836,6 +839,7 @@ dDatRn := field->datdok
 nNRekRn := field->fisc_rn
 
 select fakt
+go top
 seek ( cFirma + cTipDok + cBrDok )
 
 nTRec := RECNO()
@@ -854,7 +858,7 @@ do while !EOF() .and. field->idfirma == cFirma ;
 enddo
 
 // koji je broj racuna koji storniramo
-if lStorno 
+if lStorno == .t. 
 	Box(,1,60)
 		@ m_x + 1, m_y + 2 SAY "Reklamiramo fisk.racun:" ;
 			GET nNRekRn PICT "999999999" VALID ( nNRekRn > 0 )
@@ -1002,7 +1006,7 @@ do while !EOF() .and. field->idfirma == cFirma ;
 	if gFC_acd == "D" .and. ( gFc_zbir <> 1 .or. cTipDok $ "11" )
 		// generisanje inkrementalnog PLU kod-a
 		// ako je opcija zbirnog racuna 1 - onda nece generisati
-		nF_plu := auto_plu()
+		nF_plu := auto_plu( nil, nil,  __device )
 	endif
 
 	nF_pprice := roba->mpc
@@ -1184,7 +1188,7 @@ AADD( aTmp, { aData[1, 1] , ;
 	nKolicina, ;
 	aData[1, 7], ;
 	aData[1, 8], ;
-	auto_plu(), ;
+	auto_plu( nil, nil, __device ), ;
 	nTotal, ;
 	0, ;
 	"", ;

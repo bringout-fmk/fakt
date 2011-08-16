@@ -699,6 +699,8 @@ local nPom2
 local nPom3
 local nHPid
 local cType
+// koristi se za informacije o dokumentu
+local aFD_data := {}
 
 cType:=TYPE("lVrsteP")
 
@@ -810,6 +812,10 @@ select roba
 set order to tag "ID"
 select pripr
 go top
+
+altd()
+// 0. napuni matricu sa brojem dokumenta
+AADD( aFD_data, { pripr->idfirma, pripr->idtipdok, pripr->brdok } )
 
 // 1. azuriranje u bazu FAKT
 
@@ -1122,11 +1128,12 @@ else
   	endif
 endif
 
-
 BoxC()
 
-closeret
-return
+close all
+
+return aFD_data
+
 
 
 // provjeri duple stavke u pripremi za vise dokumenata
