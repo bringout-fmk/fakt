@@ -847,7 +847,8 @@ function RenumPripr(cVezOtpr,dNajnoviji)
 //poziva se samo pri generaciji otpremnica u fakturu
 local dDatDok
 local lSetujDatum:=.f.
-private nRokPl:=0, cSetPor:="N"
+private nRokPl:=0
+private cSetPor:="N"
 
 select pripr
 set order to 1
@@ -953,7 +954,11 @@ Box("#PARAMETRI DOKUMENTA:",10,75)
    read
   endif
 
-  @ m_x+10, m_y+2 SAY "Obracunati PDV ?" GET cSetPor pict "@!" valid cSetPor $ "DN"
+  // ovo ukidam, ovo je porez na promet proizvoda...
+  // to se vise ne koristi !
+
+  //@ m_x+10, m_y+2 SAY "Obracunati PDV ?" GET cSetPor pict "@!" valid cSetPor $ "DN"
+  
   read
 
 BoxC()
@@ -990,9 +995,11 @@ endif
 
 Gather()
 
-if lSetujDatum .or. cSetPor=="D"    // obracunaj porez na promet proizvoda na sve stavke!!
-   ObracunajPP(cSetPor,dDatDok)
+if lSetujDatum .or. cSetPor=="D"    
+      // obracunaj porez na promet proizvoda na sve stavke!!
+      ObracunajPP(cSetPor,dDatDok)
 endif
+
 return
 
 
