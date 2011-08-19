@@ -873,6 +873,8 @@ Box(, 23, 76, .f., "VARIJANTE OBRADE DOKUMENATA")
 	@ m_x+22,m_y+2 SAY "Koristiti rabat iz sif.robe (polje N1) ?" GET gRabIzRobe PICT "@!" VALID gRabIzRobe $ "DN"
 	@ m_x+23,m_y+2 SAY "Brisi direktno u smece" GET gcF9usmece PICT "@!" VALID gcF9usmece $ "DN"
 	@ m_x+23,col()+2 SAY "Timeout kod azuriranja" GET gAzurTimeout PICT "9999" 
+	@ m_x+23,col()+2 SAY "Email info" GET gEmailInfo ;
+		VALID gEmailInfo $ "DN" PICT "!@" 
 	
 	read
 BoxC()
@@ -900,6 +902,7 @@ if (LASTKEY()<>K_ESC)
    	WPar("g5",gKarN2)
    	WPar("g6",gPSamoKol)
 	WPar("gC",gArtCDX)
+	WPar("gE",gEmailInfo)
 	WPar("rR",gRabIzRobe)
 	WPar("Fx",gcF9usmece)
 	WPar("Fz",gAzurTimeout)
@@ -907,7 +910,6 @@ if (LASTKEY()<>K_ESC)
 endif
 
 return 
-*}
 
 
 *string Params_c1;

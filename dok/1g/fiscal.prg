@@ -817,6 +817,7 @@ local cJibPartn := ""
 local lIno := .f.
 local cPOslob := ""
 local cNF_txt := cFirma + "-" + cTipDok + "-" + ALLTRIM( cBrDok )
+local cKupacInfo := ""
 
 O_DOKS
 O_FAKT
@@ -873,13 +874,18 @@ endif
 // 4 - ptt
 // 5 - grad
 
-if cTipDok $ "10#"
+altd()
+
+if cTipDok $ "#10#11#"
 
 	// uzmi kupca i setuj placanje
 
 	// daj mi partnera za ovu fakturu
 	cPartnId := doks->idpartner
-	cVr_Placanja := "3"
+	
+	if cTipDok $ "#10#"
+		cVr_Placanja := "3"
+	endif
 
 endif
 
@@ -888,7 +894,13 @@ if !EMPTY( cPartnId )
 	cJibPartn := ALLTRIM( IzSifK( "PARTN" , "REGB", cPartnId, .f. ) )
 	cPOslob := ALLTRIM( IzSifK( "PARTN" , "PDVO", cPartnId, .f. ) )
 
-	if LEN(cJibPartn) < 12 .or. !EMPTY( cPOslob )
+	if cTipDok $ "#11#"
+		
+		// ovo je NN kupac
+		// jednostavno za njega nadji podatke
+		lIno := .f.
+
+	elseif LEN(cJibPartn) < 12 .or. !EMPTY( cPOslob )
 		
 		// ovo je ino partner
 		// uzmi podatak iz deviznog ziro racuna
@@ -944,15 +956,23 @@ if !EMPTY( cPartnId )
 		if !lPEmpty
 			lPEmpty := EMPTY( partn->mjesto )
 		endif
-		if lPEmpty
+		  
+		if cTipDok $ "#10#"
+		  if lPEmpty
 			msgbeep("!!! Podaci partnera nisu kompletirani !!!#Prekidam operaciju")
 			return 0
+		  endif
 		endif
-	
-		// ubaci u matricu podatke o partneru
-		AADD( aKupac, { cJibPartn, partn->naz, partn->adresa, ;
+
+		if cTipDok $ "#10#"
+		   // ubaci u matricu podatke o partneru
+		   AADD( aKupac, { cJibPartn, partn->naz, partn->adresa, ;
 			partn->ptt, partn->mjesto } )
-	
+		endif
+
+		// setuj kupac info
+		cKupacInfo := ALLTRIM( partn->naz )
+
 	endif
 
 endif
@@ -1119,11 +1139,11 @@ if nFisc_no <= 0
 endif
 
 if nErr <> 0
-	
-	msgbeep("Postoji greska sa stampanjem !!!")
 
-	// vrati dokument u pripremu...
-	// to do
+	// pobrisi izlazni fajl ako je ostao !
+	fp_d_out( ALLTRIM(gFc_path) + ALLTRIM(gFc_name) )
+
+	msgbeep("Postoji greska sa stampanjem !!!")
 
 else
 	
@@ -1132,6 +1152,17 @@ else
 		// u ovom slucaju broj racuna iz fakt
 		fp_nf_txt( ALLTRIM( gFC_path ), ;
 			ALLTRIM( gFC_name ), cNF_txt )
+	endif
+
+	if gEmailInfo == "D" .and. cTipDok $ "#11#"
+		
+		// posalji email...
+		// ako se radi o racunu tipa "11"
+		// ramaglas specificno...
+
+		_snd_eml( nFisc_no, cTipDok + "-" + ALLTRIM(cBrDok), ;
+			ALLTRIM( cKupacInfo ), nil, nTotal )
+	
 	endif
 
 	msgbeep("Kreiran fiskalni racun broj: " + ALLTRIM(STR(nFisc_No)))
@@ -1589,5 +1620,25 @@ endif
 select (nTArea)
 return ALLTRIM( STR( nFisc_no ) )
 
+
+// ------------------------------------------------------
+// posalji email 
+// ------------------------------------------------------
+static function _snd_eml( nFisc_rn, cFakt_dok, cKupac, cEml_file, nTotal )
+// uzmi podatke za email iz ini-ja
+local cEmail := IzFmkIni("Ruby", "FiscEmail", "c:\sigma\eFisc.rb")
+local cMessage
+
+if EMPTY( cEmail ) .or. cEmail == "-"
+	return
+endif
+
+cMessage := '"Racun: ' +  ALLTRIM(STR(nFisc_rn)) + ;
+	', ' + cFakt_dok + ', ' + cKupac + ;
+	', iznos: ' + ALLTRIM(STR(nTotal,12,2)) + ' KM"' 
+
+email_send("F", nil, nil, cMessage, nil, cEml_file )
+
+return nil
 
 

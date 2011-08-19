@@ -337,6 +337,7 @@ public gDatVal:="N"
 
 // artikal sort - cdx
 public gArtCDX := SPACE(20)
+public gEmailInfo := "N"
 
 public gTipF:="2"
 public gVarF:="2"
@@ -604,6 +605,7 @@ RPar("g4",@gKarN1)
 RPar("g5",@gKarN2)
 RPar("g6",@gPSamoKol)
 RPar("gC",@gArtCDX)
+RPar("gE",@gEmailInfo)
 RPar("rs",@gcRabDef)
 RPar("ir",@gcRabIDef)
 RPar("id",@gcRabDok)
