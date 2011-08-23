@@ -1626,7 +1626,7 @@ return ALLTRIM( STR( nFisc_no ) )
 // ------------------------------------------------------
 static function _snd_eml( nFisc_rn, cFakt_dok, cKupac, cEml_file, nTotal )
 // uzmi podatke za email iz ini-ja
-local cEmail := IzFmkIni("Ruby", "FiscEmail", "c:\sigma\eFisc.rb")
+local cEmail := IzFmkIni("Ruby", "FiscEmail", "c:\scruby\eFisc.rb")
 local cMessage
 
 if EMPTY( cEmail ) .or. cEmail == "-"
@@ -1634,7 +1634,7 @@ if EMPTY( cEmail ) .or. cEmail == "-"
 endif
 
 cMessage := '"Racun: ' +  ALLTRIM(STR(nFisc_rn)) + ;
-	', ' + cFakt_dok + ', ' + cKupac + ;
+	', ' + cFakt_dok + ', ' + StrKzn( cKupac, "8", "W" ) + ;
 	', iznos: ' + ALLTRIM(STR(nTotal,12,2)) + ' KM"' 
 
 email_send("F", nil, nil, cMessage, nil, cEml_file )
