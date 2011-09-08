@@ -319,6 +319,11 @@ if cTabela=="D"
      AADD(ImeKol,{ "Dat.otpr", {|| dat_otpr} })
      AADD(ImeKol,{ "Dat.val.", {|| dat_val} })
    endif
+   
+   // prikaz operatera
+   IF FIELDPOS("oper_id")>0
+     AADD(ImeKol,{ "Operater", {|| oper_id} })
+   ENDIF
 
    Kol:={}; for i:=1 to len(ImeKol); AADD(Kol,i); next
    Box(,21,72)
@@ -1152,6 +1157,13 @@ do case
 		replace field->fisc_rn with nFiscal
 		return DE_REFRESH
 	endif
+  
+  case chr(Ch) $ "iI"
+  	
+	// info dokument
+	msgbeep( getfullusername( field->oper_id ) )
+	return DE_CONT
+
 
   case chr(Ch) $ "rR"
 
