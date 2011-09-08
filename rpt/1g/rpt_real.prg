@@ -381,6 +381,8 @@ local nUkupno
 local nRbr := 0
 local nRow := 35
 local cLine := ""
+local nOperater
+local cOper_Naz := ""
 
 if lCalc == nil
 	lCalc := .f.
@@ -410,7 +412,9 @@ do while !EOF()
 	cBrDok := field->brdok
 	cPart_id := field->part_id
 	cPart_naz := field->part_naz
-
+	nOperater := field->operater
+	cOper_naz := GetFullUserName( nOperater )
+	
 	nOsnovica := 0
 	nPDV := 0
 	nUkupno := 0
@@ -458,6 +462,9 @@ do while !EOF()
 
 		// ukupno
 		@ prow(), pcol()+1 SAY STR( nUkupno, _NUM, _DEC ) PICT PIC_IZN
+		
+		// operater
+		@ prow(), pcol()+1 SAY PADR( ALLTRIM( cOper_naz ), 20 )
 
 	endif
 
@@ -803,6 +810,8 @@ cLine += SPACE(1)
 cLine += REPLICATE("-", 12)
 cLine += SPACE(1)
 cLine += REPLICATE("-", 12)
+cLine += SPACE(1)
+cLine += REPLICATE("-", 20)
 
 return
 
@@ -825,6 +834,8 @@ cTxt += SPACE(1)
 cTxt += PADR("pdv", 12)
 cTxt += SPACE(1)
 cTxt += PADR("ukupno", 12)
+cTxt += SPACE(1)
+cTxt += PADR("operater", 20)
 
 ? "Realizacija po dokumentima:"
 ? cLine
