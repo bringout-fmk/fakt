@@ -1570,7 +1570,7 @@ fc_trng_rn( ALLTRIM( gFC_path ), ;
 
 // procitaj gresku
 nErr := trg_r_err( ALLTRIM( gFC_path ), ALLTRIM( gFC_name), ;
-	gFc_tout, @nFisc_no, 1 )
+	gFc_tout, @nFisc_no, nTrig )
 
 if nFisc_no <= 0
 	nErr := 1
