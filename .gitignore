@@ -1,0 +1,10 @@
+*.lnk
+*.bak
+*.BAK
+*.obj
+*.OBJ
+*.LIB
+*.lib
+*.EXE
+lst
+LST
