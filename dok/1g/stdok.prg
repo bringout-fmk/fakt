@@ -783,6 +783,9 @@ return
 // Stampa fiskalnih racuna od broja do broja
 function st_fisc_per( cIdFirma, cIdTipDok, cBrOd, cBrDo )
 local lDirekt := .f.
+local lAutoStampa := .t.
+local nDevice := 0
+local nTRec
 
 if cIdFirma <> nil
 	lDirekt := .t.
@@ -813,13 +816,17 @@ endif
 
 close all
 
+// uzmi device iz liste uredjaja
+nDevice := list_device( cIdTipDok )
+
 O_PARTN
 O_ROBA
 O_SIFK
 O_SIFV
 O_FAKT
-O_DOKS
 
+O_DOKS
+select doks
 set order to tag "1"
 hseek cIdFirma + cIdTipDok
 
@@ -829,16 +836,19 @@ if Found()
 		
 		nTRec := RecNo()
 		
-		if ALLTRIM(doks->brdok) >= ALLTRIM(cBrOd) .and. ALLTRIM(doks->brdok) <= ALLTRIM(cBrDo) 
+		if ALLTRIM(doks->brdok) >= ALLTRIM(cBrOd) .and. ;
+			ALLTRIM(doks->brdok) <= ALLTRIM(cBrDo) 
+			
 			// pozovi stampu fiskalnog racuna
 			nErr := fisc_rn( doks->idfirma, ;
 				doks->idtipdok, ;
-				doks->brdok, .t. )
+				doks->brdok, lAutoStampa, nDevice )
 		
 			if ( nErr > 0 ) 
 				msgbeep("Prekidam operaciju stampe radi greske!")
 				exit
 			endif
+		
 		endif
 		
 		select doks

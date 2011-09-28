@@ -18,12 +18,15 @@ static __auto := .f.
 // ---------------------------------------------------------
 // centralna funkcija za poziv stampe fiskalnog racuna
 // ---------------------------------------------------------
-function fisc_rn( cFirma, cTipDok, cBrDok, lAuto )
+function fisc_rn( cFirma, cTipDok, cBrDok, lAuto, nDevice )
 local nErr := 0
-local nDevice
 
 if (lAuto == nil)
 	lAuto := .f.
+endif
+
+if (nDevice == nil)
+	nDevice := nil
 endif
 
 // set automatsko stampanje, bez informacija
@@ -31,8 +34,10 @@ if lAuto
 	__auto := .t.
 endif
 
-// listaj mi uredjaje koje imam
-nDevice := list_device( cTipDok )
+if nDevice <> nil
+	// listaj mi uredjaje koje imam
+	nDevice := list_device( cTipDok )
+endif
 
 if nDevice = -99
 	msgbeep("Ponistena operacija stampe !!!")
@@ -500,7 +505,7 @@ if nErr = 0 .and. lStorno = .f. .and. cContinue <> "2"
 	if nFisc_no > 0
 		
 		// prikazi poruku samo u direktnoj stampi
-		if __auto == .f. 
+		if __auto = .f. 
 		   msgbeep("Kreiran fiskalni racun broj: " + ;
 				ALLTRIM(STR(nFisc_No)))
 		endif
@@ -1185,7 +1190,11 @@ else
 	
 	endif
 
-	msgbeep("Kreiran fiskalni racun broj: " + ALLTRIM(STR(nFisc_No)))
+	// samo ako se zadaje direktna stampa ispisi
+	if __auto = .f.
+		msgbeep("Kreiran fiskalni racun broj: " + ;
+			ALLTRIM(STR(nFisc_No)))
+	endif
 
 	// ubaci broj fiskalnog racuna u fakturu
 	fisc_to_fakt( cFirma, cTipDok, cBrDok, nFisc_no )
