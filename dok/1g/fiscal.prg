@@ -515,6 +515,7 @@ if nErr = 0 .and. lStorno = .f. .and. cContinue <> "2"
 	
 	endif
 
+	FERASE( ALLTRIM(gFc_path) + ALLTRIM(cFName) )
 endif
 
 return nErr
