@@ -34,7 +34,7 @@ if lAuto
 	__auto := .t.
 endif
 
-if nDevice <> nil
+if nDevice == nil
 	// listaj mi uredjaje koje imam
 	nDevice := list_device( cTipDok )
 endif
