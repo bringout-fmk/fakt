@@ -12,122 +12,7 @@
 
 #include "fakt.ch"
 
-/*
- * ----------------------------------------------------------------
- *                                     Copyright Sigma-com software 
- * ----------------------------------------------------------------
- */
- 
 
-/*! \ingroup ini
-  * \var *string FmkIni_ExePath_FAKT_DelphiRB
-  * \brief Da li se koristi stampa dokumenata kroz Delphi RB?
-  * \param N - ne, default vrijednost
-  * \param D - da
-  */
-*string FmkIni_ExePath_FAKT_DelphiRB;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_ExePath_FAKT_StampaViseDokumenata
-  * \brief Moze li se stampati vise od jednog dokumenta iz pripreme?
-  * \param N - ne, default vrijednost
-  * \param D - da
-  */
-*string FmkIni_ExePath_FAKT_StampaViseDokumenata;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_ExePath_POREZI_PPUgostKaoPPU
-  * \brief Odredjuje nacin obracuna poreza u maloprodaji (u ugostiteljstvu)
-  * \param M - racuna PRUC iskljucivo koristeci propisani donji limit RUC-a, default vrijednost
-  * \param R - racuna PRUC na osnovu stvarne RUC ili na osnovu pr.d.lim.RUC-a ako je stvarni RUC manji od propisanog limita
-  * \param J - metoda koju koriste u Jerry-ju
-  * \param D - racuna PPU a ne PRUC (stari sistem), s tim da se PP racuna na istu osnovicu kao i PPU
-  * \param N - racuna PPU a ne PRUC (stari sistem), s tim da se PP racuna na istu osnovicu kao i PPP
-  */
-*string FmkIni_ExePath_POREZI_PPUgostKaoPPU;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_KumPath_FAKT_BiratiUplatniRacunZaPrikazUZaglavlju
-  * \brief Omoguciti izbor uplatnog racuna koji se prikazuje u zaglavlju?
-  * \param N - ne, default vrijednost
-  * \param D - da
-  */
-*string FmkIni_KumPath_FAKT_BiratiUplatniRacunZaPrikazUZaglavlju;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_KumPath_FAKT_UplatniRacuni_SifraVrstePlacanja_XY
-  * \brief Definise uplatni racun koji se pridruzuje sifri vrste placanja XY
-  * \param ? - nije definisan, default vrijednost
-  */
-*string FmkIni_KumPath_FAKT_UplatniRacuni_SifraVrstePlacanja_XY;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_PrivPath_UpitFax_FaxText
-  * \brief Tekst koji se ispisuje na kraju dokumenta za slanje faksom
-  * \param UpisiProizvoljanText - default vrijednost
-  */
-*string FmkIni_PrivPath_UpitFax_FaxText;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_PrivPath_UpitFax_Slati
-  * \brief Da li se dokument salje faksom?
-  * \param N - ne, default vrijednost
-  * \param D - da
-  */
-*string FmkIni_PrivPath_UpitFax_Slati;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_KumPath_STAMPA_Opresa
-  * \brief Da li se koriste specificnosti radjene za Opresu (stampa) ?
-  * \param N - ne, default vrijednost
-  * \param D - da
-  */
-*string FmkIni_KumPath_STAMPA_Opresa;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_KumPath_STAMPA_Opresa13ka_A4
-  * \brief Da li se dokument tipa 13 u varijanti za Opresu(stampa) ispisuje na formatu papira A4
-  * \param N - ne, default vrijednost
-  * \param D - da
-  */
-*string FmkIni_KumPath_STAMPA_Opresa13ka_A4;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_KumPath_FAKT_IdPartnNaF
-  * \brief Da li se u okviru naziva kupca na fakturi ispisuje i sifra kupca
-  * \param N - ne, default vrijednost
-  * \param D - da
-  */
-*string FmkIni_KumPath_FAKT_IdPartnNaF;
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_KumPath_FAKT_RegBrPorBr
-  * \brief Da li se na dokumentu ispisuju registarski i poreski broj partnera?
-  * \param D - da, default vrijednost
-  * \param N - ne
-  */
-*string FmkIni_KumPath_FAKT_RegBrPorBr;
-
-
-/*! \fn StDok(cIdFirma,cIdTipDok,cBrDok)
- *  \brief Stampa dokumenata
- *  \param cIdFirma
- *  \param cIdTipDok
- *  \param cBrDok
- */
-
-// ------------------------------------------- 
-// ------------------------------------------- 
 function StDok
 parameters cIdFirma,cIdTipDok,cBrDok
 
@@ -891,6 +776,81 @@ StAzPeriod( gFirma, cTipDok, cBrOd, cBrDo )
 
 gcDirekt := cDirPom
 close all
+
+return
+
+
+// Stampa fiskalnih racuna od broja do broja
+function st_fisc_per( cIdFirma, cIdTipDok, cBrOd, cBrDo )
+local lDirekt := .f.
+
+if cIdFirma <> nil
+	lDirekt := .t.
+endif
+
+if !lDirekt
+	
+	cIdFirma:=gFirma
+	cIdTipDok:="10"
+	cBrOd:=space(8)
+	cBrDo:=space(8)
+
+	Box("", 5, 35)
+        @ m_x+1, m_y+2 SAY "Dokument:"
+        @ m_x+2, m_y+2 SAY " RJ-tip:" GET cIdFirma
+        @ m_x+2, col()+1 SAY "-" GET cIdTipDok
+        @ m_x+3, m_y+2 SAY "Brojevi:" 
+	@ m_x+4, m_y+3 SAY "od" GET cBrOd VALID !EMPTY(cBrOd)
+	@ m_x+4, col()+1 SAY "do" GET cBrDo VALID !EMPTY(cBrDo)
+        
+	read
+	BoxC()
+
+	if LASTKEY()==K_ESC
+		return
+	endif
+endif
+
+close all
+
+O_PARTN
+O_ROBA
+O_SIFK
+O_SIFV
+O_FAKT
+O_DOKS
+
+set order to tag "1"
+hseek cIdFirma + cIdTipDok
+
+if Found()
+	do while !EOF() .and. doks->idfirma = cIdFirma ;
+		.and. doks->idtipdok = cIdTipDok
+		
+		nTRec := RecNo()
+		
+		if ALLTRIM(doks->brdok) >= ALLTRIM(cBrOd) .and. ALLTRIM(doks->brdok) <= ALLTRIM(cBrDo) 
+			// pozovi stampu fiskalnog racuna
+			nErr := fisc_rn( doks->idfirma, ;
+				doks->idtipdok, ;
+				doks->brdok, .t. )
+		
+			if ( nErr > 0 ) 
+				msgbeep("Prekidam operaciju stampe radi greske!")
+				exit
+			endif
+		endif
+		
+		select doks
+		go (nTRec)
+		skip
+	enddo
+else
+	MsgBeep("Trazeni tip dokumenta ne postoji!")
+endif
+
+SELECT DOKS
+use
 
 return
 

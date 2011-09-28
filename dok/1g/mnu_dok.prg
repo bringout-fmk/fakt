@@ -13,39 +13,7 @@
 #include "fakt.ch"
 
 
-/*
- * ----------------------------------------------------------------
- *                                     Copyright Sigma-com software 
- * ----------------------------------------------------------------
- * $Source: c:/cvsroot/cl/sigma/fmk/fakt/dok/1g/mnu_dok.prg,v $
- * $Author: sasavranic $ 
- * $Revision: 1.3 $
- * $Log: mnu_dok.prg,v $
- * Revision 1.3  2004/05/11 09:00:31  sasavranic
- * Dodao stampu narudzbenice kroz Fmk.NET
- *
- * Revision 1.2  2002/09/26 12:47:05  mirsad
- * no message
- *
- * Revision 1.1  2002/07/03 12:21:12  sasa
- * uvodjenje novog prg fajla
- *
- * Revision 
- * no message
- *
- *
- */
-
-/*! \file fmk/fakt/dok/1g/mnu_dok.prg
- *  \brief Meni opcija za stampu i pregled dokumenata
- */
-
-/*! \fn MBrDoks()
- *  \brief Meni opcija za stampu i pregled dokumenata
- */
-
 function MBrDoks()
-*{
 private opc:={}
 private opcexe:={}
 private Izbor:=1
@@ -58,21 +26,27 @@ AADD(opc,"3. stampa dokumenata od broja do broja      ")
 AADD(opcexe, {|| StAzPeriod()})
 
 if IsUgovori()
-	AADD(opc,"4. stampa fakt.na osnovu ugovora od-do")
+	AADD(opc,"U. stampa fakt.na osnovu ugovora od-do")
 	AADD(opcexe, {|| ug_za_period()})
 endif
 
+// ako koristimo fiskalne funkcije
+if gFc_use == "D"
+	AADD(opc,"F. stampa fiskalnih racuna od-do")
+	AADD(opcexe, {|| st_fisc_per()})
+endif
+
 Menu_SC("stfak")
+
 CLOSERET
+
 return .f.
-*}
 
 /*! \fn MAzurDoks()
  *  \brief Ostale operacije nad podacima
  */
  
 function MAzurDoks()
-*{
 private opc:={}
 private opcexe:={}
 private Izbor:=1
