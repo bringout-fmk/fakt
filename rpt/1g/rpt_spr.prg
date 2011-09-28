@@ -37,7 +37,8 @@ local aFields := {}
 AADD(aFields, {"sifra", "C", 7, 0 })
 AADD(aFields, {"naziv", "C", 40, 0 })
 AADD(aFields, {"kolicina", "N", 15, 5 })
-AADD(aFields, {"iznos", "N", 15, 5 })
+AADD(aFields, {"osnovica", "N", 15, 5 })
+AADD(aFields, {"ukupno", "N", 15, 5 })
 
 return aFields
 
@@ -45,7 +46,7 @@ return aFields
 // -------------------------------------------
 // filuje export tabelu sa podacima
 // -------------------------------------------
-static function fill_exp_tbl( cIdSif, cNazSif, nKol, nIzn )
+static function fill_exp_tbl( cIdSif, cNazSif, nKol, nOsn, nUk )
 local nArr
 nArr := SELECT()
 
@@ -54,7 +55,8 @@ append blank
 replace field->sifra with cIdSif
 replace field->naziv with cNazSif
 replace field->kolicina with nKol
-replace field->iznos with nIzn
+replace field->osnovica with nOsn
+replace field->ukupno with nUk
 
 select (nArr)
 
@@ -299,11 +301,11 @@ EOF CRET
 
 START PRINT CRET
 
-
 if cPrikaz=="1"
 	cLinija:="---- ------ -------------------------- ------------"
 else
-	cLinija:="---- ----------- "+REPL("-",40)+" ------------ ------------"
+	cLinija:="---- ----------- "+REPL("-",40)+" ------------" + ;
+		" ------------ -------------"
 endif
 
 if cSvediJmj == "D"
@@ -421,7 +423,8 @@ else
   	nCol1:=10
 	nTKolicina:=0
 	nTKolJmj := 0
-	nTIznos:=0
+	nTOsn:=0
+	nTUkupno:=0
 	nCounter:=0
 	nMX:=0
 	nMY:=0
@@ -438,8 +441,10 @@ else
 	
     		nKolicina := 0
 		nKolJmj := 0
-		nIznos := 0
-		nPojIznos := 0
+		nOsn := 0
+		nPojOsn := 0
+		nUkupno := 0
+		nPojUk := 0
    		cIdRoba := IdRoba
 		
 		if cDDokOtpr == "O"
@@ -542,22 +547,35 @@ else
 			
 			endif
 			
-			// pojedinacni iznos
-			nPojIznos := ROUND( kolicina * Cijena * (1-Rabat/100) * (1+Porez/100) ,ZAOKRUZENJE)
+			// pojedinacna osnova
+			nPojOsn := ROUND( kolicina * Cijena * (1-Rabat/100) * (1+Porez/100) ,ZAOKRUZENJE)
 			
+			// ukupni iznos sa PDV
+			nPojUk := nPojOsn
+
 			// ako je rijec o MP dokumentima
 			// potrebno je izvuci osnovicu iz iznosa
 			// jer se radi o cijeni sa PDV-om
 
 			if field->idtipdok $ "11#13#23"
 			
-				nPojIznos := _osnovica( field->idtipdok, ;
-					field->idpartner, nPojIznos )
+				nPojOsn := _osnovica( field->idtipdok, ;
+					field->idpartner, nPojOsn )
+			
+			endif
+			
+			// ako je rijec o VP dokumentima, treba izracunati
+			// ukupno sa PDV
+
+			if field->idtipdok $ "10#12"
+				nPojUk := _uk_sa_pdv( field->idtipdok, ;
+					field->idpartner, nPojUk )
 			endif
 
 			// dodaj na total
-			nIznos += nPojIznos
-		
+			nOsn += nPojOsn
+			nUkupno += nPojUk
+
 			++ nCounter
 			
 			// ispisi progres u box-u
@@ -588,15 +606,18 @@ else
       				@ prow(),PCol()+1 SAY STR(nKolJmj,12,2)
 				nTKolJmj += nKolJmj
 			endif
-			@ prow(),PCol()+1 SAY STR(nIznos,12,2)
-      			nTKolicina+=nKolicina
-			nTIznos+=nIznos
 			
+			@ prow(),PCol()+1 SAY STR(nOsn,12,2)
+			@ prow(),PCol()+1 SAY STR(nUkupno,12,2)
+      			
+			nTKolicina += nKolicina
+			nTOsn += nOsn
+			nTUkupno += nUkupno
     		endif
 		
 		if lExpRpt
 			fill_exp_tbl( cIdRoba, LEFT(roba->naz, 40), ;
-					nKolicina, nIznos )
+					nKolicina, nOsn, nUkupno )
 		endif
 		
   	enddo
@@ -618,7 +639,8 @@ endif
 if cSvediJmj == "D"
 	@ prow(),pcol()+1 SAY STR(nTKolJmj,12,2)
 endif
-@ prow(),pcol()+1 SAY STR(nTIznos,12,2)
+@ prow(),pcol()+1 SAY STR(nTOsn,12,2)
+@ prow(),pcol()+1 SAY STR(nTUkupno,12,2)
 ? space(gnLMarg)
 ?? cLinija
 
@@ -626,7 +648,7 @@ endif
 set filter to  
 
 if lExpRpt
-	fill_exp_tbl( "UKUPNO", "", nTKolicina, nTIznos )
+	fill_exp_tbl( "UKUPNO", "", nTKolicina, nTOsn, nTUkupno )
 endif
 
 FF
@@ -692,7 +714,7 @@ endif
 
 set century off
 
-P_12CPI
+P_COND
 
 ? SPACE(gnLMarg)
 ?? cLinija
@@ -706,7 +728,8 @@ else
 		PADC("Naziv", 40) + ;
 		"   Kolicina   " + ;
 		if(cSvediJmj == "D", "  Kol.po jmj ", "" )+ ;
-		"    Iznos   "
+		" Uk.bez PDV " + ;
+		"  Uk.sa PDV "
 endif
 
 ? SPACE(gnLMarg)
