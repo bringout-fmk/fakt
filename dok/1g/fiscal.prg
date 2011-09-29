@@ -15,6 +15,7 @@
 static __device := 0
 static __auto := .f.
 
+
 // ---------------------------------------------------------
 // centralna funkcija za poziv stampe fiskalnog racuna
 // ---------------------------------------------------------
