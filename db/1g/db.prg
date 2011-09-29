@@ -390,6 +390,30 @@ else
 	return 0
 endif
 
+// fiscal zabrana
+// ako je fiskalni racun u vezi, ovo nema potrebe vracati
+// samo uz lozinku
+
+if gFc_use == "D" .and. cIdTipDok $ "10#11"
+
+	nTArea := SELECT()
+	
+	select doks
+	hseek cIdFirma+cIdTipDok+cBrDok
+	
+	if FOUND() .and. doks->fisc_rn <> 0
+		
+		// veza sa fisc_rn postoji
+		
+		msgbeep("Za ovaj dokument je izdat fiskalni racun.#Opcija povrata je onemogucena !!!")
+		close all
+		return 0
+	endif
+	
+	select (nTArea)
+
+endif
+
 if ( !fR .and. !lTest )
 	if Pitanje("","Dokument "+cIdFirma+"-"+cIdTipDok+"-"+cBrDok+" povuci u pripremu (D/N) ?","D")=="N"
    		close all
