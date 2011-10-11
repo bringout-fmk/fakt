@@ -450,6 +450,7 @@ public gFC_zbir := 0
 public gFc_dlist := "N"
 public gFc_pauto := 0
 public gFc_serial := PADR("010000", 15)
+public gFc_restart := "N"
 
 // stmpa na traku
 public gMpPrint := "N"
