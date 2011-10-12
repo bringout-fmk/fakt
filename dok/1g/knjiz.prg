@@ -2814,9 +2814,33 @@ return
 // -------------------------------------------------
 static function c_cijena( nCijena, cTipDok )
 local lRet := .t.
+local nRCijena := nil
+ 
+if cTipDok $ "11#15#27"
+  
+  if gMP == "1"
+    nRCijena := roba->mpc
+  elseif gMP == "3"
+    nRCijena := roba->mpc2
+  elseif gMP == "4"
+    nRCijena := roba->mpc3
+  elseif gMP == "5"
+    nRCijena := roba->mpc4
+  elseif gMP == "6"
+    nRCijena := roba->mpc5
+  elseif gMP == "7"
+    nRCijena := roba->mpc6
+  endif
 
-if gPratiC == "D" .and. cTipDok $ "10" .and. nCijena <> roba->vpc
-	msgbeep("Unesena cijena razlicita od cijene u sifrarniku !")
+elseif cTipDok $ "10#"
+  // veleprodaja...
+  nRCijena := roba->vpc
+endif
+
+if gPratiC == "D" .and. nRCijena <> nil .and. nCijena <> nRCijena
+	msgbeep("Unesena cijena razlicita od cijene u sifrarniku !" + ; 
+		"#Trenutna: " + ALLTRIM(STR(nCijena,12,2)) + ;
+		", sifrarnik: " + ALLTRIM(STR(nRCijena,12,2)) )
 	if Pitanje(,"Koristiti ipak ovu cijenu ?", "D") == "N"
 		lRet := .f.
 	endif
