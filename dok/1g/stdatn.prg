@@ -298,12 +298,18 @@ EOF CRET
 if cTabela=="D"
 
    ImeKol:={}
+   
+   if FIELDPOS("FISC_RN")>0
+     AADD(ImeKol,{ " ", {|| g_fiscal_info(fisc_rn)} })
+   endif
+
    AADD(ImeKol,{ "RJ",       {|| idfirma}  })
    AADD(ImeKol,{ "VD",       {|| idtipdok} })
    AADD(ImeKol,{ "Brdok",    {|| brdok+rezerv} })
    AADD(ImeKol,{ "VP",       {|| idvrstep } })
    AADD(ImeKol,{ "Datum",    {|| Datdok } })
-   AADD(ImeKol,{ "Partner",    {|| iif(m1="Z","<<dok u pripremi>>",partner)} })
+   AADD(ImeKol,{ "Partner",  ;
+      {|| PADR( iif(m1="Z","<<dok u pripremi>>",partner),28) } })
    AADD(ImeKol,{ "Ukupno-Rab ",    {|| iznos} })
    AADD(ImeKol,{ "Rabat",    {|| rabat} })
    AADD(ImeKol,{ "Ukupno",    {|| iznos+rabat} })
@@ -316,10 +322,7 @@ if cTabela=="D"
      AADD(ImeKol,{ "Datum placanja", {|| datpl} })
    ENDIF
 
-   IF FIELDPOS("FISC_RN")>0
-     AADD(ImeKol,{ "Fisk.rn", {|| fisc_rn} })
-   ENDIF
-
+   
    if FIELDPOS("DOK_VEZA") <> 0
      AADD(ImeKol,{ "Vezni dokumenti", ;
      	{|| PADR( ALLTRIM( g_d_veza(idfirma,idtipdok,brdok,dok_veza)) , ;
@@ -371,7 +374,7 @@ if cTabela=="D"
                    {|| .t.}, {|| P_Firma(@widpartner)}, "V" }
    adKol:={}; for i:=1 to len(adImeKol); AADD(adKol,i); next
 
-   ObjDbedit("",19,72,{|| EdDatn()},"","", , , ,{ || if(gFC_use == "D", fisc_rn > 0, .f. ) } ,2)
+   ObjDbedit("",19,72,{|| EdDatn()},"","", , , ,{ || if(gFC_use == "D", .f., .f. ) } ,2)
    BoxC()
    if fupripremu
      close all
@@ -591,6 +594,18 @@ END PRINT
 
 closeret
 return
+
+
+// ------------------------------------------
+// vraca info o fiskalnom racunu
+// ------------------------------------------
+static function g_fiscal_info( _f_rn )
+local cInfo := " "
+if _f_rn > 0
+	cInfo := "F"
+endif
+return cInfo
+
 
 
 // ------------------------------------------------------

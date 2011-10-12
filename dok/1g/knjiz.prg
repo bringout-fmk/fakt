@@ -1639,7 +1639,7 @@ if (gSamokol != "D")
     		@ m_x+18+RKOR+RKOR2, 25  SAY IF( _idtipdok $ "13#23".and.( gVar13=="2" .or. glCij13Mpc), "MPC.s.PDV", "Cijena ("+ALLTRIM(ValDomaca())+")") GET _Cijena ;
 		     PICT piccdem ;
 		     WHEN  _podbr<>" ." .and. KLevel<="1" .and. SKCKalk(.t.) ;
-		     VALID SKCKalk(.f.) .and. c_cijena(_cijena, _idtipdok)
+		     VALID SKCKalk(.f.) .and. c_cijena(_cijena, _idtipdok, fNovi)
 
 		if ( PADR(_dindem, 3) <> PADR(ValDomaca(), 3) ) 
 			@ m_x+18+ RKOR + RKOR2, col() + 2 SAY "Pr"  GET cPretvori ;
@@ -2812,10 +2812,15 @@ return
 // -------------------------------------------------
 // provjeri cijenu sa cijenom iz sifrarnika
 // -------------------------------------------------
-static function c_cijena( nCijena, cTipDok )
+static function c_cijena( nCijena, cTipDok, lNovidok )
 local lRet := .t.
 local nRCijena := nil
- 
+
+// provjeru radi samo kod novog dokumenta
+if !lNoviDok
+	return lRet
+endif
+
 if cTipDok $ "11#15#27"
   
   if gMP == "1"
