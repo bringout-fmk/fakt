@@ -359,6 +359,7 @@ public gKrizA5:=2
 public gERedova:=9 // extra redova
 public gVlZagl:=space(12)   // naziv fajla vlastitog zaglavlja
 public gPratiK:="N"
+public gPratiC:="N"
 public gFZaok:=2
 public gImeF:="N"
 public gKomlin:=""
@@ -511,6 +512,7 @@ RPar("p0",@PicCDem)
 RPar("p1",@PicDem)
 RPar("p2",@PicKol)
 RPar("pk",@gPratik)
+RPar("pc",@gPratiC)
 RPar("pr",@gnLMarg)
 RPar("56",@gnLMargA5)
 RPar("pt",@gnTMarg)

@@ -863,7 +863,8 @@ Box(, 23, 76, .f., "VARIJANTE OBRADE DOKUMENATA")
   	@ m_x+5,m_y+2 SAY "Varijanta dokumenta 13 (1/2)   " GET gVar13 VALID gVar13$"12"
   	@ m_x+6,m_y+2 SAY "Varijanta numeracije dokumenta 13 (1/2)   " GET gVarNum VALID gVarNum$"12"
   	@ m_x+7,m_y+2 SAY "Pratiti trenutnu kolicinu D/N ?" GET gPratiK PICT "@!" VALID gPratiK $ "DN"
-  	@ m_x+8,m_y+2 SAY  "Koristenje VP cijene:"
+  	@ m_x+7,col()+1 SAY "Pratiti cijene na unosu D/N ?" GET gPratiC PICT "@!" VALID gPratiC $ "DN"
+	@ m_x+8,m_y+2 SAY  "Koristenje VP cijene:"
   	@ m_x+9,m_y+2 SAY  "  ( ) samo VPC   (X) koristiti samo MPC    (1) VPC1/VPC2 "
   	@ m_x+10,m_y+2 SAY "  (2) VPC1/VPC2 putem rabata u odnosu na VPC1   (3) NC "
   	@ m_x+11,m_y+2 SAY "  (4) Uporedo vidi i MPC............" GET gVarC
@@ -900,6 +901,7 @@ if (LASTKEY()<>K_ESC)
    	WPar("vo",gVar13)
    	WPar("vn",gVarNum)
    	WPar("pk",gPratik)
+   	WPar("pc",gPratiC)
    	WPar("50",gVarC)
    	WPar("mp",gMP)  // varijanta maloprodajne cijene
    	WPar("nd",gNumdio)
