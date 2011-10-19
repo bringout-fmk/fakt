@@ -265,6 +265,8 @@ do case
 
 		msgc()
 
+		select pripr
+		
 		if gFC_faktura == "D" .and. ;
 			Pitanje(,"Stampati fakturu ?", "N") == "D"
 			
@@ -275,6 +277,8 @@ do case
 			select pripr
 
 		endif
+
+		return DE_CONT
 	
 	case (Ch==K_CTRL_T .or. (Ch=K_DEL .and. gTBDir=="D"))
      		if BrisiStavku()==1
