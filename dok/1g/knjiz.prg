@@ -274,8 +274,13 @@ do case
 
 			StampTXT( cFFirma, cFTipDok, cFBrDok )
 			
-			select pripr
+			close all
 
+			o_edit()
+
+			select pripr
+			
+			return DE_REFRESH
 		endif
 
 		return DE_CONT
