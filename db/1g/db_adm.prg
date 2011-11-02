@@ -27,7 +27,7 @@ opc:={}
 opcexe:={}
 Izbor:=1
 
-AADD(opc, "1. instalacija db-a              ")
+AADD(opc, "1. instalacija db-a                   ")
 AADD(opcexe, {|| goModul:oDatabase:install()}) 
 AADD(opc, "2. skip speed db-a")
 AADD(opcexe, {|| SpeedSkip()}) 
@@ -41,7 +41,9 @@ AADD(opc, "6. regeneracija polja idpartner")
 AADD(opcexe, {|| fa_part_regen()})
 AADD(opc, "7. generisanja datuma otpr. isp.")
 AADD(opcexe, {|| gen_dotpr()})
-AADD(opc, "8. kontrola duplih partnera")
+AADD(opc, "8. regeneracija doks iznos ukupno")
+AADD(opcexe, {|| do_uk_regen()})
+AADD(opc, "9. kontrola duplih partnera")
 AADD(opcexe, {|| chk_dpartn()})
 AADD(opc, "E. fakt export (r_exp) ")
 AADD(opcexe, {|| fkt_export()})
@@ -97,6 +99,166 @@ enddo
 BoxC()
 
 return
+
+
+// --------------------------------------------------
+// regeneracija polja ukupno u tabeli doks
+// --------------------------------------------------
+function do_uk_regen()
+local cD_firma
+local cD_tdok
+local cD_brdok
+local nCounter
+local nCnt
+local i
+local aTest := {}
+local nTotal
+local nRabat
+local nStavka
+local nStRabat
+local nStPorez
+
+O_FAKT
+O_DOKS
+
+if !SigmaSif("REGEN")
+	return 
+endif
+
+if Pitanje(,"Izvrsiti regeneraciju (D/N)?","N") == "N"
+	return
+endif
+
+select doks
+set order to tag "1"
+go top
+
+nCounter := 0
+
+Box(,3, 60)
+
+@ 1 + m_x, 2 + m_y SAY "popunjavanje polja u toku..."
+
+do while !EOF()
+	
+	cD_firma := field->idfirma
+	cD_tdok := field->idtipdok
+	cD_brdok := field->brdok
+
+	// trenutno nam treba samo za dokumente "20"
+	if cD_tdok <> "20" .and. cD_tdok <> "10"
+		skip
+		loop
+	endif
+
+	select fakt
+	set order to tag "1"
+	go top
+	seek ( cD_firma + cD_tdok + cD_brdok )
+
+	nTotal := 0
+	nRabat := 0
+	nStavka := 0
+	nStPorez := 0
+	nStRabat := 0
+
+	do while !EOF() .and. field->idfirma + field->idtipdok + ;
+		field->brdok == cD_firma + cD_tdok + cD_brdok
+	
+		// ukini polje poreza
+		if field->porez <> 0
+			replace field->porez with 0
+		endif
+
+    		if field->dindem == LEFT(ValBazna(), 3)
+        		
+			nStavka := Round( field->kolicina * ;
+				field->cijena * PrerCij() * ;
+				(1 - field->Rabat/100), ZAOKRUZENJE )
+        	
+			// rabat
+        		nStRabat := ROUND( field->kolicina * ;
+				field->cijena * PrerCij() * ;
+				(field->rabat / 100), ZAOKRUZENJE)
+        		
+			// porez
+        		nStPorez := ROUND( nStavka * (field->porez / 100), ;
+				ZAOKRUZENJE )
+
+			nTotal += nStavka + nStPorez
+			nRabat += nStRabat
+    		else
+        		
+			nStavka := round( field->kolicina * ;
+				field->cijena * ;
+				(PrerCij() / UBaznuValutu(datdok)) * ;
+				(1-field->Rabat/100), ZAOKRUZENJE)
+        		
+			// rabat
+        		nStRabat := ROUND( field->kolicina * ;
+				field->cijena * ;
+				( PrerCij() / UBaznuValutu(datdok)) * ;
+				(field->Rabat/100), ZAOKRUZENJE)
+        		// porez
+        		nStPorez := ROUND(nStavka * ;
+				(field->porez/100), ZAOKRUZENJE)
+        		
+			nTotal += nStavka + nStPorez
+        		nRabat += nStRabat
+
+    		endif
+    		skip
+  	enddo
+  
+	select doks
+
+	// ubaci u tabelu doks ako je iznos razlicit
+	if ROUND(field->iznos, ZAOKRUZENJE) <> ROUND(nTotal, ZAOKRUZENJE)
+		// dodaj u kontrolnu matricu
+		AADD( aTest, { field->idfirma + "-" + ;
+				field->idtipdok + "-" + ;
+				ALLTRIM(field->brdok), ;
+				field->iznos, ;
+				nTotal } )
+
+		replace field->iznos with nTotal
+		replace field->rabat with nRabat
+	endif
+
+	++nCounter
+
+	@ 3+m_x, 2+m_y SAY "odradjeno zapisa " + ALLTRIM(STR(nCounter)) 
+
+	skip
+
+enddo
+
+BoxC()
+
+if LEN( aTest ) > 0
+	// daj mi info o zamjenjenim iznosima
+	START PRINT CRET
+	
+	? "Iznosi zamjenjeni na sljedecim dokumentima:"
+	? "--------------------------------------------------------"
+	
+	nCnt := 1
+
+	for i := 1 to LEN( aTest )
+		? PADL( ALLTRIM( STR(nCnt) ), 5) + ".", ;
+			aTest[i, 1], ;
+			ROUND( aTest[i, 2], ZAOKRUZENJE), ;
+			"=>", ;
+			ROUND( aTest[i, 3], ZAOKRUZENJE)
+		++ nCnt
+	next
+
+	FF
+	END PRINT
+endif
+
+return
+
 
 
 // --------------------------------------------------
