@@ -755,7 +755,6 @@ return DE_CONT
 
 // stampaj poresku fakturu u odt formatu
 function pr_odt()
-*{
 select doks
 nTrec:=recno()
 _cIdFirma:=idfirma

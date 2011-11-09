@@ -267,12 +267,27 @@ do case
 
 		select pripr
 		
-		if gFC_faktura == "D" .and. ;
+		if gFC_faktura $ "D#G#X"
+			
+		    if gFC_faktura $ "D#X" .and. ; 
 			Pitanje(,"Stampati fakturu ?", "N") == "D"
 			
 			// stampaj dokument odmah nakon fiskalnog racuna
 
 			StampTXT( cFFirma, cFTipDok, cFBrDok )
+		    	
+			close all
+
+			o_edit()
+
+			select pripr
+	
+		    endif
+		
+		    if gFC_faktura $ "G#X" .and. ;
+			Pitanje(,"Stampati graficku fakturu ?", "N") == "D"
+			
+			stdokodt( cFFirma, cFTipDok, cFBrDok )
 			
 			close all
 
@@ -280,9 +295,12 @@ do case
 
 			select pripr
 			
-			return DE_REFRESH
-		endif
+		    endif
 
+		    return DE_REFRESH
+		
+		endif
+		
 		return DE_CONT
 	
 	case (Ch==K_CTRL_T .or. (Ch=K_DEL .and. gTBDir=="D"))
