@@ -613,16 +613,23 @@ if !EMPTY( cPartnId )
 	cJibPartn := ALLTRIM( IzSifK( "PARTN" , "REGB", cPartnId, .f. ) )
 	cPOslob := ALLTRIM( IzSifK( "PARTN" , "PDVO", cPartnId, .f. ) )
 
+	if EMPTY(cJibPartn) .and. cTipDok <> "11"
+		msgbeep("Partner nema popunjen ID broj !!!")
+		return 0
+	endif
+
 	if LEN(cJibPartn) < 12 .or. !EMPTY( cPOslob )
 		
 		lIno := .t.
 	
-	elseif LEN( cJibPartn ) = 12
+	elseif LEN( cJibPartn ) >= 12
+
+		// ovo moze biti pdv ili ne-pdv obveznik
 
 		// ako je pdv obveznik
 		// dodaj "4" ispred id broja
 		
-		cJibPartn := "4" + ALLTRIM( cJibPartn )
+		cJibPartn := PADL( ALLTRIM(cJibPartn), 13, "4" )
 		
 		lIno := .f.
 
@@ -929,6 +936,11 @@ if !EMPTY( cPartnId )
 	cJibPartn := ALLTRIM( IzSifK( "PARTN" , "REGB", cPartnId, .f. ) )
 	cPOslob := ALLTRIM( IzSifK( "PARTN" , "PDVO", cPartnId, .f. ) )
 
+	if EMPTY(cJibPartn) .and. cTipDok <> "11"
+		msgbeep("Partner nema popunjen ID broj !!!")
+		return 0
+	endif
+
 	if cTipDok $ "#11#"
 		
 		// ovo je NN kupac
@@ -940,12 +952,12 @@ if !EMPTY( cPartnId )
 
 		lIno := .t.
 	
-	elseif LEN( cJibPartn ) = 12
+	elseif LEN( cJibPartn ) >= 12
 
 		// ako je pdv obveznik
 		// dodaj "4" ispred id broja
 		
-		cJibPartn := "4" + ALLTRIM( cJibPartn )
+		cJibPartn := PADL( ALLTRIM( cJibPartn ), 13, "4" )
 				
 		lIno := .f.
 		lPDVObveznik := .t.
