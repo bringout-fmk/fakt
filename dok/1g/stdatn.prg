@@ -1183,7 +1183,17 @@ do case
 		replace field->fisc_rn with nFiscal
 		return DE_REFRESH
 	endif
-  
+ 
+  case chr(Ch) $ "kK"
+	
+	// korekcija dokumenta
+	// ispravka partnera itd...
+	if fakt_edit_data( field->idfirma, ;
+		field->idtipdok, ;
+		field->brdok ) = .t.
+		return DE_REFRESH
+	endif
+
   case chr(Ch) $ "iI"
   	
 	// info dokument
