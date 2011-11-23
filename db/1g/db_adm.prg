@@ -760,6 +760,11 @@ if LastKey() == K_ESC
 	return lRet
 endif
 
+if Pitanje(,"Izvrsiti zamjenu podataka ? (D/N)", "D") == "N"
+	select (nTArea)
+	return lRet
+endif
+
 // mjenjamo podatke
 lRet := .t.
 
