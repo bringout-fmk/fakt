@@ -209,6 +209,7 @@ local cJibPartn := ""
 local lIno := .f.
 local cPOslob := ""
 local cNF_txt := cFirma + "-" + cTipDok + "-" + ALLTRIM( cBrDok )
+local cFName
 
 if cContinue == nil
 	cContinue := "0"
@@ -480,13 +481,14 @@ nErr := fc_trm_rn( ALLTRIM( gFC_path ), ;
 		gFc_error, cContinue )
 
 
+cFName := trm_filename( cF_brrn )
+
 // pogledati kako obraditi gresku...
 if gFc_error == "D"
 	
 	// provjeri greske...
 	// nErr := ...
 
-	cFName := trm_filename( cF_brrn )
 
 	if trm_read_out( ALLTRIM(gFc_path), ALLTRIM(cFName) )
 		
