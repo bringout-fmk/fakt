@@ -104,8 +104,8 @@ if PrazanDBF()
         nRab+=ROUND( kolicina*Cijena*Rabat/100 ,ZAOKRUZENJE)
 
       else
-        nDugD+=round( kolicina*Cijena*1/UBaznuValutu(datdok)*(1-Rabat/100)*(1+Porez/100) ,ZAOKRUZENJE)
-        nRabD+=round( kolicina*Cijena*Rabat/100*1/UBaznuValutu(datdok),ZAOKRUZENJE)
+        nDugD+=round( kolicina*Cijena*1*(1-Rabat/100)*(1+Porez/100) ,ZAOKRUZENJE)
+        nRabD+=round( kolicina*Cijena*Rabat/100*1,ZAOKRUZENJE)
       endif
       skip
     enddo

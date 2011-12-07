@@ -1118,12 +1118,12 @@ do while !EOF() .and. field->idfirma == cFirma ;
 	if field->dindem == LEFT(ValBazna(), 3)
 		nF_total += Round( nF_kolicina * ;
 			nF_cijena * PrerCij() * ;
-			(1 - nF_rabat/100), ZAOKRUZENJE )
+			(1 - nF_rabat / 100), ZAOKRUZENJE )
         else
-		nF_total += round( nF_kolicina * ;
+		nF_total += round( ( nF_kolicina * ;
 			nF_cijena * ;
-			(PrerCij() / UBaznuValutu(field->datdok)) * ;
-			(1-nF_rabat/100), ZAOKRUZENJE)
+			PrerCij()) * ;
+			(1 - nF_rabat / 100), ZAOKRUZENJE)
 	endif
 
 	// 1 - broj racuna
@@ -1163,7 +1163,7 @@ do while !EOF() .and. field->idfirma == cFirma ;
 	skip
 enddo
 
-if lPopNaTeret = .t. .or. lIno = .t.
+//if lPopNaTeret == .t. .or. lIno == .t.
 
 	// ako ima popusta na teret prodavaca
 	// sredi total, ukljuci i rabat koji je dat
@@ -1172,7 +1172,7 @@ if lPopNaTeret = .t. .or. lIno = .t.
 	for n := 1 to LEN( aStavke )
 		aStavke[n, 14] := nF_total
 	next
-endif
+//endif
 
 if cTipDok $ "10"
 	

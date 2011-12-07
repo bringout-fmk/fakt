@@ -1040,7 +1040,9 @@ do while !eof()
 	nRab:=0
   	nDugD:=0
 	nRabD:=0
-  	
+  
+	altd()
+
 	do while !eof() .and. cIdFirma==idfirma .and. cIdTipdok==idtipdok .and. cBrDok==brdok
     		if cDinDem==LEFT(ValBazna(),3)
         		nPom1:=Round(kolicina*Cijena*PrerCij()*(1-Rabat/100),ZAOKRUZENJE)
@@ -1054,9 +1056,9 @@ do while !eof()
     		else
         		//nPom1:=round( Cijena*kolicina*PrerCij()/UBaznuValutu(datdok)*(1+Porez/100), ZAOKRUZENJE)
         		// greska kada imamo porez  !!
-        		nPom1:=round( kolicina*Cijena*PrerCij()/UBaznuValutu(datdok)*(1-Rabat/100), ZAOKRUZENJE)
+        		nPom1 := round( kolicina*Cijena*PrerCij()*(1-Rabat/100), ZAOKRUZENJE)
         		// npom1 - cijena sa porezom i uracunatim rabatom
-        		nPom2:=ROUND( kolicina*Cijena*PrerCij()/UBaznuValutu(datdok)*Rabat/100 , ZAOKRUZENJE)
+        		nPom2:=ROUND( kolicina*Cijena*PrerCij()*Rabat/100 , ZAOKRUZENJE)
         		// rabat za stavku
         		nPom3:=ROUND(nPom1*Porez/100, ZAOKRUZENJE)
         		nDugD+= nPom1 + nPom3
@@ -1066,7 +1068,9 @@ do while !eof()
   	enddo
   
   	select doks
-  	
+  
+	//msgbeep(" valbazna = " + VALBAZNA() + " gBaznaV=" + gBaznaV )
+
 	if (cDinDem==LEFT(ValBazna(),3))
    		_field->Iznos:=nDug 
 		// iznos sadrzi umanjenje za rabat
