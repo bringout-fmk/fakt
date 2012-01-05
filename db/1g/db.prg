@@ -1441,6 +1441,7 @@ if !(ImaPravoPristupa(goModul:oDataBase:cName,"DOK","BRISANJE" ))
 	return DE_CONT
 endif
 
+altd()
 
 if Pitanje(, "Zelite li izbrisati pripremu !!????","N")=="D"
 	
@@ -1470,7 +1471,12 @@ if Pitanje(, "Zelite li izbrisati pripremu !!????","N")=="D"
 	endif
 	select pripr
    	go top
-   	do while !eof()
+   	
+	cIdFirma := ""
+	cIdTipDok := ""
+	cBrDok := ""
+
+	do while !eof()
       		cIdFirma:=IdFirma
       		cIdTipDok:=IdTipDok
       		cBrDok:=BrDok
@@ -1482,7 +1488,7 @@ if Pitanje(, "Zelite li izbrisati pripremu !!????","N")=="D"
       		endif
       		select pripr
       		skip
-      		do while !eof() .and. (idfirma==cIdFirma) .and. (idtipdok==cIdTipDok) .and. (BrDok==BrDok)
+      		do while !eof() .and. (idfirma==cIdFirma) .and. (idtipdok==cIdTipDok) .and. (BrDok==cBrDok)
 			skip
       		enddo
    	enddo
