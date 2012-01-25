@@ -1431,10 +1431,10 @@ if (nRbr==1 .and. VAL(_podbr) < 1)
 			endif
 			
      			if lVrsteP
-      				@ m_x + 9, m_y + 38  SAY "Nacin placanja" ;
+      				@ m_x + 9, m_y + 2  SAY "Nacin placanja" ;
 					GET _idvrstep ;
 					PICT "@!" ;
-					VALID P_VRSTEP( @_idvrstep, 9, 60 )
+					VALID P_VRSTEP( @_idvrstep, 9, 20 )
      			endif
    		
 		elseif (_idtipdok=="06")
@@ -1459,7 +1459,7 @@ if (nRbr==1 .and. VAL(_podbr) < 1)
 		endif
    		
 		if (pripr->(FIELDPOS("idrelac")) <> 0 .and. _idtipdok $ "#11#")
-     			@ m_x + 9, m_y + 2  SAY "Relacija   :" ;
+     			@ m_x + 9, m_y + 40  SAY "Relacija   :" ;
 				GET _idrelac
    		endif
 
@@ -1709,9 +1709,6 @@ if (gSamokol != "D")
 endif //gSamokol=="D"  // samo kolicine
 
 read
-
-
-_idvrstep := SPACE(2)
 
 if cAvRacun == "D"
 	_idvrstep := "AV"

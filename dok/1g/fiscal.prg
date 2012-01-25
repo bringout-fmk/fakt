@@ -863,6 +863,7 @@ local nIznos
 local nRabat
 local lPoPNaTeret := .f.
 local n
+local _vr_pl
 
 O_DOKS
 O_FAKT
@@ -884,6 +885,7 @@ nIznos := field->iznos
 nRabat := field->rabat
 dDatRn := field->datdok
 nNRekRn := field->fisc_rn
+_vr_pl := field->idvrstep
 
 select fakt
 go top
@@ -929,6 +931,13 @@ if cTipDok $ "#10#11#"
 	
 	if cTipDok $ "#10#"
 		cVr_Placanja := "3"
+	endif
+
+	// ako je vrsta placanja = "G " - gotovina na dokumentu 10
+	// resetuj na vrstu placanja gotovina i partnera izbaci iz igre
+	if cTipDok $ "#10#" .and. PADR( _vr_pl, 1 ) == "G"
+		cVr_placanja := "0"
+		cPartnId := ""
 	endif
 
 endif
