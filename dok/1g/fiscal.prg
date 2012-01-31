@@ -938,6 +938,8 @@ if cTipDok $ "#10#11#"
 	if cTipDok $ "#10#" .and. PADR( _vr_pl, 1 ) == "G"
 		cVr_placanja := "0"
 		cPartnId := ""
+		lIno := .f.
+		lPDVObveznik := .t.
 	endif
 
 endif
