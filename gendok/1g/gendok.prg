@@ -289,6 +289,8 @@ local nOrder
 local cBrDok := ""
 local cIdTipDok := ""
 local lSumirati := .t.
+local _vp_mp := 1
+local _n_tip_dok := "10"
 
 select pripr
 use
@@ -322,27 +324,51 @@ if reccount2() == 0
     read
     cPartner:=trim(cPartner)
     seek cidrj+"12"
-    do while !eof() .and. IdFirma+IdTipdok=cidrj+"12"
+    do while !eof() .and. IdFirma + IdTipdok = cidrj + "12"
       IF m1 <> "Z"
         replace m1 with " "
       EndIF
       skip
     enddo
 
-    seek cidrj+"12"
+    seek cidrj + "12"
+    
     BrowseKey(m_x+5,m_y+1,m_x+19,m_y+73,ImeKol,{|Ch| EdOtpr(Ch)},"IdFirma+idtipdok=cIdrj+'12'",;
-              cIdRj+"12",2,,,{|| partner=cPartner} )
+              cIdRj + "12",2,,,{|| partner=cPartner} )
    BoxC()
 
    if Pitanje(,"Formirati fakturu na osnovu gornjih otpremnica ?","N")=="D"
      
       lSumirati := Pitanje(,"Sumirati stavke fakture (D/N)","D") == "D"
-      
+
+      Box(, 5, 50)
+      	@ m_x + 1, m_y + 2 SAY "Formirati: " 
+	@ m_x + 3, m_y + 2 SAY " (1) racun veleprodaje "
+	@ m_x + 4, m_y + 2 SAY " (2) racun maloprodaje " 
+	@ m_x + 5, m_y + 2 SAY "                   ----> " ;
+		GET _vp_mp ;
+		PICT "9" ;
+		VALID _vp_mp > 0 .and. _vp_mp < 3
+      	read
+      BoxC()
+
+      // nadji sljedeci broj 10-ke ili 11-ke
+      if _vp_mp == 1
+	  _n_tip_dok := "10"
+      else
+          _n_tip_dok := "11"
+      endif
+          
       cVezOtpr := ""
+      
       select pripr
-      select doks  // order 2 !!!
-      seek cidrj+"12"+cPartner
+      select doks 
+      
+      // order 2 !!!
+      seek cidrj + "12" + cPartner
+
       dNajnoviji:=CTOD("")
+      
       do while !eof() .and. IdFirma+IdTipdok=cidrj+"12" ;
                .and. DOKS->Partner=cPartner
          
@@ -354,11 +380,12 @@ if reccount2() == 0
 
 	    cIdPart := doks->idpartner
 	    
-	    if dNajnoviji<doks->datDok
-		    dNajnoviji:=doks->datDok
+	    if dNajnoviji < doks->datDok
+		    dNajnoviji := doks->datDok
 	    endif
-            // scatter()
-            nOldIznos:=iznos   // ???!
+      
+      	    // scatter()
+            nOldIznos := iznos   // ???!
             
             cVezOtpr += Trim (DOKS->BrDok)+", "
             REPLACE IdTipDok WITH "22"      // promijeni naslov
@@ -371,13 +398,15 @@ if reccount2() == 0
             select DOKS 
 	    set order to 1
             
-	    // *********  nadji sljedeci broj  10 - ke *********
-            
+	    
 	    IF gMreznoNum == "N"
-               dbseek( dxidfirma+"10"+"È",.t.)
-               skip -1
-               if "10"<>idtipdok
-                  cBrDok:=UBrojDok(1,gNumDio,"")
+               
+	       dbseek( dxidfirma + _n_tip_dok + "È", .t. )
+               
+	       skip -1
+               
+	       if _n_tip_dok <> idtipdok
+                  cBrDok := UBrojDok( 1, gNumDio, "" )
                else
                   cBrDok:=UBrojDok( val(left(brdok,gNumDio))+1, ;
                                     gNumDio, ;
@@ -390,9 +419,9 @@ if reccount2() == 0
             ENDIF
             
 	    SELECT FAKT
-            seek dxIdFirma+"12"+dxBrDok
+            seek dxIdFirma + "12" + dxBrDok
             
-	    do while !eof() .and. (dxIdFirma+"12"+dxBrDok) == ;
+	    do while !eof() .and. ( dxIdFirma + "12" + dxBrDok ) == ;
 	    	(idfirma+idtipdok+brdok)
                
 	       skip
@@ -400,18 +429,24 @@ if reccount2() == 0
 	       skip -1
                
 	       Scatter()
-               replace IdTipDok WITH "22"
+               
+	       replace IdTipDok WITH "22"
                
 	       if gMreznoNum == "N"
-                  _Brdok:=cBrdok
+                  _Brdok := cBrdok
                else
-                  _Brdok:=SPACE (LEN (BrDok))
+                  _Brdok := SPACE(LEN( BrDok ))
                endif
 
-               _datdok:=date()
+               _datdok := date()
                _m1:="X"
-               _idtipdok:="10"
-               
+               _idtipdok := _n_tip_dok
+            
+	       if _vp_mp == 2
+		     // ako je maloprodaja, setuj cijenu sa PDV-om
+		     _cijena :=ROUND( _uk_sa_pdv( field->idtipdok, field->idpartner, field->cijena ), 2 )
+	       endif
+
                select pripr
                
 	       locate for idroba==fakt->idroba
@@ -435,11 +470,11 @@ if reccount2() == 0
          endif
          select doks
 	 set order to 2
-         //
          go nTrec0
-      enddo   // doks
+      enddo 
+
       IF !Empty (cVezOtpr)
-         cVezOtpr := "Faktura formirana na osnovu otpremnica: " +;
+         cVezOtpr := "Racun formiran na osnovu otpremnica: " +;
                      LEFT (cVezOtpr, LEN (cVezOtpr)-2)+"."     // skine ", "
       ENDIF
       select pripr
