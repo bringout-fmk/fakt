@@ -778,11 +778,11 @@ nHPid:=0
 
 lDoks2:=goModul:lDoks2
 
-if (!lDoks2 .and. !(fakt->(FLock()) .and. doks->(FLock())) .or. lDoks2 .and. !(fakt->(FLock()) .and. doks->(FLock()) .and. doks2->(FLock())))
-	Beep(4)
-  	Msg("Azuriranje NE moze vrsiti vise korisnika istovremeno !", 15)
-  	closeret
-endif
+//if (!lDoks2 .and. !(fakt->(FLock()) .and. doks->(FLock())) .or. lDoks2 .and. !(fakt->(FLock()) .and. doks->(FLock()) .and. doks2->(FLock())))
+//	Beep(4)
+//  	Msg("Azuriranje NE moze vrsiti vise korisnika istovremeno !", 15)
+//  	closeret
+//endif
 
 fRobaIDJ:=goModul:lId_J
 
@@ -791,7 +791,7 @@ fProtu:=.f.
 if (gProtu13=="D" .and. pripr->idtipdok=="13" .and. Pitanje(,"Napraviti protu-dokument zaduzenja prodavnice","D")=="D")
 	if (gVar13=="2" .and. gVarNum=="1")
       		cPRj:=RJIzKonta(pripr->idpartner+" ")
-    	else
+    else
       		O_RJ
       		Box(,2,50)
        			cPRj:=IzFMKIni("FAKT","ProtuDokument13kiIdeNaRJ","P1",KUMPATH)
@@ -799,48 +799,53 @@ if (gProtu13=="D" .and. pripr->idtipdok=="13" .and. Pitanje(,"Napraviti protu-do
        			read
       		BoxC()
       		select rj
-		use
-    	endif
+		    use
+    endif
     	
 	lVecPostoji:=.f.
-    	// prvo da provjerimo ima li isti broj dokumenta u DOKS
-    	cKontrol2Broj:=pripr->(cPRJ+"01"+TRIM(brdok)+"/13")
-    	select DOKS
+    // prvo da provjerimo ima li isti broj dokumenta u DOKS
+    cKontrol2Broj:=pripr->(cPRJ+"01"+TRIM(brdok)+"/13")
+    select DOKS
 	seek cKontrol2Broj
     	
 	if Found()
       		lVecPostoji:=.t.
-    	else
+    else
       		// ako nema u DOKS, 
-		// provjerimo ima li isti broj dokumenta u FAKT
+		    // provjerimo ima li isti broj dokumenta u FAKT
       		select fakt
-		seek cKontrol2Broj
+		    seek cKontrol2Broj
       		if Found()
-			lVecPostoji:=.t.
-		endif
-    	endif
+			    lVecPostoji:=.t.
+		    endif
+    endif
     	
 	if lVecPostoji
       		Msg("Vec postoji dokument pod brojem "+pripr->(cPRJ+"-01-"+TRIM(brdok)+"/13"),4)
       		closeret
-    	endif
-    	fProtu:=.t.
+    endif
+    fProtu:=.t.
 endif
+
 
 // ako je vise dokumenata u pripremi provjeri duple stavke
 if lViseDok
+
 	if prov_duple_stavke() == 1
-		return
+        return
 	endif
+
 else
+
 	// ako je samo jedan dokument provjeri da li je u dupli
 	cKontrolBroj:=pripr->(idfirma+idtipdok+brdok)
 
 	if dupli_dokument(cKontrolBroj)
 		Beep(4)
   		Msg("Dokument "+pripr->(idfirma+"-"+idtipdok+"-"+brdok)+" vec postoji pod istim brojem!",4)
-    		return
+        return
 	endif
+
 endif
 
 fRobaIDJ:=goModul:lId_J
@@ -885,6 +890,7 @@ if !( fakt->(flock()) .and. doks->(flock()) )
 	endif
 
 endif 
+
 
 // 0. napuni matricu sa brojem dokumenta
 AADD( aFD_data, { pripr->idfirma, pripr->idtipdok, pripr->brdok } )
