@@ -737,6 +737,7 @@ local nHPid
 local cType
 // koristi se za informacije o dokumentu
 local aFD_data := {}
+local nTime
 
 cType:=TYPE("lVrsteP")
 
@@ -849,7 +850,42 @@ set order to tag "ID"
 select pripr
 go top
 
-altd()
+// lock-uj tabele prilikom azuriranja...
+if !( fakt->(flock()) .and. doks->(flock()) ) 
+    
+    nTime := 150
+	   
+	Box(,1, 40)
+
+	    // daj mu vremena...
+	    do while nTime > 0
+	
+		    -- nTime
+
+		    @ m_x + 1, m_y + 2 SAY "timeout: " + ALLTRIM(STR(nTime))
+		
+		    if ( fakt->(flock()) .and. doks->(flock()) ) 
+			    exit
+		    endif
+	    
+		    sleep(1)
+
+	    enddo
+	    
+    BoxC()
+
+	if nTime = 0 .and. !( fakt->(flock()) .and. doks->(flock()) )
+	
+	    	Beep(4) 
+ 	    	BoxC() 
+ 	    	Msg("Timeout za azuriranje istekao!#Ne mogu azuriranti dokument...") 
+ 	    	close all
+            return 
+	
+	endif
+
+endif 
+
 // 0. napuni matricu sa brojem dokumenta
 AADD( aFD_data, { pripr->idfirma, pripr->idtipdok, pripr->brdok } )
 
@@ -858,10 +894,10 @@ AADD( aFD_data, { pripr->idfirma, pripr->idtipdok, pripr->brdok } )
 Box("#Proces azuriranja u toku",3,60)
 	do while !eof()
   	if lViseDok
-    		cPom:=idfirma+idtipdok+brdok
+    		cPom := idfirma + idtipdok + brdok
     		select doks
     		seek cPom
-    		if Found() .and. (gMreznoNum=="N" .or. M1 <> "Z")
+    		if Found() .and. ( gMreznoNum=="N" .or. M1 <> "Z" )
       			AADD(aOstaju,cPom)
       			select pripr
       			do while !eof() .and. cPom==idfirma+idtipdok+brdok
@@ -869,8 +905,8 @@ Box("#Proces azuriranja u toku",3,60)
       			enddo
       			loop
     		else
-      			cKontrolBroj:=cPom
-      			@ m_x+2, m_y+2 SAY "Azuriram dokument "+pripr->(idfirma+"-"+idtipdok+"-"+brdok)
+      			cKontrolBroj := cPom
+      			@ m_x+2, m_y+2 SAY "Azuriram dokument " + pripr->( idfirma + "-" + idtipdok + "-" + brdok )
     		endif
   	endif
 
@@ -901,9 +937,10 @@ Box("#Proces azuriranja u toku",3,60)
      		// gather()
      		Gather2()
   	endif
+
   	select pripr
-  	
-	skip
+  	skip
+
 enddo
 
 
@@ -1041,8 +1078,6 @@ do while !eof()
   	nDugD:=0
 	nRabD:=0
   
-	altd()
-
 	do while !eof() .and. cIdFirma==idfirma .and. cIdTipdok==idtipdok .and. cBrDok==brdok
     		if cDinDem==LEFT(ValBazna(),3)
         		nPom1:=Round(kolicina*Cijena*PrerCij()*(1-Rabat/100),ZAOKRUZENJE)
@@ -1069,8 +1104,6 @@ do while !eof()
   
   	select doks
   
-	//msgbeep(" valbazna = " + VALBAZNA() + " gBaznaV=" + gBaznaV )
-
 	if (cDinDem==LEFT(ValBazna(),3))
    		_field->Iznos:=nDug 
 		// iznos sadrzi umanjenje za rabat
@@ -1109,11 +1142,14 @@ do while !eof()
 	if !(doks->(FLock()))
 		
 		Beep(4)
-  		Msg("Azuriranje NE moze vrsiti vise korisnika istovremeno !", 15)
-  		closeret
+  		Msg( "Azuriranje NE moze vrsiti vise korisnika istovremeno !", 15 )
+  		close all
+        return
+
 	endif
 
   	select pripr
+
 enddo
 
 PrModem()
@@ -1148,21 +1184,21 @@ if !lAzurOK
 else
 	select pripr
   	if (lViseDok .and. LEN(aOstaju)>0)
-    		// izbrisi samo azurirane
+    	    // izbrisi samo azurirane
     		go top
     		do while !eof()
-      			skip 1
-			nRecNo:=RecNo()
-			skip -1
+      		    skip 1
+			    nRecNo:=RecNo()
+			    skip -1
       			if (ASCAN(aOstaju,idfirma+idtipdok+brdok)=0)
         			delete
       			endif
       			go (nRecNo)
     		enddo
     		
-		__dbpack()
+		    __dbpack()
     		
-		MsgBeep("U pripremi su ostali dokumenti koji izgleda da vec postoje medju azuriranim!")
+		    MsgBeep("U pripremi su ostali dokumenti koji izgleda da vec postoje medju azuriranim!")
   	else
     		ZAP
   	endif
