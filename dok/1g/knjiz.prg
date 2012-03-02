@@ -2170,30 +2170,46 @@ if gMreznoNum == "D"
   go nTrecPripr
 endif
 
-
 // novi dokument, koji nema svog broja, u pripremi
 SELECT DOKS
 //Scatter ()
 
 if gMreznoNum == "D"
-   if !DOKS->(FLOCK())
-      nOkr := 80     // daj mu 10 sekundi max
-      do while nOkr > 0
-         InkeySc (.125)
-         nOkr --
-         if DOKS->(FLOCK())
-            exit
-         endif
-      enddo
-      if nOkr == 0 .AND. ! DOKS->(FLOCK())
-         Beep (4)
-         Msg ("Nemoguce odrediti broj dokumenta - ne mogu pristupiti bazi!")
-         return SPACE (LEN (_BrDok))
-      endif
-   endif
+
+	if !DOKS->(FLOCK())
+
+		if gAzurTimeOut == nil
+			nOkr := 150
+		else
+	       		nOkr := gAzurTimeOut
+		endif
+
+		Box(,1,60)
+
+      		do while nOkr > 0
+
+         		nOkr --
+         	
+			if DOKS->(FLOCK())
+            			exit
+         		endif
+	 			
+			@ m_x + 1, m_y + 2 SAY "Timeout... " + ALLTRIM(STR( nOkr ))
+			sleep(1)
+      		
+		enddo
+
+		BoxC()
+
+      		if nOkr == 0 .AND. ! DOKS->(FLOCK())
+         		Beep (4)
+         		Msg ("Nemoguce odrediti broj dokumenta - ne mogu pristupiti bazi!")
+         		return SPACE (LEN (_BrDok))
+      		endif
+   	endif
 endif
 
-cBroj1:=OdrediNBroj(_idfirma,_idtipdok)   //_brdok
+cBroj1 := OdrediNBroj(_idfirma,_idtipdok)   
 
 if _idtipdok $ "12#13"
 
@@ -2218,39 +2234,39 @@ else
 endif
 
 if gMreznoNum == "D"
-  // pravi se fizicki append u bazi dokumenata da bi se sacuvalo mjesto
-  // za ovaj dokument
-  //
-  SELECT DOKS
-  // dbappend()   // append blank skine LOCK sa baze
-  appblank2 (.F., .F.)   // ne cisti, ne otkljucavaj
-  _M1 := "Z"
-  if fieldpos("SIFRA")<>0
-    _sifra := sifrakorisn
-  endif
-  Gather2 ()
-  DBUNLOCK()
 
-  // popuni broj dokumenta u svakoj stavki pripreme
-  SELECT PRIPR
-  nTekRec := RECNO ()
-  nPrevOrd := INDEXORD()
-  set order to
-  go top
+	// pravi se fizicki append u bazi dokumenata da bi se sacuvalo mjesto
+  	// za ovaj dokument
+ 	//
+ 	SELECT DOKS
+  	// dbappend()   // append blank skine LOCK sa baze
+  	appblank2 (.F., .F.)   // ne cisti, ne otkljucavaj
+  	_M1 := "Z"
+  	if fieldpos("SIFRA")<>0
+    		_sifra := sifrakorisn
+  	endif
+  	Gather2 ()
+  	DBUNLOCK()
 
-  LOCATE for IdFirma == _IdFirma .AND. IdTipDok == _IdTipDok ;
-             .AND. EMPTY (BrDok)
-  do while FOUND ()
-    REPLACE BrDok WITH _BrDok
-    CONTINUE
-  END
+  	// popuni broj dokumenta u svakoj stavki pripreme
+  	SELECT PRIPR
+  	nTekRec := RECNO ()
+  	nPrevOrd := INDEXORD()
+  	set order to
+  	go top
 
-  GO nTekRec
-  DBSETORDER(nPrevOrd)
+  	LOCATE for IdFirma == _IdFirma .AND. IdTipDok == _IdTipDok ;
+        	.AND. EMPTY (BrDok)
+  	do while FOUND ()
+    		REPLACE BrDok WITH _BrDok
+    		CONTINUE
+  	END
+
+  	GO nTekRec
+  	DBSETORDER(nPrevOrd)
 endif
 
 return _BrDok
-*}
 
 
 

@@ -858,7 +858,11 @@ go top
 // lock-uj tabele prilikom azuriranja...
 if !( fakt->(flock()) .and. doks->(flock()) ) 
     
-    nTime := 150
+	if gAzurTimeOut == nil
+		nTime := 150
+	else
+	       	nTime := gAzurTimeOut
+	endif
 	   
 	Box(,1, 40)
 
