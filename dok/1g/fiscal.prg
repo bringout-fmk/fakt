@@ -864,6 +864,7 @@ local nRabat
 local lPoPNaTeret := .f.
 local n
 local _vr_pl
+local _rn_cnt := 0
 
 O_DOKS
 O_FAKT
@@ -898,6 +899,8 @@ do while !EOF() .and. field->idfirma == cFirma ;
 	.and. field->idtipdok == cTipDok ;
 	.and. field->brdok == cBrDok
 
+    ++ _rn_cnt
+
 	if field->kolicina > 0
 		lStorno := .f.
 		exit
@@ -906,6 +909,12 @@ do while !EOF() .and. field->idfirma == cFirma ;
 	skip
 enddo
 
+// ovaj racun nema stavki ?!?
+if _rn_cnt = 0
+    MsgBeep( "Racun nema stavki u tabeli fakt.dbf !!!" )
+    return 0
+endif
+
 // koji je broj racuna koji storniramo
 if lStorno == .t. 
 	Box(,1,60)
@@ -913,6 +922,11 @@ if lStorno == .t.
 			GET nNRekRn PICT "999999999" VALID ( nNRekRn > 0 )
 		read
 	BoxC()
+
+    if LastKey() == K_ESC
+        return 0
+    endif
+
 endif
 
 // kupac
@@ -1208,7 +1222,7 @@ fp_pos_rn( ALLTRIM( gFC_path ), ;
 
 // procitaj gresku!
 nErr := fp_r_error( ALLTRIM( gFC_path ), ALLTRIM( gFC_name), ;
-	gFc_tout, @nFisc_no )
+	gFc_tout, @nFisc_no, lStorno )
 
 if nErr = -9
   // nestanak trake ?
@@ -1216,7 +1230,7 @@ if nErr = -9
      if Pitanje(,"Ubacite traku i pritisnite 'D'","D") == "D"
  	// procitaj gresku opet !
 	nErr := fp_r_error( ALLTRIM( gFC_path ), ;
-		ALLTRIM( gFC_name ), gFc_tout, @nFisc_no )
+		ALLTRIM( gFC_name ), gFc_tout, @nFisc_no, lStorno )
      endif
   endif
 endif
