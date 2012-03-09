@@ -827,31 +827,11 @@ if (gProtu13=="D" .and. pripr->idtipdok=="13" .and. Pitanje(,"Napraviti protu-do
     fProtu:=.t.
 endif
 
-
-// ako je vise dokumenata u pripremi provjeri duple stavke
-if lViseDok
-
-	if prov_duple_stavke() == 1
-        return
-	endif
-
-else
-
-	// ako je samo jedan dokument provjeri da li je u dupli
-	cKontrolBroj:=pripr->(idfirma+idtipdok+brdok)
-
-	if dupli_dokument(cKontrolBroj)
-		Beep(4)
-  		Msg("Dokument "+pripr->(idfirma+"-"+idtipdok+"-"+brdok)+" vec postoji pod istim brojem!",4)
-        return
-	endif
-
-endif
-
 fRobaIDJ:=goModul:lId_J
 
 select roba
 set order to tag "ID"
+
 select pripr
 go top
 
@@ -895,6 +875,26 @@ if !( fakt->(flock()) .and. doks->(flock()) )
 
 endif 
 
+// ako je vise dokumenata u pripremi provjeri duple stavke
+if lViseDok
+
+	if prov_duple_stavke() == 1
+        return
+	endif
+
+else
+
+	// ako je samo jedan dokument provjeri da li je u dupli
+	cKontrolBroj:=pripr->(idfirma+idtipdok+brdok)
+
+	if dupli_dokument(cKontrolBroj)
+		Beep(4)
+  		Msg("Dokument "+pripr->(idfirma+"-"+idtipdok+"-"+brdok)+" vec postoji pod istim brojem!",4)
+        return
+	endif
+
+endif
+
 
 // 0. napuni matricu sa brojem dokumenta
 AADD( aFD_data, { pripr->idfirma, pripr->idtipdok, pripr->brdok } )
@@ -902,11 +902,16 @@ AADD( aFD_data, { pripr->idfirma, pripr->idtipdok, pripr->brdok } )
 // 1. azuriranje u bazu FAKT
 
 Box("#Proces azuriranja u toku",3,60)
-	do while !eof()
-  	if lViseDok
+
+do while !eof()
+
+      	if lViseDok
+
     		cPom := idfirma + idtipdok + brdok
+
     		select doks
     		seek cPom
+
     		if Found() .and. ( gMreznoNum=="N" .or. M1 <> "Z" )
       			AADD(aOstaju,cPom)
       			select pripr
@@ -918,38 +923,40 @@ Box("#Proces azuriranja u toku",3,60)
       			cKontrolBroj := cPom
       			@ m_x+2, m_y+2 SAY "Azuriram dokument " + pripr->( idfirma + "-" + idtipdok + "-" + brdok )
     		endif
-  	endif
 
-  	select pripr
-  	Scatter()
+  	    endif
 
-  	select fakt
+  	    select pripr
 
-  	// nemoj brisati i nemoj otkljucavati
-	AppBlank2(.f.,.f.)   
+  	    Scatter()
+
+  	    select fakt
+
+  	    // nemoj brisati i nemoj otkljucavati
+	    AppBlank2(.f.,.f.)   
   	
-	if fRobaIDJ  
-		// nafiluj polje IDROBA_J u prometu
-   		select roba
-		hseek _idroba
-   		_idroba_j:=roba->id_j
-   		select fakt
-  	endif
+	    if fRobaIDJ  
+		    // nafiluj polje IDROBA_J u prometu
+   		    select roba
+		    hseek _idroba
+   		    _idroba_j:=roba->id_j
+   		    select fakt
+  	    endif
        
         // opet nemoj otkljucavati
-	Gather2()
+	    Gather2()
 
-  	if (fProtu .and. idtipdok=="13")
+  	    if (fProtu .and. idtipdok=="13")
      		AppBlank2(.f.,.f.) 
      		_idfirma:=cPRJ
      		_idtipdok:="01"
      		_brdok:=TRIM(_brdok)+"/13"
      		// gather()
      		Gather2()
-  	endif
+  	    endif
 
-  	select pripr
-  	skip
+  	    select pripr
+  	    skip
 
 enddo
 
