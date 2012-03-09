@@ -1272,7 +1272,30 @@ if lDocExist
 endif
 
 return 0
-*}
+
+
+
+// lokovanje tabela fakt i doks
+function fakt_lock()
+
+if Pitanje(, "zakljucaj baze ?", "N") == "D"
+    if !fakt->FLOCK()
+        msgbeep("Ne mogu lokovati FAKT !")
+    endif
+
+    if !doks->FLOCK()
+        msgbeep("Ne mogu lokovati DOKS !")
+    endif
+endif
+
+if pitanje(, "otkljucaj baze", "N" ) == "D"
+    close all
+endif
+
+return
+
+
+
 
 
 // brisi stavke iz pripreme koje se vec nalaze u kumulativu

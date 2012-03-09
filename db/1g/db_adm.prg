@@ -47,6 +47,9 @@ AADD(opc, "9. kontrola duplih partnera")
 AADD(opcexe, {|| chk_dpartn()})
 AADD(opc, "E. fakt export (r_exp) ")
 AADD(opcexe, {|| fkt_export()})
+AADD(opc, "F. lock kumulativ ")
+AADD(opcexe, {|| fakt_lock()})
+
 
 Menu_SC("fain")
 
