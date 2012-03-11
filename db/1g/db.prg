@@ -844,14 +844,14 @@ if !( fakt->(flock()) .and. doks->(flock()) )
 	       	nTime := gAzurTimeOut
 	endif
 	   
-	Box(,1, 40)
+	Box(,1, 60)
 
 	    // daj mu vremena...
 	    do while nTime > 0
 	
 		    -- nTime
 
-		    @ m_x + 1, m_y + 2 SAY "timeout: " + ALLTRIM(STR(nTime))
+		    @ m_x + 1, m_y + 2 SAY "Baza je trenutno zauzeta... " + ALLTRIM(STR(nTime))
 		
 		    if ( fakt->(flock()) .and. doks->(flock()) ) 
 			    exit
@@ -865,11 +865,11 @@ if !( fakt->(flock()) .and. doks->(flock()) )
 
 	if nTime = 0 .and. !( fakt->(flock()) .and. doks->(flock()) )
 	
-	    	Beep(4) 
- 	    	BoxC() 
- 	    	Msg("Timeout za azuriranje istekao!#Ne mogu azuriranti dokument...") 
- 	    	close all
-            return 
+	    Beep(4) 
+ 	    BoxC() 
+ 	    Msg("Timeout za azuriranje istekao!#Ne mogu azuriranti dokument...") 
+ 	    close all
+            return nil 
 	
 	endif
 
@@ -879,7 +879,7 @@ endif
 if lViseDok
 
 	if prov_duple_stavke() == 1
-        return
+        	return nil
 	endif
 
 else
@@ -890,7 +890,7 @@ else
 	if dupli_dokument(cKontrolBroj)
 		Beep(4)
   		Msg("Dokument "+pripr->(idfirma+"-"+idtipdok+"-"+brdok)+" vec postoji pod istim brojem!",4)
-        return
+        	return nil
 	endif
 
 endif
@@ -1278,17 +1278,24 @@ return 0
 // lokovanje tabela fakt i doks
 function fakt_lock()
 
-if Pitanje(, "zakljucaj baze ?", "N") == "D"
-    if !fakt->FLOCK()
+if !SigmaSif("LOCK")
+	return
+endif
+
+O_FAKT
+O_DOKS
+
+if Pitanje(, "Zakljucaj baze ?", "N") == "D"
+    if !(fakt->(FLOCK()))
         msgbeep("Ne mogu lokovati FAKT !")
     endif
 
-    if !doks->FLOCK()
+    if !(doks->(FLOCK()))
         msgbeep("Ne mogu lokovati DOKS !")
     endif
 endif
 
-if pitanje(, "otkljucaj baze", "N" ) == "D"
+if Pitanje(, "Otkljucaj baze", "N" ) == "D"
     close all
 endif
 

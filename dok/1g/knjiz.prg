@@ -387,7 +387,6 @@ do case
 		O_Edit()
 	
 		if gFc_use == "D" .and. cFTipDok $ "10#11"
-			
 			if aFakt_dok <> nil .and. LEN( aFakt_dok ) > 0
 				cFirma := aFakt_dok[ 1, 1 ] 
 				cFTipDok := aFakt_dok[ 1, 2 ] 
