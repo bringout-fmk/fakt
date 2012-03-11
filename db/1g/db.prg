@@ -1432,9 +1432,9 @@ local _srch_tag
 _prefix := PADL( ALLTRIM( STR( GetUserId() ) ), 2, "0" )
 
 // pretraga po prefiksu
-if gSecurity == "D" .and. _idtipdok == "12" .and. !EMPTY( _prefix )
+if gSecurity == "D" .and. _idtipdok $ "12#22" .and. !EMPTY( _prefix )
     
-    	_srch_tag := _prefix + "-"
+    	_srch_tag := _prefix + "/"
 
 	seek _idfirma +_idtipdok + _srch_tag + "È"
  	skip -1
