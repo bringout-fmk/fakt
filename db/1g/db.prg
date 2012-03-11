@@ -1420,26 +1420,19 @@ if Found()
 endif
 return .f.
 
-// --------------------------------------
-// OdrediNBroj(_idfirma,_idtipdok)
-// ---------------------------------------- 
-function OdrediNbroj( _idfirma, _idtipdok )
-local cNBrDok := ""
+
+// --------------------------------------------------
+// pretraga broja dokumenta sa prefiksom
+// --------------------------------------------------
+static function po_prefix( _firma, _tip_dok )
+local _broj := ""
 local _prefix
 local _srch_tag
 
-if ( gPoPrefiksu == "D" )
-    _prefix := PADL( ALLTRIM( STR( GetUserId() ) ), 2, "0" )
-endif
-
-select DOKS
-set order to tag "1"
-go top
-
-altd()
+_prefix := PADL( ALLTRIM( STR( GetUserId() ) ), 2, "0" )
 
 // pretraga po prefiksu
-if _idtipdok == "12" .and. gPoPrefiksu == "D" .and. !EMPTY( _prefix )
+if gSecurity == "D" .and. _idtipdok == "12" .and. !EMPTY( _prefix )
     
     	_srch_tag := _prefix + "-"
 
@@ -1448,17 +1441,37 @@ if _idtipdok == "12" .and. gPoPrefiksu == "D" .and. !EMPTY( _prefix )
     
    	if field->idfirma == _idfirma .and. field->idtipdok == _idtipdok .and. LEFT( field->brdok, 3 ) == _srch_tag
     
-        	cNBrDok := UBrojDok( VAL( RIGHT( ALLTRIM( field->brdok ), 5 ) ) + 1, gNumDio, "" )
+        	_broj := UBrojDok( VAL( RIGHT( ALLTRIM( field->brdok ), 5 ) ) + 1, gNumDio, "" )
         
 
     	else
-		cNBrDok := UBrojDok( 1, gNumDio, "" )
+		_broj := UBrojDok( 1, gNumDio, "" )
 	endif 
 
-        cNBrDok := PADR( _srch_tag + cNBrDok, 8 )
+        _broj := PADR( _srch_tag + _broj, 8 )
 
-        return cNBrDok
+endif
 
+return _broj
+
+
+
+// --------------------------------------
+// OdrediNBroj(_idfirma,_idtipdok)
+// ---------------------------------------- 
+function OdrediNbroj( _idfirma, _idtipdok )
+local cNBrDok := ""
+local _ret
+
+select DOKS
+set order to tag "1"
+go top
+
+if gPoPrefiks == "D"
+	_ret := po_prefix( _idfirma, _idtipdok )
+	if !EMPTY( _ret )
+		return _ret
+	endif
 endif
 
 if (gVarNum=="2".and._idtipdok=="13")

@@ -858,7 +858,8 @@ Box(, 23, 76, .f., "VARIJANTE OBRADE DOKUMENATA")
 	@ m_x+1,m_y+2 SAY "Unos Dat.pl, otpr., narudzbe D/N (1/2) ?" GET gDoDPar VALID gDodPar $ "12" PICT "@!"
   	@ m_x+1,m_y+46 SAY "Dat.pl.u svim v.f.9 (D/N)?" GET gDatVal VALID gDatVal $ "DN" PICT "@!"
   	@ m_x+2,m_y+2 SAY "Generacija ulaza prilikom izlaza 13" GET gProtu13 VALID gProtu13 $ "DN" PICT "@!"
-  	@ m_x+3,m_y+2 SAY "Mrezna numeracija dokumenata D/N" GET gMreznoNum PICT "@!" VALID gMreznoNum $ "DN"
+  	@ m_x+3,m_y+2 SAY "Mrezna numeracija (D/N)" GET gMreznoNum PICT "@!" VALID gMreznoNum $ "DN"
+  	@ m_x+3,col()+1 SAY "Otpr.sa prefiksom" GET gPoPrefiks PICT "@!" VALID gPoPrefiks $ "DN"
   	@ m_x+4,m_y+2 SAY "Maloprod.cijena za 13-ku ( /1/2/3/4/5/6)   " GET g13dcij VALID g13dcij$" 123456"
   	@ m_x+5,m_y+2 SAY "Varijanta dokumenta 13 (1/2)   " GET gVar13 VALID gVar13$"12"
   	@ m_x+6,m_y+2 SAY "Varijanta numeracije dokumenta 13 (1/2)   " GET gVarNum VALID gVarNum$"12"
@@ -902,6 +903,7 @@ if (LASTKEY()<>K_ESC)
    	WPar("vn",gVarNum)
    	WPar("pk",gPratik)
    	WPar("pc",gPratiC)
+	WPar("Fz",gAzurTimeout)
    	WPar("50",gVarC)
    	WPar("mp",gMP)  // varijanta maloprodajne cijene
    	WPar("nd",gNumdio)
@@ -920,6 +922,7 @@ if (LASTKEY()<>K_ESC)
 	WPar("rR",gRabIzRobe)
 	WPar("Fx",gcF9usmece)
 	WPar("Fz",gAzurTimeout)
+	WPar("oP",gPoPrefiks)
   	
 endif
 

@@ -463,7 +463,8 @@ public gMPCjenPDV := "2"
 // zaokruzenje 5pf
 public gZ_5pf := "N"
 
-public gPoPrefiksu := "D"
+// novi dokumenti - otpremnice po prefiksu
+public gPoPrefiksu := "N"
 
 O_PARAMS
 private cSection:="1"
@@ -614,6 +615,7 @@ RPar("rp",@gRabProc)
 RPar("pd",@gProtu13)
 RPar("a5",@gFormatA5)
 RPar("mn",@gMreznoNum)
+RPar("oP",@gPoPrefiks)
 RPar("mV",@gModemVeza)
 RPar("g1",@gKarC1)
 RPar("g2",@gKarC2)
