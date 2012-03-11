@@ -1436,22 +1436,28 @@ select DOKS
 set order to tag "1"
 go top
 
+altd()
+
 // pretraga po prefiksu
-if gPoPrefiksu == "D" .and. !EMPTY( prefix )
+if _idtipdok == "12" .and. gPoPrefiksu == "D" .and. !EMPTY( _prefix )
     
-    _srch_tag := _prefix + "-"
+    	_srch_tag := _prefix + "-"
 
 	seek _idfirma +_idtipdok + _srch_tag + "È"
  	skip -1
     
-    if field->idfirma == _idfirma .and. field->idtipdok == _idtipdok .and. LEFT( field->brdok, 3 ) == _srch_tag
+   	if field->idfirma == _idfirma .and. field->idtipdok == _idtipdok .and. LEFT( field->brdok, 3 ) == _srch_tag
     
-        cNBrDok := UBrojDok( VAL( RIGHT( ALLTRIM( field->brdok ), 5 ) ), gNumDio, RIGHT( field->brdok, LEN( field->brdok ) - gNumDio ))
-        cNBrDok := PADR( _srch_tag + cNBrDok, 8 )
+        	cNBrDok := UBrojDok( VAL( RIGHT( ALLTRIM( field->brdok ), 5 ) ) + 1, gNumDio, "" )
         
-        return cNBrDok
 
-    endif 
+    	else
+		cNBrDok := UBrojDok( 1, gNumDio, "" )
+	endif 
+
+        cNBrDok := PADR( _srch_tag + cNBrDok, 8 )
+
+        return cNBrDok
 
 endif
 

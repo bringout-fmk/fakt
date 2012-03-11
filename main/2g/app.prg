@@ -463,7 +463,7 @@ public gMPCjenPDV := "2"
 // zaokruzenje 5pf
 public gZ_5pf := "N"
 
-public gPo_prefiksu := "D"
+public gPoPrefiksu := "D"
 
 O_PARAMS
 private cSection:="1"
