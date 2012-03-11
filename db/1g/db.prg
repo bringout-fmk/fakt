@@ -1416,12 +1416,37 @@ return .f.
 // --------------------------------------
 // OdrediNBroj(_idfirma,_idtipdok)
 // ---------------------------------------- 
-function OdrediNbroj(_idfirma, _idtipdok)
-local cNBrDok:=""
+function OdrediNbroj( _idfirma, _idtipdok )
+local cNBrDok := ""
+local _prefix
+local _srch_tag
+
+if ( gPoPrefiksu == "D" )
+    _prefix := PADL( ALLTRIM( STR( GetUserId() ) ), 2, "0" )
+endif
 
 select DOKS
-set order to 1
+set order to tag "1"
 go top
+
+// pretraga po prefiksu
+if gPoPrefiksu == "D" .and. !EMPTY( prefix )
+    
+    _srch_tag := _prefix + "-"
+
+	seek _idfirma +_idtipdok + _srch_tag + "È"
+ 	skip -1
+    
+    if field->idfirma == _idfirma .and. field->idtipdok == _idtipdok .and. LEFT( field->brdok, 3 ) == _srch_tag
+    
+        cNBrDok := UBrojDok( VAL( RIGHT( ALLTRIM( field->brdok ), 5 ) ), gNumDio, RIGHT( field->brdok, LEN( field->brdok ) - gNumDio ))
+        cNBrDok := PADR( _srch_tag + cNBrDok, 8 )
+        
+        return cNBrDok
+
+    endif 
+
+endif
 
 if (gVarNum=="2".and._idtipdok=="13")
 	seek _idfirma+_idtipdok+PADL(ALLTRIM(STR(VAL(ALLTRIM(SUBSTR(_idpartner,4))))),2,"0")+CHR(238)
