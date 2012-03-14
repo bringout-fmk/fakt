@@ -12,33 +12,8 @@
 
 #include "fakt.ch"
 
-/*
- * ----------------------------------------------------------------
- *                                     Copyright Sigma-com software 
- * ----------------------------------------------------------------
- *
- */
-
-/*! \file fmk/fakt/dok/1g/vknjiz2.prg
- *  \brief
- */
-
-
-/*! \ingroup ini
-  * \var *string FmkIni_KumPath_FAKT_UnosPartneraObaveznoPoSifri
-  * \brief Omogucava varijantu unosa partnera na dokumentu iskljucivo pomocu sifre
-  * \param N - ne mora preko sifre, default vrijednost
-  * \param D - mora se unijeti sifra partnera
-  */
-*string FmkIni_KumPath_FAKT_UnosPartneraObaveznoPoSifri;
-
- 
-/*! \fn PrZaglavlje()
- *  \brief 
- */
 
 function PrZaglavlje()
-*{
 private aPom:={"00 - Pocetno stanje     ",;
                "01 - Ulaz / Radni nalog ",;
                "10 - Racun veleprodaje",;
