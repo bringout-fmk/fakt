@@ -1049,18 +1049,16 @@ if !EMPTY( cPartnId )
 		lP_stamp := .f.
 
 		if !EMPTY( cPOslob )
+
 			// za oslobodjene od pdv-a cemo stampati podatke
 			// o partneru
+            
 			lP_stamp := .t.	
+
 		endif
 	
 	elseif LEN( cJibPartn ) >= 12
 
-		// ako je pdv obveznik
-		// dodaj "4" ispred id broja
-		
-		cJibPartn := PADL( ALLTRIM( cJibPartn ), 13, "4" )
-				
 		lIno := .f.
 		lPDVObveznik := .t.
 		lP_stamp := .t.
@@ -1072,7 +1070,11 @@ if !EMPTY( cPartnId )
 
 	if lP_stamp
 		
-		nTarea := SELECT()
+		if LEN( cJibPartn ) == 12
+            cJibPartn := PADL( ALLTRIM( cJibPartn ), 13, "4" )
+        endif
+		
+        nTarea := SELECT()
 	
 		select partn
 		seek cPartnId
