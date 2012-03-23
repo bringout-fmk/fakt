@@ -207,6 +207,8 @@ local nErr := 0
 local nFisc_no := 0
 local cJibPartn := ""
 local lIno := .f.
+local lPDVObveznik := .f.
+local lP_stamp := .f.
 local cPOslob := ""
 local cNF_txt := cFirma + "-" + cTipDok + "-" + ALLTRIM( cBrDok )
 local cFName
@@ -280,27 +282,50 @@ endif
 
 if !EMPTY( cPartnId )
 
+
 	cJibPartn := ALLTRIM( IzSifK( "PARTN" , "REGB", cPartnId, .f. ) )
 	cPOslob := ALLTRIM( IzSifK( "PARTN" , "PDVO", cPartnId, .f. ) )
 
-	if LEN(cJibPartn) < 12 .or. !EMPTY( cPOslob )
+	if EMPTY(cJibPartn) .and. cTipDok <> "11"
+		msgbeep("Partner nema popunjen ID broj !!!")
+		return 0
+	endif
+
+	if cTipDok $ "#11#"
 		
+		// kod 11-ki nam ne treba ispis partnera
+		lIno := .f.
+		lPDVObveznik := .t.
+		lP_stamp := .f.
+
+	elseif LEN(cJibPartn) < 12 .or. !EMPTY( cPOslob )
+
 		lIno := .t.
+		lP_stamp := .f.
+
+		if !EMPTY( cPOslob )
+			// za oslobodjene od pdv-a cemo stampati podatke
+			// o partneru
+			lP_stamp := .t.	
+		endif
 	
-	elseif LEN( cJibPartn ) = 12
+	elseif LEN( cJibPartn ) >= 12
 
 		// ako je pdv obveznik
 		// dodaj "4" ispred id broja
 		
-		cJibPartn := "4" + ALLTRIM( cJibPartn )
-		
+		cJibPartn := PADL( ALLTRIM( cJibPartn ), 13, "4" )
+				
 		lIno := .f.
+		lPDVObveznik := .t.
+		lP_stamp := .t.
 
 	endif
 
-	// ako nije INO, onda setuj partnera
+	// ako treba stampati podatke partnera
+	// poduzmi sljedece
 
-	if lIno = .f.
+	if lP_stamp
 		
 		nTarea := SELECT()
 	
@@ -312,27 +337,39 @@ if !EMPTY( cPartnId )
 		// provjeri podatke partnera
 		lPEmpty := .f.
 		lPEmpty := EMPTY( cJibPartn )
+	
 		if !lPEmpty
 			lPEmpty := EMPTY( partn->naz )
 		endif
+		
 		if !lPEmpty
 			lPEmpty := EMPTY( partn->adresa )
 		endif
+		
 		if !lPEmpty
 			lPEmpty := EMPTY( partn->ptt )
 		endif
+		
 		if !lPEmpty
 			lPEmpty := EMPTY( partn->mjesto )
 		endif
-		if lPEmpty
+		  
+		if cTipDok $ "#10#"
+		  if lPEmpty
 			msgbeep("!!! Podaci partnera nisu kompletirani !!!#Prekidam operaciju")
 			return 0
+		  endif
 		endif
-	
-		// ubaci u matricu podatke o partneru
-		AADD( aKupac, { cJibPartn, partn->naz, partn->adresa, ;
+
+		if cTipDok $ "#10#"
+		   // ubaci u matricu podatke o partneru
+		   AADD( aKupac, { cJibPartn, partn->naz, partn->adresa, ;
 			partn->ptt, partn->mjesto } )
-	
+		endif
+
+		// setuj kupac info
+		cKupacInfo := ALLTRIM( partn->naz )
+
 	endif
 
 endif
@@ -543,6 +580,8 @@ local nErr := 0
 local nFisc_no := 0
 local cJibPartn := ""
 local lIno := .f.
+local lPDVObveznik := .f.
+local lP_stamp := .f.
 local cPOslob := ""
 local cNF_txt := cFirma + "-" + cTipDok + "-" + ALLTRIM( cBrDok )
 local nU_total
@@ -620,26 +659,41 @@ if !EMPTY( cPartnId )
 		return 0
 	endif
 
-	if LEN(cJibPartn) < 12 .or. !EMPTY( cPOslob )
+	if cTipDok $ "#11#"
 		
+		// kod 11-ki nam ne treba ispis partnera
+		lIno := .f.
+		lPDVObveznik := .t.
+		lP_stamp := .f.
+
+	elseif LEN(cJibPartn) < 12 .or. !EMPTY( cPOslob )
+
 		lIno := .t.
+		lP_stamp := .f.
+
+		if !EMPTY( cPOslob )
+			// za oslobodjene od pdv-a cemo stampati podatke
+			// o partneru
+			lP_stamp := .t.	
+		endif
 	
 	elseif LEN( cJibPartn ) >= 12
-
-		// ovo moze biti pdv ili ne-pdv obveznik
 
 		// ako je pdv obveznik
 		// dodaj "4" ispred id broja
 		
-		cJibPartn := PADL( ALLTRIM(cJibPartn), 13, "4" )
-		
+		cJibPartn := PADL( ALLTRIM( cJibPartn ), 13, "4" )
+				
 		lIno := .f.
+		lPDVObveznik := .t.
+		lP_stamp := .t.
 
 	endif
 
-	// ako nije INO, onda setuj partnera
+	// ako treba stampati podatke partnera
+	// poduzmi sljedece
 
-	if lIno = .f.
+	if lP_stamp
 		
 		nTarea := SELECT()
 	
@@ -651,28 +705,41 @@ if !EMPTY( cPartnId )
 		// provjeri podatke partnera
 		lPEmpty := .f.
 		lPEmpty := EMPTY( cJibPartn )
+	
 		if !lPEmpty
 			lPEmpty := EMPTY( partn->naz )
 		endif
+		
 		if !lPEmpty
 			lPEmpty := EMPTY( partn->adresa )
 		endif
+		
 		if !lPEmpty
 			lPEmpty := EMPTY( partn->ptt )
 		endif
+		
 		if !lPEmpty
 			lPEmpty := EMPTY( partn->mjesto )
 		endif
-		if lPEmpty
+		  
+		if cTipDok $ "#10#"
+		  if lPEmpty
 			msgbeep("!!! Podaci partnera nisu kompletirani !!!#Prekidam operaciju")
 			return 0
+		  endif
 		endif
-	
-		// ubaci u matricu podatke o partneru
-		AADD( aKupac, { cJibPartn, partn->naz, partn->adresa, ;
+
+		if cTipDok $ "#10#"
+		   // ubaci u matricu podatke o partneru
+		   AADD( aKupac, { cJibPartn, partn->naz, partn->adresa, ;
 			partn->ptt, partn->mjesto } )
-	
+		endif
+
+		// setuj kupac info
+		cKupacInfo := ALLTRIM( partn->naz )
+
 	endif
+
 
 endif
 
@@ -853,6 +920,7 @@ local nErr := 0
 local nFisc_no := 0
 local cJibPartn := ""
 local lIno := .f.
+local lP_stamp := .f.
 local cPOslob := ""
 local cNF_txt := cFirma + "-" + cTipDok + "-" + ALLTRIM( cBrDok )
 local cKupacInfo := ""
@@ -899,7 +967,7 @@ do while !EOF() .and. field->idfirma == cFirma ;
 	.and. field->idtipdok == cTipDok ;
 	.and. field->brdok == cBrDok
 
-    ++ _rn_cnt
+    	++ _rn_cnt
 
 	if field->kolicina > 0
 		lStorno := .f.
@@ -970,14 +1038,21 @@ if !EMPTY( cPartnId )
 
 	if cTipDok $ "#11#"
 		
-		// ovo je NN kupac
-		// jednostavno za njega nadji podatke
+		// kod 11-ki nam ne treba ispis partnera
 		lIno := .f.
 		lPDVObveznik := .t.
+		lP_stamp := .f.
 
 	elseif LEN(cJibPartn) < 12 .or. !EMPTY( cPOslob )
 
 		lIno := .t.
+		lP_stamp := .f.
+
+		if !EMPTY( cPOslob )
+			// za oslobodjene od pdv-a cemo stampati podatke
+			// o partneru
+			lP_stamp := .t.	
+		endif
 	
 	elseif LEN( cJibPartn ) >= 12
 
@@ -988,12 +1063,14 @@ if !EMPTY( cPartnId )
 				
 		lIno := .f.
 		lPDVObveznik := .t.
+		lP_stamp := .t.
 
 	endif
 
-	// ako nije INO, onda setuj partnera
+	// ako treba stampati podatke partnera
+	// poduzmi sljedece
 
-	if lIno = .f.
+	if lP_stamp
 		
 		nTarea := SELECT()
 	
@@ -1005,15 +1082,19 @@ if !EMPTY( cPartnId )
 		// provjeri podatke partnera
 		lPEmpty := .f.
 		lPEmpty := EMPTY( cJibPartn )
+	
 		if !lPEmpty
 			lPEmpty := EMPTY( partn->naz )
 		endif
+		
 		if !lPEmpty
 			lPEmpty := EMPTY( partn->adresa )
 		endif
+		
 		if !lPEmpty
 			lPEmpty := EMPTY( partn->ptt )
 		endif
+		
 		if !lPEmpty
 			lPEmpty := EMPTY( partn->mjesto )
 		endif

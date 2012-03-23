@@ -12,19 +12,8 @@
 
 #include "fakt.ch"
 
-/*
- * ----------------------------------------------------------------
- *                                     Copyright Sigma-com software 
- * ----------------------------------------------------------------
- */
-
-
-/*! \fn GDokInv(cIdRj)
- *  \brief generacija dokumenta inventure
- */
  
 function GDokInv(cIdRj)
-*{
 local cIdRoba
 local cBrDok
 local nUl
@@ -291,16 +280,21 @@ local cIdTipDok := ""
 local lSumirati := .t.
 local _vp_mp := 1
 local _n_tip_dok := "10"
+local _ctrl_firma, _ctrl_broj, _ctrl_tip
+local _old_broj
 
 select pripr
 use
+
 O_PRIPR
+
 go top
 
 if reccount2() == 0
 
    select doks
-   set order to 2  
+   set order to tag "2"
+
    // idfirma+idtipdok+partner
 
    ImeKol:={}
@@ -331,7 +325,7 @@ if reccount2() == 0
       skip
     enddo
 
-    seek cidrj + "12"
+    seek cIdRj + "12"
     
     BrowseKey(m_x+5,m_y+1,m_x+19,m_y+73,ImeKol,{|Ch| EdOtpr(Ch)},"IdFirma+idtipdok=cIdrj+'12'",;
               cIdRj + "12",2,,,{|| partner=cPartner} )
@@ -362,43 +356,91 @@ if reccount2() == 0
       cVezOtpr := ""
       
       select pripr
-      select doks 
+
+      select doks
+      go top
       
       // order 2 !!!
-      seek cidrj + "12" + cPartner
+      seek cIdRj + "12" + cPartner
 
-      dNajnoviji:=CTOD("")
+      dNajnoviji := CTOD("")
       
-      do while !eof() .and. IdFirma+IdTipdok=cidrj+"12" ;
-               .and. DOKS->Partner=cPartner
+      do while !eof() .and. IdFirma + IdTipdok = cIdrj + "12" ;
+               .and. UPPER( doks->Partner ) = UPPER( cPartner )
          
 	 skip
-	 nTrec0:=recno()
+
+	 nTrec0 := RECNO()
+	 
 	 skip -1
          
-	 if m1="*"
+	 if m1 = "*"
 
 	    cIdPart := doks->idpartner
 	    
-	    if dNajnoviji < doks->datDok
-		    dNajnoviji := doks->datDok
+	    if dNajnoviji < doks->datdok
+		    dNajnoviji := doks->datdok
 	    endif
       
-      	    // scatter()
-            nOldIznos := iznos   // ???!
+            nOldIznos := iznos   
             
-            cVezOtpr += Trim (DOKS->BrDok)+", "
-            REPLACE IdTipDok WITH "22"      // promijeni naslov
-            REPLACE m1       WITH " "       // skini zvjezdicu iz browsa
-            
-            dxIdFirma := DOKS->IdFirma    // za provozat FAKT
-            dxBrDok   := DOKS->BrDok
-            
+	    // prvo cemo napraviti kontrolu broja dokumenta
+	    _ctrl_firma := doks->idfirma 
+	    _ctrl_tip := "22" 
+	    _ctrl_broj := doks->brdok
+	    _count := 0
 
-            select DOKS 
-	    set order to 1
-            
+	    do while .t.
+	        
+		++ _count
+
+		select fakt
+	    	set order to tag "1"
+	    	go top
+	    	seek _ctrl_firma + _ctrl_tip + _ctrl_broj
+
+	    	if FOUND()
+	       	    	// hjuston, imamo problem
+			// uvecaj broj
+			_ctrl_broj := PADR( ALLTRIM( _ctrl_broj ), gNumDio ) + "-" + ALLTRIM(STR( _count ))
+			_ctrl_broj := PADR( _ctrl_broj, 8 )
+	    	else
+			exit
+		endif
+
+	    enddo
+
+	    select doks
+
+            // napravi zamjenu
+            _old_broj := doks->brdok
 	    
+	    replace idfirma with _ctrl_firma
+	    replace brdok with _ctrl_broj
+            replace idtipdok with _ctrl_tip      
+	    replace m1 with " "       
+            
+            dxIdFirma := doks->idfirma    
+	    dxBrDok   := doks->brdok
+            
+            cVezOtpr += TRIM(doks->brdok) + ", "
+            
+	    // odmah napravi promjenu 12-ki i u fakt tabeli
+	    select fakt
+	    set order to tag "1"
+	    go top
+	    seek dxIdFirma + "12" + _old_broj
+	    do while !EOF() .and. field->idfirma + field->idtipdok + field->brdok == dxIdFirma + "12" + _old_broj
+	    	skip
+		_t_rec := RECNO()
+		skip -1
+		replace field->brdok with _ctrl_broj
+		go ( _t_rec )
+	    enddo
+
+	    select DOKS 
+	    set order to tag "1"
+           
 	    IF gMreznoNum == "N"
                
 	       dbseek( dxidfirma + _n_tip_dok + "È", .t. )
@@ -408,7 +450,7 @@ if reccount2() == 0
 	       if _n_tip_dok <> idtipdok
                   cBrDok := UBrojDok( 1, gNumDio, "" )
                else
-                  cBrDok:=UBrojDok( val(left(brdok,gNumDio))+1, ;
+                  cBrDok := UBrojDok( val(left(brdok,gNumDio))+1, ;
                                     gNumDio, ;
                                     right(brdok,len(brdok)-gNumDio) ;
                                   )
@@ -474,11 +516,14 @@ if reccount2() == 0
       enddo 
 
       IF !Empty (cVezOtpr)
-         cVezOtpr := "Racun formiran na osnovu otpremnica: " +;
-                     LEFT (cVezOtpr, LEN (cVezOtpr)-2)+"."     // skine ", "
+         cVezOtpr := "Racun formiran na osnovu otpremnica: " + ;
+              LEFT (cVezOtpr, LEN (cVezOtpr)-2) + "."     
+		// skine ", "
       ENDIF
+      
       select pripr
-      RenumPripr(cVezOtpr,dNajnoviji)
+      
+      RenumPripr( cVezOtpr, dNajnoviji )
 
       select doks
       set order to 1

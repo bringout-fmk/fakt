@@ -67,8 +67,10 @@ P_COND
 // uzmi totale
 _st_mp_dok( @nT_osn, @nT_pdv, @nT_uk, .t. )
 
-// stampaj po operateru
-_st_mp_oper()
+if gSecurity == "D"
+	// stampaj po operateru
+	_st_mp_oper()
+endif
 
 ?
 
@@ -136,8 +138,10 @@ Box( , 10, 66)
 
 	++ nX
 
-	@ m_x + nX, m_y + 2 SAY "Operater (0-svi):" GET nOperater ;
-		PICT "999" VALID nOperater = 0 .or. P_USERS( @nOperater )
+	if gSecurity == "D"
+		@ m_x + nX, m_y + 2 SAY "Operater (0-svi):" GET nOperater ;
+			PICT "999" VALID nOperater = 0 .or. P_USERS( @nOperater )
+	endif
 
 	++ nX
 	++ nX
@@ -425,7 +429,11 @@ do while !EOF()
 	cPart_id := field->part_id
 	cPart_naz := field->part_naz
 	nOperater := field->operater
-	cOper_naz := GetFullUserName( nOperater )
+	if gSecurity == "D"
+		cOper_naz := GetFullUserName( nOperater )
+	else
+		cOper_naz := ""
+	endif
 	
 	nOsnovica := 0
 	nPDV := 0
