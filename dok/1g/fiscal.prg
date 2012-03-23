@@ -1071,10 +1071,10 @@ if !EMPTY( cPartnId )
 	if lP_stamp
 		
 		if LEN( cJibPartn ) == 12
-            cJibPartn := PADL( ALLTRIM( cJibPartn ), 13, "4" )
-        endif
+            		cJibPartn := PADL( ALLTRIM( cJibPartn ), 13, "4" )
+        	endif
 		
-        nTarea := SELECT()
+        	nTarea := SELECT()
 	
 		select partn
 		seek cPartnId
