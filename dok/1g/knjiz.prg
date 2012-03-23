@@ -992,11 +992,6 @@ Box("#PARAMETRI DOKUMENTA:",10,75)
    read
   endif
 
-  // ovo ukidam, ovo je porez na promet proizvoda...
-  // to se vise ne koristi !
-
-  //@ m_x+10, m_y+2 SAY "Obracunati PDV ?" GET cSetPor pict "@!" valid cSetPor $ "DN"
-  
   read
 
 BoxC()
@@ -1173,9 +1168,6 @@ if !fnovi
      		endif
    	endif
 	
-	
-	altd()
-
 	if LEN(aMemo)>=18
 		// destinacija
 		public _DEST := aMemo[18]
@@ -1748,26 +1740,29 @@ select (nTArea)
 
 
 if lTxtNaKraju
+
 	// uzmi odgovarajucu listu
 	cListaTxt := g_txt_tipdok( _idtipdok )
+
 	// unesi tekst
 	UzorTxt2( cListaTxt )
+
 endif
 
 if (_podbr==" ." .or.  roba->tip="U" .or. (nrbr==1 .and. val(_podbr)<1))
 	
 	// odsjeci na kraju prazne linije
 	_txt2:=OdsjPLK(_txt2)           
-     	if !"Faktura formirana na osnovu" $ _txt2
-        	_txt2 += CHR(13)+Chr(10)+_VezOtpr
+     	if !"Racun formiran na osnovu" $ _txt2
+        	_txt2 += CHR(13) + Chr(10) + _VezOtpr
      	endif
 	
     	//1
-	_txt:=Chr(16)+trim(_txt1)+Chr(17) 
-	_txt += Chr(16)+_txt2+Chr(17)
-	_txt += Chr(16)+trim(_txt3a)+Chr(17) 
-	_txt += Chr(16)+_txt3b+Chr(17)
-	_txt += Chr(16)+trim(_txt3c)+Chr(17)
+	_txt := Chr(16) + trim(_txt1) + Chr(17) 
+	_txt += Chr(16) + _txt2 + Chr(17)
+	_txt += Chr(16) + trim(_txt3a) + Chr(17) 
+	_txt += Chr(16) + _txt3b + Chr(17)
+	_txt += Chr(16) + trim(_txt3c) + Chr(17)
 	
 	// 6 - br otpr
 	_txt += Chr(16)+_BrOtp+Chr(17)
@@ -1988,7 +1983,6 @@ if cVar=="0"   // when
       endif
 
 elseif cVar=="1"  // valid
-	altd()
 	// ako je rama-glas
 	if !lRP0
 		if nRokPl < 1

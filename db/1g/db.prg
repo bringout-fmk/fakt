@@ -1572,8 +1572,6 @@ if !(ImaPravoPristupa(goModul:oDataBase:cName,"DOK","BRISANJE" ))
 	return DE_CONT
 endif
 
-altd()
-
 if Pitanje(, "Zelite li izbrisati pripremu !!????","N")=="D"
 	
    if gcF9usmece == "D"

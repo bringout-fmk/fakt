@@ -762,6 +762,7 @@ endif
 if (nRbr==1 .and. val(_podbr)<1)
 
   Box(,11,75)
+
      do while .t.
 
 	@ m_x + 1, m_y + 1 SAY "Odaberi uzorak teksta iz sifrarnika:" ;
@@ -771,26 +772,37 @@ if (nRbr==1 .and. val(_podbr)<1)
 	
 	read
  
- 	if lastkey() <> K_ESC .and. !EMPTY( cId ) 
+ 	if LastKey() <> K_ESC .and. !EMPTY( cId ) 
 	  	if cId <> "MX"
    			P_Ftxt(@cId)
 			_add_to_txt( cId, nCount, .t. )
 			++ nCount
 			cId := "  "
 		endif
-   	endif	
+   	endif
+
+	if LastKey() == K_ESC
+		exit
+	endif
+
  	setcolor(Invert)
- 	UsTipke()
- 	private fUMemu:=.t.
- 	_txt2:=MemoEdit(_txt2,m_x+3,m_y+1,m_x+9,m_y+76)
- 	fUMemu:=NIL
- 	setcolor(Normal)
+ 	
+	UsTipke()
+ 	
+	private fUMemu:=.t.
+ 	
+	_txt2 := MemoEdit( _txt2, m_x+3, m_y+1, m_x+9, m_y+76)
+ 	
+	fUMemu:=NIL
+ 	
+	setcolor(Normal)
      
         if LastKey() == K_ESC
-	   exit
+	   	exit
 	endif
      
      enddo
+
   BoxC()
 
 endif
