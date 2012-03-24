@@ -1041,7 +1041,7 @@ if !EMPTY( cPartnId )
 		// kod 11-ki nam ne treba ispis partnera
 		lIno := .f.
 		lPDVObveznik := .t.
-		lP_stamp := .f.
+		lP_stamp := .t.
 
 	elseif LEN(cJibPartn) < 12 .or. !EMPTY( cPOslob )
 
