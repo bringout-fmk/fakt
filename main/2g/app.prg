@@ -452,6 +452,7 @@ public gFc_dlist := "N"
 public gFc_pauto := 0
 public gFc_serial := PADR("010000", 15)
 public gFc_restart := "N"
+public gFc_tmpxml := "N"
 
 // stmpa na traku
 public gMpPrint := "N"
